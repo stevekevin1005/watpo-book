@@ -172,6 +172,9 @@
                             <li>
                                 <a href="#" class="waves-effect waves-primary"><i class="md md-view-list"></i><span> 訂單列表 </span></a>
                             </li>
+                            <li>
+                                <a href="#" class="waves-effect waves-primary"><i class="md md-error"></i><span> 黑名單 </span></a>
+                            </li>
                             <li class="text-muted menu-title">管理功能選單</li>
                             <li>
                                 <a href="#" class="waves-effect waves-primary"><i class="md md-people"></i><span> 員工管理 </span></a>
