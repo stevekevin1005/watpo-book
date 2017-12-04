@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('index');
 });
 
+Route::get('/admin/login', function () {
+    return view('admin.login');
+});
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
