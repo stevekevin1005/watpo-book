@@ -37,10 +37,11 @@
                   &#x9;&#x9;&#x9;&#x9;
                   <hr>
                   &#x9;&#x9;&#x9;&#x9;
-                  <form action="/auth/local" method="POST" class="form-horizontal">
+                  <form action="/auth/logincheck" method="POST" class="form-horizontal">
+                     {{ csrf_field() }}
                      <div class="form-group">
                         <label class="col-md-2 control-label">&#x5E33;&#x865F;</label>&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
-                        <div class="col-md-10"><input type="text" placeholder="User name" name="identifier" class="form-control"></div>
+                        <div class="col-md-10"><input type="text" placeholder="User name" name="account" class="form-control"></div>
                      </div>
                      <!-- /form-group-->
                      <div class="form-group">
@@ -48,6 +49,9 @@
                         <div class="col-md-10"><input type="password" placeholder="Password" name="password" class="form-control"></div>
                      </div>
                      <!-- /form-group-->
+                     @if ($errors->has('fail'))
+                        <div style="color:red">{{ $errors->first('fail') }}</div>
+                     @endif
                      <div class="row m-top-6">
                         <div class="col-sm-6 col-sm-offset-3"><input type="submit" value="登入" class="btn btn-black btn-block border-radius-circle"></div>
                         <!-- /col-sm-6-->

@@ -11,13 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
-
-Route::get('/admin/login', function () {
-    return view('admin.login');
-});
 
 /*
 |--------------------------------------------------------------------------
@@ -31,5 +24,20 @@ Route::get('/admin/login', function () {
 */
 
 Route::group(['middleware' => ['web']], function () {
-    //
+  
+  Route::get('/', function () {
+	    return view('welcome');
+	});
+
+	Route::get('/admin/login', ['uses' => 'LoginController@index', 'as' => 'login']);
+	Route::get('/admin/logout', ['uses' => 'LoginController@logout', 'as' => 'logout']);
+	Route::post('/auth/logincheck', ['uses' => 'LoginController@loginCheck', 'as' => 'loginCheck']);
+
+	Route::group(['middleware' => 'auth.login'], function () {
+		
+		Route::get('/admin', function () {
+	    return view('index');
+		});
+
+	});
 });

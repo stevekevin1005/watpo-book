@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Account extends Model {
 
   protected $table = 'Account';
-  protected $primaryKey = 'account'
+  protected $primaryKey = 'account';
 }
 
 /*
