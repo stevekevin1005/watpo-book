@@ -33,11 +33,18 @@ Route::group(['middleware' => ['web']], function () {
 	Route::get('/admin/logout', ['uses' => 'LoginController@logout', 'as' => 'logout']);
 	Route::post('/auth/logincheck', ['uses' => 'LoginController@loginCheck', 'as' => 'loginCheck']);
 
-	Route::group(['middleware' => 'auth.login'], function () {
+	Route::group(['prefix' => '/admin', 'middleware' => 'auth.login'], function () {
 		
-		Route::get('/admin', function () {
-	    return view('index');
+		Route::get('/', function () {
+	    return view('layout');
 		});
+		Route::get('/serviceprovider/list', ['uses' => 'ServiceProviderController@index', 'as' => 'serviceProviderList']);
+	});
 
+	Route::group(['prefix' => '/api'], function () {
+
+		Route::get('/serviceprovider/list', ['uses' => 'ServiceProviderController@api_list', 'as' => 'apiServiceProviderList']);
+		Route::post('/serviceprovider/add', ['uses' => 'ServiceProviderController@api_add', 'as' => 'apiServiceProviderAdd']);
+		Route::post('/serviceprovider/delete', ['uses' => 'ServiceProviderController@api_delete', 'as' => 'apiServiceProviderDelete']);
 	});
 });

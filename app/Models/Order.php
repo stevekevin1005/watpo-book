@@ -17,6 +17,11 @@ class Order extends Model {
   {
     return $this->belongsTo('App\Models\Service', 'service_id');
   }
+
+  public function serviceProvider()
+  {
+    return $this->belongsTo('App\Models\ServiceProvider', 'service_provider_id');
+  }
 }
 
 /*
@@ -26,6 +31,7 @@ class Order extends Model {
 	status: enum("1", "2", "3", "4", "5") 
 					1: customer book 2: staff book 3: customer cancel 4: staff cancel 5: order success
 	service_id: service table
+	service_provider_id: serviceProvider table
 	room_id: room table
 	start_time: datetime
 	end_time: datetime
