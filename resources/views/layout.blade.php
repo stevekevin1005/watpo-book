@@ -152,7 +152,7 @@
                             <li class="text-muted menu-title">一般功能選單</li>
 
                             <li>
-                                <a href="#" class="waves-effect waves-primary subdrop"><i
+                                <a href="#" class="waves-effect waves-primary "><i
                                         class="md md-dashboard"></i><span> 總覽 </span></a>
                             </li>
 
@@ -177,7 +177,7 @@
                                 <a href="#" class="waves-effect waves-primary"><i class="md md-view-list"></i><span> 訂單列表 </span></a>
                             </li>
                             <li>
-                                <a href="#" class="waves-effect waves-primary"><i class="md md-error"></i><span> 黑名單 </span></a>
+                                <a href="/admin/blacklist/list" class="waves-effect waves-primary"><i class="md md-error"></i><span> 黑名單 </span></a>
                             </li>
                             <li class="text-muted menu-title">管理功能選單</li>
                             <li>

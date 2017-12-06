@@ -38,7 +38,11 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/', function () {
 	    return view('layout');
 		});
-		Route::get('/serviceprovider/list', ['uses' => 'ServiceProviderController@index', 'as' => 'serviceProviderList']);
+		Route::get('/serviceprovider/list', ['uses' => 'ServiceProviderController@index', 'as' => 'serviceProviderIndex']);
+
+		Route::get('/blacklist/list', ['uses' => 'BlackListController@index', 'as' => 'blackListIndex']);
+		Route::post('/blacklist/add', ['uses' => 'BlackListController@add', 'as' => 'blackListAdd']);
+		Route::post('/blacklist/delete', ['uses' => 'BlackListController@delete', 'as' => 'blackListDelete']);
 	});
 
 	Route::group(['prefix' => '/api'], function () {
@@ -46,5 +50,6 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/serviceprovider/list', ['uses' => 'ServiceProviderController@api_list', 'as' => 'apiServiceProviderList']);
 		Route::post('/serviceprovider/add', ['uses' => 'ServiceProviderController@api_add', 'as' => 'apiServiceProviderAdd']);
 		Route::post('/serviceprovider/delete', ['uses' => 'ServiceProviderController@api_delete', 'as' => 'apiServiceProviderDelete']);
+
 	});
 });
