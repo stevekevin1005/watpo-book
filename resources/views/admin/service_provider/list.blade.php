@@ -1,7 +1,5 @@
 @extends('layout')
 @section('head')
-	<link rel="stylesheet" href="/assets/plugins/magnific-popup/dist/magnific-popup.css" />
- 	<link rel="stylesheet" href="/assets/plugins/jquery-datatables-editable/datatables.css" />
  	<style type="text/css">
 		.spinner {
 		  margin: 100px auto;
@@ -212,7 +210,7 @@
         var shop_id = $(this).data("shop_id");
         swal({
             title: '確定刪除該名員工?',
-            text: "此舉會刪除該名員工所有相關記錄!",
+            text: "此舉無法恢復紀錄！",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

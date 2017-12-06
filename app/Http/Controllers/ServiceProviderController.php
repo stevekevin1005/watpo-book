@@ -50,7 +50,6 @@ class ServiceProviderController extends Controller
 			
 			$serviceProvider = new ServiceProvider;
 			$serviceProvider = $serviceProvider->where('id', $request->id)->first();
-			$serviceProvider->orders()->delete();
 			$serviceProvider->delete();
 
 			return response()->json('刪除成功');
