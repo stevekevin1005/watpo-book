@@ -8,9 +8,14 @@ class ServiceProvider extends Model {
 
   protected $table = 'ServiceProvider';
 
+
   public function orders()
   {
     return $this->hasMany('App\Models\Order', 'service_provider_id');
+
+  public function leaves()
+  {
+    return $this->hasMany('App\Models\Leave', 'service_provider_id');
   }
 }
 

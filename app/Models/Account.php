@@ -7,7 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Account extends Model {
 
   protected $table = 'Account';
+
+
   protected $primaryKey = 'account';
+
+  public function logs()
+  {
+    return $this->hasMany('App\Models\Log', 'account_id');
+  }
+
 }
 
 /*
