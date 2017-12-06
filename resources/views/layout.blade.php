@@ -13,7 +13,6 @@
         <link href="/assets/plugins/sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css">
         <link href="/assets/plugins/switchery/switchery.min.css" rel="stylesheet" />
         <link href="/assets/plugins/jquery-circliful/css/jquery.circliful.css" rel="stylesheet" type="text/css" />
-
         <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/core.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/icons.css" rel="stylesheet" type="text/css">
@@ -21,6 +20,11 @@
         <link href="/assets/css/pages.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/menu.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/responsive.css" rel="stylesheet" type="text/css">
+        <style type="text/css">
+            .swal2-cancel{
+                margin-right: 30px;
+            }
+        </style>
         @yield('head')
         <script src="/assets/js/modernizr.min.js"></script>
 
