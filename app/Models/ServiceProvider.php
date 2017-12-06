@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class ServiceProvider extends Model {
 
   protected $table = 'ServiceProvider';
+
+  public function leaves()
+  {
+    return $this->hasMany('App\Models\Leave', 'service_provider_id');
+  }
 }
 
 /*
