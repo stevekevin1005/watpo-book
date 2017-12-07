@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BlackList;
-use Hash;
+use Hash, Exception;
 
 class BlackListController extends Controller
 {

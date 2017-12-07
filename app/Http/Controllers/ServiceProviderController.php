@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Shop;
 use App\Models\ServiceProvider;
-use Hash;
+use Hash, Exception;
 
 class ServiceProviderController extends Controller
 {
