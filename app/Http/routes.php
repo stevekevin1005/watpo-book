@@ -34,15 +34,15 @@ Route::group(['middleware' => ['web']], function () {
 	Route::post('/auth/logincheck', ['uses' => 'LoginController@loginCheck', 'as' => 'loginCheck']);
 
 	Route::group(['prefix' => '/admin', 'middleware' => 'auth.login'], function () {
-		
-		Route::get('/', function () {
-	    return view('layout');
-		});
+
 		Route::get('/serviceprovider/list', ['uses' => 'ServiceProviderController@index', 'as' => 'serviceProviderIndex']);
 
 		Route::get('/blacklist/list', ['uses' => 'BlackListController@index', 'as' => 'blackListIndex']);
 		Route::post('/blacklist/add', ['uses' => 'BlackListController@add', 'as' => 'blackListAdd']);
 		Route::post('/blacklist/delete', ['uses' => 'BlackListController@delete', 'as' => 'blackListDelete']);
+
+		Route::get('/leave', ['uses' => 'LeaveController@index', 'as' => 'leaveIndex']);
+		Route::post('/leave/add', ['uses' => 'LeaveController@add', 'as' => 'leaveAdd']);
 	});
 
 	Route::group(['prefix' => '/api'], function () {
@@ -51,5 +51,6 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('/serviceprovider/add', ['uses' => 'ServiceProviderController@api_add', 'as' => 'apiServiceProviderAdd']);
 		Route::post('/serviceprovider/delete', ['uses' => 'ServiceProviderController@api_delete', 'as' => 'apiServiceProviderDelete']);
 
+		Route::post('/leave/delete', ['uses' => 'LeaveController@api_delete', 'as' => 'apiLeaveDelete']);
 	});
 });

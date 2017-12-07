@@ -171,7 +171,7 @@
                             </li>
 
                             <li>
-                                <a href="#" class="waves-effect waves-primary"><i class="md md-face-unlock"></i><span> 出勤管理 </span></a>
+                                <a href="/admin/leave" class="waves-effect waves-primary"><i class="md md-face-unlock"></i><span> 出勤管理 </span></a>
                             </li>
                             <li>
                                 <a href="#" class="waves-effect waves-primary"><i class="md md-view-list"></i><span> 訂單列表 </span></a>
