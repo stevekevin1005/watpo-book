@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('admin.layout')
 @section('head')
 <link rel='stylesheet' href='/assets/plugins/fullcalendar/fullcalendar.css' />
 @stop

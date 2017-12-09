@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('admin.layout')
 @section('head')
  	<style type="text/css">
 		.spinner {
