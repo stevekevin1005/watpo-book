@@ -170,10 +170,13 @@
                                 <a href="/admin/leave" class="waves-effect waves-primary"><i class="md md-face-unlock"></i><span> 出勤管理 </span></a>
                             </li>
                             <li>
-                                <a href="#" class="waves-effect waves-primary"><i class="md md-view-list"></i><span> 訂單列表 </span></a>
+                                <a href="/admin/order" class="waves-effect waves-primary"><i class="md md-view-list"></i><span> 訂單列表 </span></a>
                             </li>
                             <li>
                                 <a href="/admin/blacklist/list" class="waves-effect waves-primary"><i class="md md-error"></i><span> 黑名單 </span></a>
+                            </li>
+                            <li>
+                                <a href="/admin/logout" class="waves-effect waves-primary"><i class="md  md-reply"></i><span> 登出 </span></a>
                             </li>
                             <li class="text-muted menu-title">管理功能選單</li>
                             <li>
@@ -183,7 +186,6 @@
                                     <li><a href="/icons-materialdesign.html">帳號管理</a></li>
                                 </ul>
                             </li>
-
                             <li>
                                 <a href="#" class="waves-effect waves-primary"><i class="md md-content-paste"></i><span> 操作記錄 </span></a>
                             </li>  

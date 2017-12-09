@@ -47,6 +47,8 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/calender/{id}', ['uses' => 'CalenderController@index', 'as' => 'CalenderIndex']);
 
 		Route::get('/dashboard', ['uses' => 'DashboardController@index', 'as' => 'DashboardIndex']);
+
+		Route::get('/order', ['uses' => 'OrderController@index', 'as' => 'OrderIndex']);
 	});
 
 	Route::group(['prefix' => '/api'], function () {
