@@ -152,21 +152,17 @@
                             <li class="text-muted menu-title">一般功能選單</li>
 
                             <li>
-                                <a href="#" class="waves-effect waves-primary "><i
+                                <a href="/admin/dashboard" class="waves-effect waves-primary "><i
                                         class="md md-dashboard"></i><span> 總覽 </span></a>
                             </li>
 
                             <li>
                                 <a href="#" class="waves-effect waves-primary"><i class="md md-event-note"></i>
                                     <span> 預約排程 </span> 
-                                    <span class="label label-default pull-right">5</span> 
                                 </a>
                                 <ul class="list-unstyled">
-                                    <li><a href="/icons-glyphicons.html">Glyphicons</a></li>
-                                    <li><a href="/icons-materialdesign.html">Material Design</a></li>
-                                    <li><a href="/icons-themifyicon.html">Themify Icons</a></li>
-                                    <li><a href="/icons-ionicons.html">Ion Icons</a></li>
-                                    <li><a href="/icons-fontawesome.html">Font awesome</a></li>
+                                    <li><a href="/admin/calender/1">民生店</a></li>
+                                    <li><a href="/admin/calender/2">光復店</a></li>
                                 </ul>
                             </li>
 
