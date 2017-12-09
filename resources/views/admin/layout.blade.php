@@ -183,7 +183,7 @@
                                 <a href="#" class="waves-effect waves-primary"><i class="md md-people"></i><span> 員工管理 </span></a>
                                 <ul class="list-unstyled">
                                     <li><a href="/admin/serviceprovider/list">師傅管理</a></li>
-                                    <li><a href="/icons-materialdesign.html">帳號管理</a></li>
+                                    <li><a href="/admin/account">帳號管理</a></li>
                                 </ul>
                             </li>
                             <li>

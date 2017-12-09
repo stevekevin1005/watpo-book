@@ -51,6 +51,8 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/order', ['uses' => 'OrderController@index', 'as' => 'OrderIndex']);
 
 		Route::get('/log', ['uses' => 'LogController@index', 'as' => 'LogIndex']);
+
+		Route::get('/account', ['uses' => 'AccountController@index', 'as' => 'AccountIndex']);
 	});
 
 	Route::group(['prefix' => '/api'], function () {
