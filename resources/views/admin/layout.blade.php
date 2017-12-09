@@ -187,7 +187,7 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="#" class="waves-effect waves-primary"><i class="md md-content-paste"></i><span> 操作記錄 </span></a>
+                                <a href="/admin/log" class="waves-effect waves-primary"><i class="md md-content-paste"></i><span> 操作記錄 </span></a>
                             </li>  
                         </ul>
                         <div class="clearfix"></div>

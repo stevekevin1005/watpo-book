@@ -49,6 +49,8 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/dashboard', ['uses' => 'DashboardController@index', 'as' => 'DashboardIndex']);
 
 		Route::get('/order', ['uses' => 'OrderController@index', 'as' => 'OrderIndex']);
+
+		Route::get('/log', ['uses' => 'LogController@index', 'as' => 'LogIndex']);
 	});
 
 	Route::group(['prefix' => '/api'], function () {
