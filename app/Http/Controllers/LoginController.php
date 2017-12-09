@@ -20,7 +20,7 @@ class LoginController extends Controller
 		if ($account != null && Hash::check($request->password, $account->password))
 		{
 		  $request->session()->put('account', $request->account);
-		  return redirect('/admin');
+		  return redirect('/admin/dashboard');
 		}
 		return redirect('/admin/login')->withErrors(['fail'=>'帳號或密碼錯誤']);
 	}
