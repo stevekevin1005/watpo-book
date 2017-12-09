@@ -45,6 +45,8 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('/leave/add', ['uses' => 'LeaveController@add', 'as' => 'leaveAdd']);
 
 		Route::get('/calender/{id}', ['uses' => 'CalenderController@index', 'as' => 'CalenderIndex']);
+
+		Route::get('/dashboard', ['uses' => 'DashboardController@index', 'as' => 'DashboardIndex']);
 	});
 
 	Route::group(['prefix' => '/api'], function () {
