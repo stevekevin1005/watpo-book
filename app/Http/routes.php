@@ -25,9 +25,7 @@
 
 Route::group(['middleware' => ['web']], function () {
   
-  Route::get('/', function () {
-	    return view('welcome');
-	});
+  Route::get('/', ['uses' => 'BookController@index', 'as' => 'book']);
 
 	Route::get('/admin/login', ['uses' => 'LoginController@index', 'as' => 'login']);
 	Route::get('/admin/logout', ['uses' => 'LoginController@logout', 'as' => 'logout']);
