@@ -8,9 +8,6 @@ class Account extends Model {
 
   protected $table = 'Account';
 
-
-  protected $primaryKey = 'account';
-
   public function logs()
   {
     return $this->hasMany('App\Models\Log', 'account_id');
@@ -19,7 +16,8 @@ class Account extends Model {
 }
 
 /*
-	account: varchar(20) pk
+  id: int(255) pk
+	account: varchar(20)
 	password: varchar(128) not null
 	level: enum("1", "2") 1: admin 2: normal
 	created_at: datetime

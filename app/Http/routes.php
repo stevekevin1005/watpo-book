@@ -42,15 +42,16 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/leave', ['uses' => 'LeaveController@index', 'as' => 'leaveIndex']);
 		Route::post('/leave/add', ['uses' => 'LeaveController@add', 'as' => 'leaveAdd']);
 
-		Route::get('/calender/{id}', ['uses' => 'CalenderController@index', 'as' => 'CalenderIndex']);
+		Route::get('/calender/{id}', ['uses' => 'CalenderController@index', 'as' => 'calenderIndex']);
 
-		Route::get('/dashboard', ['uses' => 'DashboardController@index', 'as' => 'DashboardIndex']);
+		Route::get('/dashboard', ['uses' => 'DashboardController@index', 'as' => 'dashboardIndex']);
 
-		Route::get('/order', ['uses' => 'OrderController@index', 'as' => 'OrderIndex']);
+		Route::get('/order', ['uses' => 'OrderController@index', 'as' => 'orderIndex']);
 
-		Route::get('/log', ['uses' => 'LogController@index', 'as' => 'LogIndex']);
+		Route::get('/log', ['uses' => 'LogController@index', 'as' => 'logIndex']);
 
-		Route::get('/account', ['uses' => 'AccountController@index', 'as' => 'AccountIndex']);
+		Route::get('/account', ['uses' => 'AccountController@index', 'as' => 'accountIndex']);
+		Route::post('/account/update_password', ['uses' => 'AccountController@update_password', 'as' => 'accountUpdatePassword']);
 	});
 
 	Route::group(['prefix' => '/api'], function () {
@@ -60,5 +61,9 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('/serviceprovider/delete', ['uses' => 'ServiceProviderController@api_delete', 'as' => 'apiServiceProviderDelete']);
 
 		Route::post('/leave/delete', ['uses' => 'LeaveController@api_delete', 'as' => 'apiLeaveDelete']);
+
+		Route::post('/account/add', ['uses' => 'AccountController@api_add', 'as' => 'apiAccountAdd']);
+		Route::post('/account/delete', ['uses' => 'AccountController@api_delete', 'as' => 'apiAccountDelete']);
+		Route::post('/account/reset_password', ['uses' => 'AccountController@api_reset_password', 'as' => 'apiAccountResetPassword']);
 	});
 });
