@@ -8,7 +8,7 @@ let settings = [{
     './resources/src/'
   ],
   output: {
-    path: path.join(__dirname, '/public'),
+    path: path.join(__dirname, '/resources/views'),
     filename: 'bundle.js'
   },
   module: {
@@ -49,8 +49,10 @@ let settings = [{
   devServer: {
     port: process.env.PORT || 8080,
     host: "localhost",
-    contentBase: "./public",
-    historyApiFallback: true,
+    contentBase: "./resources/views",
+    historyApiFallback: {
+      index: 'resources/views/book.blade.php'
+    },
     hot: true,
     inline: true
   },
@@ -58,7 +60,8 @@ let settings = [{
     new webpack.NamedModulesPlugin(),
     new webpack.ProvidePlugin({
       React: 'react',
-      ReactDOM:'react-dom'
+      ReactDOM:'react-dom',
+      ReactBootstrap: 'react-bootstrap'
     })
   ]
 }];

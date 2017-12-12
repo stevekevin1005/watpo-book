@@ -8,9 +8,10 @@
     <meta name="KeyWords" content="watpo">
     <meta name="Description" content="watpo">
     <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
   </head>
   <body>
-    <div class="container"></div>
+    <div id="container"></div>
   </body>
   <script src="bundle.js"></script>
 </html>

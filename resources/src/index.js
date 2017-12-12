@@ -6,6 +6,7 @@ import App from "./components/App";
 import {Provider} from "react-redux";
 import store from "./store";
 
+require("./assets/stylesheets/style.sass");
 
 const Index = (props)=>(
   <Provider store={store}>
@@ -13,4 +14,4 @@ const Index = (props)=>(
   </Provider>      
 );
 
-ReactDOM.render(<Index/>,document.querySelector(".container"));
+ReactDOM.render(<Index/>,document.querySelector("#container"));
