@@ -22,6 +22,7 @@ class Shop extends Model {
 /*
 	id: int(255) pk
 	name: varchar(20)
+  description: text
 	location: varchar(20)
 	created_at: datetime
 	updated_at: datetime

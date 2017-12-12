@@ -54,7 +54,7 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('/account/update_password', ['uses' => 'AccountController@update_password', 'as' => 'accountUpdatePassword']);
 	});
 
-	Route::group(['prefix' => '/api'], function () {
+	Route::group(['prefix' => '/api', 'middleware' => 'auth.login'], function () {
 
 		Route::get('/serviceprovider/list', ['uses' => 'ServiceProviderController@api_list', 'as' => 'apiServiceProviderList']);
 		Route::post('/serviceprovider/add', ['uses' => 'ServiceProviderController@api_add', 'as' => 'apiServiceProviderAdd']);
@@ -66,4 +66,9 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('/account/delete', ['uses' => 'AccountController@api_delete', 'as' => 'apiAccountDelete']);
 		Route::post('/account/reset_password', ['uses' => 'AccountController@api_reset_password', 'as' => 'apiAccountResetPassword']);
 	});
+});
+
+Route::group(['prefix' => '/api'], function () {
+		Route::get('/shop_list', ['uses' => 'BookController@api_shop_list', 'as' => 'apiShopList']);
+	
 });
