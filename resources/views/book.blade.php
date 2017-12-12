@@ -13,5 +13,5 @@
   <body>
     <div id="container"></div>
   </body>
-  <script src="bundle.js"></script>
+  <script src="/assets/frontend/bundle.js"></script>
 </html>
