@@ -66,9 +66,13 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('/account/delete', ['uses' => 'AccountController@api_delete', 'as' => 'apiAccountDelete']);
 		Route::post('/account/reset_password', ['uses' => 'AccountController@api_reset_password', 'as' => 'apiAccountResetPassword']);
 	});
+
+	Route::group(['prefix' => '/api'], function () {
+		Route::get('/shop_list', ['uses' => 'BookController@api_shop_list', 'as' => 'apiShopList']);
+		Route::get('/service_list', ['uses' => 'BookController@api_service_list', 'as' => 'apiServiceList']);
+		Route::get('/time_list', ['uses' => 'BookController@api_time_list', 'as' => 'apiTimeList']);
+		
+	});
 });
 
-Route::group(['prefix' => '/api'], function () {
-		Route::get('/shop_list', ['uses' => 'BookController@api_shop_list', 'as' => 'apiShopList']);
-	
-});
+

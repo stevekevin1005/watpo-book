@@ -24,6 +24,8 @@ class Shop extends Model {
 	name: varchar(20)
   description: text
 	location: varchar(20)
+  start_time: time
+  end_time: time
 	created_at: datetime
 	updated_at: datetime
 */

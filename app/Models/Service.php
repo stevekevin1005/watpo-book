@@ -17,7 +17,10 @@ class Service extends Model {
 /*
 	id: int(255) pk
 	title: varchar(20)
-	description: text
+	description_tw: text
+	description_en: text
+	description_jp: text
+	price: int(5)
 	time: int(5)
 	created_at: datetime
 	updated_at: datetime
