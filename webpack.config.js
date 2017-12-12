@@ -8,7 +8,7 @@ let settings = [{
     './resources/src/'
   ],
   output: {
-    path: path.join(__dirname, '/resources/views'),
+    path: path.join(__dirname, '/public/assets/frontend'),
     filename: 'bundle.js'
   },
   module: {
