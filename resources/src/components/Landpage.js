@@ -1,3 +1,5 @@
+import React, {Component} from 'react';
+import { translate } from 'react-i18next';
 // 首頁
 
 const Button = ReactBootstrap.Button,
@@ -11,6 +13,8 @@ class Landpage extends React.Component{
         super(props);
     }
     render(){
+        const { t } = this.props;
+        console.log(t);
         const branchData = [{
             name: "民生會館",
             time: "中午 PM 12:00 ~ 凌晨 AM 04:00 ",
@@ -43,7 +47,7 @@ class Landpage extends React.Component{
                         <div style={{width: "300px", margin: "0 auto", maxWidth: "90vw"}}>
                         <Button bsStyle="primary" bsSize="large" block
                             onClick={this.props.toReservation}>
-                            預約服務
+                            {t('book')}
                         </Button>
                         </div>
                     </div>
@@ -77,5 +81,4 @@ class Landpage extends React.Component{
         );
     }
 }
-
-module.exports = Landpage;
+export default translate()(Landpage); 
