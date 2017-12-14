@@ -8,7 +8,8 @@ let settings = [{
     './resources/src/'
   ],
   output: {
-    path: path.join(__dirname, '/public/assets/frontend'),
+    // path: path.join(__dirname, '/public/assets/frontend'),
+    path: path.join(__dirname, '/resources/views'),
     filename: 'bundle.js'
   },
   module: {
@@ -47,7 +48,7 @@ let settings = [{
     extensions: ['.js','.sass', ".jsx"]
   },
   devServer: {
-    port: process.env.PORT || 8080,
+    port: process.env.PORT || 8087,
     host: "localhost",
     contentBase: "./resources/views",
     historyApiFallback: {
