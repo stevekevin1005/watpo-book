@@ -24,6 +24,7 @@ class Room extends Model {
 	name: varchar(20)
 	shower: tinyint(1)
 	shop_id: shop table
+  person: int(2)
 	created_at: datetime
 	updated_at: datetime
 */
