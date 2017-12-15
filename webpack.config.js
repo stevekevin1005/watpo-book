@@ -8,8 +8,7 @@ let settings = [{
     './resources/src/'
   ],
   output: {
-    // path: path.join(__dirname, '/public/assets/frontend'),
-    path: path.join(__dirname, '/resources/views'),
+    path: path.join(__dirname, '/public/assets/frontend'),
     filename: 'bundle.js'
   },
   module: {
@@ -37,7 +36,9 @@ let settings = [{
           {
             loader: 'url-loader',
             options: {
-              limit: 10000 /* file smaller than 10kB would be transformed into base64 */
+              limit: 10000, /* file smaller than 10kB would be transformed into base64 */
+              name: "../images/book/[name].[ext]",
+              publicPath: "../assets"
             }
           }
         ]
@@ -48,7 +49,7 @@ let settings = [{
     extensions: ['.js','.sass', ".jsx"]
   },
   devServer: {
-    port: process.env.PORT || 8087,
+    port: process.env.PORT || 8080,
     host: "localhost",
     contentBase: "./resources/views",
     historyApiFallback: {

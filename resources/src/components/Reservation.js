@@ -23,7 +23,7 @@ class Reservation extends React.Component{
     render(){
         // steps
         const currentStep = parseInt(this.props.match.params.step),
-              stepsData = ["選擇服務","選擇時間","確認細節"], pointer = {cursor: "pointer"}, currentStepStyle = {cursor:"pointer",color: "red"};
+              stepsData = ["選擇服務","選擇時間","確認細節"], pointer = {cursor: "pointer"}, currentStepStyle = {cursor:"pointer",color: "#914327"};
         let steps = stepsData.map((step, index,arr)=>{
                 let divider = index < arr.length - 1 && <span> > </span>;
                 if(currentStep > index)return (
@@ -55,6 +55,10 @@ class Reservation extends React.Component{
             case 2:
                 el = <CheckDetail/>;
                 break;
+            case 3: 
+                return;
+            default:
+                return;
         }
 
         return(
@@ -67,9 +71,13 @@ class Reservation extends React.Component{
                     </div>
                 </Col>
                 {currentStep > 0 && <Col md={12} >
-                    <Link to={"/reservation/"+ (currentStep - 1)}><span style={pointer}>{"< 返回上一步"}</span></Link>
+                    <Link to={"/reservation/"+ (currentStep - 1)}><p className="prevStap">{"< 返回上一步"}</p></Link>
                 </Col>}
-                    {el}    
+                <Col md={12}>
+                    <div style={{padding:"16px 0"}}>
+                    {el}
+                    </div>    
+                </Col>
                 <Col md={12}>
                     <Link to = {"/reservation/"+(currentStep + 1)}>
                     <Button bsStyle="primary" bsSize="large" onClick={this.next}>

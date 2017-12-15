@@ -1,3 +1,7 @@
+$brown: #443324
+$darkBrown: #38291d
+$lightBrown: #684f38
+
 
 *
   font-family: 微軟正黑體
@@ -13,7 +17,7 @@ $breakpoints: ("phone":400px,"phone-wide":480px,"phablet":560px,"tablet-small": 
       @content
 
 body
-  background-color: #fffdf9
+  background-color: #f9f7f9
 
 .divider
   width: 1px
@@ -23,20 +27,16 @@ body
 
 @media only screen and (max-width: 987px)
   .divider
-    width: 95%
+    width: 85%
     height: 1px
     
-.img1
-  height: 300px
-  background-image: url(../images/img1.jpg)
+.img
+  height: 370px
+  background-image: url(../images/img.jpg)
   background-repeat: no-repeat
   background-size: cover
-
-.img2
-  height: 300px
-  background-image: url(../images/img2.jpg)
-  background-repeat: no-repeat
-  background-size: cover
+  margin-bottom: 16px
+  border-radius: 16px
 
 .topContainer
   padding: 48px 32px
@@ -56,10 +56,10 @@ body
   left: 0
 
 .reservationContainer
-  padding: 16px
+  padding: 16px 32px
   background-color: rgba(255,255,255,.7)
   border-radius: 16px
-
+  box-shadow: 0 0 5px 2px rgba(0,0,0,.2)
 h3
   text-align: center
   font-weight: bold
@@ -74,3 +74,64 @@ h3
     border-radius: 10em
     width: 90vw
     color: brown
+
+.btn-primary
+  background-color: $brown
+  border: none
+  box-shadow: 1px 1px 3px 1px rgba(71, 53, 37,.3)
+  min-width: 100px
+  &:hover
+    background-color: $lightBrown
+  &:active
+    background-color: $darkBrown
+  &:focus
+    background-color: $darkBrown
+  &:focus:active
+    background-color: $darkBrown
+
+.navbar-inverse .navbar-nav > li > a, .navbar-inverse .navbar-brand
+  color: white
+
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover
+  background-color: $brown
+
+.navbar-inverse
+  background-color: $brown
+  border: none
+  color: white
+  border-radius: 0
+  box-shadow: 1px 1px 3px 1px rgba(71, 53, 37,.3)
+
+.navbar-nav > .active
+  background-color: $darkBrown
+
+.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover
+  background-color: $darkBrown
+
+a
+  color: $brown
+
+.mainBtn
+  padding-top: 16px
+  padding-bottom: 16px
+
+.title, .sub
+  text-shadow: 2px 2px 1px rgba(0,0,0,.3)
+
+.title
+  font-size: 7rem
+.sub
+  font-size: 5rem
+
+.form-control
+  max-width: 90%
+
+.reservationContainer > .container
+  padding: 16px
+
+.prevStep
+  cursor: pointer
+  margin: 16px 0
+
+p
+  margin: 10px 0
