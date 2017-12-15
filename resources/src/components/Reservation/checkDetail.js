@@ -40,7 +40,7 @@ class CheckDetail extends React.Component{
                <div className="divider"></div>
                </Col>
 
-               <Col md={6}>
+               <Col md={5}>
                     <ControlLabel>預約人姓名</ControlLabel>
                     <FormControl
                         type="text"

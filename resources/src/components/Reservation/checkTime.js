@@ -15,12 +15,12 @@ class CheckTime extends React.Component{
             <Grid>
             <Row className="show-grid">
             <Col md={5}>
-                <div style={{backgroundColor: "#F5F5F5",borderRadius:"16px",border:"solid 1px #E8E8E8", padding: "8px 16px", height: "300px"}}>
+                <div style={{backgroundColor: "#F5F5F5",borderRadius:"16px",border:"solid 1px #E8E8E8", padding: "8px 16px", height: "300px", margin: "16px 0", maxWidth: "90%"}}>
                     日曆
                 </div>
             </Col>
             <Col md={5}>
-                <div style={{height: "300px", overflowY:"auto"}}>
+                <div style={{height: "300px", overflowY:"auto", margin: "16px 0", maxWidth: "50%"}}>
                     <ListGroup>
                         <ListGroupItem>Item 1</ListGroupItem>
                         <ListGroupItem>Item 2</ListGroupItem>
