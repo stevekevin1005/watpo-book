@@ -24,8 +24,6 @@
 */
 
 Route::group(['middleware' => ['web']], function () {
-  
-  Route::get('/', ['uses' => 'BookController@index', 'as' => 'book']);
 
 	Route::get('/admin/login', ['uses' => 'LoginController@index', 'as' => 'login']);
 	Route::get('/admin/logout', ['uses' => 'LoginController@logout', 'as' => 'logout']);
@@ -73,6 +71,11 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/time_list', ['uses' => 'BookController@api_time_list', 'as' => 'apiTimeList']);
 		
 	});
+
+	//frontend react
+	Route::get('/{path?}', ['uses' => 'BookController@index', 'as' => 'book', 'where' => ['path' => '.*']]);
 });
+
+
 
 
