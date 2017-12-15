@@ -19,6 +19,7 @@ class BookController extends Controller
 		$view_data = [];
 
 		return view('book', $view_data);
+		
 	}
 
 	public function api_shop_list(Request $request)

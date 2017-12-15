@@ -1,5 +1,7 @@
 // 導覽列
 
+import { LinkContainer } from 'react-router-bootstrap';
+
 const Navbar = ReactBootstrap.Navbar,
 Nav_ = ReactBootstrap.Nav,
 NavItem = ReactBootstrap.NavItem,
@@ -15,15 +17,19 @@ class Nav extends React.Component{
           <Navbar inverse collapseOnSelect>
           <Navbar.Header>
             <Navbar.Brand>
-              <span onClick={this.props.toIndex} style={{cursor: "pointer"}}>泰和殿 Wat po</span>
+              <LinkContainer to="/">
+                <span style={{cursor: "pointer"}}>泰和殿 Wat po</span>
+              </LinkContainer>
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav_>
-              <NavItem onClick={()=>{this.props.toReservation();}}>
-                預約服務
-              </NavItem>
+              <LinkContainer to="/reservation/0">
+                <NavItem>
+                  預約服務
+                </NavItem>
+              </LinkContainer>
             </Nav_>
             <Nav_ pullRight>
               <NavDropdown title="語言" id="basic-nav-dropdown">
