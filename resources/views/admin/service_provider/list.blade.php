@@ -171,6 +171,7 @@
                     },
                     success: function(data){
                         renderList(id);
+                        $("#serviceProviderName").val('');
                     },
                     error: function(e){
                         swal(
