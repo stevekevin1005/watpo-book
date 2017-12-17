@@ -42,6 +42,16 @@ let settings = [{
             }
           }
         ]
+      },
+      { 
+        test: /\.[ot]tf$/, 
+        loader: 'url-loader',
+        options:{
+          limit: 65000,
+          mimetype: "application/octet-stream",
+          name: "../fonts/[name].[ext]",
+          publicPath: "../assets"          
+        } 
       }
     ]
   },

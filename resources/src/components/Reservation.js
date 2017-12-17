@@ -4,6 +4,8 @@ import CheckDetail from "./Reservation/CheckDetail";
 import CheckService from "./Reservation/CheckService";
 import CheckTime from "./Reservation/CheckTime";
 import { Link } from 'react-router-dom';
+import { translate } from 'react-i18next';
+import {connect} from "react-redux";
 
 const Grid = ReactBootstrap.Grid,
     Row = ReactBootstrap.Row,
@@ -21,11 +23,13 @@ class Reservation extends React.Component{
         }
     }
     render(){
+        const { t } = this.props;
+
         // steps
         const currentStep = parseInt(this.props.match.params.step),
-              stepsData = ["選擇服務","選擇時間","確認細節"], pointer = {cursor: "pointer"}, currentStepStyle = {cursor:"pointer",color: "#914327"};
+              stepsData = [t("chooseService"),t("chooseTime"),t("checkDetails")], pointer = {cursor: "pointer"}, currentStepStyle = {cursor:"pointer",color: "#914327"};
         let steps = stepsData.map((step, index,arr)=>{
-                let divider = index < arr.length - 1 && <span> > </span>;
+                let divider = index < arr.length - 1 && <span> <i className="fa fa-angle-right" aria-hidden="true"></i> </span>;
                 if(currentStep > index)return (
                     <span key={index}>
                         <Link to={"/reservation/"+index}>
@@ -64,26 +68,28 @@ class Reservation extends React.Component{
         return(
             <Grid>
             <div className="reservationContainer">
-                <Row className="show-grid">
+                <Row className="reservationGrid">
                 <Col md={12}>
-                    <div style={{backgroundColor: "#F5F5F5",borderRadius:"16px",border:"solid 1px #E8E8E8", padding: "8px 16px"}}>
+                    <div className="steps">
                         {steps}
                     </div>
                 </Col>
                 {currentStep > 0 && <Col md={12} >
-                    <Link to={"/reservation/"+ (currentStep - 1)}><p className="prevStap">{"< 返回上一步"}</p></Link>
+                <p className="prevStap"><Link to={"/reservation/"+ (currentStep - 1)}><span><i className="fa fa-angle-left" aria-hidden="true"></i>{" "+t("prevStep")}</span></Link></p>
                 </Col>}
-                <Col md={12}>
-                    <div style={{padding:"16px 0"}}>
+                    <div className="reservationContent" style={{padding:"16px 0"}}>
                     {el}
                     </div>    
-                </Col>
                 <Col md={12}>
-                    <Link to = {"/reservation/"+(currentStep + 1)}>
+                    {currentStep < 2?<Link to = {"/reservation/"+(currentStep + 1)}>
                     <Button bsStyle="primary" bsSize="large" onClick={this.next}>
-                        {currentStep == 2?"送出":"下一步"}
+                        {t("nextStep")}
                     </Button>
-                    </Link>
+                    </Link>:
+                    <Button bsStyle="primary" bsSize="large" onClick={this.next}>
+                        {t("send")}
+                    </Button>
+                    }
                 </Col>
                 </Row>                
                 </div>
@@ -93,4 +99,5 @@ class Reservation extends React.Component{
     }
 }
 
-module.exports = Reservation;
+
+module.exports = translate()(Reservation);

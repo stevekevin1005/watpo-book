@@ -1,4 +1,6 @@
 // 負責寫資料(分店,服務)到global state
+import { translate } from 'react-i18next';
+import {connect} from "react-redux";
 
 const Button = ReactBootstrap.Button,
         Grid = ReactBootstrap.Grid,
@@ -13,21 +15,21 @@ class CheckService extends React.Component{
         super(props);
     }
     render(){
+        const { t } = this.props;
+
         return(
             <Grid>
-                <Row className="show-grid">
+                <Row>
                     <Col md={7}>
                         <FormGroup controlId="formControlsSelect">
-                            <ControlLabel>分店</ControlLabel>
+                            <ControlLabel bsClass="control-label branch">{t("branch")}</ControlLabel>
                             <FormControl componentClass="select" placeholder="select">
                                 <option value="select">select</option>
                                 <option value="other">...</option>
                             </FormControl>
                         </FormGroup>
-                    </Col>
-                    <Col md={7}>
                         <FormGroup controlId="formControlsSelect">
-                            <ControlLabel>服務</ControlLabel>
+                            <ControlLabel>{t("service")}</ControlLabel>
                             <FormControl componentClass="select" placeholder="select">
                                 <option value="select">select</option>
                                 <option value="other">...</option>
@@ -40,4 +42,5 @@ class CheckService extends React.Component{
     }
 }
 
-module.exports = CheckService;
+
+module.exports = translate()(CheckService);

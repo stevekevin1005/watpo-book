@@ -1,5 +1,8 @@
 // 負責寫資料(日期,時段)到global state
 
+import Calendar from "./Calendar";
+import {connect} from "react-redux";
+
 const Grid = ReactBootstrap.Grid,
 Row = ReactBootstrap.Row,
 Col = ReactBootstrap.Col,
@@ -15,22 +18,19 @@ class CheckTime extends React.Component{
             <Grid>
             <Row className="show-grid">
             <Col md={5}>
-                <div style={{backgroundColor: "#F5F5F5",borderRadius:"16px",border:"solid 1px #E8E8E8", padding: "8px 16px", height: "300px", margin: "16px 0", maxWidth: "90%"}}>
-                    日曆
-                </div>
+                <Calendar />
             </Col>
             <Col md={5}>
-                <div style={{height: "300px", overflowY:"auto", margin: "16px 0", maxWidth: "50%"}}>
-                    <ListGroup>
-                        <ListGroupItem>Item 1</ListGroupItem>
-                        <ListGroupItem>Item 2</ListGroupItem>
-                        <ListGroupItem>...</ListGroupItem>
-                        <ListGroupItem>...</ListGroupItem>
-                        <ListGroupItem>...</ListGroupItem>
-                        <ListGroupItem>...</ListGroupItem>
-                        <ListGroupItem>...</ListGroupItem>
-                        <ListGroupItem>...</ListGroupItem>
-                    </ListGroup>
+                <div className="timePeriods">
+                    <span className="timePeriod">19:00</span>
+                    <span className="timePeriod">19:00</span>
+                    <span className="timePeriod">19:00</span>
+                    <span className="timePeriod">19:00</span>
+                    <span className="timePeriod">19:00</span>
+                    <span className="timePeriod">19:00</span>
+                    <span className="timePeriod">19:00</span>
+                    <span className="timePeriod">19:00</span>
+                    <span className="timePeriod">19:00</span>
                 </div>
             </Col>
             </Row>

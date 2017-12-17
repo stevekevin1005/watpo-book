@@ -10,6 +10,13 @@ const reducers = {
       if(action.type=="TOGGLELOADING"){
         return action.payload;
       }else return state;
+    },
+    lang:
+    (state=null, action)=>{
+      if(action.type == "CHANGELANG"){
+        console.log(action.payload);
+        return action.payload;
+      }else return state;
     }
   };
 

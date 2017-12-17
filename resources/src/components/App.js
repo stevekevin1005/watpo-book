@@ -4,14 +4,15 @@ import Nav from "./Nav";
 import Landpage from "./Landpage";
 import Reservation from "./Reservation";
 import { Switch, Route, BrowserRouter } from "react-router-dom";
-
+import i18n from '../i18n';
+import {connect} from "react-redux";
 
 class App extends React.Component{
     constructor(props){
         super(props);
     }
     componentDidReceiveProps(){
-        
+
     }
     render(){
         return(
