@@ -1,4 +1,6 @@
 // 負責寫資料(師傅,人數,房號,姓名,電話)到global state
+import { translate } from 'react-i18next';
+import {connect} from "react-redux";
 
 const Button = ReactBootstrap.Button,
 Grid = ReactBootstrap.Grid,
@@ -14,26 +16,34 @@ class CheckDetail extends React.Component{
         super(props);
     }
     render(){
+        const { t } = this.props;
+
         return(
             <Grid>
             <Row className="show-grid">
             <FormGroup controlId="formControlsSelect">
                 <Col md={5}>
-                        <ControlLabel>服務人員</ControlLabel>
+                        <ControlLabel>{t("operator")}</ControlLabel>
                         <FormControl componentClass="select" placeholder="select">
                             <option value="select">select</option>
                             <option value="other">...</option>
                         </FormControl>
-                        <ControlLabel>房號</ControlLabel>
+                        <FormControl.Feedback />
+                        <HelpBlock></HelpBlock>
+                        <ControlLabel>{t("roomNumber")}</ControlLabel>
                         <FormControl componentClass="select" placeholder="select">
                             <option value="select">select</option>
                             <option value="other">...</option>
                         </FormControl>
-                        <ControlLabel>人數</ControlLabel>
+                        <FormControl.Feedback />
+                        <HelpBlock></HelpBlock>
+                        <ControlLabel>{t("guestNum")}</ControlLabel>
                         <FormControl componentClass="select" placeholder="select">
                             <option value="select">select</option>
                             <option value="other">...</option>
                         </FormControl>
+                        <FormControl.Feedback />
+                        <HelpBlock></HelpBlock>
                </Col>
                
                <Col md={1}>
@@ -41,14 +51,14 @@ class CheckDetail extends React.Component{
                </Col>
 
                <Col md={5}>
-                    <ControlLabel>預約人姓名</ControlLabel>
+                    <ControlLabel>{t("reservatorName")}</ControlLabel>
                     <FormControl
                         type="text"
                         placeholder="Enter text"
                     />
                     <FormControl.Feedback />
                     <HelpBlock></HelpBlock>
-                    <ControlLabel>連絡電話</ControlLabel>
+                    <ControlLabel>{t("contactNumber")}</ControlLabel>
                     <FormControl
                         type="text"
                         placeholder="Enter text"
@@ -63,4 +73,5 @@ class CheckDetail extends React.Component{
     }
 }
 
-module.exports = CheckDetail;
+
+module.exports = translate()(CheckDetail);

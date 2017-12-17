@@ -1,10 +1,31 @@
 $brown: #443324
 $darkBrown: #38291d
 $lightBrown: #684f38
+$highlight: #9e5334
 
+// Noto Serif CJK tc
+@font-face
+  font-family: "title"
+  src: url('../fonts/title.otf')
+// Noto Sans CJK tc
+@font-face
+  font-family: "sub"
+  src: url('../fonts/sub.otf')
+
+
+@mixin scrollBar($color)
+  &::-webkit-scrollbar-track
+    border: 1px solid $color
+    background-color: rgba(255,255,255,0.2)
+  &::-webkit-scrollbar
+    width: 6px
+    background-color: rgba(255,255,255,0.2)
+  &::-webkit-scrollbar-thumb
+    background-color: $color
 
 *
-  font-family: 微軟正黑體
+  font-family: 微軟正黑體, Helvetica
+  +scrollBar($brown)
 
 $breakpoints: ("phone":400px,"phone-wide":480px,"phablet":560px,"tablet-small": 640px,"tablet":768px,"tablet-wide":1024px,"desktop":1248px,"desktop-wide": 1440px)
 
@@ -18,6 +39,8 @@ $breakpoints: ("phone":400px,"phone-wide":480px,"phablet":560px,"tablet-small": 
 
 body
   background-color: #f9f7f9
+  min-width: 287px
+  overflow-x: hidden
 
 .divider
   width: 1px
@@ -37,43 +60,87 @@ body
   background-size: cover
   margin-bottom: 16px
   border-radius: 16px
+  box-shadow: inset 0px 0px 3px 1px rgba(0,0,0,.2)
 
-.topContainer
+.landpage_top
   padding: 48px 32px
   text-align: center
-  height: 100vh
+  height: 95vh
+  & .topContainer
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%,-50%)
+    animation: emerge 2s 1 both
+
+@keyframes emerge
+  0%
+    opacity: 0
+    transform: translate(-50%,0%)
+  100%
+    opacity: 1
+    transform: translate(-50%,-50%)
 
 .topBg
+  opacity: .9
+  width: 100%
+  height: 95vh
+  box-shadow: inset 0px 0px 10px 5px rgba(0,0,0,.2)
+  position: absolute
   background-image: url(../images/bg.jpg)
   background-repeat: no-repeat
   background-size: cover
   background-position: 50% 50%
   top: 0
-  width: 100%
-  height: 100vh
-  position: absolute
-  z-index: -1
   left: 0
+  z-index: -2
+  background-attachment: fixed
+  &::after
+    content: attr(data-arrow)
+    font-family: "FontAwesome"
+    background-color: #f9f7f9
+    border-radius: 30px
+    position: absolute
+    top: 95%
+    left: 50%
+    transform: translateX(-50%)
+    color: $brown
+    width: 63px
+    height: 60px
+    line-height: 60px
+    text-align: center
+    z-index: -1
 
 .reservationContainer
   padding: 16px 32px
   background-color: rgba(255,255,255,.7)
   border-radius: 16px
   box-shadow: 0 0 5px 2px rgba(0,0,0,.2)
-h3
+  margin-top: 70px
+
+.sectionTitle
+  font-family: title
+  position: relative
   text-align: center
   font-weight: bold
-  padding: 10px
+  padding: 30px
+  z-index: 1
   &::after
     content: ""
-    top: 48px
-    width: 90vw
+    position: absolute
     left: 50%
+    bottom: 20px
+    width: 90%
     transform: translateX(-50%)
-    height: 5px
-    border-radius: 10em
-    width: 90vw
-    color: brown
+    border-bottom: solid 2px lightGray
+
+h4, h5
+  font-weight: bold
+  & i
+    color: $highlight
+
+h4
+  font-family: sub
 
 .btn-primary
   background-color: $brown
@@ -89,6 +156,8 @@ h3
   &:focus:active
     background-color: $darkBrown
 
+
+// navbar
 .navbar-inverse .navbar-nav > li > a, .navbar-inverse .navbar-brand
   color: white
 
@@ -96,11 +165,15 @@ h3
   background-color: $brown
 
 .navbar-inverse
+  position: fixed
   background-color: $brown
   border: none
   color: white
   border-radius: 0
   box-shadow: 1px 1px 3px 1px rgba(71, 53, 37,.3)
+  margin-bottom: 0
+  width: 100vw
+  z-index: 10
 
 .navbar-nav > .active
   background-color: $darkBrown
@@ -108,30 +181,232 @@ h3
 .navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover
   background-color: $darkBrown
 
+.navbar-brand
+  font-family: title
+  cursor: pointer
+
+.navbar-toggle
+  border-color: $darkBrown
+  &:hover
+    background-color: $lightBrown
+  &:focus
+    background-color: $darkBrown
+  &:hover:focus
+    background-color: $darkBrown
+
+.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover
+  background-color: $darkBrown
+.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover
+  background-color: $darkBrown
+
 a
   color: $brown
+  &:hover
+    color: $highlight
 
 .mainBtn
   padding-top: 16px
   padding-bottom: 16px
+  margin-top: 25px
+
+.title
+  font-size: 10rem
+  
+.sub
+  font-size: 6rem
+  max-width: 95vw
 
 .title, .sub
   text-shadow: 2px 2px 1px rgba(0,0,0,.3)
+  font-family: title
 
-.title
-  font-size: 7rem
-.sub
-  font-size: 5rem
+.reservationGrid > .col-md-12 > .reservationContent > .container
+  width: unset
 
-.form-control
-  max-width: 90%
-
-.reservationContainer > .container
-  padding: 16px
+.steps
+  background-color: #F5F5F5
+  border-radius: 16px
+  border: solid 1px #E8E8E8
+  padding: 8px 16px
+  font-weight: bold
 
 .prevStep
   cursor: pointer
   margin: 16px 0
 
+
+.branch
+  padding-top: 8px
+
 p
   margin: 10px 0
+
+.calendar
+  border-radius: 16px
+  background-color: white
+  margin-bottom: 16px
+  box-shadow: 1px 1px 3px 1px rgba(0,0,0,.3)
+  & span
+    text-align: center
+  & .year, .month
+    text-align: center
+  & .year
+    background-color: $brown
+    border-radius: 13px 13px 0 0
+    color: white
+    margin: 0
+    padding: 8px 0
+  & .month
+    margin: 0
+    position: relative
+    color: white
+    padding: 8px
+    background-color: $brown
+    box-shadow: 0 2px 3px 1px rgba(0,0,0,.1)
+    padding-top: 0
+  & .weekDays
+    margin: 0
+    padding: 10px
+    font-weight: bold
+    & span
+      border-radius: 30px
+      position: relative
+      color: white
+      z-index: 1
+      &::after
+        content: ""
+        width: 25px
+        height: 25px
+        position: absolute
+        top: 50%
+        left: 50%
+        transform: translate(-50%,-50%)
+        background-color: $lightBrown
+        z-index: -1
+        border-radius: 16px
+  & .days
+    width: 100%
+    padding: 10px
+    margin: 0
+    padding-top: 0
+    & .day
+      padding: 5px 0
+      cursor: pointer
+      z-index: 1
+      position: relative
+      &:hover
+        color: white
+        &::after
+          content: ""
+          width: 25px
+          height: 25px
+          position: absolute
+          top: 50%
+          left: 50%
+          transform: translate(-50%,-50%)
+          background-color: $highlight
+          z-index: -1
+          border-radius: 16px
+  & .next, .prev
+    position: absolute
+    cursor: pointer
+    &:hover
+      color: $highlight
+  & .prev
+    left: 16px
+  & .next
+    right: 16px
+
+.timePeriods
+  border-radius: 16px
+  border: solid 1px #E8E8E8
+  height: 300px
+  overflow-y: auto
+  padding: 8px
+  background-color: #F5F5F5
+  box-shadow: inset 1px 1px 3px 1px rgba(0,0,0,.2)
+  +scrollBar(lightgray)
+  & .timePeriod
+    border-radius: 10px
+    display: inline-block
+    padding: 5px 10px
+    width: 45%
+    margin: 5px 2.5%
+    background-color: rgba(255,255,255,.5)
+    cursor: pointer
+    box-shadow: 1px 1px 3px 1px rgba(0,0,0,.2)
+    &:hover
+      background-color: $highlight
+      color: white
+
+.landpageBtnContainer
+  width: 300px
+  margin: 0 auto
+  max-width: 90%
+
+.contentBlock
+  border-radius: 16px
+  border: solid 1px #E8E8E8
+  padding: 16px
+  background-color: #F5F5F5
+  box-shadow: inset 1px 1px 3px 1px rgba(0,0,0,.2)
+  & p
+    margin: 0
+
+.sectionItem
+  margin: 16px 0
+
+.navbar > .container
+  min-width: 90%
+
+footer
+  position: relative
+  padding: 16px 0
+  color: white
+  text-align: center
+  margin-top: 150px
+  &::after
+    content: ""
+    width: 150vw
+    position: absolute
+    bottom: 0
+    left: -50%
+    box-shadow: 0 -3px 1px 1px rgba(0,0,0,.1)
+    background-color: $brown
+    height: 100%
+    z-index: -1
+  & .fa
+    cursor: pointer
+    font-size: 32px
+    margin: 10px
+  & a
+    color: white
+
+@media (min-width: 768px)
+  .reservationContent .container
+    width: unset
+
++mq("desktop",min)
+  .timePeriods
+    max-width: 70%
+  .sectionItem
+    margin: 0
++mq("phone-wide",max)
+  .title
+    font-size: 7rem
+  .sub
+    font-size: 5rem
+  .timePeriods
+    max-width: unset
+    height: 200px
+  .reservationContainer
+    & .btn-primary
+      width: 100%
+  .img
+    height: 200px
+  .sectionItem
+    margin: 16px 8px
+  .map
+    margin: 16px 0
+  .branch
+    padding-top: 0

@@ -9,12 +9,18 @@ import { I18nextProvider } from 'react-i18next';
 
 require("./assets/stylesheets/style.sass");
 
-const Index = (props)=>(
-  <Provider store={store}>
-  	<I18nextProvider i18n={ i18n }>
-      <App/>
-  	</I18nextProvider>
-  </Provider>      
-);
+class Index extends React.Component{
+  constructor(props){
+    super(props);
+  }
+  render(){
+    return(
+      <Provider store={store}>
+        <I18nextProvider i18n={ i18n }>
+          <App/>
+        </I18nextProvider>
+      </Provider>);
+  }
+}
 
 ReactDOM.render(<Index/>,document.querySelector("#container"));

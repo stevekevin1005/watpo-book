@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { translate } from 'react-i18next';
+import i18n from '../i18n';
+import {connect} from "react-redux";
 // 首頁
 
 const Button = ReactBootstrap.Button,
       Grid = ReactBootstrap.Grid,
       Row = ReactBootstrap.Row,
-      Col = ReactBootstrap.Col,
-      Well = ReactBootstrap.Well;
+      Col = ReactBootstrap.Col;
 
 class Landpage extends React.Component{
     constructor(props){
@@ -15,85 +15,111 @@ class Landpage extends React.Component{
     }
     render(){
         const { t } = this.props;
-        console.log(t);
+
         const branchData = [{
-            name: "民生會館",
-            time: "中午 PM 12:00 ~ 凌晨 AM 04:00 ",
-            address: "台北市中山區民生東路 2 段 88 號",
+            name: t("location1"),
+            time: "12:00 p.m. ~ AM 04:00 a.m.",
+            address: t('watpoAddr1'),
             phone: "( 02 ) 2581- 3338"
         },{
-            name: "光復會館",
-            time: "上午 AM 11:00 ~ 凌晨 AM 03:00",
-            address: "台北市松山區光復北路34 號",
+            name: t("location2"),
+            time: "11:00 a.m. ~ 03:00 a.m.",
+            address: t('watpoAddr2'),
             phone: "( 02 ) 2570- 9393"
         }],
         branches = branchData.map((branch, index)=>{
             return (
-                
-                <Well key={index}>
-                <p><b>{branch.name}</b><br/>
-                {"營業時間: "+branch.time}<br/>
-                {"地址: "+branch.address}<br/>
-                {"預約專線: "+branch.phone}</p>
-                </Well>
-                
+                <div>
+                <h4><i className="fa fa-caret-right" aria-hidden="true"></i>{" "+branch.name}</h4>
+                <div className="contentBlock" key={index}>
+                <p>
+                {t('bussinessHours') + " : " +branch.time}<br/>
+                {t('address') + " : " +branch.address}<br/>
+                {t('registrationNumber') + " : " +branch.phone}</p>
+                </div>
+                </div>
             );
         });
         return(
               <Grid>
-                <Row className="show-grid">
+                <Row className="landpage_top">
                     <div className="topContainer">
-                    <h1 className="cwtexqfangsong title">泰和殿</h1>
-                    <h2 className="cwtexqfangsong sub">泰式養生會館</h2>
-                        <div style={{width: "300px", margin: "0 auto", maxWidth: "90vw"}}>
+                    <h1 className="title">{t("Watpo")}</h1>
+                    <h2 className="sub">{t("ThaiTraditionalMedicalMassage")}</h2>
+                        <div className="landpageBtnContainer">
                         <LinkContainer to="/reservation/0">
                             <Button bsStyle="primary" bsSize="large" className="btn mainBtn" block>
-                                {t('book')}
+                                <i className="fa fa-pencil" aria-hidden="true"></i>
+                                {"  " + t('book')}
                             </Button>
                         </LinkContainer>
                         </div>
                     </div>
                 </Row>
-                <Row className="show-grid">
+                <Row className="landpage_section">
                     <Col md={12}>
-                        <h3>服務項目</h3>
+                        <h3 className="sectionTitle"><i className="fa fa-list-alt" aria-hidden="true"></i>{" " + t("services")}</h3>
                     </Col>
                     <Col md={5}>
                         <div className="img"></div>
                     </Col>
                     <Col md={7}>
-
-                        <Well>    
-                            <p><b>泰式全身去角質+芳香精油SPA 經典價 2200 元</b><br/>
-                            隔絕身心壓力及都市污染，泰和殿為您準備的洗塵儀式開始，您今天的 SPA 專屬時空已經替您預留。沐浴的開始即是SPA芳香舒壓的開始 ~~~ 
-                            </p>
-                        </Well>
-                        <Well>
-                            <p><b>泰式芳香精油SPA (2小時)</b><br/>
-                            採用預先挑選的高級芳香精油，由專業的按摩師配合泰式舒壓使身體充分吸收美好的精油，並使全身徹底舒展放鬆
-                            </p>
-                        </Well>
-                        <Well>
-                            <p><b>泰式古法指壓 (2小時)</b><br/>
-                            泰國古式按摩源於印度的瑜珈術泰式是在地板上或高床上進行，按摩師運用雙手、手指、手軸和膝蓋、臂膀和腳的力量，循著身體各部位施以按壓、揉捏、彎曲、扭轉等動作，使身體更加放鬆及達到舒壓的效果，並同時促進血液循環。
-                            </p>
-                        </Well>
+                        <div className="sectionItem">
+                            <h4><i className="fa fa-caret-right" aria-hidden="true"></i> {t("massageAndSpa")+" (2" + t("hours") +")"}</h4>
+                            <h5>{t("price1")+" "+t("servicePrice1")}</h5>
+                            <div className="contentBlock">    
+                                <p>
+                                {t("massageAndSpaDes")}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="sectionItem">
+                            <h4><i className="fa fa-caret-right" aria-hidden="true"></i> {t("ThaiOilMassage")+" (2" + t("hours") +")"}</h4>
+                            <h5>{t("price2") +" "+t("servicePrice2")}</h5>
+                            <div className="contentBlock">
+                                <p>
+                                    {t("ThaiOilMassageDes")}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="sectionItem">
+                            <h4><i className="fa fa-caret-right" aria-hidden="true"></i>{t("ThaiTraditionalMassage")+" (2" + t("hours") +")"}</h4>
+                            <h5>{t("price3") + " " + t("servicePrice3")}</h5>
+                            <div className="contentBlock">
+                                <p>
+                                {t("ThaiTraditionalMassageDes")}
+                                </p>
+                            </div>
+                        </div>
                     </Col>
                 </Row>
-                <Row>
+                <Row className="landpage_section">
                 <Col md={12}>
-                    <h3>服務據點</h3>
+                    <h3 className="sectionTitle"><i className="fa fa-building-o" aria-hidden="true"></i>{" "+t("locations")}</h3>
                 </Col>
                     <Col md={5}>
                         {branches}
                     </Col>
                     <Col md={7}>
-                        <Well>地圖</Well>
+                        <div className="contentBlock sectionItem map">(map)</div>
                     </Col>
                 </Row>
-                <div className="topBg"></div>
+                <div className="topBg" data-arrow="&#xf078;"></div>
+                <Row className="footerContainer">
+                <Col md={12}>
+                <footer>
+                    <a href="https://www.facebook.com/watpomassages" target="_blank"><i className="fa fa-facebook-square" aria-hidden="true"></i></a><br/>
+                    {t("WatpoThaiTraditionalMedicalMassage")}<br/>
+                    {t("registrationNumber")}: ( 02 ) 2581- 3338<br/>
+                    {t("bussinessHours")}: 12:00 p.m. ~ 04:00 a.m.<br/>
+                    {t("watpoAddr1")}
+                </footer>
+                </Col>
+                </Row>
               </Grid>
         );
     }
 }
+
+
 export default translate()(Landpage); 
