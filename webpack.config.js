@@ -37,7 +37,7 @@ let settings = [{
             loader: 'url-loader',
             options: {
               limit: 10000, /* file smaller than 10kB would be transformed into base64 */
-              name: "../images/book/[name].[ext]",
+              name: "/images/book/[name].[ext]",
               publicPath: "../assets"
             }
           }
@@ -49,7 +49,7 @@ let settings = [{
         options:{
           limit: 65000,
           mimetype: "application/octet-stream",
-          name: "../fonts/[name].[ext]",
+          name: "/fonts/[name].[ext]",
           publicPath: "../assets"          
         } 
       }
