@@ -9,6 +9,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import LoadingAnimation from "./LoadingAnimation";
 import clearReservation from "../dispatchers/clearReservation";
+import clearSourceData from "../dispatchers/clearSourceData";
 
 const Grid = ReactBootstrap.Grid,
     Row = ReactBootstrap.Row,
@@ -20,19 +21,27 @@ class Reservation extends React.Component{
         super(props);
     }
     componentWillReceiveProps(nextProps){
-        console.log("reservation componentWillReceiveProps");
-        console.log(nextProps);
+
         // 清資料
         const reservation = this.props.reservation;
         switch(nextProps.match.params.step){
-            case 0:
+            case "0":
                 // step1 => step0
-                if(reservation.time || reservation.date) this.props.clearReservation("step1");
+                if(reservation.time!=undefined || reservation.date!=undefined){
+                    this.props.clearReservation("step1");
+                    this.props.clearSourceData("selectedDetail");
+                    this.props.clearSourceData("timeList");
+                }
                 break;
-            case 1:
+            case "1":
                 // step2 => step1
-                if(((reservation.operator || reservation.room) || (reservation.guestNum ||reservation.name)) || reservation.contactNumber) this.props.clearReservation("step2");
+                if(((reservation.operator!=undefined || reservation.room!=undefined) || (reservation.guestNum!=undefined ||reservation.name!=undefined)) || reservation.contactNumber!=undefined){
+                    this.props.clearReservation("step2");
+                } 
                 break;
+            case "2":
+                if(nextProps.sourceData.timeList === undefined || nextProps.sourceData.selectedDetail === undefined)
+                    this.props.history.push('/reservation/0');
         }
     }
     render(){
@@ -75,17 +84,14 @@ class Reservation extends React.Component{
                 break;
         }
         if(isDisabled){
-            console.log("no link");
             button = (<Button bsStyle="primary" bsSize="large" disabled={isDisabled}>
                 {currentStep==2?t("send"):t("nextStep")}
             </Button>);
         }else if(currentStep == 2){
-            console.log("send / no link");
             button = (<Button bsStyle="primary" bsSize="large">
                 {t("send")}
             </Button>);
         }else{
-            console.log("link added");
             button = (<Link to = {"/reservation/"+(currentStep + 1)}>
             <Button bsStyle="primary" bsSize="large">
                 {t("nextStep")}
@@ -139,13 +145,15 @@ class Reservation extends React.Component{
 const mapStateToProps = (state)=>{
     return {
         loading: state.loading,
-        reservation: state.reservation
+        reservation: state.reservation,
+        sourceData: state.sourceData
     }
 }
 
 const mapDispatchToProps = (dispatch)=>{
     return bindActionCreators({
-        clearReservation: clearReservation
+        clearReservation: clearReservation,
+        clearSourceData: clearSourceData
     },dispatch);
 }
   

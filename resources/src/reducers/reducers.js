@@ -45,8 +45,8 @@ const reducers = {
       }
     },
     reservation:
-    (state={shop:"1", service:"1"}, action)=>{
-      let result = state?JSON.parse(JSON.stringify(state)):{};
+    (state={shop:"-1", service:"-1", guestNum: "-1"}, action)=>{
+      let result = state?JSON.parse(JSON.stringify(state)):{shop:"-1", service:"-1", guestNum: "-1"};
       switch(action.type){
         // generally are ids of data
         case "SET_SHOP":
@@ -83,12 +83,12 @@ const reducers = {
         case "CLEAR_STEP2":
           result.operator = undefined;
           result.room = undefined;
-          result.guestNum = undefined;
+          result.guestNum = 1;
           result.name = undefined;
           result.contactNumber = undefined;
           return state;
         case "CLEAR":
-          return {};
+          return {shop:"-1", service:"-1", guestNum: "-1"};
         default:
           return state;
       }

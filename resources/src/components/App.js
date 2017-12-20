@@ -11,11 +11,7 @@ import clearReservation from "../dispatchers/clearReservation";
 
 class App extends React.Component{
     constructor(props){
-        super(props);
-    }
-    componentWillReceiveProps(nextProps){
-        // NOT FIRED SHOULD FIND SOME OTHER WAYS
-        if(this.props.reservation !== null) this.props.clearReservation("all");
+        super(props);       
     }
     render(){
         return(

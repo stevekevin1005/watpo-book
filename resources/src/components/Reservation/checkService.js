@@ -20,6 +20,9 @@ class CheckService extends React.Component{
         this.setReservation = this.setReservation.bind(this);
     }
     componentDidMount(){
+        this.props.setReservation("shop","1");
+        this.props.setReservation("service","1");
+        // get data of shops and services
         const sourceData = this.props.sourceData;
         // check if data is already loaded
         if(sourceData.shops && sourceData.services) return;

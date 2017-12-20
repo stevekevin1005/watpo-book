@@ -57,9 +57,21 @@ class BookController extends Controller
 		try{
 			
 			$date = $request->date;
-			$service = Service::where('id', $request->service_id)->first();
+			$shop_id = $request->shop_id;
+			$service_id = $request->service_id;
 
-			$shop = Shop::where('id', $request->shop_id)->first();
+			if(!$date){
+				throw new Exception("缺少日期", 1);
+			}
+			if(!$shop_id){
+				throw new Exception("缺少店家ID", 1);
+			}
+			if(!$service_id){
+				throw new Exception("缺少服務ID", 1);
+			}
+			$service = Service::where('id', $service_id)->first();
+
+			$shop = Shop::where('id', $shop_id)->first();
 			
 			$start_time = strtotime($date.' '.$shop->start_time);
 			$end_time = strtotime($date.' '.$shop->end_time);
@@ -72,11 +84,11 @@ class BookController extends Controller
 			$i = 0;
 			while($start_time <= $end_time){
 				$time_list[$i]['time'] = date("H:i:s", $start_time);
-				$time_list[$i]['detail'] = $this->time_option($start_time, $service->time , $request->shop_id);
+				$time_list[$i]['detail'] = $this->time_option($start_time, $service->time , $shop_id);
 				$start_time = strtotime("+30 min", $start_time); 
 				$i++;
 			}
-			return response()->json($time_list, 400);
+			return response()->json($time_list, 200);
 		}
 		catch(Exception $e){
 			return response()->json($e->getMessage(), 400);
@@ -95,8 +107,10 @@ class BookController extends Controller
 		
 		$result['service_provider_list'] = null;
 		foreach($service_providers as $service_provider){
-			if(is_null($service_provider->orders()->where('start_time', '<', date("Y/m/d H:i:s", $end_time))->where('end_time', '>', date("Y/m/d H:i:s", $start_time))->first())){
-				$result['service_provider_list'][] = $service_provider;
+			if(is_null($service_provider->leaves()->where('start_time', '<', date("Y/m/d H:i:s", $end_time))->where('end_time', '>', date("Y/m/d H:i:s", $start_time))->first())){
+				if(is_null($service_provider->orders()->where('start_time', '<', date("Y/m/d H:i:s", $end_time))->where('end_time', '>', date("Y/m/d H:i:s", $start_time))->first())){
+					$result['service_provider_list'][] = $service_provider;
+				}
 			}
 		}
 
@@ -104,10 +118,27 @@ class BookController extends Controller
 		$result['room'] = null;
 		foreach($rooms as $room){
 			if(is_null($room->orders()->where('start_time', '<', date("Y/m/d H:i:s", $end_time))->where('end_time', '>', date("Y/m/d H:i:s", $start_time))->first())){
-				$result['room'][] = $room;
+				if($room->shower){
+					$result['room']['shower'][$room->person][] = $room;
+				}
+				else{
+					$result['room']['normal'][$room->person][] = $room;
+				}
 			}
 		}
 
 		return $result;
+	}
+
+	public function api_order(Request $request){
+		try{
+			$shop_id = $request->shop_id;
+		}
+		catch(Exception $e){
+			return response()->json($e->getMessage(), 400);
+		}
+		catch(\Illuminate\Database\QueryException $e){
+			return response()->json('資料庫錯誤, 請洽系統商!', 400);
+		}
 	}
 }

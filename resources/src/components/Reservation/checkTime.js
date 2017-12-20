@@ -6,6 +6,7 @@ import {bindActionCreators} from "redux";
 import toggleLoading from "../../dispatchers/toggleLoading";
 import setReservation from "../../dispatchers/setReservation";
 import setSourceData from "../../dispatchers/setSourceData";
+import clearSourceData from "../../dispatchers/clearSourceData";
 
 const Grid = ReactBootstrap.Grid,
     Row = ReactBootstrap.Row,
@@ -25,44 +26,38 @@ class CheckTime extends React.Component{
     getTimePeriods(year,month,day){
         const that = this, date = year+"/"+month+"/"+day,
               csrf_token = document.querySelector('input[name="_token"]').value;
-        if(!this.state.touched) this.setState({hint: ""});
 
-        console.log(csrf_token);
+        // clear selected detail index
+        this.props.clearSourceData("selectedDetail");
 
+        // set loading state
+        that.setState({hint: ""});
         this.props.toggleLoading(true);
+
         this.props.setReservation("date", date);
-        axios({
-                method: "get",
-                url: "../api/time_list",
-                params: {
-                    shop_id: this.props.reservation.shop,
-                    service_id: this.props.reservation.service,
-                    date: date
-                },
-                headers: {'X-CSRF-TOKEN': csrf_token},
-                responseType: 'json'
-            })
-            .then(function (response) {
-                console.log(response);
-                if(response.statusText == "OK"){
-                    that.props.setSourceData(response.data);
-                    that.props.toggleLoading(false);
-                    if(response.data.length === 0) that.setState({hint: "目前無符合時段"});
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
+        this.props.setSourceData("timelist",
+            {
+                shop: this.props.reservation.shop, 
+                service: this.props.reservation.service,
+                date: date,
+                token: csrf_token
+            },
+            (length)=>{
+                that.props.toggleLoading(false);
+                if(length === 0) that.setState({hint: "目前無符合時段"});
+            },()=>{
                 that.props.toggleLoading(false);
                 that.setState({hint: "某處發生錯誤，請重新嘗試"});
             });
-        
     }
     setTime(event){
-        const value = event.target.innerHTML;
-        console.log(value);
+        const value = event.target.innerHTML,
+              index = event.target.getAttribute("data-index");
         this.props.setReservation("time", value);
+        this.props.setSourceData("selectedDetail", parseInt(index));
     }
     render(){
+        if(this.props.reservation.shop == "-1" || this.props.reservation.service == "-1") location.href = '../reservation/0';
         return(
             <Grid>
             <Row className="show-grid">
@@ -71,8 +66,10 @@ class CheckTime extends React.Component{
             </Col>
             <Col md={5}>
                 <div className="timePeriods">
-                    {this.state.timePeriods?this.props.timeList.map((time,index)=>{
-                        return (<span className="timePeriod" key={index} data-index={index} onClick={this.setTime}>{time.time}</span>);
+                    {this.props.sourceData.timeList?this.props.sourceData.timeList.map((time,index)=>{
+                        if(time.detail.service_provider_list === null || time.detail.room === null) return (<span className="timePeriod" key={index} data-index={index}>{time.time}</span>);
+                        else if(index === this.props.sourceData.selectedDetail) return (<span className="timePeriod selectedTime" key={index} data-index={index}>{time.time}</span>);
+                        return (<span className="timePeriod available" key={index} data-index={index} onClick={this.setTime}>{time.time}</span>);
                     }):<p>{this.state.hint}</p>}
                 </div>
             </Col>
@@ -94,7 +91,8 @@ const mapDispatchToProps = (dispatch)=>{
     return bindActionCreators({
         toggleLoading: toggleLoading,
         setReservation: setReservation,
-        setSourceData: setSourceData
+        setSourceData: setSourceData,
+        clearSourceData: clearSourceData
     },dispatch);
   }
   

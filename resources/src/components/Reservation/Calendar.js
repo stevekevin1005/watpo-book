@@ -1,25 +1,28 @@
 import { translate } from 'react-i18next';
 import {connect} from "react-redux";
+import clearSourceData from "../../dispatchers/clearSourceData";
+import clearReservation from "../../dispatchers/clearReservation";
+import {bindActionCreators} from "redux";
 
 class Calendar extends React.Component{
     constructor(props){
         super(props);
         const date = new Date(),
               firstDay = new Date(date.getFullYear(),date.getMonth(),1),
-              lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-        this.state = {
+              lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate(),
+              inputtedDate = this.props.reservation.date?this.props.reservation.date.split("/"):null;
 
-            displayingYear: date.getFullYear(),
-            displayingMonth: date.getMonth() + 1, // 1-based
+        this.state = {
+            displayingYear: inputtedDate?inputtedDate[0]:date.getFullYear(),
+            displayingMonth: inputtedDate?inputtedDate[1]:date.getMonth() + 1, // 1-based
             firstWeekDay: firstDay.getDay(), // 1-based
             dayNum: lastDayOfMonth, // 0-based, 0=>禮拜天, 1=>禮拜一...
-
         };
+
         this.changeMonth = this.changeMonth.bind(this);
         this.selectDay = this.selectDay.bind(this);
     }
     changeMonth(date){
-
         // check if date if later than current date
         if(date.getTime() < new Date(new Date().getFullYear(), new Date().getMonth()).getTime()) return;
         if(date.getMonth > 11 || date.getMonth < 0) return;
@@ -35,6 +38,11 @@ class Calendar extends React.Component{
             firstWeekDay: firstDay.getDay(),
             dayNum: lastDayOfMonth
         });
+
+        // clear current displaying time periods
+        this.props.clearSourceData("timeList");
+        this.props.clearSourceData("selectedDetail");
+        this.props.clearReservation("step1");
     }
     selectDay(event){
         // send in year, month, day arguments
@@ -54,10 +62,8 @@ class Calendar extends React.Component{
                   :unit * 6 +"%"};
 
         for(let i = 1;i <= this.state.dayNum; i++){
-
-            if(i===1) days.push(<span key={i} className={i===selectedDay?"day selectedDay":"day"} style={firstDayStyle} onClick={this.selectDay}>{i}</span>);
-            else days.push(<span key={i} className={i===selectedDay?"day selectedDay":"day"} style={spanStyle} onClick={this.selectDay}>{i}</span>);
-
+                if(i===1) days.push(<span key={i} className={i===selectedDay?"day selectedDay":"day"} style={firstDayStyle} onClick={this.selectDay}>{i}</span>);
+                else days.push(<span key={i} className={i===selectedDay?"day selectedDay":"day"} style={spanStyle} onClick={this.selectDay}>{i}</span>);
         }
 
         return (<div className="calendar">
@@ -96,7 +102,14 @@ const mapStateToProps = (state)=>{
         reservation: state.reservation
     }
 }
+
+const mapDispatchToProps = (dispatch)=>{
+    return bindActionCreators({
+        clearSourceData: clearSourceData,
+        clearReservation: clearReservation
+    },dispatch);
+}
   
-Calendar = connect(mapStateToProps,null)(Calendar);  
+Calendar = connect(mapStateToProps,mapDispatchToProps)(Calendar);  
 
 module.exports = translate()(Calendar);

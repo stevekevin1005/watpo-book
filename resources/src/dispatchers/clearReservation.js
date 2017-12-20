@@ -1,8 +1,9 @@
-module.exports = (dataKey)=>{
+module.exports = (dataKey,fn)=>{
     // 0-based
     switch(dataKey){
         // date and time
         case "step1":
+        setTimeout(fn,500);
             return ({
                 type: "CLEAR_STEP1",
                 payload: null

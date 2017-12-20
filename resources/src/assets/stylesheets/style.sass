@@ -41,7 +41,7 @@ $breakpoints: ("phone":400px,"phone-wide":480px,"phablet":560px,"tablet-small": 
 
 body
   background-color: #f9f7f9
-  min-width: 287px
+  min-width: 314px
   overflow-x: hidden
 
 .divider
@@ -183,6 +183,7 @@ h4
   margin-bottom: 0
   width: 100vw
   z-index: 10
+  min-width: 314px
 
 .navbar-nav > .active
   background-color: $darkBrown
@@ -348,6 +349,7 @@ p
   padding: 8px
   background-color: #F5F5F5
   box-shadow: inset 1px 1px 3px 1px rgba(0,0,0,.2)
+  color: silver
   +scrollBar(lightgray)
   & .timePeriod
     border-radius: 10px
@@ -358,9 +360,16 @@ p
     background-color: rgba(255,255,255,.5)
     cursor: pointer
     box-shadow: 1px 1px 3px 1px rgba(0,0,0,.2)
-    &:hover
-      background-color: $highlight
-      color: white
+
+.timePeriods > .timePeriod.available
+  color: $brown
+  &:hover
+    background-color: $highlight
+    color: white
+
+.timePeriods > .timePeriod.selectedTime
+  color: white
+  background-color: orange
 
 .landpageBtnContainer
   width: 300px
