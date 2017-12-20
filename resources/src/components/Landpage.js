@@ -26,31 +26,50 @@ class Landpage extends React.Component{
     }
     render(){
         const { t } = this.props;
-
+        const map_style = {
+            width: 600,
+            height: 450,
+            border: 0
+        };
         const branchData = [{
             name: t("location1"),
             time: "12:00 p.m. ~ 04:00 a.m.",
             address: t('watpoAddr1'),
-            phone: "( 02 ) 2581- 3338"
+            phone: "( 02 ) 2581- 3338",
+            location_src: "https://www.google.com/maps/embed/v1/place?key=AIzaSyDF_ECD1dnac71XWyss7Asu_Q15pb7HbF4&q=place_id:ChIJD_320V2pQjQR7q6lHg9dZaA"
         },{
             name: t("location2"),
             time: "11:00 a.m. ~ 03:00 a.m.",
             address: t('watpoAddr2'),
-            phone: "( 02 ) 2570- 9393"
+            phone: "( 02 ) 2570- 9393",
+            location_src: "https://www.google.com/maps/embed/v1/place?key=AIzaSyDF_ECD1dnac71XWyss7Asu_Q15pb7HbF4&q=place_id:ChIJdbQig-qrQjQRA7uNkj6tkc4"
         }],
         branches = branchData.map((branch, index)=>{
             return (
                 <div>
-                <h4><i className="fa fa-caret-right" aria-hidden="true"></i>{" "+branch.name}</h4>
-                <div className="contentBlock" key={index}>
-                <p>
-                {t('bussinessHours') + " : " +branch.time}<br/>
-                {t('address') + " : " +branch.address}<br/>
-                {t('registrationNumber') + " : " +branch.phone}</p>
-                </div>
+                    <h4><i className="fa fa-caret-right" aria-hidden="true"></i>{" "+branch.name}</h4>
+                    <Row>
+                        <Col md={6}>
+                            <div className="contentBlock" key={index}>
+                                <p>
+                                {t('bussinessHours') + " : " +branch.time}<br/>
+                                {t('address') + " : " +branch.address}<br/>
+                                {t('registrationNumber') + " : " +branch.phone}
+                                </p>
+                            </div>
+                        </Col>
+                        <Col md={6}>
+                            <iframe
+                              frameborder="0" 
+                              style={map_style}
+                              src={branch.location_src} allowfullscreen>
+                            </iframe>
+                        </Col>
+                    </Row>  
                 </div>
             );
         });
+
         return(
               <Grid>
                 <Row className="landpage_top">
@@ -108,11 +127,8 @@ class Landpage extends React.Component{
                 <Col md={12}>
                     <h3 className="sectionTitle"><i className="fa fa-building-o" aria-hidden="true"></i>{" "+t("locations")}</h3>
                 </Col>
-                    <Col md={5}>
+                    <Col md={12}>
                         {branches}
-                    </Col>
-                    <Col md={7}>
-                        <div className="contentBlock sectionItem map">(map)</div>
                     </Col>
                 </Row>
                 <div className="topBg" data-arrow="&#xf078;"></div>
