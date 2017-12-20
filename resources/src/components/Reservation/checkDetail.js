@@ -32,9 +32,9 @@ class CheckDetail extends React.Component{
     componentDidMount(){
         const data = this.props.sourceData.timeList[this.props.sourceData.selectedDetail].detail;
         this.props.setReservation("operator", data.service_provider_list[0].id);
-        this.props.setReservation("room", flatten(data.room)[0].id);
+        this.props.setReservation("room", data.room[0].id);
         this.props.setReservation("guestNum", "1");
-        this.setState({maxGuestNum: flatten(data.room)[0].person});
+        this.setState({maxGuestNum: data.room[0].person});
     }
     setOperator(event){
         const value = event.target.options[event.target.selectedIndex].value;
@@ -89,7 +89,7 @@ class CheckDetail extends React.Component{
                         <HelpBlock></HelpBlock>
                         <ControlLabel>{t("roomNumber")}</ControlLabel>
                         <FormControl componentClass="select" placeholder="select" onChange={this.setRoom}>
-                            {flatten(data.room).map((room, index)=>{
+                            {data.room.map((room, index)=>{
                                 return (<option key={index} value={room.id} data-maxNum={room.person}>{room.name + " ( "+room.person + "人房, "+ (room.shower?"附":"無") + "衛浴)"}</option>);
                             })}
                         </FormControl>
@@ -134,18 +134,6 @@ class CheckDetail extends React.Component{
     }
 }
 
-
-function flatten(obj){
-    let rooms = Object.values(obj), flattened = [];
-    rooms.forEach((room)=>{
-        flattened = flattened.concat(Object.values(room));
-    });
-    flattened = flattened.reduce((arr, nextArr)=>{
-        return arr.concat(nextArr);
-    });
-    
-    return flattened;
-}
 
 const mapStateToProps = (state)=>{
     return {
