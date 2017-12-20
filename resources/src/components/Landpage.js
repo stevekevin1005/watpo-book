@@ -2,6 +2,10 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { translate } from 'react-i18next';
 import i18n from '../i18n';
 import {connect} from "react-redux";
+import clearReservation from "../dispatchers/clearReservation";
+import clearSourceData from "../dispatchers/clearSourceData";
+import {bindActionCreators} from "redux";
+
 // 首頁
 
 const Button = ReactBootstrap.Button,
@@ -13,12 +17,19 @@ class Landpage extends React.Component{
     constructor(props){
         super(props);
     }
+    componentDidMount(){
+        if(this.props.reservation !== null){
+            this.props.clearReservation("all");
+            this.props.clearSourceData("timeList");
+            this.props.clearSourceData("selectedDetail");
+        }
+    }
     render(){
         const { t } = this.props;
 
         const branchData = [{
             name: t("location1"),
-            time: "12:00 p.m. ~ AM 04:00 a.m.",
+            time: "12:00 p.m. ~ 04:00 a.m.",
             address: t('watpoAddr1'),
             phone: "( 02 ) 2581- 3338"
         },{
@@ -121,5 +132,13 @@ class Landpage extends React.Component{
     }
 }
 
+const mapDispatchToProps = (dispatch)=>{
+    return bindActionCreators({
+        clearReservation: clearReservation,
+        clearSourceData: clearSourceData
+    },dispatch);
+}
+  
+Landpage = connect(null, mapDispatchToProps)(Landpage);
 
 export default translate()(Landpage); 

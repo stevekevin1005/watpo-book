@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Hash, Exception, DB;
 use App\Models\Shop;
@@ -9,19 +7,15 @@ use App\Models\Service;
 use App\Models\ServiceProvider;
 use App\Models\Order;
 use App\Models\Room;
-
 class BookController extends Controller
 {
 	
-
 	public function index()
 	{
 		$view_data = [];
-
 		return view('book', $view_data);
 		
 	}
-
 	public function api_shop_list(Request $request)
 	{
 		try{
@@ -36,7 +30,6 @@ class BookController extends Controller
 			return response()->json('資料庫錯誤, 請洽系統商!', 400);
 		}
 	}
-
 	public function api_service_list(Request $request)
 	{
 		try{
@@ -51,7 +44,6 @@ class BookController extends Controller
 			return response()->json('資料庫錯誤, 請洽系統商!', 400);
 		}
 	}
-
 	public function api_time_list(Request $request)
 	{
 		try{
@@ -59,7 +51,6 @@ class BookController extends Controller
 			$date = $request->date;
 			$shop_id = $request->shop_id;
 			$service_id = $request->service_id;
-
 			if(!$date){
 				throw new Exception("缺少日期", 1);
 			}
@@ -70,17 +61,13 @@ class BookController extends Controller
 				throw new Exception("缺少服務ID", 1);
 			}
 			$service = Service::where('id', $service_id)->first();
-
 			$shop = Shop::where('id', $shop_id)->first();
 			
 			$start_time = strtotime($date.' '.$shop->start_time);
 			$end_time = strtotime($date.' '.$shop->end_time);
-
-
 			if($end_time <= $start_time){
 				$end_time = strtotime("+1 day", $end_time);
 			}
-
 			$i = 0;
 			while($start_time <= $end_time){
 				$time_list[$i]['time'] = date("H:i:s", $start_time);
@@ -98,7 +85,6 @@ class BookController extends Controller
 		}
 			
 	}
-
 	private function time_option($datetime, $service_time, $shower,$shop_id){
 		
 		$service_providers = ServiceProvider::where('shop_id', $shop_id)->get();
@@ -112,7 +98,6 @@ class BookController extends Controller
 				}
 			}
 		}
-
 		$rooms = Room::where('shop_id', $shop_id);
 		if($shower == 2){
 			$rooms = $rooms->where('shower', 1);
@@ -124,10 +109,8 @@ class BookController extends Controller
 				$result['room'][] = $room;
 			}
 		}
-
 		return $result;
 	}
-
 	public function api_order(Request $request){
 		try{
 			$shop_id = $request->shop_id;
@@ -139,7 +122,6 @@ class BookController extends Controller
 			$service_provider_id = $request->service_provider_id;
 			$name = $request->name;
 			$phone = $request->phone;
-
 			if(!$start_time){
 				throw new Exception("缺少開始時間", 1);
 			}
@@ -173,7 +155,6 @@ class BookController extends Controller
 			if(is_null($service_provider->leaves()->where('start_time', '<', $end_time)->where('end_time', '>', $start_time)->first())){
 				if(is_null($service_provider->orders()->where('start_time', '<', $end_time)->where('end_time', '>', $start_time)->first())){
 					$room = Room::where('id', $room_id)->first();
-
 					if(is_null($room->orders()->where('start_time', '<', $end_time)->where('end_time', '>', $start_time)->first())){
 						$order = new Order;
 						$order->name = $name;
@@ -197,7 +178,6 @@ class BookController extends Controller
 			else{
 				throw new Exception("該師傅該時段請假", 1);
 			}
-
 			return response()->json('預約成功', 200);
 		}
 		catch(Exception $e){

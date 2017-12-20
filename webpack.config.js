@@ -73,7 +73,8 @@ let settings = [{
     new webpack.ProvidePlugin({
       React: 'react',
       ReactDOM:'react-dom',
-      ReactBootstrap: 'react-bootstrap'
+      ReactBootstrap: 'react-bootstrap',
+      axios: 'axios'
     })
   ]
 }];

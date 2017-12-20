@@ -6,13 +6,12 @@ import Reservation from "./Reservation";
 import { Switch, Route, BrowserRouter } from "react-router-dom";
 import i18n from '../i18n';
 import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import clearReservation from "../dispatchers/clearReservation";
 
 class App extends React.Component{
     constructor(props){
-        super(props);
-    }
-    componentDidReceiveProps(){
-
+        super(props);       
     }
     render(){
         return(
@@ -28,5 +27,14 @@ class App extends React.Component{
         );
     }
 }
+
+const mapDispatchToProps = (dispatch)=>{
+    return bindActionCreators({
+        clearReservation: clearReservation
+    },dispatch);
+}
+  
+App = connect(null, mapDispatchToProps)(App);
+
 
 module.exports = App;

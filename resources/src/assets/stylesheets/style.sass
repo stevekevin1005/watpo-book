@@ -27,6 +27,8 @@ $highlight: #9e5334
   font-family: 微軟正黑體, Helvetica
   +scrollBar($brown)
 
+@import "./loadingAnimation"
+
 $breakpoints: ("phone":400px,"phone-wide":480px,"phablet":560px,"tablet-small": 640px,"tablet":768px,"tablet-wide":1024px,"desktop":1248px,"desktop-wide": 1440px)
 
 @mixin mq($width, $type: min)
@@ -39,7 +41,7 @@ $breakpoints: ("phone":400px,"phone-wide":480px,"phablet":560px,"tablet-small": 
 
 body
   background-color: #f9f7f9
-  min-width: 287px
+  min-width: 314px
   overflow-x: hidden
 
 .divider
@@ -71,12 +73,12 @@ body
     top: 50%
     left: 50%
     transform: translate(-50%,-50%)
-    animation: emerge 2s 1 both
+    animation: floatUp 2s 1 both
 
-@keyframes emerge
+@keyframes floatUp
   0%
     opacity: 0
-    transform: translate(-50%,0%)
+    transform: translate(-50%,-25%)
   100%
     opacity: 1
     transform: translate(-50%,-50%)
@@ -95,6 +97,7 @@ body
   left: 0
   z-index: -2
   background-attachment: fixed
+  animation: emerge 3s 1 both
   &::after
     content: attr(data-arrow)
     font-family: "FontAwesome"
@@ -111,7 +114,14 @@ body
     text-align: center
     z-index: -1
 
+@keyframes emerge
+  0%
+    opacity: 0
+  100%
+    opacity: .9
+
 .reservationContainer
+  position: relative
   padding: 16px 32px
   background-color: rgba(255,255,255,.7)
   border-radius: 16px
@@ -135,7 +145,6 @@ body
     border-bottom: solid 2px lightGray
 
 h4, h5
-  font-weight: bold
   & i
     color: $highlight
 
@@ -174,6 +183,7 @@ h4
   margin-bottom: 0
   width: 100vw
   z-index: 10
+  min-width: 314px
 
 .navbar-nav > .active
   background-color: $darkBrown
@@ -210,10 +220,10 @@ a
   margin-top: 25px
 
 .title
-  font-size: 10rem
+  font-size: 7rem
   
 .sub
-  font-size: 6rem
+  font-size: 5rem
   max-width: 95vw
 
 .title, .sub
@@ -275,8 +285,8 @@ p
       z-index: 1
       &::after
         content: ""
-        width: 25px
-        height: 25px
+        width: 30px
+        height: 30px
         position: absolute
         top: 50%
         left: 50%
@@ -317,6 +327,20 @@ p
   & .next
     right: 16px
 
+.selectedDay
+  color: white
+  &::after
+    content: ""
+    width: 25px
+    height: 25px
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%,-50%)
+    background-color: orange
+    z-index: -1
+    border-radius: 16px
+
 .timePeriods
   border-radius: 16px
   border: solid 1px #E8E8E8
@@ -325,6 +349,7 @@ p
   padding: 8px
   background-color: #F5F5F5
   box-shadow: inset 1px 1px 3px 1px rgba(0,0,0,.2)
+  color: silver
   +scrollBar(lightgray)
   & .timePeriod
     border-radius: 10px
@@ -335,9 +360,16 @@ p
     background-color: rgba(255,255,255,.5)
     cursor: pointer
     box-shadow: 1px 1px 3px 1px rgba(0,0,0,.2)
-    &:hover
-      background-color: $highlight
-      color: white
+
+.timePeriods > .timePeriod.available
+  color: $brown
+  &:hover
+    background-color: $highlight
+    color: white
+
+.timePeriods > .timePeriod.selectedTime
+  color: white
+  background-color: orange
 
 .landpageBtnContainer
   width: 300px
@@ -387,6 +419,10 @@ footer
     width: unset
 
 +mq("desktop",min)
+  .title
+    font-size: 10rem
+  .sub
+    font-size: 6rem
   .timePeriods
     max-width: 70%
   .sectionItem
