@@ -4,7 +4,6 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { translate } from 'react-i18next';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import changeLang from "../dispatchers/changeLang";
 import i18next from 'i18next';
 
 const Navbar = ReactBootstrap.Navbar,
@@ -20,7 +19,6 @@ class Nav extends React.Component{
     }
     changeLang(lang){
       i18next.changeLanguage(lang); 
-      this.props.changeLang(lang);
     }
     render(){
         const { t } = this.props;
@@ -55,12 +53,5 @@ class Nav extends React.Component{
         );
     }
 }
-
-
-const mapDispatchToProps = (dispatch)=>{
-  return bindActionCreators({changeLang:changeLang},dispatch);
-}
-
-Nav = connect(null,mapDispatchToProps)(Nav);
 
 module.exports = translate()(Nav);

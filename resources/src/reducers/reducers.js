@@ -11,13 +11,6 @@ const reducers = {
         return action.payload;
       }else return state;
     },
-    lang:
-    (state=null, action)=>{
-      if(action.type == "CHANGE_LANG"){
-        console.log(action.payload);
-        return action.payload;
-      }else return state;
-    },
     sourceData:
     (state={}, action)=>{
       let result = state?JSON.parse(JSON.stringify(state)):{};
@@ -45,8 +38,8 @@ const reducers = {
       }
     },
     reservation:
-    (state={shop:"-1", service:"-1", guestNum: "-1"}, action)=>{
-      let result = state?JSON.parse(JSON.stringify(state)):{shop:"-1", service:"-1", guestNum: "-1"};
+    (state={}, action)=>{
+      let result = state?JSON.parse(JSON.stringify(state)):{};
       switch(action.type){
         // generally are ids of data
         case "SET_SHOP":
@@ -88,7 +81,7 @@ const reducers = {
           result.contactNumber = undefined;
           return state;
         case "CLEAR":
-          return {shop:"-1", service:"-1", guestNum: "-1"};
+          return {};
         default:
           return state;
       }
