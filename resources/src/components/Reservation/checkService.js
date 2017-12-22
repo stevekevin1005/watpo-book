@@ -20,8 +20,8 @@ class CheckService extends React.Component{
         this.setReservation = this.setReservation.bind(this);
     }
     componentDidMount(){
-        this.props.setReservation("shop","1");
-        this.props.setReservation("service","1");
+        this.props.setReservation("shop", 0);
+        this.props.setReservation("service", 0);
         // get data of shops and services
         const sourceData = this.props.sourceData;
         // check if data is already loaded
@@ -76,8 +76,8 @@ class CheckService extends React.Component{
     setReservation(event){
         const el = event.target,
               group = el.id,
-              value = el.options[el.selectedIndex].value;
-        this.props.setReservation(group, value);
+              index = parseInt(el.options[el.selectedIndex].value);
+        this.props.setReservation(group, index);
     }
     render(){
         const { t } = this.props, sourceData = this.props.sourceData;
@@ -88,17 +88,17 @@ class CheckService extends React.Component{
                     <Col md={7}>
                         <FormGroup controlId="formControlsSelect">
                             <ControlLabel bsClass="control-label branch">{t("branch")}</ControlLabel>
-                            <FormControl componentClass="select" id="shop" placeholder="..." defaultValue={this.props.reservation.shop?this.props.reservation.shop:null} onChange={this.setReservation}>
+                            <FormControl componentClass="select" id="shop" placeholder="..." defaultValue={this.props.reservation.shop === undefined?this.props.reservation.shop:null} onChange={this.setReservation}>
                                 {sourceData.shops && sourceData.shops.map((shop,index)=>{
-                                    return (<option key={index} value={shop.id}>{shop.name}</option>);
+                                    return (<option key={index} value={index}>{shop.name}</option>);
                                 })}
                             </FormControl>
                         </FormGroup>
                         <FormGroup controlId="formControlsSelect">
                             <ControlLabel>{t("service")}</ControlLabel>
-                            <FormControl componentClass="select" id="service" defaultValue={this.props.reservation.service?this.props.reservation.service:null} placeholder="..." onChange={this.setReservation}>
+                            <FormControl componentClass="select" id="service" defaultValue={this.props.reservation.service === undefined?this.props.reservation.service:null} placeholder="..." onChange={this.setReservation}>
                                 {sourceData.services && sourceData.services.map((service,index)=>{
-                                    return (<option key={index} value={service.id}>{service.title}</option>);
+                                    return (<option key={index} value={index}>{service.title}</option>);
                                 })}
                             </FormControl>
                         </FormGroup>

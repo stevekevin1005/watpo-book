@@ -27,7 +27,7 @@ class Landpage extends React.Component{
     render(){
         const { t } = this.props;
         const map_style = {
-            width: 600,
+            width: "100%",
             height: 450,
             border: 0
         };
@@ -60,6 +60,7 @@ class Landpage extends React.Component{
                         </Col>
                         <Col md={6}>
                             <iframe
+                              className="sectionItem"
                               frameborder="0" 
                               style={map_style}
                               src={branch.location_src} allowfullscreen>
