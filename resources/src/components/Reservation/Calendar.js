@@ -46,7 +46,7 @@ class Calendar extends React.Component{
     }
     selectDay(event){
         // send in year, month, day arguments
-        this.props.getTimePeriods(this.state.displayingYear,this.state.displayingMonth, event.target.innerHTML);
+        this.props.getTimePeriods(this.state.displayingYear, parseInt(this.state.displayingMonth), parseInt(event.target.innerHTML));
     }
     render(){
         const { t } = this.props, selectedDay = this.props.reservation.date?parseInt(this.props.reservation.date.split("/")[2]):-1;
