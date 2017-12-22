@@ -121,7 +121,6 @@ class CheckDetail extends React.Component{
                     if(rooms[i].shower === 1 && rooms[i].person > max) max = rooms[i].person;
                 }
         }
-        console.log(max);
         this.setState({maxGuestNum: max},fn());
     }
     setRoomId(noRoom){

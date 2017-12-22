@@ -38,7 +38,7 @@ class CheckTime extends React.Component{
         this.props.setSourceData("timelist",
             {
                 shop: this.props.sourceData.shops[this.props.reservation.shop].id, 
-                service: this.props.sourceData.shops[this.props.reservation.shop].id,
+                service: this.props.sourceData.services[this.props.reservation.service].id,
                 date: date,
                 token: csrf_token
             },

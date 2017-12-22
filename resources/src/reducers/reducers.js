@@ -23,6 +23,7 @@ const reducers = {
           return result;
         case "SET_TIMELIST":
           result.timeList = action.payload;
+          console.log(result);
           return result;
         case "SET_SELECTED_DETAIL":
           result.selectedDetail = action.payload;
