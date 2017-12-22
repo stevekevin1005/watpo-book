@@ -24,7 +24,7 @@ class CheckTime extends React.Component{
         this.setTime = this.setTime.bind(this);
     }
     getTimePeriods(year,month,day){
-        const that = this, date = year+"/"+month+"/"+day,
+        const that = this, date = year+"/"+ (month<10?"0"+month:month) +"/"+ (day<10?"0"+day:day),
               csrf_token = document.querySelector('input[name="_token"]').value;
 
         // clear selected detail index
@@ -37,8 +37,8 @@ class CheckTime extends React.Component{
         this.props.setReservation("date", date);
         this.props.setSourceData("timelist",
             {
-                shop: this.props.reservation.shop, 
-                service: this.props.reservation.service,
+                shop: this.props.sourceData.shops[this.props.reservation.shop].id, 
+                service: this.props.sourceData.services[this.props.reservation.service].id,
                 date: date,
                 token: csrf_token
             },
@@ -57,7 +57,7 @@ class CheckTime extends React.Component{
         this.props.setSourceData("selectedDetail", parseInt(index));
     }
     render(){
-        if(this.props.reservation.shop == "-1" || this.props.reservation.service == "-1") location.href = '../reservation/0';
+        if(this.props.reservation.shop === undefined || this.props.reservation.service === undefined) location.href = '../reservation/0';
         return(
             <Grid>
             <Row className="show-grid">

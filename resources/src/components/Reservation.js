@@ -15,10 +15,18 @@ const Grid = ReactBootstrap.Grid,
     Row = ReactBootstrap.Row,
     Col = ReactBootstrap.Col,
     Button = ReactBootstrap.Button;
+import SweetAlert from 'sweetalert-react';
 
 class Reservation extends React.Component{
     constructor(props){
         super(props);
+
+        this.state = {
+            showAlert: false,
+            alertTitle: "",
+            alertText: ""
+        };
+        this.send = this.send.bind(this);
     }
     componentWillReceiveProps(nextProps){
 
@@ -43,6 +51,65 @@ class Reservation extends React.Component{
                 if(nextProps.sourceData.timeList === undefined || nextProps.sourceData.selectedDetail === undefined)
                     this.props.history.push('/reservation/0');
         }
+    }
+    send(event){
+        event.preventDefault();
+
+        // get end time
+        const duration = this.props.sourceData.services[this.props.reservation.service].time / 60,
+              token = document.querySelector('input[name="_token"]').value,
+              that = this;
+        let endTime = this.props.reservation.time.split(":");
+        endTime[0] = parseInt(endTime[0]) + duration;
+        endTime = (endTime[0]>=10?endTime[0]:"0"+endTime[0]) + ":" + endTime[1] + ":" + endTime[2];
+
+        // get info: service, shop
+        const reservation = this.props.reservation,
+              serviceName = this.props.sourceData.services[reservation.service].title;
+
+        // call API
+        axios({
+            method: "post",
+            url: "/api/order",
+            params: {
+                phone: reservation.contactNumber,
+                shop_id: this.props.sourceData.shops[reservation.shop].id,
+                service_id: this.props.sourceData.services[reservation.service].id,
+                start_time: reservation.date + " " + reservation.time,
+                end_time: reservation.date + " " + endTime,
+                room_id: reservation.room,
+                person: reservation.guestNum,
+                service_provider_id: reservation.operator,
+                name: reservation.name
+            },
+            headers: {'X-CSRF-TOKEN': token},
+            responseType: 'json'
+        }).then(function(response){
+            console.log(response);
+            if(response.statusText == "OK"){
+                // show success alert
+                that.setState({
+                    showAlert: true,
+                    alertTitle: "預定成功",
+                    alertText: reservation.name + " " + reservation.date + " " + reservation.time + " 預約 " + serviceName+ " 服務 " + reservation.guestNum + " 人 成功"
+                });
+            }else{
+                // show failure alert
+                that.setState({
+                    showAlert: true,
+                    alertTitle: "錯誤",
+                    alertText: "系統錯誤請再重試"
+                });
+            }
+        }).catch(function(error){
+            console.log(error);
+            // error handle
+            that.setState({
+                showAlert: true,
+                alertTitle: "錯誤",
+                alertText: "系統錯誤請再重試"
+            });
+        });
     }
     render(){
         const { t } = this.props;
@@ -74,13 +141,13 @@ class Reservation extends React.Component{
         let isDisabled = false, button;
         switch(currentStep){
             case 0:
-                if(!reservation.shop || !reservation.service) isDisabled = true;
+                if(reservation.shop === undefined || reservation.service === undefined) isDisabled = true;
                 break;
             case 1:
                 if(!reservation.date || !reservation.time) isDisabled = true;
                 break;
             case 2:
-                if(((!reservation.operator || !reservation.room) || ( reservation.guestNum || reservation.name)) || reservation.contactNumber) isDisabled = true;
+                if(((!reservation.operator || !reservation.room) || ( reservation.guestNum  === undefined || reservation.name === undefined)) || !reservation.contactNumber) isDisabled = true;
                 break;
         }
         if(isDisabled){
@@ -88,7 +155,7 @@ class Reservation extends React.Component{
                 {currentStep==2?t("send"):t("nextStep")}
             </Button>);
         }else if(currentStep == 2){
-            button = (<Button bsStyle="primary" bsSize="large">
+            button = (<Button bsStyle="primary" bsSize="large" onClick={this.send}>
                 {t("send")}
             </Button>);
         }else{
@@ -137,6 +204,15 @@ class Reservation extends React.Component{
                 {this.props.loading && <Col md={12}><LoadingAnimation /></Col>}
                 </Row>                
                 </div>
+                <SweetAlert
+                    show={this.state.showAlert}
+                    title={this.state.alertTitle}
+                    text={this.state.alertText}
+                    onConfirm={() => {
+                        this.setState({ showAlert: false });
+                        location.reload();
+                    }}
+                />
             </Grid>
         );
     }
