@@ -23,7 +23,6 @@ class Reservation extends React.Component{
 
         this.state = {
             showAlert: false,
-            success: false,
             alertTitle: "",
             alertText: ""
         };
@@ -91,7 +90,6 @@ class Reservation extends React.Component{
                 // show success alert
                 that.setState({
                     showAlert: true,
-                    success: true,
                     alertTitle: "預定成功",
                     alertText: reservation.name + " " + reservation.date + " " + reservation.time + " 預約 " + serviceName+ " 服務 " + reservation.guestNum + " 人 成功"
                 });
@@ -212,7 +210,7 @@ class Reservation extends React.Component{
                     text={this.state.alertText}
                     onConfirm={() => {
                         this.setState({ showAlert: false });
-                        if(this.state.success){location.href = "../";}
+                        location.reload();
                     }}
                 />
             </Grid>
