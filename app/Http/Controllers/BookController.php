@@ -47,7 +47,7 @@ class BookController extends Controller
 	public function api_time_list(Request $request)
 	{
 		try{
-			
+
 			$date = $request->date;
 			$shop_id = $request->shop_id;
 			$service_id = $request->service_id;
@@ -75,6 +75,7 @@ class BookController extends Controller
 				$start_time = strtotime("+30 min", $start_time); 
 				$i++;
 			}
+
 			return response()->json($time_list, 200);
 		}
 		catch(Exception $e){
@@ -87,26 +88,42 @@ class BookController extends Controller
 	}
 	private function time_option($datetime, $service_time, $shower,$shop_id){
 		
-		$service_providers = ServiceProvider::where('shop_id', $shop_id)->get();
 		$start_time = $datetime;
 		$end_time = strtotime("+".$service_time." min", $start_time);
+
+		$service_providers = ServiceProvider::with(['leaves' => function ($query) use ($start_time, $end_time) {
+		    $query->where('start_time', '<', date("Y/m/d H:i:s", $end_time));
+		    $query->where('end_time', '>', date("Y/m/d H:i:s", $start_time));
+		}])->with(['orders' => function ($query) use ($start_time, $end_time) {
+				$query->where('status', '!=', 3);
+				$query->where('status', '!=', 4);
+		    $query->where('start_time', '<', date("Y/m/d H:i:s", $end_time));
+		    $query->where('end_time', '>', date("Y/m/d H:i:s", $start_time));
+		}])->where('shop_id', $shop_id)->get();
+		
 		$result['service_provider_list'] = null;
+
 		foreach($service_providers as $service_provider){
-			if(is_null($service_provider->leaves()->where('start_time', '<', date("Y/m/d H:i:s", $end_time))->where('end_time', '>', date("Y/m/d H:i:s", $start_time))->first())){
-				if(is_null($service_provider->orders()->where('start_time', '<', date("Y/m/d H:i:s", $end_time))->where('end_time', '>', date("Y/m/d H:i:s", $start_time))->first())){
-					$result['service_provider_list'][] = $service_provider;
+			if($service_provider->leaves->count() == 0){
+				if($service_provider->orders->count() == 0){
+					$result['service_provider_list'][] = ['id' => $service_provider->id, 'name' => $service_provider->name, 'shop_id' => $service_provider->shop_id];
 				}
 			}
 		}
-		$rooms = Room::where('shop_id', $shop_id);
+		$rooms = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
+				$query->where('status', '!=', 3);
+				$query->where('status', '!=', 4);
+		    $query->where('start_time', '<', date("Y/m/d H:i:s", $end_time));
+		    $query->where('end_time', '>', date("Y/m/d H:i:s", $start_time));
+		}])->where('shop_id', $shop_id);
 		if($shower == 2){
 			$rooms = $rooms->where('shower', 1);
 		}
 		$rooms = $rooms->orderBy("shower", "asc")->get();
 		$result['room'] = null;
 		foreach($rooms as $room){
-			if(is_null($room->orders()->where('start_time', '<', date("Y/m/d H:i:s", $end_time))->where('end_time', '>', date("Y/m/d H:i:s", $start_time))->first())){
-				$result['room'][] = $room;
+			if($room->orders->count() == 0){
+				$result['room'][] = ['id' => $room->id, 'shower' => $room->shower, 'shop_id' => $room->shop_id, 'person' => $room->person];
 			}
 		}
 		return $result;
@@ -149,7 +166,7 @@ class BookController extends Controller
 			if(!$phone){
 				throw new Exception("缺少預約客電話", 1);
 			}
-			
+
 			$service_provider = ServiceProvider::where('id', $service_provider_id)->first();
 			
 			if(is_null($service_provider->leaves()->where('start_time', '<', $end_time)->where('end_time', '>', $start_time)->first())){
