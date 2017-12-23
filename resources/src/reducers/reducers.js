@@ -23,7 +23,6 @@ const reducers = {
           return result;
         case "SET_TIMELIST":
           result.timeList = action.payload;
-          console.log(result);
           return result;
         case "SET_SELECTED_DETAIL":
           result.selectedDetail = action.payload;
@@ -39,8 +38,8 @@ const reducers = {
       }
     },
     reservation:
-    (state={}, action)=>{
-      let result = state?JSON.parse(JSON.stringify(state)):{};
+    (state={operator:[]}, action)=>{
+      let result = JSON.parse(JSON.stringify(state));
       switch(action.type){
         // generally are ids of data
         case "SET_SHOP":
@@ -56,7 +55,7 @@ const reducers = {
           result.time = action.payload;
           return result;
         case "SET_OPERATOR":
-          result.operator = action.payload;
+          result.operator[action.payload.index] = action.payload.data;
           return result;
         case "SET_ROOM":
           result.room = action.payload;
@@ -75,14 +74,17 @@ const reducers = {
           result.time = undefined;
           return result;
         case "CLEAR_STEP2":
-          result.operator = undefined;
+          result.operator = [];
           result.room = undefined;
           result.guestNum = 1;
           result.name = undefined;
           result.contactNumber = undefined;
-          return state;
+          return result;
         case "CLEAR":
-          return {};
+          return {operator:[]};
+        case "CLEAR_OPERATOR":
+          result.operator = result.operator.slice(0, action.payload);
+          return result;
         default:
           return state;
       }
