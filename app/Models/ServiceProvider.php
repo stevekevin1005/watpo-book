@@ -8,10 +8,9 @@ class ServiceProvider extends Model {
 
   protected $table = 'ServiceProvider';
 
-
   public function orders()
   {
-    return $this->hasMany('App\Models\Order', 'service_provider_id');
+    return $this->belongsToMany('App\Models\Order', 'service_provider_order', 'service_provider_id','order_id');
   }
   public function leaves()
   {
