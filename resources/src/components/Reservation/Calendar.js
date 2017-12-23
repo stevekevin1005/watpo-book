@@ -53,7 +53,9 @@ class Calendar extends React.Component{
 
         const months = [t("jan"),t("feb"),t("mar"),t("apr"),t("may"),t("jun"),t("jul"),t("aug"),t("sep"),t("oct"),t("nov"),t("dec")],
               weekDays = [t("mon"),t("tue"),t("wed"),t("thu"),t("fri"),t("sat"),t("sun")],
-              unit = 100 / 7;
+              unit = 100 / 7,
+              isCurrentMonth = (this.state.displayingMonth == new Date().getMonth() + 1) &&(this.state.displayingYear == new Date().getFullYear()),
+              today = new Date().getDate();
         const days = [], spanStyle = {display:"inline-block",width: unit + "%"},
               firstDayStyle = {
                   display:"inline-block",
@@ -62,8 +64,9 @@ class Calendar extends React.Component{
                   :unit * 6 +"%"};
 
         for(let i = 1;i <= this.state.dayNum; i++){
-                if(i===1) days.push(<span key={i} className={i===selectedDay?"day selectedDay":"day"} style={firstDayStyle} onClick={this.selectDay}>{i}</span>);
-                else days.push(<span key={i} className={i===selectedDay?"day selectedDay":"day"} style={spanStyle} onClick={this.selectDay}>{i}</span>);
+                let isPastDay = isCurrentMonth && i < today;
+                if(i===1) days.push(<span key={i} className={i===selectedDay?"day selectedDay":(isPastDay?"day pastDay":"day")} style={firstDayStyle} onClick={isPastDay?null:this.selectDay}>{i}</span>);
+                else days.push(<span key={i} className={i===selectedDay?"day selectedDay":(isPastDay?"day pastDay":"day")} style={spanStyle} onClick={isPastDay?null:this.selectDay}>{i}</span>);
         }
 
         return (<div className="calendar">

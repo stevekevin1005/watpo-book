@@ -24,7 +24,8 @@ class Reservation extends React.Component{
         this.state = {
             showAlert: false,
             alertTitle: "",
-            alertText: ""
+            alertText: "",
+            success: false
         };
         this.send = this.send.bind(this);
     }
@@ -39,11 +40,14 @@ class Reservation extends React.Component{
                     this.props.clearReservation("step1");
                     this.props.clearSourceData("selectedDetail");
                     this.props.clearSourceData("timeList");
+                    if(((reservation.operator.length>2 || reservation.room!=undefined) || (reservation.guestNum > 1 ||reservation.name!=undefined)) || reservation.contactNumber!=undefined){
+                        this.props.clearReservation("step2");
+                    } 
                 }
                 break;
             case "1":
                 // step2 => step1
-                if(((reservation.operator!=undefined || reservation.room!=undefined) || (reservation.guestNum!=undefined ||reservation.name!=undefined)) || reservation.contactNumber!=undefined){
+                if(((reservation.operator.length>2 || reservation.room!=undefined) || (reservation.guestNum > 1 ||reservation.name!=undefined)) || reservation.contactNumber!=undefined){
                     this.props.clearReservation("step2");
                 } 
                 break;
@@ -54,6 +58,17 @@ class Reservation extends React.Component{
     }
     send(event){
         event.preventDefault();
+        // check if there are repeated operators
+        for(let i =0;i<this.props.reservation.operator.length;i++){
+            if(this.props.reservation.operator.indexOf(this.props.reservation.operator[i],i+1)>0){
+                this.setState({
+                    showAlert: true,
+                    alertTitle: "錯誤",
+                    alertText: "指定的師傅編號不可重複"
+                });
+                return;
+            }
+        }
 
         // get end time
         const duration = this.props.sourceData.services[this.props.reservation.service].time / 60,
@@ -79,16 +94,16 @@ class Reservation extends React.Component{
                 end_time: reservation.date + " " + endTime,
                 room_id: reservation.room,
                 person: reservation.guestNum,
-                service_provider_id: reservation.operator,
+                service_provider_id: reservation.operator.join(),
                 name: reservation.name
             },
             headers: {'X-CSRF-TOKEN': token},
             responseType: 'json'
         }).then(function(response){
-            console.log(response);
             if(response.statusText == "OK"){
                 // show success alert
                 that.setState({
+                    success: true,
                     showAlert: true,
                     alertTitle: "預定成功",
                     alertText: reservation.name + " " + reservation.date + " " + reservation.time + " 預約 " + serviceName+ " 服務 " + reservation.guestNum + " 人 成功"
@@ -147,7 +162,7 @@ class Reservation extends React.Component{
                 if(!reservation.date || !reservation.time) isDisabled = true;
                 break;
             case 2:
-                if(((!reservation.operator || !reservation.room) || ( reservation.guestNum  === undefined || reservation.name === undefined)) || !reservation.contactNumber) isDisabled = true;
+                if(((!reservation.operator || !reservation.room) || ( reservation.guestNum  === undefined || reservation.name === undefined)) || (!reservation.contactNumber||reservation.contactNumber.length<6)) isDisabled = true;
                 break;
         }
         if(isDisabled){
@@ -210,7 +225,7 @@ class Reservation extends React.Component{
                     text={this.state.alertText}
                     onConfirm={() => {
                         this.setState({ showAlert: false });
-                        location.reload();
+                        if(this.state.success) location.reload();
                     }}
                 />
             </Grid>

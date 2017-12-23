@@ -1,4 +1,4 @@
-module.exports = (dataKey,fn)=>{
+module.exports = (dataKey,fn,index)=>{
     // 0-based
     switch(dataKey){
         // date and time
@@ -18,6 +18,11 @@ module.exports = (dataKey,fn)=>{
             return ({
                 type: "CLEAR",
                 payload: null
+            });
+        case "operator":
+            return ({
+                type: "CLEAR_OPERATOR",
+                payload: index
             });
     }
 }
