@@ -17,7 +17,7 @@ class Order extends Model {
   {
     return $this->belongsTo('App\Models\Service', 'service_id');
   }
-  public function serviceProvider()
+  public function serviceProviders()
   {
     return $this->belongsToMany('App\Models\ServiceProvider', 'service_provider_order', 'order_id','service_provider_id');
   }
