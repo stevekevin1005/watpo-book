@@ -4,9 +4,9 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import setReservation from "../../dispatchers/setReservation";
 import clearReservation from "../../dispatchers/clearReservation";
+import Button from "./Button";
 
-const Button = ReactBootstrap.Button,
-    Grid = ReactBootstrap.Grid,
+const Grid = ReactBootstrap.Grid,
     Row = ReactBootstrap.Row,
     Col = ReactBootstrap.Col,
     FormGroup = ReactBootstrap.FormGroup,
@@ -26,7 +26,8 @@ class CheckDetail extends React.Component{
             // 程式選中的房間是否會附衛浴，影響房間配置，與客人實際需求無關
             shower: shower,
             nameHint: "",
-            contactNumberHint: ""
+            contactNumberHint: "",
+            operatorHint: ""
         };
 
         this.setOperator = this.setOperator.bind(this);
@@ -36,6 +37,7 @@ class CheckDetail extends React.Component{
         this.setContactNumber = this.setContactNumber.bind(this);
         this.setMaxGuestNum = this.setMaxGuestNum.bind(this);
         this.setRoomId = this.setRoomId.bind(this);
+        this.send = this.send.bind(this);
     }
     componentDidMount(){
         // initializing
@@ -69,14 +71,16 @@ class CheckDetail extends React.Component{
     setGuestNum(event){
         const value = parseInt(event.target.options[event.target.selectedIndex].value),
               data = this.props.sourceData.timeList[this.props.sourceData.selectedDetail].detail;
-        // set guest number and !!set room id!!
+
+        // set guest number and set room id
         this.props.setReservation("guestNum", value);
         this.setState({guestNum: value, prevGuestNum: this.state.guestNum},()=>{
-            this.setRoomId();
+        this.setRoomId();
 
             // set default operator data
             if(value > this.state.prevGuestNum){
-                for(let i = this.state.prevGuestNum ;i<value;i++){
+                // 把師父資料全部重設
+                for(let i=0;i<value;i++){
                     this.props.setReservation("operator", {
                         index: i,
                         data: data.service_provider_list[i].id
@@ -89,16 +93,34 @@ class CheckDetail extends React.Component{
         });
     }
     setName(){
-        this.props.setReservation("name", this.nameInput.value);
+        // clear hint
+        if(this.state.nameHint !== "")this.setState({nameHint: ""});
+
+        // set value to global state
+        const value = this.nameInput.value;
+
+        // set hint
+        this.props.setReservation("name", value);
+        if(value === "") this.setState({nameHint: "請輸入聯絡人姓名"});
     }
     setContactNumber(){
-        this.props.setReservation("contactNumber", this.numberInput.value);
+        // clear hint
+        if(this.state.contactNumberHint !== "")this.setState({contactNumberHint: ""});
+
+        // set value to global state
+        const value = this.numberInput.value;
+        this.props.setReservation("contactNumber", value);
+        
+        // set hint
+        if(value === "") this.setState({contactNumberHint: "請輸入聯絡號碼"});
+        else if(value.length < 6) this.setState({contactNumberHint: "請輸入有效聯絡號碼"});
     }
     //
     setMaxGuestNum(fn){
         // max guest number is set in initializing, and whenever shower option changes, and is decided by service type
         const showerType = this.props.sourceData.services[this.props.reservation.service].shower,
-              rooms = this.props.sourceData.timeList[this.props.sourceData.selectedDetail].detail.room;
+              data = this.props.sourceData.timeList[this.props.sourceData.selectedDetail].detail,
+              rooms = data.room;
         let max = 0;
         switch(showerType){
             case 0:
@@ -141,6 +163,9 @@ class CheckDetail extends React.Component{
                     if(rooms[i].shower === 1 && rooms[i].person > max) max = rooms[i].person;
                 }
         }
+        // 確認目前可提供服務的師傅數量
+        const operatorsNum = data.service_provider_list.length;
+        if(operatorsNum < max) max = operatorsNum;
         this.setState({maxGuestNum: max},fn());
     }
     setRoomId(noRoom){
@@ -173,6 +198,28 @@ class CheckDetail extends React.Component{
         }
         this.props.setReservation("room", roomId);
     }
+    send(event){
+        event.preventDefault();
+
+        let pass = true;
+        if(!this.props.reservation.name){
+            this.setState({nameHint: "請輸入聯絡人姓名"});
+            this.numberInput.focus();
+            pass = false;
+        }
+        if(!this.props.reservation.contactNumber){
+            this.setState({contactNumberHint: "請輸入聯絡號碼"});
+            this.numberInput.focus();
+            pass = false;
+        }else if(this.props.reservation.contactNumber.length < 6){
+            this.setState({contactNumberHint: "請輸入有效聯絡號碼"});
+            this.numberInput.focus();
+            pass = false;
+        }
+        if(!pass) return;
+
+        this.props.send();
+    }
     render(){
         // redirect if reservation of time or date is not set
         if(this.props.sourceData.timeList === undefined || this.props.sourceData.selectedDetail === undefined) location.href = '../reservation/0';
@@ -188,11 +235,22 @@ class CheckDetail extends React.Component{
             }
         }
 
+        const selectedOperators = this.props.reservation.operator;
         if(this.state.guestNum>0){
             for(let i = 0; i < this.state.guestNum;i++){
                 // options of operators
-                operators.push(<FormControl bsClass="form-control operatorOption" componentClass="select" id={"operator"+i} data-index={i} onChange={this.setOperator} defaultValue={this.props.reservation.operator[i] || data.service_provider_list[i].id}>
+                operators.push(<FormControl bsClass="form-control operatorOption" componentClass="select" id={"operator"+i} data-index={i} onChange={this.setOperator} defaultValue={this.props.reservation.operator[i]}>
                     {data.service_provider_list.map((operator, index)=>{
+                        let selected = false;
+                        for(let j = 0 ; j < selectedOperators.length ; j++){
+                            if(j === i) continue; // 當前的不用確認
+                            if(operator.id == selectedOperators[j]){
+                              selected = true;
+                              break;
+                           }
+                         }
+                         
+                        if(selected) return null;
                         return (<option key={index} value={operator.id}>{operator.name}</option>);
                     })}
                 </FormControl>);
@@ -208,7 +266,6 @@ class CheckDetail extends React.Component{
                         <ControlLabel>{t("operator")}</ControlLabel>
                             {operators}
                         <FormControl.Feedback />
-                        <HelpBlock></HelpBlock>
                     { this.props.sourceData.services[this.props.reservation.service].shower === 1 && 
                         <div>
                             <ControlLabel>{"是否需要衛浴?"}</ControlLabel>
@@ -218,7 +275,6 @@ class CheckDetail extends React.Component{
                                 <option value={false}>{"否"}</option>
                             </FormControl>
                             <FormControl.Feedback />
-                            <HelpBlock></HelpBlock>
                         </div>
                     }
                         {this.props.reservation.room?<div><ControlLabel>{t("guestNum")}</ControlLabel>
@@ -226,7 +282,7 @@ class CheckDetail extends React.Component{
                             {guestNumEl}
                         </FormControl>
                         <FormControl.Feedback />
-                        <HelpBlock></HelpBlock></div>:<p className="hint">目前無符合您需求的房間</p>}
+                        </div>:<p className="hint">目前無符合您需求的房間</p>}
                </Col>
                
                <Col md={1}>
@@ -242,7 +298,7 @@ class CheckDetail extends React.Component{
                         onChange = {this.setName}
                     />
                     <FormControl.Feedback />
-                    <HelpBlock>{this.state.nameHint}</HelpBlock>
+                    <p className="hint">{this.state.nameHint}</p>
                     <ControlLabel>{t("contactNumber")}</ControlLabel>
                     <FormControl
                         type="text"
@@ -251,9 +307,10 @@ class CheckDetail extends React.Component{
                         onChange = {this.setContactNumber}
                     />
                     <FormControl.Feedback />
-                    <HelpBlock>{this.state.contactNumberHint}</HelpBlock>
+                    <p className="hint">{this.state.contactNumberHint}</p>
                 </Col>
              </FormGroup>
+             <Button currentStep={2} clickHandle={this.send} disabled={false}/>
             </Row>
         </Grid>
         );
