@@ -7,6 +7,7 @@ import toggleLoading from "../../dispatchers/toggleLoading";
 import setReservation from "../../dispatchers/setReservation";
 import setSourceData from "../../dispatchers/setSourceData";
 import clearSourceData from "../../dispatchers/clearSourceData";
+import Button from "./Button";
 
 const Grid = ReactBootstrap.Grid,
     Row = ReactBootstrap.Row,
@@ -58,6 +59,9 @@ class CheckTime extends React.Component{
     }
     render(){
         if(this.props.reservation.shop === undefined || this.props.reservation.service === undefined) location.href = '../reservation/0';
+        const reservation = this.props.reservation,
+              disabled = (!reservation.date || !reservation.time);
+
         return(
             <Grid>
             <Row className="show-grid">
@@ -73,6 +77,7 @@ class CheckTime extends React.Component{
                     }):<p>{this.state.hint}</p>}
                 </div>
             </Col>
+            <Button currentStep={1} clickHandle={this.props.nextStep} disabled={disabled}/>
             </Row>
             </Grid>
         );
