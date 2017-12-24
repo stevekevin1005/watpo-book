@@ -13,8 +13,12 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="page-title-box">
-                        <h4 class="page-title">民生店 - 預約管理&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">新建預約單</button></h4>
-
+                        <h4 class="page-title">民生店 - 預約管理&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">新建預約單</button> 
+                        </h4>
+                        <a href="#" style="color:royalblue;">●</a> - 客戶預定
+                        <a href="#" style="color:khaki;">●</a> - 櫃檯預定
+                        <a href="#" style="color:indianred;">●</a> - 客戶取消
+                        <a href="#" style="color:lime;">●</a> - 訂單成立
                     </div>
                 </div>
             </div>
@@ -72,10 +76,11 @@
                         },
                         schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source'
                     };
-                    console.log(data);
+ 
                     option.now = data.today;
                     option.resources = data.service_providers;
-                    option.events = data.order;
+                    option.events = data.orders;
+                    console.log(option);
                     $('#calendar').fullCalendar(option);
                 },
                 error: function(e){

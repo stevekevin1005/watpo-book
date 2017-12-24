@@ -1,5 +1,5 @@
 // 負責寫資料(日期,時段)到global state
-
+import { translate } from 'react-i18next';
 import Calendar from "./Calendar";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
@@ -18,14 +18,17 @@ const Grid = ReactBootstrap.Grid,
 class CheckTime extends React.Component{
     constructor(props){
         super(props);
+        const { t } = this.props;
 
-        this.state = {hint: "請點擊月曆選擇日期"};
+        this.state = {hint: t("calendarHint")};
 
         this.getTimePeriods = this.getTimePeriods.bind(this);
         this.setTime = this.setTime.bind(this);
     }
     getTimePeriods(year,month,day){
-        const that = this, date = year+"/"+ (month<10?"0"+month:month) +"/"+ (day<10?"0"+day:day),
+        const that = this, 
+              { t } = this.props,
+              date = year+"/"+ (month<10?"0"+month:month) +"/"+ (day<10?"0"+day:day),
               csrf_token = document.querySelector('input[name="_token"]').value;
 
         // clear selected detail index
@@ -45,10 +48,10 @@ class CheckTime extends React.Component{
             },
             (length)=>{
                 that.props.toggleLoading(false);
-                if(length === 0) that.setState({hint: "目前無符合時段"});
+                if(length === 0) that.setState({hint: t("calendarError_noTimelist")});
             },()=>{
                 that.props.toggleLoading(false);
-                that.setState({hint: "某處發生錯誤，請重新嘗試"});
+                that.setState({hint: t("errorHint_system")});
             });
     }
     setTime(event){
@@ -103,4 +106,4 @@ const mapDispatchToProps = (dispatch)=>{
   
 CheckTime = connect(mapStateToProps,mapDispatchToProps)(CheckTime);  
 
-module.exports = CheckTime;
+module.exports = translate()(CheckTime);

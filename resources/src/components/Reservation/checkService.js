@@ -82,7 +82,7 @@ class CheckService extends React.Component{
     render(){
         const { t } = this.props, sourceData = this.props.sourceData,
               reservation = this.props.reservation,
-              disabled = (reservation.shop === undefined || reservation.service === undefined);
+              disabled = (reservation.shop === undefined || reservation.service === undefined) || this.props.loading;
 
         return(
             <Grid>
@@ -115,7 +115,8 @@ class CheckService extends React.Component{
 const mapStateToProps = (state)=>{
     return {
         reservation: state.reservation,
-        sourceData: state.sourceData
+        sourceData: state.sourceData,
+        loading: state.loading
     }
 }
 

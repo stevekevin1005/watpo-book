@@ -96,29 +96,30 @@ class Landpage extends React.Component{
                     </Col>
                     <Col md={7}>
                         <div className="sectionItem">
-                            <h4><i className="fa fa-caret-right" aria-hidden="true"></i> {t("massageAndSpa")+" (2" + t("hours") +")"}</h4>
-                            <h5>{t("price1")+" "+t("servicePrice1")}</h5>
-                            <div className="contentBlock">    
+                            <h4><i className="fa fa-caret-right" aria-hidden="true"></i>{t("ThaiTraditionalMassage")}</h4>
+                            <h5>{t("price1") + ": " + t("servicePrice1_1hr")+ " (1" + t("hour") +") / "+ t("servicePrice1_2hr")+ " (2" + t("hours") +")"}</h5>
+                            <div className="contentBlock">
                                 <p>
-                                {t("massageAndSpaDes")}
+                                {t("ThaiTraditionalMassageDes")}
                                 </p>
                             </div>
                         </div>
                         <div className="sectionItem">
-                            <h4><i className="fa fa-caret-right" aria-hidden="true"></i> {t("ThaiOilMassage")+" (2" + t("hours") +")"}</h4>
-                            <h5>{t("price2") +" "+t("servicePrice2")}</h5>
+                            <h4><i className="fa fa-caret-right" aria-hidden="true"></i> {t("ThaiOilMassage")}</h4>
+                            <h5>{t("price2") + ": " + t("servicePrice2_1hr")+ " (1" + t("hour") +") / "+ t("servicePrice2_2hr")+ " (2" + t("hours") +")"}</h5>
                             <div className="contentBlock">
                                 <p>
                                     {t("ThaiOilMassageDes")}
                                 </p>
                             </div>
                         </div>
+
                         <div className="sectionItem">
-                            <h4><i className="fa fa-caret-right" aria-hidden="true"></i>{t("ThaiTraditionalMassage")+" (2" + t("hours") +")"}</h4>
-                            <h5>{t("price3") + " " + t("servicePrice3")}</h5>
-                            <div className="contentBlock">
+                            <h4><i className="fa fa-caret-right" aria-hidden="true"></i> {t("massageAndSpa")}</h4>
+                            <h5>{t("price3") + ": " + t("servicePrice3") + " (2" + t("hours") +")"}</h5>
+                            <div className="contentBlock">    
                                 <p>
-                                {t("ThaiTraditionalMassageDes")}
+                                {t("massageAndSpaDes")}
                                 </p>
                             </div>
                         </div>

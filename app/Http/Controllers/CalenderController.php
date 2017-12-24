@@ -38,14 +38,38 @@ class CalenderController extends Controller
 
 			$result['service_providers'] = [];
 			foreach ($service_providers as $key => $service_provider) {
-				$result['service_providers'][] = ['id'=> $service_provider->id, 'name'=>$service_provider->name];
+				$result['service_providers'][] = ['id'=> $service_provider->id, 'title'=>$service_provider->name];
 			}
 
-			$orders = Order::where('start_time', '>=', date("Y/m/d H:i:s", $start_time))->get();
+			$orders = Order::with('serviceProviders')->where('start_time', '>=', date("Y/m/d H:i:s", $start_time))->where('status', '!=', 4)->get();
 
 			$result['orders'] = [];
+			
+			$i = 1;
 			foreach ($orders as $key => $order) {
-				$result['orders'][] = ['id'=>$order->id, 'resourceId'=>$order->service_provider_id, 'start'=>$order->start_time, 'end'=>$order->end_time, 'title'=>$order->name, 'phone'=>$order->phone, 'person'=>$order->person];
+				foreach ($order->serviceProviders as $key => $serviceProvider) {
+					
+					switch ($order->status) {
+						case 1:
+							$color = "royalblue";
+							break;
+						case 2:
+							$color = "khaki";
+							break;
+						case 3:
+							$color = "indianred";
+							break;
+						case 5:
+							$color = "lime";
+							break;	
+						default:
+							$color = "royalblue";
+							break;
+					}
+
+					$result['orders'][] = ['id'=>$i ,'data-id'=>$order->id, 'resourceId'=>$serviceProvider->id, 'start'=>$order->start_time, 'end'=>$order->end_time, 'title'=>$order->name, 'phone'=>$order->phone, 'person'=>$order->person, 'color'=> $color];
+					$i++;
+				}
 			}
 
 			return response()->json($result, 200);
