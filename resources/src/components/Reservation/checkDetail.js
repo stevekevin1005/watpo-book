@@ -72,14 +72,15 @@ class CheckDetail extends React.Component{
         const value = parseInt(event.target.options[event.target.selectedIndex].value),
               data = this.props.sourceData.timeList[this.props.sourceData.selectedDetail].detail;
 
-        // set guest number and !!set room id!!
+        // set guest number and set room id
         this.props.setReservation("guestNum", value);
         this.setState({guestNum: value, prevGuestNum: this.state.guestNum},()=>{
         this.setRoomId();
 
             // set default operator data
             if(value > this.state.prevGuestNum){
-                for(let i = this.state.prevGuestNum ;i<value;i++){
+                // 把師父資料全部重設
+                for(let i=0;i<value;i++){
                     this.props.setReservation("operator", {
                         index: i,
                         data: data.service_provider_list[i].id
@@ -118,7 +119,8 @@ class CheckDetail extends React.Component{
     setMaxGuestNum(fn){
         // max guest number is set in initializing, and whenever shower option changes, and is decided by service type
         const showerType = this.props.sourceData.services[this.props.reservation.service].shower,
-              rooms = this.props.sourceData.timeList[this.props.sourceData.selectedDetail].detail.room;
+              data = this.props.sourceData.timeList[this.props.sourceData.selectedDetail].detail,
+              rooms = data.room;
         let max = 0;
         switch(showerType){
             case 0:
@@ -161,6 +163,9 @@ class CheckDetail extends React.Component{
                     if(rooms[i].shower === 1 && rooms[i].person > max) max = rooms[i].person;
                 }
         }
+        // 確認目前可提供服務的師傅數量
+        const operatorsNum = data.service_provider_list.length;
+        if(operatorsNum < max) max = operatorsNum;
         this.setState({maxGuestNum: max},fn());
     }
     setRoomId(noRoom){
@@ -234,7 +239,7 @@ class CheckDetail extends React.Component{
         if(this.state.guestNum>0){
             for(let i = 0; i < this.state.guestNum;i++){
                 // options of operators
-                operators.push(<FormControl bsClass="form-control operatorOption" componentClass="select" id={"operator"+i} data-index={i} onChange={this.setOperator} defaultValue={this.props.reservation.operator[i] || data.service_provider_list[i].id}>
+                operators.push(<FormControl bsClass="form-control operatorOption" componentClass="select" id={"operator"+i} data-index={i} onChange={this.setOperator} defaultValue={this.props.reservation.operator[i]}>
                     {data.service_provider_list.map((operator, index)=>{
                         let selected = false;
                         for(let j = 0 ; j < selectedOperators.length ; j++){
@@ -261,7 +266,6 @@ class CheckDetail extends React.Component{
                         <ControlLabel>{t("operator")}</ControlLabel>
                             {operators}
                         <FormControl.Feedback />
-                        <p className="hint">{this.state.operatorHint}</p>
                     { this.props.sourceData.services[this.props.reservation.service].shower === 1 && 
                         <div>
                             <ControlLabel>{"是否需要衛浴?"}</ControlLabel>
