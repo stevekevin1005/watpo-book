@@ -5,9 +5,9 @@ import {bindActionCreators} from "redux";
 import toggleLoading from "../../dispatchers/toggleLoading";
 import setReservation from "../../dispatchers/setReservation";
 import setSourceData from "../../dispatchers/setSourceData";
+import Button from "./Button";
 
-const Button = ReactBootstrap.Button,
-        Grid = ReactBootstrap.Grid,
+const Grid = ReactBootstrap.Grid,
         Row = ReactBootstrap.Row,
         Col = ReactBootstrap.Col,
         FormGroup = ReactBootstrap.FormGroup,
@@ -80,7 +80,9 @@ class CheckService extends React.Component{
         this.props.setReservation(group, index);
     }
     render(){
-        const { t } = this.props, sourceData = this.props.sourceData;
+        const { t } = this.props, sourceData = this.props.sourceData,
+              reservation = this.props.reservation,
+              disabled = (reservation.shop === undefined || reservation.service === undefined);
 
         return(
             <Grid>
@@ -103,6 +105,7 @@ class CheckService extends React.Component{
                             </FormControl>
                         </FormGroup>
                     </Col>
+                    <Button currentStep={0} clickHandle={this.props.nextStep} disabled={disabled}/>
                 </Row>
             </Grid>
         );
