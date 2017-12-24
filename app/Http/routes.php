@@ -55,6 +55,14 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/time_list', ['uses' => 'BookController@api_time_list', 'as' => 'apiTimeList']);
 		Route::post('/order', ['uses' => 'BookController@api_order', 'as' => 'apiOrder']);
 	});
+	//admin redirect
+	Route::get('/admin/{path?}', ['where' => ['path' => '.*'], function(){
+		return redirect('/admin/login');
+	}]);
+	//api redirect
+	Route::get('/api/{path?}', ['where' => ['path' => '.*'], function(){
+		return redirect('/');
+	}]);
 	//frontend react
 	Route::get('/{path?}', ['uses' => 'BookController@index', 'as' => 'book', 'where' => ['path' => '.*']]);
 });
