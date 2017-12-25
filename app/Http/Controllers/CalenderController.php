@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\BlackList;
 use Hash, Exception;
 use App\Models\ServiceProvider;
 use App\Models\Shop;
+use App\Models\Room;
 use App\Models\Order;
+use App\Models\Service;
+
 
 class CalenderController extends Controller
 {
@@ -15,8 +17,28 @@ class CalenderController extends Controller
 
 	public function index(Request $request, $shop_id)
 	{
-		$blackList = BlackList::paginate(10);
-		$view_data['blackList'] = $blackList;
+
+		$service_providers = ServiceProvider::with('shop')->get();
+		$rooms = Room::where('shop_id', $shop_id)->get();
+
+		foreach ($service_providers as $key => $service_provider) {
+			$service_provider_name = $service_provider->name."(".$service_provider->shop->name.")";
+			$view_data['service_providers'][] = ['id' => $service_provider->id, 'name' => $service_provider_name];
+		}
+
+		foreach ($rooms as $key => $room) {
+			if($room->shower){
+				$shower = "可沖洗";
+			}
+			else{
+				$shower = "";
+			}
+			$room_name = $room->name."(".$room->person."人房 ".$shower.")";
+			$view_data['rooms'][] = ['id' => $room->id, 'name' => $room_name ];
+		}
+
+		$view_data['shop'] = Shop::where('id', $shop_id)->first();
+		$view_data['service_list'] = Service::all();
 		$view_data['shop_id'] = $shop_id;
 
 		return view('admin.calender.index', $view_data);

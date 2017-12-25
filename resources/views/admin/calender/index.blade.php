@@ -3,6 +3,7 @@
 <link rel='stylesheet' href='/assets/plugins/fullcalendar/fullcalendar.css' />
 <link href='/assets/plugins/fullcalendar/fullcalendar.print.min.css' rel='stylesheet' media='print' />
 <link href='/assets/plugins/fullcalendar/scheduler.min.css' rel='stylesheet' />
+<link rel="stylesheet" href="/assets/css/bootstrap-select.min.css">
 @stop
 @section('content')
 <div class="content-page">
@@ -13,7 +14,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="page-title-box">
-                        <h4 class="page-title">民生店 - 預約管理&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary">新建預約單</button> 
+                        <h4 class="page-title">{{ $shop->name }} - 預約管理&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" id="new_order">新建預約單</button> 
                         </h4>
                         <a href="#" style="color:royalblue;">●</a> - 客戶預定
                         <a href="#" style="color:khaki;">●</a> - 櫃檯預定
@@ -39,14 +40,107 @@
     </footer>
     <!-- End FOOTER -->
 </div>
-
 @stop
 @section('script')
+<script src="/assets/plugins/bootstrap-select.min.js"></script>
+{{-- <script src="/assets/plugins/i18n/defaults-*.min.js"></script> --}}
 <script src='/assets/plugins/fullcalendar/fullcalendar.js'></script>
 <script src='/assets/plugins/fullcalendar/scheduler.min.js'></script>
+<script id="order_form_template" type="x-jsrender">
+    <form id="order_form" class="container" style="height:300px;">
+        <div class="row" style="margin-top:10px">
+            <div class="col-md-1" style="text-align:left;">
+                姓名:
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="exampleInputEmail3" placeholder="現場客">
+            </div>
+            <div class="col-md-1" style="text-align:left;">
+                電話:
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="exampleInputEmail3" placeholder="現場客">
+            </div>
+        </div>
+        <div class="row" style="margin-top:10px">
+            <div class="col-md-1" style="text-align:left;">
+                房間:
+            </div>
+            <div class="col-md-3">
+                <select name="" class="form-control">
+                    @foreach($rooms as $room)
+                    <option value="{{ $room['id'] }}">{{ $room['name'] }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-1" style="text-align:left;">
+                師傅:
+            </div>
+            <div class="col-md-6">
+                <select name="" class="selectpicker" multiple data-max-options="4" data-width="100%">
+                    @foreach($service_providers as $service_provider)
+                    <option value="{{ $service_provider['id'] }}">{{ $service_provider['name'] }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <div class="row" style="margin-top:10px">
+            <div class="col-md-1"  style="text-align:left;">
+                服務:
+            </div>
+            <div class="col-md-3">
+                <select name="" class="form-control" required>
+                    @foreach($service_list as $service)
+                    <option value="{{ $service->id }}">{{ $service->title }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <div class="row" style="margin-top:10px">
+            <div class="col-md-2"  style="text-align:left;">
+                開始時間:
+            </div>
+            <div class="col-md-3">
+                <input type="datetime-local" class="form-control" required>
+            </div>
+            <div class="col-md-2"  style="text-align:left;">
+                結束時間:
+            </div>
+            <div class="col-md-3">
+                <input type="datetime-local" class="form-control" required>
+            </div>
+        </div>
+        <div class="row" style="margin-top:50px;">
+            <div class="col-md-12">
+                <input type="submit" class="btn btn-info" style="font-size:17px; font-weight: 500;font-weight: 500;margin: 15px 5px 0;padding: 10px 32px;border: 0;border-radius: 3px;">
+            </div>
+        </div>
+    </form>
+</script>
 <script type="text/javascript">
     $(function() { // document ready
-        $(".button-menu-mobile").trigger('click');
+        $( "#new_order" ).on( "click", function() {
+            var myTemplate = $.templates("#order_form_template");
+                var html = myTemplate.render();
+            swal({
+                title: '新建預約單',
+                html: html,
+                width: "90%",
+                allowOutsideClick: false,
+                showCancelButton: true,
+                focusConfirm: false,
+                cancelButtonText:'取消',
+                showConfirmButton: false,
+            }).then((result) => {
+
+            });
+            $('.selectpicker').selectpicker({
+                size: 4
+            });
+        });
+        $(".open-left").trigger('click');
+        $(".open-left").trigger('touchstart');
+
 
         function render_calender(){
             $.ajax({

@@ -50,7 +50,7 @@
                 <!-- LOGO -->
                 <div class="topbar-left">
                     <div class="text-center">
-                        <a href="/index.html" class="logo"><span>泰和殿管理後台</span> </a>
+                        <a href="/admin/dashboard" class="logo"><span>泰和殿管理後台</span> </a>
                     </div>
                 </div>
 

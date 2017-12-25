@@ -16,6 +16,10 @@ class ServiceProvider extends Model {
   {
     return $this->hasMany('App\Models\Leave', 'service_provider_id');
   }
+  public function shop()
+  {
+    return $this->belongsTo('App\Models\Shop', 'shop_id');
+  }
 }
 
 /*
