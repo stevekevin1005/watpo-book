@@ -10,6 +10,7 @@ import {bindActionCreators} from "redux";
 import LoadingAnimation from "./LoadingAnimation";
 import clearReservation from "../dispatchers/clearReservation";
 import clearSourceData from "../dispatchers/clearSourceData";
+import toggleLoading from "../dispatchers/toggleLoading";
 
 const Grid = ReactBootstrap.Grid,
     Row = ReactBootstrap.Row,
@@ -61,6 +62,7 @@ class Reservation extends React.Component{
         this.props.history.push('/reservation/' + (parseInt(this.props.match.params.step) + 1));
     }
     send(){
+        const { t } = this.props;
       // get end time
       const duration = this.props.sourceData.services[this.props.reservation.service].time / 60,
             token = document.querySelector('input[name="_token"]').value,
@@ -73,7 +75,18 @@ class Reservation extends React.Component{
       const reservation = this.props.reservation,
             serviceName = this.props.sourceData.services[reservation.service].title;
 
+      // check if there's available room
+      if(reservation.room === undefined){
+        that.setState({
+            showAlert: true,
+            alertTitle: t("error"),
+            alertText: t("errorHint_noRoom")
+        });
+        return;
+      }
+
       // call API
+      this.props.toggleLoading(true);
       axios({
           method: "post",
           url: "/api/order",
@@ -93,27 +106,30 @@ class Reservation extends React.Component{
       }).then(function(response){
           if(response.statusText == "OK"){
               // show success alert
+              that.props.toggleLoading(false);
               that.setState({
                   success: true,
                   showAlert: true,
-                  alertTitle: "預定成功",
-                  alertText: reservation.name + " " + reservation.date + " " + reservation.time + " 預約 " + serviceName+ " 服務 " + reservation.guestNum + " 人 成功"
+                  alertTitle: t("success"),
+                  alertText: reservation.name + " " + reservation.date + " " + reservation.time + " " + serviceName + " " + reservation.guestNum + " "+ (reservation.guestNum>1?t("people"):t("person")) +" " + t("success")
               });
           }else{
               // show failure alert
+              that.props.toggleLoading(false);
               that.setState({
                   showAlert: true,
-                  alertTitle: "錯誤",
-                  alertText: "系統錯誤請再重試"
+                  alertTitle: t("error"),
+                  alertText: t("errorHint_system")
               });
           }
       }).catch(function(error){
           console.log(error);
           // error handle
+          that.props.toggleLoading(false);
           that.setState({
               showAlert: true,
-              alertTitle: "錯誤",
-              alertText: "系統錯誤請再重試"
+              alertTitle: t("error"),
+              alertText: t("errorHint_system")
           });
       });
     }
@@ -202,7 +218,8 @@ const mapStateToProps = (state)=>{
 const mapDispatchToProps = (dispatch)=>{
     return bindActionCreators({
         clearReservation: clearReservation,
-        clearSourceData: clearSourceData
+        clearSourceData: clearSourceData,
+        toggleLoading: toggleLoading
     },dispatch);
 }
   
