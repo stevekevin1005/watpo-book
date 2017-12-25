@@ -18,16 +18,14 @@ const Grid = ReactBootstrap.Grid,
 class CheckTime extends React.Component{
     constructor(props){
         super(props);
-        const { t } = this.props;
 
-        this.state = {hint: t("calendarHint")};
+        this.state = {hint: "calendarHint"};
 
         this.getTimePeriods = this.getTimePeriods.bind(this);
         this.setTime = this.setTime.bind(this);
     }
     getTimePeriods(year,month,day){
         const that = this, 
-              { t } = this.props,
               date = year+"/"+ (month<10?"0"+month:month) +"/"+ (day<10?"0"+day:day),
               csrf_token = document.querySelector('input[name="_token"]').value;
 
@@ -48,10 +46,10 @@ class CheckTime extends React.Component{
             },
             (length)=>{
                 that.props.toggleLoading(false);
-                if(length === 0) that.setState({hint: t("calendarError_noTimelist")});
+                if(length === 0) that.setState({hint: "calendarError_noTimelist"});
             },()=>{
                 that.props.toggleLoading(false);
-                that.setState({hint: t("errorHint_system")});
+                that.setState({hint: "errorHint_system"});
             });
     }
     setTime(event){
@@ -63,7 +61,8 @@ class CheckTime extends React.Component{
     render(){
         if(this.props.reservation.shop === undefined || this.props.reservation.service === undefined) location.href = '../reservation/0';
         const reservation = this.props.reservation,
-              disabled = (!reservation.date || !reservation.time);
+              disabled = (!reservation.date || !reservation.time),
+              { t } = this.props;;
 
         return(
             <Grid>
@@ -77,7 +76,7 @@ class CheckTime extends React.Component{
                         if(time.detail.service_provider_list === null || time.detail.room === null) return (<span className="timePeriod" key={index} data-index={index}>{time.time}</span>);
                         else if(index === this.props.sourceData.selectedDetail) return (<span className="timePeriod selectedTime" key={index} data-index={index}>{time.time}</span>);
                         return (<span className="timePeriod available" key={index} data-index={index} onClick={this.setTime}>{time.time}</span>);
-                    }):<p>{this.state.hint}</p>}
+                    }):<p>{t(this.state.hint)}</p>}
                 </div>
             </Col>
             <Button currentStep={1} clickHandle={this.props.nextStep} disabled={disabled}/>

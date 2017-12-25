@@ -102,7 +102,7 @@ class CheckDetail extends React.Component{
 
         // set hint
         this.props.setReservation("name", value);
-        if(value === "") this.setState({nameHint: t("nameHint")});
+        if(value === "") this.setState({nameHint: "nameHint"});
     }
     setContactNumber(){
         const { t } = this.props;
@@ -114,8 +114,8 @@ class CheckDetail extends React.Component{
         this.props.setReservation("contactNumber", value);
         
         // set hint
-        if(value === "") this.setState({contactNumberHint: t("contactNumberHint_blank")});
-        else if(value.length < 6) this.setState({contactNumberHint: t("contactNumberHint_length")});
+        if(value === "") this.setState({contactNumberHint: "contactNumberHint_blank"});
+        else if(value.length < 6) this.setState({contactNumberHint: "contactNumberHint_length"});
     }
     //
     setMaxGuestNum(fn){
@@ -206,16 +206,16 @@ class CheckDetail extends React.Component{
         const { t } = this.props;
         let pass = true;
         if(!this.props.reservation.name){
-            this.setState({nameHint: t("nameHint")});
+            this.setState({nameHint: "nameHint"});
             this.numberInput.focus();
             pass = false;
         }
         if(!this.props.reservation.contactNumber){
-            this.setState({contactNumberHint: t("contactNumberHint_blank")});
+            this.setState({contactNumberHint: "contactNumberHint_blank"});
             this.numberInput.focus();
             pass = false;
         }else if(this.props.reservation.contactNumber.length < 6){
-            this.setState({contactNumberHint: t("contactNumberHint_length")});
+            this.setState({contactNumberHint: "contactNumberHint_length"});
             this.numberInput.focus();
             pass = false;
         }
@@ -260,7 +260,6 @@ class CheckDetail extends React.Component{
             }
         }
 
-
         return(
             <Grid>
             <Row className="show-grid">
@@ -301,7 +300,7 @@ class CheckDetail extends React.Component{
                         onChange = {this.setName}
                     />
                     <FormControl.Feedback />
-                    <p className="hint">{this.state.nameHint}</p>
+                    <p className="hint">{t(this.state.nameHint)}</p>
                     <ControlLabel>{t("contactNumber")}</ControlLabel>
                     <FormControl
                         type="text"
@@ -310,7 +309,7 @@ class CheckDetail extends React.Component{
                         onChange = {this.setContactNumber}
                     />
                     <FormControl.Feedback />
-                    <p className="hint">{this.state.contactNumberHint}</p>
+                    <p className="hint">{t(this.state.contactNumberHint)}</p>
                 </Col>
              </FormGroup>
              <Button currentStep={2} clickHandle={this.send} disabled={false}/>
