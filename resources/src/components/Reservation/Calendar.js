@@ -13,7 +13,7 @@ class Calendar extends React.Component{
               inputtedDate = this.props.reservation.date?this.props.reservation.date.split("/"):null;
 
         this.state = {
-            displayingYear: inputtedDate?inputtedDate[0]:date.getFullYear(),
+            displayingYear: inputtedDate?parseInt(inputtedDate[0]):date.getFullYear(),
             displayingMonth: inputtedDate?inputtedDate[1]:date.getMonth() + 1, // 1-based
             firstWeekDay: firstDay.getDay(), // 1-based
             dayNum: lastDayOfMonth, // 0-based, 0=>禮拜天, 1=>禮拜一...
@@ -30,7 +30,7 @@ class Calendar extends React.Component{
         this.setState({selectedDay: -1});
         const firstDay = new Date(date.getFullYear(),date.getMonth(),1),
             lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-        
+
         // set local state
         this.setState({
             displayingYear: date.getFullYear(),

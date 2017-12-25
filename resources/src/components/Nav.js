@@ -18,7 +18,7 @@ class Nav extends React.Component{
         this.changeLang = this.changeLang.bind(this);
     }
     changeLang(lang){
-      i18next.changeLanguage(lang); 
+      i18next.changeLanguage(lang);
     }
     render(){
         const { t } = this.props;

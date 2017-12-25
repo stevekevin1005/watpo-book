@@ -79,7 +79,7 @@ class CheckDetail extends React.Component{
 
             // set default operator data
             if(value > this.state.prevGuestNum){
-                // 把師父資料全部重設
+                // 把師傅資料全部重設
                 for(let i=0;i<value;i++){
                     this.props.setReservation("operator", {
                         index: i,
@@ -93,6 +93,7 @@ class CheckDetail extends React.Component{
         });
     }
     setName(){
+        const { t } = this.props;
         // clear hint
         if(this.state.nameHint !== "")this.setState({nameHint: ""});
 
@@ -101,9 +102,10 @@ class CheckDetail extends React.Component{
 
         // set hint
         this.props.setReservation("name", value);
-        if(value === "") this.setState({nameHint: "請輸入聯絡人姓名"});
+        if(value === "") this.setState({nameHint: "nameHint"});
     }
     setContactNumber(){
+        const { t } = this.props;
         // clear hint
         if(this.state.contactNumberHint !== "")this.setState({contactNumberHint: ""});
 
@@ -112,8 +114,8 @@ class CheckDetail extends React.Component{
         this.props.setReservation("contactNumber", value);
         
         // set hint
-        if(value === "") this.setState({contactNumberHint: "請輸入聯絡號碼"});
-        else if(value.length < 6) this.setState({contactNumberHint: "請輸入有效聯絡號碼"});
+        if(value === "") this.setState({contactNumberHint: "contactNumberHint_blank"});
+        else if(value.length < 6) this.setState({contactNumberHint: "contactNumberHint_length"});
     }
     //
     setMaxGuestNum(fn){
@@ -201,18 +203,19 @@ class CheckDetail extends React.Component{
     send(event){
         event.preventDefault();
 
+        const { t } = this.props;
         let pass = true;
         if(!this.props.reservation.name){
-            this.setState({nameHint: "請輸入聯絡人姓名"});
+            this.setState({nameHint: "nameHint"});
             this.numberInput.focus();
             pass = false;
         }
         if(!this.props.reservation.contactNumber){
-            this.setState({contactNumberHint: "請輸入聯絡號碼"});
+            this.setState({contactNumberHint: "contactNumberHint_blank"});
             this.numberInput.focus();
             pass = false;
         }else if(this.props.reservation.contactNumber.length < 6){
-            this.setState({contactNumberHint: "請輸入有效聯絡號碼"});
+            this.setState({contactNumberHint: "contactNumberHint_length"});
             this.numberInput.focus();
             pass = false;
         }
@@ -257,7 +260,6 @@ class CheckDetail extends React.Component{
             }
         }
 
-
         return(
             <Grid>
             <Row className="show-grid">
@@ -268,11 +270,11 @@ class CheckDetail extends React.Component{
                         <FormControl.Feedback />
                     { this.props.sourceData.services[this.props.reservation.service].shower === 1 && 
                         <div>
-                            <ControlLabel>{"是否需要衛浴?"}</ControlLabel>
+                            <ControlLabel>{t("showerOrNot")}</ControlLabel>
                             <FormControl componentClass="select" placeholder="select" defaultValue={this.state.shower} onChange={this.setShower}
                              inputRef={ref => { this.showerOrNot = ref; }}>
-                                <option value={true}>{"是"}</option>
-                                <option value={false}>{"否"}</option>
+                                <option value={true}>{t("yes")}</option>
+                                <option value={false}>{t("no")}</option>
                             </FormControl>
                             <FormControl.Feedback />
                         </div>
@@ -282,7 +284,7 @@ class CheckDetail extends React.Component{
                             {guestNumEl}
                         </FormControl>
                         <FormControl.Feedback />
-                        </div>:<p className="hint">目前無符合您需求的房間</p>}
+                        </div>:<p className="hint">{t("errorHint_noRoom")}</p>}
                </Col>
                
                <Col md={1}>
@@ -293,12 +295,12 @@ class CheckDetail extends React.Component{
                     <ControlLabel>{t("reservatorName")}</ControlLabel>
                     <FormControl
                         type="text"
-                        placeholder="請輸入預約人姓名..."
+                        placeholder={t("nameHint")+"..."}
                         inputRef={ref => { this.nameInput = ref; }}
                         onChange = {this.setName}
                     />
                     <FormControl.Feedback />
-                    <p className="hint">{this.state.nameHint}</p>
+                    <p className="hint">{t(this.state.nameHint)}</p>
                     <ControlLabel>{t("contactNumber")}</ControlLabel>
                     <FormControl
                         type="text"
@@ -307,7 +309,7 @@ class CheckDetail extends React.Component{
                         onChange = {this.setContactNumber}
                     />
                     <FormControl.Feedback />
-                    <p className="hint">{this.state.contactNumberHint}</p>
+                    <p className="hint">{t(this.state.contactNumberHint)}</p>
                 </Col>
              </FormGroup>
              <Button currentStep={2} clickHandle={this.send} disabled={false}/>
