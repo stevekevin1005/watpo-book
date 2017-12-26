@@ -203,6 +203,7 @@ class BookController extends Controller
 			$order->status = 1;
 			$order->service_id = $service_id;
 			$order->room_id = $room_id;
+			$order->shop_id = $shop_id;
 			$order->start_time = $start_time;
 			$order->end_time = $end_time;
 			$order->save();
