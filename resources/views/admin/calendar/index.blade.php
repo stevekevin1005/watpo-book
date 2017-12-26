@@ -16,10 +16,10 @@
                     <div class="page-title-box">
                         <h4 class="page-title">{{ $shop->name }} - 預約管理&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" id="new_order">新建預約單</button> 
                         </h4>
-                        <a href="#" style="color:royalblue;">●</a> - 客戶預定
-                        <a href="#" style="color:khaki;">●</a> - 櫃檯預定
-                        <a href="#" style="color:indianred;">●</a> - 客戶取消
-                        <a href="#" style="color:lime;">●</a> - 訂單成立
+                        <a href="#" style="color:#3ddcf7;">●</a> - 客戶預定
+                        <a href="#" style="color:#1d7dca;">●</a> - 櫃檯預定
+                        <a href="#" style="color:#ef5350;">●</a> - 客戶取消
+                        <a href="#" style="color:#5cb85c;">●</a> - 訂單成立
                     </div>
                 </div>
             </div>
