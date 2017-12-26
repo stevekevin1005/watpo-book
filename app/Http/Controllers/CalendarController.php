@@ -73,19 +73,19 @@ class CalendarController extends Controller
 					
 					switch ($order->status) {
 						case 1:
-							$color = "royalblue";
+							$color = "#3ddcf7";
 							break;
 						case 2:
-							$color = "khaki";
+							$color = "#1d7dca";
 							break;
 						case 3:
-							$color = "indianred";
+							$color = "#ef5350";
 							break;
 						case 5:
-							$color = "lime";
+							$color = "#5cb85c";
 							break;	
 						default:
-							$color = "royalblue";
+							$color = "#3ddcf7";
 							break;
 					}
 
