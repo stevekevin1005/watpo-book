@@ -17,6 +17,11 @@ class Shop extends Model {
   {
     return $this->hasMany('App\Models\Room', 'shop_id');
   }
+
+  public function orders()
+  {
+    return $this->hasMany('App\Models\Order', 'shop_id');
+  }
 }
 
 /*

@@ -17,6 +17,12 @@ class Order extends Model {
   {
     return $this->belongsTo('App\Models\Service', 'service_id');
   }
+
+  public function shop()
+  {
+    return $this->belongsTo('App\Models\Shop', 'shop_id');
+  }
+
   public function serviceProviders()
   {
     return $this->belongsToMany('App\Models\ServiceProvider', 'service_provider_order', 'order_id','service_provider_id');
@@ -32,6 +38,7 @@ class Order extends Model {
 					1: customer book 2: staff book 3: customer cancel 4: staff cancel 5: order success
 	service_id: service table
 	room_id: room table
+  shop_id: shop table
 	start_time: datetime
 	end_time: datetime
 	created_at: datetime
