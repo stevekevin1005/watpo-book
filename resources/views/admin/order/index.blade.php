@@ -110,7 +110,7 @@
 				                </div>
 			                  <!-- /col-md-4-->
 			                  <!-- /col-md-8-->
-			                	<div class="col-md-12 text-right"><button class="btn btn-danger">匯出</button><input class="btn btn-primary" type="submit" value="查詢"></div>
+			                	<div class="col-md-12 text-right"><a href="/admin/order/export?name={{$request->name}}&service={{$request->service}}&phone={{$request->phone}}&shop={{$request->shop}}&service_provider={{$request->service_provider}}&start_time={{$request->start_time}}&end_time={{$request->end_time}}" class="btn btn-danger" target="_blank">匯出</a><input class="btn btn-primary" type="submit" value="查詢"></div>
 			                  <!-- /col-md-12-->
 			                </div>
 			                <!-- /row-->

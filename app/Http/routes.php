@@ -33,6 +33,7 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/calendar/{shop_id}', ['uses' => 'CalendarController@index', 'as' => 'calendarIndex']);
 		Route::get('/dashboard', ['uses' => 'DashboardController@index', 'as' => 'dashboardIndex']);
 		Route::get('/order', ['uses' => 'OrderController@index', 'as' => 'orderIndex']);
+		Route::get('/order/export', ['uses' => 'OrderController@export', 'as' => 'orderExport']);
 		Route::get('/log', ['uses' => 'LogController@index', 'as' => 'logIndex']);
 		Route::get('/account', ['uses' => 'AccountController@index', 'as' => 'accountIndex']);
 		Route::post('/account/update_password', ['uses' => 'AccountController@update_password', 'as' => 'accountUpdatePassword']);
