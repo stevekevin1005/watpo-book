@@ -63,7 +63,7 @@ class CalenderController extends Controller
 				$result['service_providers'][] = ['id'=> $service_provider->id, 'title'=>$service_provider->name];
 			}
 
-			$orders = Order::with('serviceProviders')->where('start_time', '>=', date("Y/m/d H:i:s", $start_time))->where('status', '!=', 4)->get();
+			$orders = Order::with('serviceProviders')->where('shop_id', $shop_id)->where('start_time', '>=', date("Y/m/d H:i:s", $start_time))->where('status', '!=', 4)->get();
 
 			$result['orders'] = [];
 			
