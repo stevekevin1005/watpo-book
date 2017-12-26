@@ -30,7 +30,7 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('/blacklist/delete', ['uses' => 'BlackListController@delete', 'as' => 'blackListDelete']);
 		Route::get('/leave', ['uses' => 'LeaveController@index', 'as' => 'leaveIndex']);
 		Route::post('/leave/add', ['uses' => 'LeaveController@add', 'as' => 'leaveAdd']);
-		Route::get('/calender/{shop_id}', ['uses' => 'CalenderController@index', 'as' => 'calenderIndex']);
+		Route::get('/calendar/{shop_id}', ['uses' => 'CalendarController@index', 'as' => 'calendarIndex']);
 		Route::get('/dashboard', ['uses' => 'DashboardController@index', 'as' => 'dashboardIndex']);
 		Route::get('/order', ['uses' => 'OrderController@index', 'as' => 'orderIndex']);
 		Route::get('/log', ['uses' => 'LogController@index', 'as' => 'logIndex']);
@@ -46,7 +46,7 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('/account/add', ['uses' => 'AccountController@api_add', 'as' => 'apiAccountAdd']);
 		Route::post('/account/delete', ['uses' => 'AccountController@api_delete', 'as' => 'apiAccountDelete']);
 		Route::post('/account/reset_password', ['uses' => 'AccountController@api_reset_password', 'as' => 'apiAccountResetPassword']);
-		Route::get('/calender/{shop_id}', ['uses' => 'CalenderController@api_shop_calender', 'as' => 'apiShopClander']);
+		Route::get('/calendar/{shop_id}', ['uses' => 'CalendarController@api_shop_calendar', 'as' => 'apiShopClander']);
 	});
 
 	Route::group(['prefix' => '/api'], function () {

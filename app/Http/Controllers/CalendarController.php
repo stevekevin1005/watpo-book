@@ -11,7 +11,7 @@ use App\Models\Order;
 use App\Models\Service;
 
 
-class CalenderController extends Controller
+class CalendarController extends Controller
 {
 	
 
@@ -41,10 +41,10 @@ class CalenderController extends Controller
 		$view_data['service_list'] = Service::all();
 		$view_data['shop_id'] = $shop_id;
 
-		return view('admin.calender.index', $view_data);
+		return view('admin.calendar.index', $view_data);
 	}
 
-	public function api_shop_calender(Request $request, $shop_id)
+	public function api_shop_calendar(Request $request, $shop_id)
 	{	
 		try{
 			$date = date('Y-m-d');

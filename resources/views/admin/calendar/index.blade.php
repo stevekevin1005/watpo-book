@@ -144,7 +144,7 @@
 
         function render_calender(){
             $.ajax({
-                url: '/api/calender/{{ $shop_id }}',
+                url: '/api/calendar/{{ $shop_id }}',
                 type: 'GET',
                 dataType: 'json',
                 success: function(data){

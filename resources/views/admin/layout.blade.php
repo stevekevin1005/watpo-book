@@ -161,8 +161,8 @@
                                     <span> 預約排程 </span> 
                                 </a>
                                 <ul class="list-unstyled">
-                                    <li><a href="/admin/calender/1">民生店</a></li>
-                                    <li><a href="/admin/calender/2">光復店</a></li>
+                                    <li><a href="/admin/calendar/1">民生店</a></li>
+                                    <li><a href="/admin/calendar/2">光復店</a></li>
                                 </ul>
                             </li>
 
