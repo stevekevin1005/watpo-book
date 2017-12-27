@@ -20,6 +20,12 @@
                         <a href="#" style="color:#1d7dca;">●</a> - 櫃檯預定
                         <a href="#" style="color:#ef5350;">●</a> - 客戶取消
                         <a href="#" style="color:#5cb85c;">●</a> - 訂單成立
+                        @if ($errors->has('fail'))
+                        <a href="#" style="color:red;">{{ $errors->first('fail') }}</a>
+                        @endif
+                        @if (old('message'))
+                        <a href="#" style="color:green;">{{ old('message') }}</a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -43,23 +49,24 @@
 @stop
 @section('script')
 <script src="/assets/plugins/bootstrap-select.min.js"></script>
-{{-- <script src="/assets/plugins/i18n/defaults-*.min.js"></script> --}}
 <script src='/assets/plugins/fullcalendar/fullcalendar.js'></script>
 <script src='/assets/plugins/fullcalendar/scheduler.min.js'></script>
 <script id="order_form_template" type="x-jsrender">
-    <form id="order_form" class="container" style="height:300px;">
+    <form id="order_form" class="container" style="height:300px;" method="post" action="@{{:url}}">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="shop_id" value="{{ $shop_id }}">
         <div class="row" style="margin-top:10px">
             <div class="col-md-1" style="text-align:left;">
                 姓名:
             </div>
             <div class="col-md-3">
-                <input type="text" class="form-control" id="exampleInputEmail3" placeholder="現場客">
+                <input type="text" class="form-control" name="name" placeholder="現場客">
             </div>
             <div class="col-md-1" style="text-align:left;">
                 電話:
             </div>
             <div class="col-md-3">
-                <input type="text" class="form-control" id="exampleInputEmail3" placeholder="現場客">
+                <input type="text" class="form-control" name="phone" placeholder="現場客">
             </div>
         </div>
         <div class="row" style="margin-top:10px">
@@ -67,7 +74,7 @@
                 房間:
             </div>
             <div class="col-md-3">
-                <select name="" class="form-control">
+                <select name="room_id" class="form-control">
                     @foreach($rooms as $room)
                     <option value="{{ $room['id'] }}">{{ $room['name'] }}</option>
                     @endforeach
@@ -77,7 +84,7 @@
                 師傅:
             </div>
             <div class="col-md-6">
-                <select name="" class="selectpicker" multiple data-max-options="4" data-width="100%">
+                <select name="service_provider_list[]" class="selectpicker" multiple data-max-options="4" data-width="100%">
                     @foreach($service_providers as $service_provider)
                     <option value="{{ $service_provider['id'] }}">{{ $service_provider['name'] }}</option>
                     @endforeach
@@ -89,7 +96,7 @@
                 服務:
             </div>
             <div class="col-md-3">
-                <select name="" class="form-control" required>
+                <select name="service_id" class="form-control" required>
                     @foreach($service_list as $service)
                     <option value="{{ $service->id }}">{{ $service->title }}</option>
                     @endforeach
@@ -101,13 +108,13 @@
                 開始時間:
             </div>
             <div class="col-md-3">
-                <input type="datetime-local" class="form-control" required>
+                <input type="datetime-local" name="start_time" class="form-control">
             </div>
             <div class="col-md-2"  style="text-align:left;">
                 結束時間:
             </div>
             <div class="col-md-3">
-                <input type="datetime-local" class="form-control" required>
+                <input type="datetime-local" name="end_time" class="form-control">
             </div>
         </div>
         <div class="row" style="margin-top:50px;">
@@ -121,16 +128,19 @@
     $(function() { // document ready
         $( "#new_order" ).on( "click", function() {
             var myTemplate = $.templates("#order_form_template");
-                var html = myTemplate.render();
+            var html = myTemplate.render({
+                url: '/admin/calendar/{{$shop_id}}/add_order'
+            });
             swal({
                 title: '新建預約單',
                 html: html,
                 width: "90%",
                 allowOutsideClick: false,
-                showCancelButton: true,
+                showCancelButton: false,
                 focusConfirm: false,
                 cancelButtonText:'取消',
                 showConfirmButton: false,
+                showCloseButton: true,
             }).then((result) => {
 
             });
