@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const path = require('path');
-const autoprefixer = require("autoprefixer");
 
 let settings = [{
   name: "app",
@@ -44,7 +43,7 @@ let settings = [{
         ]
       },
       { 
-        test: /\.[ot]tf$/, 
+        test: /\.(eot|svg|ttf|woff|otf|woff2)$/,
         loader: 'url-loader',
         options:{
           limit: 65000,

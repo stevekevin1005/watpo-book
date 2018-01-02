@@ -63,6 +63,7 @@
 	"sun": "日",
 	"calendarHint": "キャレンダーをタップして日付を選択してください...",
 	"calendarError_noTimelist": "いまこの日付に予約できる時間はありません",
+	"timeHint": "*00:00:00以後の時間は翌日の時間です",
 	"nameHint": "お名前を入力してください",
 	"contactNumberHint_blank": "電話番号を入力してください",
 	"contactNumberHint_length": "有効な電話番号を入力してください",

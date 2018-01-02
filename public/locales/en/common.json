@@ -64,6 +64,7 @@
 	"sun": "Sun",
 	"calendarHint": "Please select the date by clicking on the calendar...",
 	"calendarError_noTimelist": "There's currently no available time periods for this date.",
+	"timeHint": "*Time periods after 00:00:00 are time periods of next day",
 	"nameHint": "Please input your name",
 	"contactNumberHint_blank": "Please input your contact number",
 	"contactNumberHint_length": "Please input valid contact number",
