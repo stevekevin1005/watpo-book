@@ -49,6 +49,8 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('/account/delete', ['uses' => 'AccountController@api_delete', 'as' => 'apiAccountDelete']);
 		Route::post('/account/reset_password', ['uses' => 'AccountController@api_reset_password', 'as' => 'apiAccountResetPassword']);
 		Route::get('/calendar/{shop_id}', ['uses' => 'CalendarController@api_shop_calendar', 'as' => 'apiShopClander']);
+		Route::post('/order/confirm', ['uses' => 'CalendarController@api_order_confirm', 'as' => 'apiOrderConfirm']);
+		Route::post('/order/cancel', ['uses' => 'CalendarController@api_order_cancel', 'as' => 'apiOrderCancel']);
 	});
 
 	Route::group(['prefix' => '/api'], function () {

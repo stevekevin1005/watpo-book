@@ -4,6 +4,11 @@
 <link href='/assets/plugins/fullcalendar/fullcalendar.print.min.css' rel='stylesheet' media='print' />
 <link href='/assets/plugins/fullcalendar/scheduler.min.css' rel='stylesheet' />
 <link rel="stylesheet" href="/assets/css/bootstrap-select.min.css">
+<style type="text/css">
+    .fc-event{
+        cursor: pointer;
+    }
+</style>
 @stop
 @section('content')
 <div class="content-page">
@@ -18,7 +23,7 @@
                         </h4>
                         <a href="#" style="color:#3ddcf7;">●</a> - 客戶預定
                         <a href="#" style="color:#1d7dca;">●</a> - 櫃檯預定
-                        <a href="#" style="color:#ef5350;">●</a> - 客戶取消
+                        <a href="#" style="color:#ffaa00;">●</a> - 櫃檯取消
                         <a href="#" style="color:#5cb85c;">●</a> - 訂單成立
                         @if ($errors->has('fail'))
                         <a href="#" style="color:red;">{{ $errors->first('fail') }}</a>
@@ -52,7 +57,7 @@
 <script src='/assets/plugins/fullcalendar/fullcalendar.js'></script>
 <script src='/assets/plugins/fullcalendar/scheduler.min.js'></script>
 <script id="order_form_template" type="x-jsrender">
-    <form id="order_form" class="container" style="height:300px;" method="post" action="@{{:url}}">
+    <form class="container" style="height:500px;" method="post" action="@{{:url}}">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <input type="hidden" name="shop_id" value="{{ $shop_id }}">
         <div class="row" style="margin-top:10px">
@@ -104,17 +109,27 @@
             </div>
         </div>
         <div class="row" style="margin-top:10px">
-            <div class="col-md-2"  style="text-align:left;">
-                開始時間:
+            <div class="col-md-1"  style="text-align:left;">
+                開始:
             </div>
             <div class="col-md-3">
-                <input type="datetime-local" name="start_time" class="form-control">
+                <div class='input-group date datetimepicker'>
+                    <input type='text' name="start_time" class="form-control" required/>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
             </div>
-            <div class="col-md-2"  style="text-align:left;">
-                結束時間:
+            <div class="col-md-1"  style="text-align:left;">
+                結束:
             </div>
             <div class="col-md-3">
-                <input type="datetime-local" name="end_time" class="form-control">
+                <div class='input-group date datetimepicker'>
+                    <input type='text' name="end_time" class="form-control" required/>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
             </div>
         </div>
         <div class="row" style="margin-top:50px;">
@@ -124,6 +139,31 @@
         </div>
     </form>
 </script>
+<script id="check_form_template" type="x-jsrender">
+    <div class="container" style="height:200x;">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>姓名: @{{:name}} 電話: @{{:phone}}</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h4>人數: @{{:person}} 服務: @{{:service}} 房號: @{{:room}}</h4>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-md-4">
+                <button type="button" class="btn btn-danger order_cancel" data-id="@{{:order_id}}" style="font-size:20px;">取消訂單</button>
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-info order_update" data-id="@{{:order_id}}" data-name="@{{:name}}" data-phone="@{{:phone}}" style="font-size:20px;">更改訂單</button>
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-success order_confirm" data-id="@{{:order_id}}" style="font-size:20px;">確認訂單</button>
+            </div>
+        </div>
+    </div>
+</script>
 <script type="text/javascript">
     $(function() { // document ready
         $( "#new_order" ).on( "click", function() {
@@ -131,6 +171,7 @@
             var html = myTemplate.render({
                 url: '/admin/calendar/{{$shop_id}}/add_order'
             });
+
             swal({
                 title: '新建預約單',
                 html: html,
@@ -141,8 +182,10 @@
                 cancelButtonText:'取消',
                 showConfirmButton: false,
                 showCloseButton: true,
-            }).then((result) => {
+            });
 
+            $('.datetimepicker').datetimepicker({
+                format: "YYYY-MM-DD HH:mm"
             });
             $('.selectpicker').selectpicker({
                 size: 4
@@ -151,92 +194,126 @@
         $(".open-left").trigger('click');
         $(".open-left").trigger('touchstart');
 
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'today prev,next',
+                center: 'title',
+                right: 'timelineDay,timelineThreeDays,agendaWeek,month,listWeek'
+            },
+            now: "{{ $today }}",
+            resources: [ 
+                @foreach($shop_service_providers as $shop_service_provider)
+                { id: {{$shop_service_provider['id']}}, title: "{{$shop_service_provider['title']}}"},
+                @endforeach
+            ],
+            resourceLabelText: '師傅',
+            views: {
+                timelineThreeDays: {
+                    type: 'timeline',
+                    duration: { days: 3 }
+                }
+            },
+            defaultView: 'timelineDay',
+            aspectRatio: 1.8,
+            events: '/api/calendar/{{ $shop_id }}',
+            eventClick: function(calEvent, jsEvent, view) {
+                var myTemplate = $.templates("#check_form_template");
+                var html = myTemplate.render({
+                    order_id: calEvent.order_id,
+                    name: calEvent.title,
+                    phone: calEvent.phone,
+                    person: calEvent.person,
+                    service: calEvent.service,
+                    room: calEvent.room
+                });
 
-        function render_calender(){
+                swal({
+                    title: '預約單確認',
+                    html: html,
+                    width: "50%",
+                    allowOutsideClick: false,
+                    showCancelButton: false,
+                    focusConfirm: false,
+                    cancelButtonText:'取消',
+                    showConfirmButton: false,
+                    showCloseButton: true,
+                });
+            },
+            schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source'
+        });
+        
+        $('#calendar').fullCalendar('refetchEventSources', "/api/calendar/{{$shop_id}}" );
+
+        $('body').on('click', '.order_cancel', function(){
+            var order_id = $(this).data('id');
             $.ajax({
-                url: '/api/calendar/{{ $shop_id }}',
-                type: 'GET',
+                url: '/api/order/cancel',
+                type: 'post',
                 dataType: 'json',
+                data: {
+                    order_id: order_id
+                },
                 success: function(data){
-                    console.log(data);
-                    var option = {
-                        header: {
-                            left: 'today prev,next',
-                            center: 'title',
-                            right: 'timelineDay,timelineThreeDays,agendaWeek,month,listWeek'
-                        },
-                        resourceLabelText: '師傅',
-                        views: {
-                            timelineThreeDays: {
-                                type: 'timeline',
-                                duration: { days: 3 }
-                            }
-                        },
-                        defaultView: 'timelineDay',
-                        editable: false, 
-                        aspectRatio: 1.8,
-                        eventClick: function(calEvent, jsEvent, view) {
-
-                        },
-                        schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source'
-                    };
- 
-                    option.now = data.today;
-                    option.resources = data.service_providers;
-                    option.events = data.orders;
-                    console.log(option);
-                    $('#calendar').fullCalendar(option);
+                    swal.close();
+                    $('#calendar').fullCalendar('refetchEventSources', "/api/calendar/{{$shop_id}}" );
                 },
                 error: function(e){
-
+                    alert('訂單取消失敗 請洽系統商!');
                 }
+            });  
+        });
+
+        $('body').on('click', '.order_confirm', function(){
+            var order_id = $(this).data('id');
+            $.ajax({
+                url: '/api/order/confirm',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    order_id: order_id
+                },
+                success: function(data){
+                    swal.close();
+                    $('#calendar').fullCalendar('refetchEventSources', "/api/calendar/{{$shop_id}}" );
+                },
+                error: function(e){
+                    alert('訂單確認失敗 請洽系統商!');
+                }
+            });  
+        });
+
+        $('body').on('click', '.order_update', function(){
+            var order_id = $(this).data('id');
+            var name = $(this).data('name');
+            var phone = $(this).data('phone');
+            var room_id = $(this).data('room_id');
+
+
+            var myTemplate = $.templates("#order_form_template");
+            var html = myTemplate.render({
+                url: '/admin/calendar/{{$shop_id}}/add_order'
+
             });
-        }
-        render_calender();
-        // $('#calendar').fullCalendar({
-        //     now: '2017-11-07',
-        //     editable: true, // enable draggable events
-        //     aspectRatio: 1.8,
-        //     scrollTime: '03:00', // undo default 6am scrollTime
-            
-        //     
-            
-            
-        //     resources: [
-        //         { id: '1', title: '1號' },
-        //         { id: '2', title: '2號', eventColor: 'green' },
-        //         { id: '3', title: '3號', eventColor: 'orange' },
-        //         { id: '4', title: '4號' },
-        //         { id: '5', title: '5號', eventColor: 'red' },
-        //         { id: '6', title: '6號' },
-        //         { id: '7', title: '7號' },
-        //         { id: '8', title: '8號' },
-        //         { id: '9', title: '9號' },
-        //         { id: '10', title: '10號', eventColor: 'green' },
-        //         { id: '11', title: '11號', eventColor: 'orange' },
-        //         { id: '12', title: '4號' },
-        //         { id: '13', title: '5號', eventColor: 'red' },
-        //         { id: '14', title: '6號' },
-        //         { id: '15', title: '7號' },
-        //         { id: '16', title: '8號' },
-        //         { id: '17', title: '1號' },
-        //         { id: '18', title: '2號', eventColor: 'green' },
-        //         { id: '19', title: '3號', eventColor: 'orange' },
-        //         { id: '20', title: '4號' },
-        //         { id: '21', title: '5號', eventColor: 'red' },
-        //         { id: '22', title: '6號' },
-        //         { id: '23', title: '7號' },
-        //         { id: '24', title: '8號' },
-        //     ],
-        //     events: [
-        //         { id: '1', resourceId: '1', start: '2017-11-07T02:00:00', end: '2017-11-07T03:00:00', title: '陳先生', detail: '123'},
-        //         { id: '2', resourceId: '2', start: '2017-11-07T05:00:00', end: '2017-11-07T22:00:00', title: 'event 2' },
-        //         { id: '3', resourceId: '3', start: '2017-11-06', end: '2017-11-08', title: 'event 3' },
-        //         { id: '4', resourceId: '4', start: '2017-11-07T03:00:00', end: '2017-11-07T08:00:00', title: 'event 4' },
-        //         { id: '5', resourceId: '5', start: '2017-11-07T00:30:00', end: '2017-11-07T02:30:00', title: 'event 5' }
-        //     ],
-            
-        // });
+
+            swal({
+                title: '更改預約單',
+                html: html,
+                width: "90%",
+                allowOutsideClick: false,
+                showCancelButton: false,
+                focusConfirm: false,
+                cancelButtonText:'取消',
+                showConfirmButton: false,
+                showCloseButton: true,
+            });
+
+            $('.datetimepicker').datetimepicker({
+                format: "YYYY-MM-DD HH:mm"
+            });
+            $('.selectpicker').selectpicker({
+                size: 4
+            });
+        });
     });
 </script>
 @stop

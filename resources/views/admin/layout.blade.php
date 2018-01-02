@@ -20,6 +20,7 @@
         <link href="/assets/css/pages.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/menu.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/responsive.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
         <style type="text/css">
             .swal2-cancel{
                 margin-right: 30px;
@@ -272,7 +273,8 @@
         <script src="/assets/js/jquery.app.js"></script>
         <!-- Js render -->
         <script src="/assets/js/jsrender.min.js"></script>
-        
+        <!-- Js bootstrap-datetimepicker -->
+        <script type="text/javascript" src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
         <script type="text/javascript">
             jQuery(document).ready(function($) {
                 $('.counter').counterUp({

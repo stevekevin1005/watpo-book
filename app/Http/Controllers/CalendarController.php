@@ -39,6 +39,22 @@ class CalendarController extends Controller
 		$view_data['service_list'] = Service::all();
 		$view_data['shop_id'] = $shop_id;
 
+		$date = date('Y-m-d');
+		$view_data['today'] = $date;
+
+		$shop = Shop::where('id', $shop_id)->first();
+		$service_providers = ServiceProvider::where('shop_id', $shop_id)->get();
+
+		$view_data['start_time'] = $shop->start_time;
+
+
+		$start_time = strtotime($date.' '.$shop->start_time);
+
+		$view_data['shop_service_providers'] = [];
+		foreach ($service_providers as $key => $service_provider) {
+			$view_data['shop_service_providers'][] = ['id'=> $service_provider->id, 'title'=>$service_provider->name];
+		}
+
 		return view('admin.calendar.index', $view_data);
 	}
 
@@ -46,25 +62,11 @@ class CalendarController extends Controller
 	{	
 		try{
 			$date = date('Y-m-d');
-			$result['today'] = $date;
-
 			$shop = Shop::where('id', $shop_id)->first();
-			$service_providers = ServiceProvider::where('shop_id', $shop_id)->get();
-
-			$result['start_time'] = $shop->start_time;
-
-
 			$start_time = strtotime($date.' '.$shop->start_time);
 
-			$result['service_providers'] = [];
-			foreach ($service_providers as $key => $service_provider) {
-				$result['service_providers'][] = ['id'=> $service_provider->id, 'title'=>$service_provider->name];
-			}
-
-			$orders = Order::with('serviceProviders')->where('shop_id', $shop_id)->where('start_time', '>=', date("Y/m/d H:i:s", $start_time))->where('status', '!=', 4)->get();
-
-			$result['orders'] = [];
-			
+			$orders = Order::with('serviceProviders')->with('service')->with('room')->where('shop_id', $shop_id)->where('start_time', '>=', date("Y/m/d H:i:s", $start_time))->where('status', '!=', 3)->get();
+			$result = null;
 			$i = 1;
 			foreach ($orders as $key => $order) {
 				foreach ($order->serviceProviders as $key => $serviceProvider) {
@@ -76,8 +78,8 @@ class CalendarController extends Controller
 						case 2:
 							$color = "#1d7dca";
 							break;
-						case 3:
-							$color = "#ef5350";
+						case 4:
+							$color = "#ffaa00";
 							break;
 						case 5:
 							$color = "#5cb85c";
@@ -87,7 +89,7 @@ class CalendarController extends Controller
 							break;
 					}
 
-					$result['orders'][] = ['id'=>$i ,'data-id'=>$order->id, 'resourceId'=>$serviceProvider->id, 'start'=>$order->start_time, 'end'=>$order->end_time, 'title'=>$order->name, 'phone'=>$order->phone, 'person'=>$order->person, 'color'=> $color];
+					$result[] = ['id'=>$i ,'order_id'=>$order->id, 'resourceId'=>$serviceProvider->id, 'start'=>$order->start_time, 'end'=>$order->end_time, 'title'=>$order->name, 'phone'=>$order->phone, 'person'=>$order->person, 'color'=> $color, 'service'=>$order->service->title, 'room'=> $order->room->name];
 					$i++;
 				}
 			}
@@ -197,6 +199,40 @@ class CalendarController extends Controller
 		}
 		catch(\Illuminate\Database\QueryException $e){
 			return redirect()->back()->withErrors(['fail'=> "訂單新增失敗: ".$e->getMessage()]);
+		}
+	}
+
+	public function api_order_confirm(Request $request)
+	{
+		try{
+			$order_id = $request->order_id;
+			$order = Order::where('id', $order_id)->first();
+			$order->status = 5;
+			$order->save();
+			return response()->json('訂單確認成功!', 200);
+		}
+		catch(Exception $e){
+			return response()->json($e->getMessage(), 400);
+		}
+		catch(\Illuminate\Database\QueryException $e){
+			return response()->json('資料庫錯誤, 請洽系統商!', 400);
+		}
+	}
+
+	public function api_order_cancel(Request $request)
+	{
+		try{
+			$order_id = $request->order_id;
+			$order = Order::where('id', $order_id)->first();
+			$order->status = 4;
+			$order->save();
+			return response()->json('訂單取消成功!', 200);
+		}
+		catch(Exception $e){
+			return response()->json($e->getMessage(), 400);
+		}
+		catch(\Illuminate\Database\QueryException $e){
+			return response()->json('資料庫錯誤, 請洽系統商!', 400);
 		}
 	}
 }

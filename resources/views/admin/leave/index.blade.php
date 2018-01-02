@@ -58,11 +58,21 @@
   						<div class="form-group row">
     						<label class="col-sm-1 col-form-label">開始時間</label>
     						<div class="col-sm-4">
-      							<input type="datetime-local" class="form-control" name="start_time"required>
+                                <div class='input-group date datetimepicker'>
+                                    <input type='text' name="start_time" class="form-control" required/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
     						</div>
     						<label class="col-sm-1 col-form-label">結束時間</label>
     						<div class="col-sm-4">
-      							<input type="datetime-local" class="form-control" name="end_time" required>
+      							<div class='input-group date datetimepicker'>
+                                    <input type='text' name="end_time" class="form-control" required/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
     						</div>
     						<div class="col-sm-2">
       							<button type="submit" class="btn btn-primary">確定</button>
@@ -110,7 +120,9 @@
 @if(isset($service_provider_id))
 <script type="text/javascript">
 	$(document).ready(function() {
-
+        $('.datetimepicker').datetimepicker({
+            format: "YYYY-MM-DD HH:mm"
+        });
 	    $('#calendar').fullCalendar({
 			header: {
 				left: 'prev,next today',
