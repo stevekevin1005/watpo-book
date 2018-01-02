@@ -1,0 +1,21 @@
+{
+  "name": "watpo-book",
+  "description": "",
+  "main": "",
+  "authors": [
+    "仰鈞 張 <qqwwee2006@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/stevekevin1005/watpo-book",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "/public/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "eonasdan-bootstrap-datetimepicker": "^4.17.47"
+  }
+}

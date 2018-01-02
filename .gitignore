@@ -3,4 +3,5 @@
 Homestead.yaml
 Homestead.json
 /public/assets/frontend/*
+/public/bower_components/*
 .env
