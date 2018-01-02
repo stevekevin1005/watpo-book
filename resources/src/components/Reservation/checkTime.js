@@ -78,6 +78,7 @@ class CheckTime extends React.Component{
                         return (<span className="timePeriod available" key={index} data-index={index} onClick={this.setTime}>{time.time}</span>);
                     }):<p>{t(this.state.hint)}</p>}
                 </div>
+                <p className="hint">{t("timeHint")}</p>
             </Col>
             <Button currentStep={1} clickHandle={this.props.nextStep} disabled={disabled}/>
             </Row>
