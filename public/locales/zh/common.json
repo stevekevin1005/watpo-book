@@ -64,6 +64,7 @@
 	"sun": "日",
 	"calendarHint": "請點擊月曆選擇日期...",
 	"calendarError_noTimelist": "目前無可選擇時段",
+	"timeHint": "*00:00:00開始的時間為隔日時間",
 	"nameHint": "請輸入聯絡人姓名",
 	"contactNumberHint_blank": "請輸入聯絡號碼",
 	"contactNumberHint_length": "請輸入有效聯絡號碼",

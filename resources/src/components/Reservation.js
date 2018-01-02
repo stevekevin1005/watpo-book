@@ -63,14 +63,7 @@ class Reservation extends React.Component{
     }
     send(){
         const { t } = this.props;
-      // get end time
-      const duration = this.props.sourceData.services[this.props.reservation.service].time / 60,
-            token = document.querySelector('input[name="_token"]').value,
-            that = this;
-      let endTime = this.props.reservation.time.split(":");
-      endTime[0] = parseInt(endTime[0]) + duration;
-      endTime = (endTime[0]>=10?endTime[0]:"0"+endTime[0]) + ":" + endTime[1] + ":" + endTime[2];
-
+      
       // get info: service, shop
       const reservation = this.props.reservation,
             serviceName = this.props.sourceData.services[reservation.service].title;
@@ -84,7 +77,41 @@ class Reservation extends React.Component{
         });
         return;
       }
+    // get end time
+    const duration = this.props.sourceData.services[this.props.reservation.service].time / 60,
+        token = document.querySelector('input[name="_token"]').value,
+        that = this;
+    let endTime = reservation.time.split(":");
+        endTime[0] = parseInt(endTime[0]) + duration;
+        endTime = (endTime[0]>=10?endTime[0]:"0"+endTime[0]) + ":" + endTime[1] + ":" + endTime[2];
+    let date = reservation.date;
 
+      // 確認是否需要將日期改為隔日
+      if(reservation.time[0]==="0"){
+            // 是過凌晨00:00:00的時間，故調整日期
+            let newDate = date.split("/").map((val)=>{
+                return parseInt(val);
+            }),
+            daynum = new Date(newDate[0], newDate[1], 0).getDate(); //該月最後一天日期
+            //跨月
+            if(newDate[2]==daynum){
+                newDate[1]=newDate[1]+1;
+                newDate[2]=1;
+            }
+            //跨年
+            else if(newDate[1]==12&&newDate[2]==31){
+                newDate[0]=newDate[0]+1;
+                newDate[1]=1;
+                newDate[2]=1;
+            }else{
+                newDate[2]=newDate[2]+1;
+            }
+            if(newDate[1] < 10) newDate[1] = "0"+newDate[1];
+            if(newDate[2] < 10) newDate[2] = "0"+newDate[2];
+            newDate = newDate.join("/");
+            date = newDate;
+      }
+      console.log(date);
       // call API
       this.props.toggleLoading(true);
       axios({
@@ -94,8 +121,8 @@ class Reservation extends React.Component{
               phone: reservation.contactNumber,
               shop_id: this.props.sourceData.shops[reservation.shop].id,
               service_id: this.props.sourceData.services[reservation.service].id,
-              start_time: reservation.date + " " + reservation.time,
-              end_time: reservation.date + " " + endTime,
+              start_time: date + " " + reservation.time,
+              end_time: date + " " + endTime,
               room_id: reservation.room,
               person: reservation.guestNum,
               service_provider_id: reservation.operator.join(),
