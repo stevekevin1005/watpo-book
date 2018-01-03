@@ -59,19 +59,18 @@
 <script id="order_form_template" type="x-jsrender">
     <form class="container" style="height:500px;" method="post" action="@{{:url}}">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <input type="hidden" name="shop_id" value="{{ $shop_id }}">
         <div class="row" style="margin-top:10px">
             <div class="col-md-1" style="text-align:left;">
                 姓名:
             </div>
             <div class="col-md-3">
-                <input type="text" class="form-control" name="name" placeholder="現場客">
+                <input type="text" class="form-control" name="name" placeholder="現場客" @{{if name}} value="@{{:name}}" @{{/if}}>
             </div>
             <div class="col-md-1" style="text-align:left;">
                 電話:
             </div>
             <div class="col-md-3">
-                <input type="text" class="form-control" name="phone" placeholder="現場客">
+                <input type="text" class="form-control" name="phone" placeholder="現場客" @{{if phone}} value="@{{:phone}}" @{{/if}}>
             </div>
         </div>
         <div class="row" style="margin-top:10px">
@@ -81,7 +80,7 @@
             <div class="col-md-3">
                 <select name="room_id" class="form-control">
                     @foreach($rooms as $room)
-                    <option value="{{ $room['id'] }}">{{ $room['name'] }}</option>
+                    <option value="{{ $room['id'] }}" {{if room_id && room_id == <?php echo $room['id']?>}} selected="selected" @{{/if}}>{{ $room['name'] }}</option>
                     @endforeach
                 </select>
             </div>
@@ -89,7 +88,7 @@
                 師傅:
             </div>
             <div class="col-md-6">
-                <select name="service_provider_list[]" class="selectpicker" multiple data-max-options="4" data-width="100%">
+                <select name="service_provider_list[]" class="selectpicker" multiple data-max-options="4" data-width="100%" required>
                     @foreach($service_providers as $service_provider)
                     <option value="{{ $service_provider['id'] }}">{{ $service_provider['name'] }}</option>
                     @endforeach
@@ -103,7 +102,7 @@
             <div class="col-md-3">
                 <select name="service_id" class="form-control" required>
                     @foreach($service_list as $service)
-                    <option value="{{ $service->id }}">{{ $service->title }}</option>
+                    <option value="{{ $service->id }}" {{if service_id && service_id == <?php echo $service->id?>}} selected="selected" @{{/if}}>{{ $service->title }}</option>
                     @endforeach
                 </select>
             </div>
@@ -114,7 +113,7 @@
             </div>
             <div class="col-md-3">
                 <div class='input-group date datetimepicker'>
-                    <input type='text' name="start_time" class="form-control" required/>
+                    <input type='text' name="start_time" class="form-control" @{{if start_time}} value="@{{:start_time}}" @{{/if}} required/>
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -125,7 +124,7 @@
             </div>
             <div class="col-md-3">
                 <div class='input-group date datetimepicker'>
-                    <input type='text' name="end_time" class="form-control" required/>
+                    <input type='text' name="end_time" class="form-control" @{{if end_time}} value="@{{:end_time}}" @{{/if}} required/>
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -156,7 +155,15 @@
                 <button type="button" class="btn btn-danger order_cancel" data-id="@{{:order_id}}" style="font-size:20px;">取消訂單</button>
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-info order_update" data-id="@{{:order_id}}" data-name="@{{:name}}" data-phone="@{{:phone}}" style="font-size:20px;">更改訂單</button>
+                <button type="button" class="btn btn-info order_update" 
+                    data-id="@{{:order_id}}" 
+                    data-name="@{{:name}}" 
+                    data-phone="@{{:phone}}" 
+                    data-start_time='@{{:start_time}}'
+                    data-end_time='@{{:end_time}}'
+                    data-room_id='@{{:room_id}}'
+                    data-service_id='@{{:service_id}}'
+                    style="font-size:20px;">更改訂單</button>
             </div>
             <div class="col-md-4">
                 <button type="button" class="btn btn-success order_confirm" data-id="@{{:order_id}}" style="font-size:20px;">確認訂單</button>
@@ -224,8 +231,15 @@
                     phone: calEvent.phone,
                     person: calEvent.person,
                     service: calEvent.service,
-                    room: calEvent.room
+                    room: calEvent.room,
+                    service_providers: calEvent.service_providers,
+                    end_time: calEvent.end.format("YYYY-MM-DD HH:mm:ss"),
+                    start_time: calEvent.start.format("YYYY-MM-DD HH:mm:ss"),
+                    service_id: calEvent.service_id,
+                    room_id: calEvent.room_id
                 });
+
+                console.log(calEvent);
 
                 swal({
                     title: '預約單確認',
@@ -287,12 +301,19 @@
             var name = $(this).data('name');
             var phone = $(this).data('phone');
             var room_id = $(this).data('room_id');
-
+            var start_time = $(this).data('start_time');
+            var end_time = $(this).data('end_time');
+            var service_id = $(this).data('service_id');
 
             var myTemplate = $.templates("#order_form_template");
             var html = myTemplate.render({
-                url: '/admin/calendar/{{$shop_id}}/add_order'
-
+                url: '/admin/calendar/order/'+order_id+'/update',
+                name: name,
+                phone: phone,
+                room_id: room_id,
+                start_time: start_time,
+                end_time: end_time,
+                service_id: service_id
             });
 
             swal({

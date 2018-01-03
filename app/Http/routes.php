@@ -32,6 +32,7 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('/leave/add', ['uses' => 'LeaveController@add', 'as' => 'leaveAdd']);
 		Route::get('/calendar/{shop_id}', ['uses' => 'CalendarController@index', 'as' => 'calendarIndex']);
 		Route::post('/calendar/{shop_id}/add_order', ['uses' => 'CalendarController@add_order', 'as' => 'calendarAddOrder']);
+		Route::post('/calendar/order/{order_id}/update', ['uses' => 'CalendarController@update_order', 'as' => 'calendarUpdateOrder']);
 		Route::get('/dashboard', ['uses' => 'DashboardController@index', 'as' => 'dashboardIndex']);
 		Route::get('/order', ['uses' => 'OrderController@index', 'as' => 'orderIndex']);
 		Route::get('/order/export', ['uses' => 'OrderController@export', 'as' => 'orderExport']);
