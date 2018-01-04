@@ -135,10 +135,10 @@ class CalendarController extends Controller
 			$phone = $request->phone;
 			$person = count($service_provider_id_list);
 			
-			if(!isset($name)){
+			if(!isset($name) || $name == ''){
 				$name = "現場客";
 			}
-			if(!isset($phone)){
+			if(!isset($phone) || $phone == ''){
 				$phone = "現場客";
 			}
 
@@ -232,10 +232,10 @@ class CalendarController extends Controller
 			$phone = $request->phone;
 			$person = count($service_provider_id_list);
 			
-			if(!isset($name)){
+			if(!isset($name) || $name == ''){
 				$name = "現場客";
 			}
-			if(!isset($phone)){
+			if(!isset($phone) || $phone == ''){
 				$phone = "現場客";
 			}
 
