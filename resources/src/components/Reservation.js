@@ -1,8 +1,8 @@
 // 負責渲染和清理資料
 
-import CheckDetail from "./Reservation/CheckDetail";
-import CheckService from "./Reservation/CheckService";
-import CheckTime from "./Reservation/CheckTime";
+import CheckDetail from "./Reservation/checkDetail";
+import CheckService from "./Reservation/checkService";
+import CheckTime from "./Reservation/checkTime";
 import { Link } from 'react-router-dom';
 import { translate } from 'react-i18next';
 import {connect} from "react-redux";
