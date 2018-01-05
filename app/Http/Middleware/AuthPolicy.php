@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 use Session, Closure;
 
-class AuthLogin
+class AuthPolicy
 {
     public function handle($request, Closure $next)
     {
