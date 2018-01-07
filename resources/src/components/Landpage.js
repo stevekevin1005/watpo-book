@@ -63,7 +63,7 @@ class Landpage extends React.Component{
                               className="sectionItem"
                               frameBorder="0" 
                               style={map_style}
-                              src={branch.location_src} allowFullscreen>
+                              src={branch.location_src} allowFullScreen>
                             </iframe>
                         </Col>
                     </Row>  
