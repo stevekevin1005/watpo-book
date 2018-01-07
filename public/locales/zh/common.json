@@ -81,5 +81,8 @@
 	"checkOrCancelReservation": "確認/取消預約",
 	"ordersInfoHint": "您目前無任何預約紀錄",
 	"cancel": "取消",
-	"orderCanceled": "您的預約已取消"
+	"orderCanceled": "您的預約已取消",
+	"name": "姓名",
+	"phone": "電話",
+	"time": "預約時間"
 }

@@ -8,7 +8,8 @@ const Grid = ReactBootstrap.Grid,
     Row = ReactBootstrap.Row,
     Col = ReactBootstrap.Col,
     ListGroupItem = ReactBootstrap.ListGroupItem,
-    ListGroup = ReactBootstrap.ListGroup;
+    ListGroup = ReactBootstrap.ListGroup,
+    Table = ReactBootstrap.Table;
 
 class OrdersInfo extends React.Component{
     constructor(props){
@@ -24,9 +25,34 @@ class OrdersInfo extends React.Component{
     componentDidMount(){
         this.getOrders();
     }
-    cancel(){
-        // call API
-        this.props.cancelSuccess();
+    cancel(e){
+        const that = this,
+        csrf_token = document.querySelector('input[name="_token"]').value;
+        that.props.toggleLoading(true);
+        axios({
+            method: "post",
+            url: "../api/customer/cancel",
+            params: {
+                order_id: e.target.value,
+                name: this.props.checkOrdersInfo.name,
+                phone: this.props.checkOrdersInfo.contactNumber
+            },
+            headers: {'X-CSRF-TOKEN': csrf_token},
+            responseType: 'json'
+        })
+        .then(function (response) {
+            console.log(response);
+            if(response.statusText == "OK"){
+                that.setState({orders: response.data});
+                that.props.toggleLoading(false);
+                this.props.cancelSuccess();
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+            that.props.toggleLoading(false);
+            that.props.getOrdersError();
+        });        
         this.getOrders();
     }
     getOrders(){
@@ -36,11 +62,16 @@ class OrdersInfo extends React.Component{
         // 取得預約資料列表
         axios({
             method: "get",
-            url: "../api/shop_list",
+            url: "../api/order/list",
+            params: {
+                name: this.props.checkOrdersInfo.name,
+                phone: this.props.checkOrdersInfo.contactNumber
+            },
             headers: {'X-CSRF-TOKEN': csrf_token},
             responseType: 'json'
         })
         .then(function (response) {
+            console.log(response);
             if(response.statusText == "OK"){
                 that.setState({orders: response.data});
                 that.props.toggleLoading(false);
@@ -50,21 +81,37 @@ class OrdersInfo extends React.Component{
             console.log(error);
             that.props.toggleLoading(false);
             that.props.getOrdersError();
+            location.href = "../checkOrders/0";
         });
     }
     render(){
         if(this.props.checkOrdersInfo.name === undefined || this.props.checkOrdersInfo.contactNumber === undefined) location.href = '../checkOrders/0';
+        
+        const { t } = this.props,
+        ths = ["name","phone","guesetNum","time",""].map((th, index)=>{
+            return (<th key={index}>{t(th)}</th>);
+        });
 
-        const { t } = this.props;
         return(
             <Grid>
             <Row className="show-grid">
             <Col md={12}>
-                <div className="timePeriods">
-                    {this.state.orders?this.state.orders.map((order,index)=>{
-                        return (<div className="orderInfo"><p>{order.description}</p><div className="cancel" onClick={this.cancel}>{t("cancel")}</div></div>);
-                    }):<p>{t(this.state.hint)}</p>}
-                </div>
+                <Table responsive>
+                    <thead>
+                        {ths}
+                    </thead>
+                    <div>
+                        {this.state.orders?this.state.orders.map((order,index)=>{
+                            return (<tr>
+                                <td>{order.name}</td>
+                                <td>{order.phone}</td>
+                                <td></td>
+                                <td></td>
+                                <td className="cancel" onClick={this.cancel} value={order.id}>{t("cancel")}</td>
+                                </tr>);
+                        }):<p>{t(this.state.hint)}</p>}
+                    </div>
+                </Table>
             </Col>
             </Row>
             </Grid>

@@ -24,7 +24,7 @@ class Landpage extends React.Component{
             this.props.clearSourceData("timeList");
             this.props.clearSourceData("selectedDetail");
         }
-        if(this.props.checkOrdersInfo == {}){
+        if(this.props.checkOrdersInfo != {}){
             this.props.clearCheckOrdersInfo("name");
             this.props.clearCheckOrdersInfo("contactNumber");
         }

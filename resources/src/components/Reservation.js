@@ -60,7 +60,7 @@ class Reservation extends React.Component{
         }
     }
     componentDidMount(){
-        if(this.props.checkOrdersInfo == {}){
+        if(this.props.checkOrdersInfo != {}){
             this.props.clearCheckOrdersInfo("name");
             this.props.clearCheckOrdersInfo("contactNumber");
         }

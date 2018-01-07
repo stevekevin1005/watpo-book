@@ -80,5 +80,8 @@
 	"checkOrCancelReservation": "予約確認/キャンセル",
 	"ordersInfoHint": "ご予約記録がおっていません",
 	"cancel": "キャンセル",
-	"orderCanceled": "ご予約がキャンセルされました"
+	"orderCanceled": "予約がキャンセルされました",
+	"name": "名前",
+	"phone": "電話",
+	"time": "予約時間"
 }

@@ -14,9 +14,6 @@ class App extends React.Component{
     constructor(props){
         super(props);       
     }
-    componentWillReceiveProps(nextProps){
-        console.log(nextProps);
-    }
     render(){
         return(
                 <BrowserRouter>

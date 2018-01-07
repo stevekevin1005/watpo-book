@@ -81,5 +81,8 @@
 	"checkOrCancelReservation": "Check/Cancel Reservation",
 	"ordersInfoHint": "You currently don't have any reservations",
 	"cancel": "Cancel",
-	"orderCanceled": "Your reservation is canceled"
+	"orderCanceled": "Your reservation is canceled",
+	"name": "Name",
+	"phone": "Phone",
+	"time": "Time"
 }
