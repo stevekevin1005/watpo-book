@@ -35,7 +35,7 @@ class Nav extends React.Component{
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav_>
-              <LinkContainer to="/reservation/0">
+              <LinkContainer to="/reservation/0" key="reservation_title">
                 <NavItem>
                   {t("book")}
                 </NavItem>

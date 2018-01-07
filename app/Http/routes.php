@@ -58,6 +58,8 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/shop_list', ['uses' => 'BookController@api_shop_list', 'as' => 'apiShopList']);
 		Route::get('/service_list', ['uses' => 'BookController@api_service_list', 'as' => 'apiServiceList']);
 		Route::get('/time_list', ['uses' => 'BookController@api_time_list', 'as' => 'apiTimeList']);
+		Route::get('/order/list', ['uses' => 'BookController@api_order_list', 'as' => 'apiOrderList']);
+		Route::post('/order/customer/cancel', ['uses' => 'BookController@api_order_customer_cancel', 'as' => 'apiOrderCustomerCancel']);
 		Route::post('/order', ['uses' => 'BookController@api_order', 'as' => 'apiOrder']);
 	});
 	//admin redirect

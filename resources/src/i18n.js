@@ -10,7 +10,7 @@ i18n
     fallbackLng: 'zh', // 未偵測到時的後備語系
     ns: ['common'], // 語系的 loading namespace 如語系檔案名稱 common.js
     defaultNS: 'common', // 預設的 namespace name
-    debug: true,
+    debug: false,
     interpolation: {
       escapeValue: false // not needed for react!!
     },

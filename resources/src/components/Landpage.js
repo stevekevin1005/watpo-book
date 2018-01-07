@@ -66,9 +66,9 @@ class Landpage extends React.Component{
                         <Col md={6}>
                             <iframe
                               className="sectionItem"
-                              frameborder="0" 
+                              frameBorder="0" 
                               style={map_style}
-                              src={branch.location_src} allowfullscreen>
+                              src={branch.location_src} allowFullScreen>
                             </iframe>
                         </Col>
                     </Row>  
@@ -87,6 +87,12 @@ class Landpage extends React.Component{
                             <Button bsStyle="primary" bsSize="large" className="btn mainBtn" block>
                                 <i className="fa fa-pencil" aria-hidden="true"></i>
                                 {"  " + t('book')}
+                            </Button>
+                        </LinkContainer>
+                        <LinkContainer to="/book/check/0">
+                            <Button bsStyle="info" bsSize="large" className="btn mainBtn" block>
+                                <i className="fa fa-search" aria-hidden="true"></i>
+                                {"  " + t('book check')}
                             </Button>
                         </LinkContainer>
                         </div>

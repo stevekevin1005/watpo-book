@@ -1,6 +1,9 @@
 {
 	"lang": "言語",
 	"book": "予約する",
+	"book check": "確認お申し込み",
+	"input information": "関連情報を入力",
+	"check book": "予約情報",
 	"services": "サービス",
 	"locations": "サービス拠点",
 	"address": "アドレス",

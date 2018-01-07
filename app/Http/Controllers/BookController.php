@@ -221,4 +221,40 @@ class BookController extends Controller
 			return response()->json('資料庫錯誤, 請洽系統商!', 400);
 		}
 	}
+
+	public function api_order_list(Request $request)
+	{
+		try{
+			$name = $request->name;
+			$phone = $request->phone;
+			$order_list = Order::where('start_time', '>', date('Y-m-d H:i:s'))->where('name', $name)->where('phone', $phone)->where('status', 1)->get();
+			
+			return response()->json($order_list);
+		}
+		catch(Exception $e){
+			return response()->json([]);
+		}
+		catch(\Illuminate\Database\QueryException $e){
+			return response()->json([]);
+		}
+	}
+
+	public function api_order_customer_cancel(Request $request)
+	{
+		try{
+			$order_id = $request->order_id;
+			$name = $request->name;
+			$phone = $request->phone;
+			$order = Order::where('id', $order_id))->where('phone', $phone)->where('name', $name)->first();
+			$order->status = 3;
+			$order->save();
+			return response()->json('預約取消成功!', 200);
+		}
+		catch(Exception $e){
+			return response()->json($e->getMessage(), 400);
+		}
+		catch(\Illuminate\Database\QueryException $e){
+			return response()->json('資料庫錯誤, 請洽系統商!', 400);
+		}
+	}
 }
