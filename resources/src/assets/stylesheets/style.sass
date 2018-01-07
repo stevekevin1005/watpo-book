@@ -3,6 +3,14 @@ $darkBrown: #38291d
 $lightBrown: #684f38
 $highlight: #9e5334
 
+// // Noto Serif CJK tc
+// @font-face
+//   font-family: "title"
+//   src: url('../fonts/title.otf')
+// // Noto Sans CJK tc
+// @font-face
+//   font-family: "sub"
+//   src: url('../fonts/sub.otf')
 
 @mixin scrollBar($color)
   &::-webkit-scrollbar-track
@@ -34,6 +42,9 @@ body
   background-color: #f9f7f9
   min-width: 314px
   overflow-x: hidden
+
+#container
+  width: 100%
 
 .divider
   width: 1px
@@ -120,7 +131,7 @@ body
   margin-top: 70px
 
 .sectionTitle
-  font-family: title
+  font-family: title, 微軟正黑體
   position: relative
   text-align: center
   font-weight: bold
@@ -140,7 +151,7 @@ h4, h5
     color: $highlight
 
 h4
-  font-family: sub
+  font-family: sub, 微軟正黑體
 
 .btn-primary
   background-color: $brown
@@ -183,7 +194,7 @@ h4
   background-color: $darkBrown
 
 .navbar-brand
-  font-family: title
+  font-family: title, 微軟正黑體
   cursor: pointer
 
 .navbar-toggle
@@ -219,7 +230,7 @@ a
 
 .title, .sub
   text-shadow: 2px 2px 1px rgba(0,0,0,.3)
-  font-family: title
+  font-family: title, 微軟正黑體
 
 .reservationGrid > .col-md-12 > .reservationContent > .container
   width: unset
@@ -392,6 +403,30 @@ p
 .hint
   color: red
 
+.orderInfo
+  border-radius: 10px
+  padding: 5px 10px
+  margin: 5px 2.5%
+  background-color: rgba(255,255,255,.5)
+  box-shadow: 1px 1px 3px 1px rgba(0,0,0,.2)
+  padding: 10px 5px
+  & p, .cancel
+    display: inline-block
+    vertical-align: top
+  & p
+    width: 86%
+    color: $darkBrown
+    padding: 5px 10px
+    margin: 0
+  & .cancel
+    text-align: center
+    cursor: pointer
+    border-radius: 5px
+    padding: 1% 2%
+    width: 12%
+    background-color: $lightBrown
+    color: white
+
 footer
   position: relative
   padding: 16px 0
@@ -422,7 +457,7 @@ iframe
 // sweet alert
 .sweet-alert
   & h2
-    font-family: title
+    font-family: title, 微軟正黑體
 
 @media (min-width: 768px)
   .reservationContent .container
@@ -453,8 +488,14 @@ iframe
   .img
     height: 200px
   .sectionItem
-    margin: 16px 8px
+    margin: 16px 8px 16px 0
   .map
     margin: 16px 0
   .branch
     padding-top: 0
+  .orderInfo
+    & p
+      width: 78%
+      padding: 5px
+    & .cancel
+      width: 22%

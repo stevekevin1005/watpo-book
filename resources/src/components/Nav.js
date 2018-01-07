@@ -40,6 +40,11 @@ class Nav extends React.Component{
                   {t("book")}
                 </NavItem>
               </LinkContainer>
+              <LinkContainer to="/checkOrders/0">
+              <NavItem>
+                {t("checkOrCancelReservation")}
+              </NavItem>
+            </LinkContainer>
             </Nav_>
             <Nav_ pullRight>
               <NavDropdown title={t("lang")} id="basic-nav-dropdown">

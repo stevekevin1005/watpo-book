@@ -75,5 +75,11 @@
 	"errorHint_system": "Sysyem error. Please try again.",
 	"errorHint_noRoom": "Sorry. Currently no room meeting your requirements in this time period.",
 	"yes": "Yes",
-	"no": "No"
+	"no": "No",
+	"inputRelatedInfo": "Input Related Info",
+	"orderInfo": "Reservation infos",
+	"checkOrCancelReservation": "Check/Cancel Reservation",
+	"ordersInfoHint": "You currently don't have any reservations",
+	"cancel": "Cancel",
+	"orderCanceled": "Your reservation is canceled"
 }

@@ -4,6 +4,7 @@ import i18n from '../i18n';
 import {connect} from "react-redux";
 import clearReservation from "../dispatchers/clearReservation";
 import clearSourceData from "../dispatchers/clearSourceData";
+import clearCheckOrdersInfo from "../dispatchers/clearCheckOrdersInfo";
 import {bindActionCreators} from "redux";
 
 // 首頁
@@ -22,6 +23,10 @@ class Landpage extends React.Component{
             this.props.clearReservation("all");
             this.props.clearSourceData("timeList");
             this.props.clearSourceData("selectedDetail");
+        }
+        if(this.props.checkOrdersInfo == {}){
+            this.props.clearCheckOrdersInfo("name");
+            this.props.clearCheckOrdersInfo("contactNumber");
         }
     }
     render(){
@@ -150,13 +155,20 @@ class Landpage extends React.Component{
     }
 }
 
+const mapStateToProps = (state)=>{
+    return {
+        reservation: state.reservation,
+        checkOrdersInfo: state.checkOrdersInfo
+    }
+}
 const mapDispatchToProps = (dispatch)=>{
     return bindActionCreators({
         clearReservation: clearReservation,
-        clearSourceData: clearSourceData
+        clearSourceData: clearSourceData,
+        clearCheckOrdersInfo: clearCheckOrdersInfo
     },dispatch);
 }
   
-Landpage = connect(null, mapDispatchToProps)(Landpage);
+Landpage = connect(mapStateToProps, mapDispatchToProps)(Landpage);
 
 export default translate()(Landpage); 
