@@ -1,6 +1,9 @@
 {
 	"lang": "Language",
-	"book": "Book now!",
+	"book": "Book Now",
+	"book check": "Book Check",
+	"input information": "input information",
+	"check book": "check book",
 	"services": "Services",
 	"locations": "Locations",
 	"address": "Address",
