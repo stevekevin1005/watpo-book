@@ -34,11 +34,14 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('/calendar/{shop_id}/add_order', ['uses' => 'CalendarController@add_order', 'as' => 'calendarAddOrder']);
 		Route::post('/calendar/order/{order_id}/update', ['uses' => 'CalendarController@update_order', 'as' => 'calendarUpdateOrder']);
 		Route::get('/dashboard', ['uses' => 'DashboardController@index', 'as' => 'dashboardIndex']);
-		Route::get('/order', ['uses' => 'OrderController@index', 'as' => 'orderIndex']);
-		Route::get('/order/export', ['uses' => 'OrderController@export', 'as' => 'orderExport']);
-		Route::get('/log', ['uses' => 'LogController@index', 'as' => 'logIndex']);
-		Route::get('/account', ['uses' => 'AccountController@index', 'as' => 'accountIndex']);
-		Route::post('/account/update_password', ['uses' => 'AccountController@update_password', 'as' => 'accountUpdatePassword']);
+		Route::group(['middleware' => 'auth.level'], function () {
+			Route::get('/order', ['uses' => 'OrderController@index', 'as' => 'orderIndex']);
+			Route::get('/order/export', ['uses' => 'OrderController@export', 'as' => 'orderExport']);
+			Route::get('/log', ['uses' => 'LogController@index', 'as' => 'logIndex']);
+			Route::get('/log/export', ['uses' => 'LogController@export', 'as' => 'logExport']);
+			Route::get('/account', ['uses' => 'AccountController@index', 'as' => 'accountIndex']);
+			Route::post('/account/update_password', ['uses' => 'AccountController@update_password', 'as' => 'accountUpdatePassword']);
+		});
 	});
 
 	Route::group(['prefix' => '/api', 'middleware' => 'auth.login'], function () {

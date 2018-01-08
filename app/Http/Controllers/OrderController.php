@@ -98,7 +98,6 @@ class OrderController extends Controller
 
 		$order_list = $order_list->get();
 
-		// dd($order_list);
 		return Excel::create('泰和殿訂單列表', function($excel) use ($order_list){
 	    $excel->sheet('訂單', function($sheet) use ($order_list){
 	    	$fromArrayData[] = [ "訂單編號", "姓名", "電話", "人數", "服務項目", "房間", "開始時間", "結束時間", "訂單時間", "訂單狀態"];

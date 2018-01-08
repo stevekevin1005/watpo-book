@@ -179,6 +179,7 @@
                             <li>
                                 <a href="/admin/logout" class="waves-effect waves-primary"><i class="md  md-reply"></i><span> 登出 </span></a>
                             </li>
+                            @if(session('account_level') == 1)
                             <li class="text-muted menu-title">管理功能選單</li>
                             <li>
                                 <a href="#" class="waves-effect waves-primary"><i class="md md-people"></i><span> 員工管理 </span></a>
@@ -189,7 +190,8 @@
                             </li>
                             <li>
                                 <a href="/admin/log" class="waves-effect waves-primary"><i class="md md-content-paste"></i><span> 操作記錄 </span></a>
-                            </li>  
+                            </li> 
+                            @endif 
                         </ul>
                         <div class="clearfix"></div>
                     </div>
