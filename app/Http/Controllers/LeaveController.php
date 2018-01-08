@@ -7,6 +7,7 @@ use App\Models\Leave;
 use App\Models\Shop;
 use App\Models\ServiceProvider;
 use Hash, Exception;
+use App\Models\Log;
 
 class LeaveController extends Controller
 {
@@ -35,6 +36,7 @@ class LeaveController extends Controller
 				$leave->start_time	= $request->start_time;
 				$leave->end_time = $request->end_time;
 				$leave->save();
+				Log::create(['description' => '設置 '.$leave->ServiceProvider()->first()->name.'('.$leave->ServiceProvider()->first()->shop()->first()->name.') 休假 開始時間:'.$leave->start_time.' 結束時間:'.$leave->end_time]);
 				return redirect()->back();
 			}
 			else{
@@ -53,7 +55,7 @@ class LeaveController extends Controller
 			$leave = new Leave;
 			$leave = $leave->where('id', $request->id)->first();
 			$leave->delete();
-
+			Log::create(['description' => '刪除 '.$leave->ServiceProvider()->first()->name.'('.$leave->ServiceProvider()->first()->shop()->first()->name.') 休假 開始時間:'.$leave->start_time.' 結束時間:'.$leave->end_time]);
 			return response()->json('刪除成功');
 		}
 		catch(Exception $e){
