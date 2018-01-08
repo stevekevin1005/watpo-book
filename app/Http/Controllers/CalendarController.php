@@ -9,6 +9,7 @@ use App\Models\Shop;
 use App\Models\Room;
 use App\Models\Order;
 use App\Models\Service;
+use App\Models\Log;
 
 
 class CalendarController extends Controller
@@ -200,6 +201,7 @@ class CalendarController extends Controller
 			$order->service_id = $service_id;
 			$order->room_id = $room_id;
 			$order->shop_id = $shop_id;
+			$order->person = count($service_provider_list);
 			$order->start_time = $start_time;
 			$order->end_time = $end_time;
 			$order->save();
@@ -208,6 +210,7 @@ class CalendarController extends Controller
 				$service_provider->orders()->save($order);
 			}
 
+			Log::create(['description' => '新增 訂單#'.$order->id." 店家:".$order->shop()->first()->name." 姓名:".$order->name." 電話:".$order->phone." 服務:".$order->service()->first()->title." 人數:".$order->person." 開始時間:".$order->start_time." 結束時間".$order->end_time]);
 			return redirect()->back()->withInput(['message' => '訂單新增成功']);
 		}
 		catch(Exception $e){
@@ -261,7 +264,7 @@ class CalendarController extends Controller
 			
 			
 
-			$order = Order::where('id', $order_id)->first();
+			$order = Order::with('service')->with('shop')->where('id', $order_id)->first();
 			$order->serviceProviders()->detach();
 			$order->name = $name;
 			$order->phone = $phone;
@@ -307,7 +310,7 @@ class CalendarController extends Controller
 			foreach ($service_provider_list as $key => $service_provider) {
 				$service_provider->orders()->save($order);
 			}
-
+			Log::create(['description' => '更改 訂單#'.$order->id." 店家:".$order->shop->name." 姓名:".$order->name." 電話:".$order->phone." 服務:".$order->service->title." 人數:".$order->person." 開始時間:".$order->start_time." 結束時間".$order->end_time]);
 			return redirect()->back()->withInput(['message' => '訂單更改成功']);
 		}
 		catch(Exception $e){
@@ -322,9 +325,10 @@ class CalendarController extends Controller
 	{
 		try{
 			$order_id = $request->order_id;
-			$order = Order::where('id', $order_id)->first();
+			$order = Order::with('service')->with('shop')->where('id', $order_id)->first();
 			$order->status = 5;
 			$order->save();
+			Log::create(['description' => '確認 訂單#'.$order->id." 店家:".$order->shop->name." 姓名:".$order->name." 電話:".$order->phone." 服務:".$order->service->title." 人數:".$order->person." 開始時間:".$order->start_time." 結束時間".$order->end_time]);
 			return response()->json('訂單確認成功!', 200);
 		}
 		catch(Exception $e){
@@ -339,9 +343,10 @@ class CalendarController extends Controller
 	{
 		try{
 			$order_id = $request->order_id;
-			$order = Order::where('id', $order_id)->first();
+			$order = Order::with('service')->with('shop')->where('id', $order_id)->first();
 			$order->status = 4;
 			$order->save();
+			Log::create(['description' => '取消 訂單#'.$order->id." 店家:".$order->shop->name." 姓名:".$order->name." 電話:".$order->phone." 服務:".$order->service->title." 人數:".$order->person." 開始時間:".$order->start_time." 結束時間".$order->end_time]);
 			return response()->json('訂單取消成功!', 200);
 		}
 		catch(Exception $e){
