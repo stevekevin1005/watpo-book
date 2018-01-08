@@ -71,46 +71,57 @@ class CalendarController extends Controller
 			$shop = Shop::where('id', $shop_id)->first();
 			$start_time = strtotime($date.' '.$shop->start_time);
 
-			$orders = Order::with('serviceProviders')->with('service')->with('room')->where('shop_id', $shop_id)->where('start_time', '>=', date("Y/m/d H:i:s", $start_time))->where('status', '!=', 3)->get();
+			$order = new Order;
+			if($request->start){
+				$order = $order->where('start_time', '>=', $request->start);
+			}
+			if($request->end){
+				$order = $order->where('end_time', '<=', $request->end);
+			}
+			$orders = $order->with('serviceProviders')->with('service')->with('room')->where('shop_id', $shop_id)->where('status', '!=', 3)->get();
 			$result = null;
 			$i = 1;
 
 			foreach ($orders as $key => $order) {
+				$service_providers = [];
 				foreach ($order->serviceProviders as $key => $serviceProvider) {
-					switch ($order->status) {
-						case 1:
-							$color = "#3ddcf7";
-							break;
-						case 2:
-							$color = "#1d7dca";
-							break;
-						case 4:
-							$color = "#ffaa00";
-							break;
-						case 5:
-							$color = "#5cb85c";
-							break;	
-						default:
-							$color = "#3ddcf7";
-							break;
-					}
-					$result[] = [
-						'id'=>$i ,
-						'order_id'=>$order->id, 
-						'resourceId'=>$serviceProvider->id, 
-						'start'=>$order->start_time, 
-						'end'=>$order->end_time, 
-						'title'=>$order->name, 
-						'phone'=>$order->phone, 
-						'person'=>$order->person, 
-						'color'=> $color, 
-						'service'=>$order->service->title, 
-						'room'=> $order->room->name, 
-						'room_id'=> $order->room_id,
-						
-					];
-					$i++;
+					$service_providers[] = $serviceProvider->id;
 				}
+				switch ($order->status) {
+					case 1:
+						$color = "#3ddcf7";
+						break;
+					case 2:
+						$color = "#1d7dca";
+						break;
+					case 4:
+						$color = "#ffaa00";
+						break;
+					case 5:
+						$color = "#5cb85c";
+						break;	
+					default:
+						$color = "#3ddcf7";
+						break;
+				}
+				$result[] = [
+					'id'=>$i ,
+					'order_id'=>$order->id, 
+					'resourceIds'=>$service_providers, 
+					'start'=>$order->start_time, 
+					'end'=>$order->end_time, 
+					'start_time'=>$order->start_time, 
+					'end_time'=>$order->end_time,
+					'title'=>$order->name, 
+					'phone'=>$order->phone, 
+					'person'=>$order->person, 
+					'color'=> $color, 
+					'service'=>$order->service->title, 
+					'room'=> $order->room->name, 
+					'room_id'=> $order->room_id,
+					
+				];
+				$i++;
 			}
 
 			return response()->json($result, 200);
@@ -260,9 +271,6 @@ class CalendarController extends Controller
 			if($person < 1){
 				throw new Exception("沒有選擇師傅", 1);
 			}
-
-			
-			
 
 			$order = Order::with('service')->with('shop')->where('id', $order_id)->first();
 			$order->serviceProviders()->detach();
