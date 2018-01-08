@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Account;
 use Hash;
+use App\Models\Log;
 
 class LoginController extends Controller
 {
@@ -20,6 +21,9 @@ class LoginController extends Controller
 		if ($account != null && Hash::check($request->password, $account->password))
 		{
 		  $request->session()->put('account', $request->account);
+		  $request->session()->put('account_id', $account->id);
+		  $request->session()->put('account_level', $account->level);
+		  Log::create(['description' => $account->account.' 登入系統']);
 		  return redirect('/admin/dashboard');
 		}
 		return redirect('/admin/login')->withErrors(['fail'=>'帳號或密碼錯誤']);
