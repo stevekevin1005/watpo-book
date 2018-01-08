@@ -35,7 +35,7 @@
 											<select name="service" class="form-control">
 												<option selected="true" value="">選擇方案</option>
 												@foreach($service_list as $service)
-												<option value="{{ $service->id }}" <?php if($request->service == $service->id){?> selected <?}?>>{{ $service->title }}</option>
+												<option value="{{ $service->id }}" <?php if($request->service == $service->id){?> selected <?php }?>>{{ $service->title }}</option>
 												@endforeach
 											</select>
 										</div>
@@ -62,7 +62,7 @@
 											<select name="shop" class="form-control">
 												<option selected="true" value="">選擇店家</option>
 												@foreach($shop_list as $shop)
-												<option value="{{ $shop->id }}" <?php if($request->shop == $shop->id){?> selected <?}?>>{{ $shop->name }}</option>
+												<option value="{{ $shop->id }}" <?php if($request->shop == $shop->id){?> selected <?php }?>>{{ $shop->name }}</option>
 												@endforeach
 											</select>
 										</div>
@@ -81,7 +81,7 @@
 			                       			<select name="service_provider" value="0" class="form-control">
 												<option selected="true" value="">選擇師傅</option>
 												@foreach($service_provider_list as $service_provider)
-												<option value="{{ $service_provider['id'] }}"<?php if($request->service_provider == $service_provider['id']){?> selected <?}?>>{{ $service_provider['name'] }}</option>
+												<option value="{{ $service_provider['id'] }}"<?php if($request->service_provider == $service_provider['id']){?> selected <?php }?>>{{ $service_provider['name'] }}</option>
 												@endforeach
 											</select>
 			                    		</div>

@@ -27,7 +27,8 @@
 			                       			<select name="account_id" value="0" class="form-control" required>
 												<option selected="true" value="">選擇帳號</option>
 												@foreach($account_list as $account)
-												<option value="{{$account->id}}" <?php if($request->account_id == $account->id){?> selected <?}?>>{{$account->account}}</option>
+												<option value="{{$account->id}}" <?php if($request->account_id == $account->id){?> selected <?php }?>
+												>{{$account->account}}</option>
 												@endforeach
 											</select>
 			                    		</div>
