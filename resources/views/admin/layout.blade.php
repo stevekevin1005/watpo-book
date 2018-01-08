@@ -66,7 +66,7 @@
                                 <span class="clearfix"></span>
                             </div>
 
-                            <ul class="nav navbar-nav navbar-right pull-right">
+                           {{--  <ul class="nav navbar-nav navbar-right pull-right">
 
                                 <li class="dropdown hidden-xs">
                                     <a href="/#" data-target="#" class="dropdown-toggle waves-effect waves-light"
@@ -135,7 +135,7 @@
 
                                     </ul>
                                 </li>
-                            </ul>
+                            </ul> --}}
                         </div>
                         <!--/.nav-collapse -->
                     </div>
