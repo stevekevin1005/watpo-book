@@ -96,7 +96,7 @@ class CheckOrders extends React.Component{
         return(
             <Grid>
             <div className="reservationContainer">
-                <Row className="reservationGrid">
+                <Row>
                 <Col md={12}>
                     <div className="steps">
                         {steps}
@@ -105,7 +105,7 @@ class CheckOrders extends React.Component{
                 {currentStep > 0 && <Col md={12} >
                 <p className="prevStap"><Link to={"/checkOrders/"+ (currentStep - 1)}><span><i className="fa fa-angle-left" aria-hidden="true"></i>{" "+t("prevStep")}</span></Link></p>
                 </Col>}
-                    <div className="reservationContent" style={{padding:"16px 0"}}>
+                    <div className="checkOrdersContent" style={{padding:"16px 0"}}>
                         {el}
                     </div>    
                 {this.props.loading && <Col md={12}><LoadingAnimation /></Col>}

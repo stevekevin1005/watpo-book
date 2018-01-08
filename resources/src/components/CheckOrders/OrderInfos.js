@@ -25,36 +25,6 @@ class OrdersInfo extends React.Component{
     componentDidMount(){
         this.getOrders();
     }
-    cancel(e){
-        const that = this,
-        csrf_token = document.querySelector('input[name="_token"]').value;
-        that.props.toggleLoading(true);
-        axios({
-            method: "post",
-            url: "../api/customer/cancel",
-            params: {
-                order_id: e.target.value,
-                name: this.props.checkOrdersInfo.name,
-                phone: this.props.checkOrdersInfo.contactNumber
-            },
-            headers: {'X-CSRF-TOKEN': csrf_token},
-            responseType: 'json'
-        })
-        .then(function (response) {
-            console.log(response);
-            if(response.statusText == "OK"){
-                that.setState({orders: response.data});
-                that.props.toggleLoading(false);
-                this.props.cancelSuccess();
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
-            that.props.toggleLoading(false);
-            that.props.getOrdersError();
-        });        
-        this.getOrders();
-    }
     getOrders(){
         const that = this,
         csrf_token = document.querySelector('input[name="_token"]').value;
@@ -71,7 +41,6 @@ class OrdersInfo extends React.Component{
             responseType: 'json'
         })
         .then(function (response) {
-            console.log(response);
             if(response.statusText == "OK"){
                 that.setState({orders: response.data});
                 that.props.toggleLoading(false);
@@ -84,33 +53,67 @@ class OrdersInfo extends React.Component{
             location.href = "../checkOrders/0";
         });
     }
+    cancel(e){
+        const that = this,
+              csrf_token = document.querySelector('input[name="_token"]').value,
+              id = e.target.getAttribute("value");
+        that.props.toggleLoading(true);
+
+        axios({
+            method: "get",
+            url: "../api/customer/cancel",
+            params: {
+                name: this.props.checkOrdersInfo.name,
+                phone: this.props.checkOrdersInfo.contactNumber,
+                order_id: id
+            },
+            headers: {'X-CSRF-TOKEN': csrf_token},
+            responseType: 'json'
+        })
+        .then(function (response) {
+            if(response.statusText == "OK"){
+                that.setState({orders: response.data});
+                that.props.toggleLoading(false);
+                that.props.cancelSuccess();
+                that.getOrders();
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+            that.props.toggleLoading(false);
+            that.props.getOrdersError();
+        });        
+    }
     render(){
         if(this.props.checkOrdersInfo.name === undefined || this.props.checkOrdersInfo.contactNumber === undefined) location.href = '../checkOrders/0';
         
         const { t } = this.props,
-        ths = ["name","phone","guesetNum","time",""].map((th, index)=>{
+        ths = ["name","phone","guestNum","time",""].map((th, index)=>{
             return (<th key={index}>{t(th)}</th>);
         });
 
         return(
             <Grid>
             <Row className="show-grid">
-            <Col md={12}>
-                <Table responsive>
+            <Col md={8}>
+                <Table responsive striped bordered condensed hover>
                     <thead>
-                        {ths}
+                        <tr>
+                            {ths}
+                        </tr>
                     </thead>
-                    <div>
-                        {this.state.orders?this.state.orders.map((order,index)=>{
-                            return (<tr>
+                    <tbody>
+                    {this.state.orders?this.state.orders.map((order,index)=>{
+                        return (
+                            <tr>
                                 <td>{order.name}</td>
                                 <td>{order.phone}</td>
-                                <td></td>
-                                <td></td>
+                                <td>{order.person}</td>
+                                <td>{order.start_time}</td>
                                 <td className="cancel" onClick={this.cancel} value={order.id}>{t("cancel")}</td>
-                                </tr>);
-                        }):<p>{t(this.state.hint)}</p>}
-                    </div>
+                            </tr>);
+                    }):<p>{t(this.state.hint)}</p>}
+                    </tbody>
                 </Table>
             </Col>
             </Row>

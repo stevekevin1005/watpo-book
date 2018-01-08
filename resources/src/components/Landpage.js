@@ -17,6 +17,7 @@ const Button = ReactBootstrap.Button,
 class Landpage extends React.Component{
     constructor(props){
         super(props);
+        this.scroll = this.scroll.bind(this);
     }
     componentDidMount(){
         if(this.props.reservation !== null){
@@ -28,6 +29,11 @@ class Landpage extends React.Component{
             this.props.clearCheckOrdersInfo("name");
             this.props.clearCheckOrdersInfo("contactNumber");
         }
+    }
+    scroll(){
+        document.querySelector('.landpage_section').scrollIntoView(
+            {behavior: "smooth", block: "start"}
+        );
     }
     render(){
         const { t } = this.props;
@@ -84,13 +90,13 @@ class Landpage extends React.Component{
                     <h2 className="sub">{t("ThaiTraditionalMedicalMassage")}</h2>
                         <div className="landpageBtnContainer">
                         <LinkContainer to="/reservation/0">
-                            <Button bsStyle="primary" bsSize="large" className="btn mainBtn" block>
+                            <Button bsStyle="info" bsSize="large" className="btn mainBtn" block>
                                 <i className="fa fa-pencil" aria-hidden="true"></i>
                                 {"  " + t('book')}
                             </Button>
                         </LinkContainer>
-                        <LinkContainer to="/book/check/0">
-                            <Button bsStyle="info" bsSize="large" className="btn mainBtn" block>
+                        <LinkContainer to="/checkOrders/0">
+                            <Button bsStyle="primary" bsSize="large" className="btn mainBtn" block>
                                 <i className="fa fa-search" aria-hidden="true"></i>
                                 {"  " + t('book check')}
                             </Button>
@@ -99,6 +105,7 @@ class Landpage extends React.Component{
                     </div>
                 </Row>
                 <Row className="landpage_section">
+                    <i className="fa fa-chevron-down scrollArrow" onClick={this.scroll}></i>
                     <Col md={12}>
                         <h3 className="sectionTitle"><i className="fa fa-list-alt" aria-hidden="true"></i>{" " + t("services")}</h3>
                     </Col>

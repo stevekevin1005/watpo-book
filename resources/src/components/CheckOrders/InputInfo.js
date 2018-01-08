@@ -85,8 +85,8 @@ class InputInfo extends React.Component{
         return(
             <Grid>
             <Row className="show-grid">
-            <FormGroup controlId="formControlsSelect">
-               <Col md={5}>
+            <Col md={7}>
+                <FormGroup controlId="formControlsSelect">
                     <ControlLabel>{t("reservatorName")}</ControlLabel>
                     <FormControl
                         type="text"
@@ -107,8 +107,8 @@ class InputInfo extends React.Component{
                     />
                     <FormControl.Feedback />
                     <p className="hint">{t(this.state.contactNumberHint)}</p>
-                </Col>
-             </FormGroup>
+                </FormGroup>
+             </Col>
              <Button currentStep={0} clickHandle={this.send} disabled={false}/>
             </Row>
         </Grid>

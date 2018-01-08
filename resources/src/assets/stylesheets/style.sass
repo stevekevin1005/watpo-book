@@ -18,10 +18,11 @@ $highlight: #9e5334
     background-color: rgba(255,255,255,0.2)
   &::-webkit-scrollbar
     width: 6px
+    height: 6px
     background-color: rgba(255,255,255,0.2)
   &::-webkit-scrollbar-thumb
     background-color: $color
-
+    
 *
   font-family: 微軟正黑體, Helvetica
   +scrollBar($brown)
@@ -100,13 +101,12 @@ body
   z-index: -2
   background-attachment: fixed
   animation: emerge 3s 1 both
-  &::after
-    content: attr(data-arrow)
-    font-family: "FontAwesome"
+
+.scrollArrow
     background-color: #f9f7f9
     border-radius: 30px
     position: absolute
-    top: 95%
+    top: 90vh
     left: 50%
     transform: translateX(-50%)
     color: $brown
@@ -114,21 +114,13 @@ body
     height: 60px
     line-height: 60px
     text-align: center
-    z-index: -1
+    cursor: pointer
 
 @keyframes emerge
   0%
     opacity: 0
   100%
     opacity: .9
-
-.reservationContainer
-  position: relative
-  padding: 16px 32px
-  background-color: rgba(255,255,255,.7)
-  border-radius: 16px
-  box-shadow: 0 0 5px 2px rgba(0,0,0,.2)
-  margin-top: 70px
 
 .sectionTitle
   font-family: title, 微軟正黑體
@@ -232,8 +224,40 @@ a
   text-shadow: 2px 2px 1px rgba(0,0,0,.3)
   font-family: title, 微軟正黑體
 
+.branch
+  padding-top: 8px
+
+p
+  margin: 10px 0
+
+.landpageBtnContainer
+  width: 300px
+  margin: 0 auto
+  max-width: 90%
+
+.contentBlock
+  border-radius: 16px
+  border: solid 1px #E8E8E8
+  padding: 16px
+  background-color: #F5F5F5
+  box-shadow: inset 1px 1px 3px 1px rgba(0,0,0,.2)
+  & p
+    margin: 0
+
+.sectionItem
+  margin: 16px 0
+
+// reservation
 .reservationGrid > .col-md-12 > .reservationContent > .container
   width: unset
+
+.reservationContainer
+  position: relative
+  padding: 16px 32px
+  background-color: rgba(255,255,255,.7)
+  border-radius: 16px
+  box-shadow: 0 0 5px 2px rgba(0,0,0,.2)
+  margin-top: 70px
 
 .steps
   background-color: #F5F5F5
@@ -245,13 +269,6 @@ a
 .prevStep
   cursor: pointer
   margin: 16px 0
-
-
-.branch
-  padding-top: 8px
-
-p
-  margin: 10px 0
 
 .calendar
   border-radius: 16px
@@ -377,23 +394,6 @@ p
   color: white
   background-color: orange
 
-.landpageBtnContainer
-  width: 300px
-  margin: 0 auto
-  max-width: 90%
-
-.contentBlock
-  border-radius: 16px
-  border: solid 1px #E8E8E8
-  padding: 16px
-  background-color: #F5F5F5
-  box-shadow: inset 1px 1px 3px 1px rgba(0,0,0,.2)
-  & p
-    margin: 0
-
-.sectionItem
-  margin: 16px 0
-
 .navbar > .container
   min-width: 90%
 
@@ -403,29 +403,18 @@ p
 .hint
   color: red
 
-.orderInfo
-  border-radius: 10px
-  padding: 5px 10px
-  margin: 5px 2.5%
-  background-color: rgba(255,255,255,.5)
-  box-shadow: 1px 1px 3px 1px rgba(0,0,0,.2)
-  padding: 10px 5px
-  & p, .cancel
-    display: inline-block
-    vertical-align: top
-  & p
-    width: 86%
-    color: $darkBrown
-    padding: 5px 10px
-    margin: 0
-  & .cancel
-    text-align: center
-    cursor: pointer
-    border-radius: 5px
-    padding: 1% 2%
-    width: 12%
-    background-color: $lightBrown
-    color: white
+.cancel
+  text-align: center
+  cursor: pointer
+  border-radius: 2px
+  padding: 1% 2%
+  width: 12%
+  background-color: $lightBrown
+  color: white
+  margin: 2px 0
+
+.checkOrdersContent .form-group
+  margin-top: 0px
 
 footer
   position: relative
@@ -473,6 +462,8 @@ iframe
     margin-bottom: 0
   .sectionItem
     margin: 0
+  .checkOrdersContent .form-group
+    margin-top: 15px
 +mq("phone-wide",max)
   .title
     font-size: 7rem
@@ -493,9 +484,5 @@ iframe
     margin: 16px 0
   .branch
     padding-top: 0
-  .orderInfo
-    & p
-      width: 78%
-      padding: 5px
-    & .cancel
-      width: 22%
+  .checkOrdersContent .form-group
+    margin-top: 0px

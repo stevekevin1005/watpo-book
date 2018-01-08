@@ -245,7 +245,7 @@ class BookController extends Controller
 			$order_id = $request->order_id;
 			$name = $request->name;
 			$phone = $request->phone;
-			$order = Order::where('id', $order_id))->where('phone', $phone)->where('name', $name)->first();
+			$order = Order::where('id', $order_id)->where('phone', $phone)->where('name', $name)->first();
 			$order->status = 3;
 			$order->save();
 			return response()->json('預約取消成功!', 200);
