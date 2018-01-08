@@ -10,6 +10,7 @@ const Grid = ReactBootstrap.Grid,
         FormControl = ReactBootstrap.FormControl,
         ControlLabel = ReactBootstrap.ControlLabel;
 
+
 class CheckInformation extends React.Component{
     constructor(props){
         super(props);
