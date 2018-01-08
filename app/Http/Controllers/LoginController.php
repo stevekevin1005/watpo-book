@@ -23,7 +23,7 @@ class LoginController extends Controller
 		  $request->session()->put('account', $request->account);
 		  $request->session()->put('account_id', $account->id);
 		  $request->session()->put('account_level', $account->level);
-		  Log::create(['description' => $account->account.' 登入系統']);
+		  Log::create(['description' => '登入系統']);
 		  return redirect('/admin/dashboard');
 		}
 		return redirect('/admin/login')->withErrors(['fail'=>'帳號或密碼錯誤']);
@@ -31,6 +31,7 @@ class LoginController extends Controller
 
 	public function logout(Request $request)
 	{
+		Log::create(['description' => '登出系統']);
 		$request->session()->flush();
 		return redirect('/admin/login');
 	}
