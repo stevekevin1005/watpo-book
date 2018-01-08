@@ -7,6 +7,7 @@ use App\Models\Service;
 use App\Models\ServiceProvider;
 use App\Models\Order;
 use App\Models\Room;
+use App\Models\BlackList;
 class BookController extends Controller
 {
 	
@@ -165,6 +166,9 @@ class BookController extends Controller
 			}
 			if(!$phone){
 				throw new Exception("缺少預約客電話", 1);
+			}
+			if(!is_null(BlackList::where('name', $name)->where('phone', $phone)->first())){
+				throw new Exception("系統錯誤", 1);
 			}
 			$service_provider_id_list = explode(",", $service_provider_id);
 

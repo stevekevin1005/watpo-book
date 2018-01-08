@@ -30,6 +30,9 @@
                                     <button type="submit" class="btn btn-primary waves-effect waves-light">Add <i class="fa fa-plus"></i></button>
                                 </div>
                             </div>
+                            @if ($errors->has('fail'))
+                            <a href="#" style="color:red;">{{ $errors->first('fail') }}</a>
+                            @endif
                         </form>
                     </div>
                 </div>

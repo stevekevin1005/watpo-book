@@ -224,7 +224,7 @@
             aspectRatio: 1.8,
             events: '/api/calendar/{{ $shop_id }}',
             eventClick: function(calEvent, jsEvent, view) {
-                var myTemplate = $.templates("#check_form_template");
+                var myTemplate = $.templates("#check_form_template"); 
                 var html = myTemplate.render({
                     order_id: calEvent.order_id,
                     name: calEvent.title,
@@ -233,14 +233,11 @@
                     service: calEvent.service,
                     room: calEvent.room,
                     service_providers: calEvent.service_providers,
-                    end_time: calEvent.end.format("YYYY-MM-DD HH:mm:ss"),
-                    start_time: calEvent.start.format("YYYY-MM-DD HH:mm:ss"),
+                    end_time: calEvent.end_time,
+                    start_time: calEvent.start_time,
                     service_id: calEvent.service_id,
                     room_id: calEvent.room_id
                 });
-
-                console.log(calEvent);
-
                 swal({
                     title: '預約單確認',
                     html: html,
