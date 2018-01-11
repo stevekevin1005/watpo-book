@@ -4,6 +4,7 @@ import i18n from '../i18n';
 import {connect} from "react-redux";
 import clearReservation from "../dispatchers/clearReservation";
 import clearSourceData from "../dispatchers/clearSourceData";
+import clearCheckOrdersInfo from "../dispatchers/clearCheckOrdersInfo";
 import {bindActionCreators} from "redux";
 
 // 首頁
@@ -16,6 +17,7 @@ const Button = ReactBootstrap.Button,
 class Landpage extends React.Component{
     constructor(props){
         super(props);
+        this.scroll = this.scroll.bind(this);
     }
     componentDidMount(){
         if(this.props.reservation !== null){
@@ -23,6 +25,19 @@ class Landpage extends React.Component{
             this.props.clearSourceData("timeList");
             this.props.clearSourceData("selectedDetail");
         }
+        if(this.props.checkOrdersInfo != {}){
+            this.props.clearCheckOrdersInfo("name");
+            this.props.clearCheckOrdersInfo("contactNumber");
+        }
+    }
+    scroll(){
+        const distance = document.querySelector('.landpage_section').getBoundingClientRect().top + window.scrollY - 20,
+              scrollLen = distance / 50;
+
+        const scroll = setInterval(function(){
+            window.scroll(0, window.scrollY + scrollLen);
+            if(window.scrollY >= distance) clearInterval(scroll);
+        },16);
     }
     render(){
         const { t } = this.props;
@@ -79,13 +94,13 @@ class Landpage extends React.Component{
                     <h2 className="sub">{t("ThaiTraditionalMedicalMassage")}</h2>
                         <div className="landpageBtnContainer">
                         <LinkContainer to="/reservation/0">
-                            <Button bsStyle="primary" bsSize="large" className="btn mainBtn" block>
+                            <Button bsStyle="info" bsSize="large" className="btn mainBtn" block>
                                 <i className="fa fa-pencil" aria-hidden="true"></i>
                                 {"  " + t('book')}
                             </Button>
                         </LinkContainer>
-                        <LinkContainer to="/book/check/0">
-                            <Button bsStyle="info" bsSize="large" className="btn mainBtn" block>
+                        <LinkContainer to="/checkOrders/0">
+                            <Button bsStyle="primary" bsSize="large" className="btn mainBtn" block>
                                 <i className="fa fa-search" aria-hidden="true"></i>
                                 {"  " + t('book check')}
                             </Button>
@@ -94,6 +109,7 @@ class Landpage extends React.Component{
                     </div>
                 </Row>
                 <Row className="landpage_section">
+                    <i className="fa fa-chevron-down scrollArrow" onClick={this.scroll}></i>
                     <Col md={12}>
                         <h3 className="sectionTitle"><i className="fa fa-list-alt" aria-hidden="true"></i>{" " + t("services")}</h3>
                     </Col>
@@ -156,13 +172,20 @@ class Landpage extends React.Component{
     }
 }
 
+const mapStateToProps = (state)=>{
+    return {
+        reservation: state.reservation,
+        checkOrdersInfo: state.checkOrdersInfo
+    }
+}
 const mapDispatchToProps = (dispatch)=>{
     return bindActionCreators({
         clearReservation: clearReservation,
-        clearSourceData: clearSourceData
+        clearSourceData: clearSourceData,
+        clearCheckOrdersInfo: clearCheckOrdersInfo
     },dispatch);
 }
   
-Landpage = connect(null, mapDispatchToProps)(Landpage);
+Landpage = connect(mapStateToProps, mapDispatchToProps)(Landpage);
 
 export default translate()(Landpage); 

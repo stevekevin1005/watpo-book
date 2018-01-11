@@ -72,11 +72,20 @@
 	"contactNumberHint_blank": "請輸入聯絡號碼",
 	"contactNumberHint_length": "請輸入有效聯絡號碼",
 	"error": "錯誤",
-	"success": "預定成功",
+	"success": "成功",
 	"person": "人",
 	"people": "人",
 	"errorHint_system": "某處發生錯誤，請重新嘗試",
 	"errorHint_noRoom": "此時段無符合您需求的房間",
 	"yes": "是",
-	"no": "否"
+	"no": "否",
+	"inputRelatedInfo": "輸入相關資訊",
+	"orderInfo": "預約資訊",
+	"checkOrCancelReservation": "確認/取消預約",
+	"ordersInfoHint": "您目前無任何預約紀錄",
+	"cancel": "取消",
+	"orderCanceled": "您的預約已取消",
+	"name": "姓名",
+	"phone": "電話",
+	"time": "預約時間"
 }

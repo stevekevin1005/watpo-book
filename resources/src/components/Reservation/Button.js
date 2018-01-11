@@ -7,7 +7,7 @@ const Button_ = (props)=>{
     const { t } = props;
     return (
         <Col md={12}>
-            <Button bsStyle="primary" bsSize="large" disabled={props.disabled} onClick={props.disabled?null:props.clickHandle}>
+            <Button type="submit" bsStyle="primary" bsSize="large" disabled={props.disabled} onClick={props.disabled?null:props.clickHandle}>
                 {props.currentStep==2?t("send"):t("nextStep")}
             </Button>
         </Col>
