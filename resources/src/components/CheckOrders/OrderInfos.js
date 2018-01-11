@@ -17,7 +17,7 @@ class OrdersInfo extends React.Component{
 
         this.state = {
             hint: "ordersInfoHint",
-            orders: null
+            orders: []
         };
         this.cancel = this.cancel.bind(this);
         this.getOrders = this.getOrders.bind(this);
@@ -60,8 +60,8 @@ class OrdersInfo extends React.Component{
         that.props.toggleLoading(true);
 
         axios({
-            method: "get",
-            url: "../api/customer/cancel",
+            method: "post",
+            url: "../api/order/customer/cancel",
             params: {
                 name: this.props.checkOrdersInfo.name,
                 phone: this.props.checkOrdersInfo.contactNumber,
@@ -72,7 +72,6 @@ class OrdersInfo extends React.Component{
         })
         .then(function (response) {
             if(response.statusText == "OK"){
-                that.setState({orders: response.data});
                 that.props.toggleLoading(false);
                 that.props.cancelSuccess();
                 that.getOrders();
@@ -103,7 +102,7 @@ class OrdersInfo extends React.Component{
                         </tr>
                     </thead>
                     <tbody>
-                    {this.state.orders?this.state.orders.map((order,index)=>{
+                    {this.state.orders.length>0?this.state.orders.map((order,index)=>{
                         return (
                             <tr>
                                 <td>{order.name}</td>

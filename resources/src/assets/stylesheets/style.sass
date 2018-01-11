@@ -414,7 +414,10 @@ p
   margin: 2px 0
 
 .checkOrdersContent .form-group
-  margin-top: 0px
+  margin-top: 15px
+
+tbody p
+  padding: 0 5px
 
 footer
   position: relative
@@ -451,7 +454,10 @@ iframe
 @media (min-width: 768px)
   .reservationContent .container
     width: unset
-
+  .checkOrdersContent .container
+    width: unset
+  .checkOrdersContent .form-group
+    margin-top: 0px
 +mq("desktop",min)
   .title
     font-size: 10rem
@@ -484,5 +490,3 @@ iframe
     margin: 16px 0
   .branch
     padding-top: 0
-  .checkOrdersContent .form-group
-    margin-top: 0px

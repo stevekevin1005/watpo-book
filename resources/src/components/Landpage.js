@@ -31,9 +31,13 @@ class Landpage extends React.Component{
         }
     }
     scroll(){
-        document.querySelector('.landpage_section').scrollIntoView(
-            {behavior: "smooth", block: "start"}
-        );
+        const distance = document.querySelector('.landpage_section').getBoundingClientRect().top + window.scrollY - 20,
+              scrollLen = distance / 50;
+
+        const scroll = setInterval(function(){
+            window.scroll(0, window.scrollY + scrollLen);
+            if(window.scrollY >= distance) clearInterval(scroll);
+        },16);
     }
     render(){
         const { t } = this.props;
