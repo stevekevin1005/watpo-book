@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
-        <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
+        <meta name="description" content="管理系統,泰和殿">
         <meta name="author" content="Coderthemes">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="shortcut icon" href="/assets/images/favicon_1.ico">
 
-        <title>Minton - Responsive Admin Dashboard Template</title>
+        <title>泰和殿 - 管理介面</title>
 
         <link href="/assets/plugins/sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css">
         <link href="/assets/plugins/switchery/switchery.min.css" rel="stylesheet" />
@@ -66,7 +66,7 @@
                                 <span class="clearfix"></span>
                             </div>
 
-                            <ul class="nav navbar-nav navbar-right pull-right">
+                           {{--  <ul class="nav navbar-nav navbar-right pull-right">
 
                                 <li class="dropdown hidden-xs">
                                     <a href="/#" data-target="#" class="dropdown-toggle waves-effect waves-light"
@@ -135,7 +135,7 @@
 
                                     </ul>
                                 </li>
-                            </ul>
+                            </ul> --}}
                         </div>
                         <!--/.nav-collapse -->
                     </div>
