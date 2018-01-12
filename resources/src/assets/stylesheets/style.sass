@@ -3,6 +3,14 @@ $darkBrown: #38291d
 $lightBrown: #684f38
 $highlight: #9e5334
 
+// // Noto Serif CJK tc
+// @font-face
+//   font-family: "title"
+//   src: url('../fonts/title.otf')
+// // Noto Sans CJK tc
+// @font-face
+//   font-family: "sub"
+//   src: url('../fonts/sub.otf')
 
 @mixin scrollBar($color)
   &::-webkit-scrollbar-track
@@ -10,10 +18,11 @@ $highlight: #9e5334
     background-color: rgba(255,255,255,0.2)
   &::-webkit-scrollbar
     width: 6px
+    height: 6px
     background-color: rgba(255,255,255,0.2)
   &::-webkit-scrollbar-thumb
     background-color: $color
-
+    
 *
   font-family: 微軟正黑體, Helvetica
   +scrollBar($brown)
@@ -34,6 +43,10 @@ body
   background-color: #f9f7f9
   min-width: 314px
   overflow-x: hidden
+  width: 100vw
+
+#container
+  width: 100%
 
 .divider
   width: 1px
@@ -89,13 +102,12 @@ body
   z-index: -2
   background-attachment: fixed
   animation: emerge 3s 1 both
-  &::after
-    content: attr(data-arrow)
-    font-family: "FontAwesome"
+
+.scrollArrow
     background-color: #f9f7f9
     border-radius: 30px
     position: absolute
-    top: 95%
+    top: 90vh
     left: 50%
     transform: translateX(-50%)
     color: $brown
@@ -103,7 +115,7 @@ body
     height: 60px
     line-height: 60px
     text-align: center
-    z-index: -1
+    cursor: pointer
 
 @keyframes emerge
   0%
@@ -111,16 +123,8 @@ body
   100%
     opacity: .9
 
-.reservationContainer
-  position: relative
-  padding: 16px 32px
-  background-color: rgba(255,255,255,.7)
-  border-radius: 16px
-  box-shadow: 0 0 5px 2px rgba(0,0,0,.2)
-  margin-top: 70px
-
 .sectionTitle
-  font-family: title
+  font-family: title, 微軟正黑體
   position: relative
   text-align: center
   font-weight: bold
@@ -140,7 +144,7 @@ h4, h5
     color: $highlight
 
 h4
-  font-family: sub
+  font-family: sub, 微軟正黑體
 
 .btn-primary
   background-color: $brown
@@ -183,7 +187,7 @@ h4
   background-color: $darkBrown
 
 .navbar-brand
-  font-family: title
+  font-family: title, 微軟正黑體
   cursor: pointer
 
 .navbar-toggle
@@ -219,10 +223,42 @@ a
 
 .title, .sub
   text-shadow: 2px 2px 1px rgba(0,0,0,.3)
-  font-family: title
+  font-family: title, 微軟正黑體
 
+.branch
+  padding-top: 8px
+
+p
+  margin: 10px 0
+
+.landpageBtnContainer
+  width: 300px
+  margin: 0 auto
+  max-width: 90%
+
+.contentBlock
+  border-radius: 16px
+  border: solid 1px #E8E8E8
+  padding: 16px
+  background-color: #F5F5F5
+  box-shadow: inset 1px 1px 3px 1px rgba(0,0,0,.2)
+  & p
+    margin: 0
+
+.sectionItem
+  margin: 16px 0
+
+// reservation
 .reservationGrid > .col-md-12 > .reservationContent > .container
   width: unset
+
+.reservationContainer
+  position: relative
+  padding: 16px 32px
+  background-color: rgba(255,255,255,.7)
+  border-radius: 16px
+  box-shadow: 0 0 5px 2px rgba(0,0,0,.2)
+  margin-top: 70px
 
 .steps
   background-color: #F5F5F5
@@ -234,13 +270,6 @@ a
 .prevStep
   cursor: pointer
   margin: 16px 0
-
-
-.branch
-  padding-top: 8px
-
-p
-  margin: 10px 0
 
 .calendar
   border-radius: 16px
@@ -366,23 +395,6 @@ p
   color: white
   background-color: orange
 
-.landpageBtnContainer
-  width: 300px
-  margin: 0 auto
-  max-width: 90%
-
-.contentBlock
-  border-radius: 16px
-  border: solid 1px #E8E8E8
-  padding: 16px
-  background-color: #F5F5F5
-  box-shadow: inset 1px 1px 3px 1px rgba(0,0,0,.2)
-  & p
-    margin: 0
-
-.sectionItem
-  margin: 16px 0
-
 .navbar > .container
   min-width: 90%
 
@@ -391,6 +403,22 @@ p
 
 .hint
   color: red
+
+.cancel
+  text-align: center
+  cursor: pointer
+  border-radius: 2px
+  padding: 1% 2%
+  width: 12%
+  background-color: $lightBrown
+  color: white
+  margin: 2px 0
+
+.checkOrdersContent .form-group
+  margin-top: 15px
+
+tbody p
+  padding: 0 5px
 
 footer
   position: relative
@@ -415,6 +443,10 @@ footer
   & a
     color: white
 
+.footerContainer
+  width: 100vw
+  overflow: hidden
+
 // map
 iframe
   border-radius: 20px
@@ -422,12 +454,15 @@ iframe
 // sweet alert
 .sweet-alert
   & h2
-    font-family: title
+    font-family: title, 微軟正黑體
 
 @media (min-width: 768px)
   .reservationContent .container
     width: unset
-
+  .checkOrdersContent .container
+    width: unset
+  .checkOrdersContent .form-group
+    margin-top: 0px
 +mq("desktop",min)
   .title
     font-size: 10rem
@@ -438,6 +473,8 @@ iframe
     margin-bottom: 0
   .sectionItem
     margin: 0
+  .checkOrdersContent .form-group
+    margin-top: 15px
 +mq("phone-wide",max)
   .title
     font-size: 7rem
@@ -453,7 +490,7 @@ iframe
   .img
     height: 200px
   .sectionItem
-    margin: 16px 8px
+    margin: 16px 8px 16px 0
   .map
     margin: 16px 0
   .branch

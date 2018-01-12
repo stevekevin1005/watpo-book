@@ -71,11 +71,20 @@
 	"contactNumberHint_blank": "電話番号を入力してください",
 	"contactNumberHint_length": "有効な電話番号を入力してください",
 	"error": "エラー",
-	"success": "予約成功",
+	"success": "成功",
 	"person": "人",
 	"people": "人",
 	"errorHint_system": "システムエラーが起った・再度試してください・",
 	"errorHint_noRoom": "いま予約時間に要件を満たすルームはありません",
 	"yes": "はい",
-	"no": "いいえ"
+	"no": "いいえ",
+	"inputRelatedInfo": "関連情報を入力する",
+	"orderInfo": "予約情報",
+	"checkOrCancelReservation": "予約確認/キャンセル",
+	"ordersInfoHint": "予約記録がおりません",
+	"cancel": "キャンセル",
+	"orderCanceled": "予約がキャンセルされました",
+	"name": "名前",
+	"phone": "電話",
+	"time": "予約時間"
 }

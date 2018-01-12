@@ -11,6 +11,7 @@ import LoadingAnimation from "./LoadingAnimation";
 import clearReservation from "../dispatchers/clearReservation";
 import clearSourceData from "../dispatchers/clearSourceData";
 import toggleLoading from "../dispatchers/toggleLoading";
+import clearCheckOrdersInfo from "../dispatchers/clearCheckOrdersInfo";
 
 const Grid = ReactBootstrap.Grid,
     Row = ReactBootstrap.Row,
@@ -56,6 +57,12 @@ class Reservation extends React.Component{
             case "2":
                 if(nextProps.sourceData.timeList === undefined || nextProps.sourceData.selectedDetail === undefined)
                     this.props.history.push('/reservation/0');
+        }
+    }
+    componentDidMount(){
+        if(this.props.checkOrdersInfo != {}){
+            this.props.clearCheckOrdersInfo("name");
+            this.props.clearCheckOrdersInfo("contactNumber");
         }
     }
     nextStep(){
@@ -238,7 +245,8 @@ const mapStateToProps = (state)=>{
     return {
         loading: state.loading,
         reservation: state.reservation,
-        sourceData: state.sourceData
+        sourceData: state.sourceData,
+        checkOrdersInfo: state.checkOrdersInfo
     }
 }
 
@@ -246,6 +254,7 @@ const mapDispatchToProps = (dispatch)=>{
     return bindActionCreators({
         clearReservation: clearReservation,
         clearSourceData: clearSourceData,
+        clearCheckOrdersInfo: clearCheckOrdersInfo,
         toggleLoading: toggleLoading
     },dispatch);
 }

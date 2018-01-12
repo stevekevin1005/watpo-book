@@ -3,7 +3,7 @@
 import Nav from "./Nav";
 import Landpage from "./Landpage";
 import Reservation from "./Reservation";
-import BookCheck from "./BookCheck";
+import CheckOrders from "./CheckOrders";
 import { Switch, Route, BrowserRouter } from "react-router-dom";
 import i18n from '../i18n';
 import {connect} from "react-redux";
@@ -22,7 +22,7 @@ class App extends React.Component{
                         <Switch>
                             <Route exact path="/" component={Landpage} />
                             <Route path="/reservation/:step" component={Reservation} />
-                            <Route path="/book/check/:step" component={BookCheck} />
+                            <Route path="/checkOrders/:step" component={CheckOrders} />
                         </Switch>
                     </div>
                 </BrowserRouter>

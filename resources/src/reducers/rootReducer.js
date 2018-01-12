@@ -5,7 +5,8 @@ const rootReducer = combineReducers({
     lastAction: reducers.lastAction,
     loading: reducers.loading,
     reservation: reducers.reservation,
-    sourceData: reducers.sourceData
+    sourceData: reducers.sourceData,
+    checkOrdersInfo: reducers.checkOrdersInfo
   });
 
   module.exports = rootReducer;
