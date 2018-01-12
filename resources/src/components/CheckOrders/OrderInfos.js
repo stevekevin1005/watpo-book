@@ -111,7 +111,7 @@ class OrdersInfo extends React.Component{
                                 <td>{order.start_time}</td>
                                 <td className="cancel" onClick={this.cancel} value={order.id}>{t("cancel")}</td>
                             </tr>);
-                    }):<p>{t(this.state.hint)}</p>}
+                    }):<td colSpan="5"><p>{t(this.state.hint)}</p></td>}
                     </tbody>
                 </Table>
             </Col>
