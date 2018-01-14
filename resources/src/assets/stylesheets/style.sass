@@ -46,7 +46,8 @@ body
   width: 100vw
 
 #container
-  width: 100%
+  width: 100vw
+  overflow-x: hidden
 
 .divider
   width: 1px
@@ -426,26 +427,22 @@ footer
   color: white
   text-align: center
   margin-top: 150px
-  &::after
-    content: ""
-    width: 150vw
-    position: absolute
-    bottom: 0
-    left: -50%
-    box-shadow: 0 -3px 1px 1px rgba(0,0,0,.1)
-    background-color: $brown
-    height: 100%
-    z-index: -1
   & .fa
     cursor: pointer
     font-size: 32px
     margin: 10px
   & a
     color: white
-
-.footerContainer
-  width: 100vw
-  overflow: hidden
+  &::after
+      content: ""
+      width: 150vw
+      position: absolute
+      bottom: 0
+      left: -50%
+      box-shadow: 0 -3px 1px 1px rgba(0,0,0,.1)
+      background-color: $brown
+      height: 100%
+      z-index: -1
 
 // map
 iframe
