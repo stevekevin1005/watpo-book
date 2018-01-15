@@ -62,6 +62,11 @@ return [
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
             'strict'    => false,
+            'dump' => [
+                'dump_binary_path' => '/', // only the path, so without `mysqldump` or `pg_dump`
+                'use_single_transaction',
+                'timeout' => 60 * 5, // 5 minute timeout
+            ]  
         ],
 
         'pgsql' => [
