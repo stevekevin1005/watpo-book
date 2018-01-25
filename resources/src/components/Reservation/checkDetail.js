@@ -214,7 +214,7 @@ class CheckDetail extends React.Component{
             this.setState({contactNumberHint: "contactNumberHint_blank"});
             this.numberInput.focus();
             pass = false;
-        }else if(this.props.reservation.contactNumber.length < 6){
+        }else if(this.props.reservation.contactNumber.length < 8){
             this.setState({contactNumberHint: "contactNumberHint_length"});
             this.numberInput.focus();
             pass = false;
@@ -265,9 +265,10 @@ class CheckDetail extends React.Component{
             <Row className="show-grid">
             <FormGroup controlId="formControlsSelect">
                 <Col md={5}>
-                        <ControlLabel>{t("operator")}</ControlLabel>
-                            {operators}
-                        <FormControl.Feedback />
+                    {this.props.reservation.room?<div><ControlLabel>{t("guestNum")}</ControlLabel>
+                    <FormControl componentClass="select" placeholder="select" value={this.state.guestNum} onChange={this.setGuestNum}>
+                        {guestNumEl}
+                    </FormControl>
                     { this.props.sourceData.services[this.props.reservation.service].shower === 1 && 
                         <div>
                             <ControlLabel>{t("showerOrNot")}</ControlLabel>
@@ -279,12 +280,11 @@ class CheckDetail extends React.Component{
                             <FormControl.Feedback />
                         </div>
                     }
-                        {this.props.reservation.room?<div><ControlLabel>{t("guestNum")}</ControlLabel>
-                        <FormControl componentClass="select" placeholder="select" value={this.state.guestNum} onChange={this.setGuestNum}>
-                            {guestNumEl}
-                        </FormControl>
-                        <FormControl.Feedback />
-                        </div>:<p className="hint">{t("errorHint_noRoom")}</p>}
+                    <FormControl.Feedback />
+                    </div>:<p className="hint">{t("errorHint_noRoom")}</p>}
+                    <ControlLabel>{t("operator")}</ControlLabel>
+                        {operators}
+                    <FormControl.Feedback />
                </Col>
                
                <Col md={1}>
