@@ -118,7 +118,7 @@ class Reservation extends React.Component{
             newDate = newDate.join("/");
             date = newDate;
       }
-      console.log(date);
+      // console.log(date);
       // call API
       this.props.toggleLoading(true);
       axios({

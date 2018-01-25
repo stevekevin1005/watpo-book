@@ -69,7 +69,7 @@ class InputInfo extends React.Component{
             this.setState({contactNumberHint: "contactNumberHint_blank"});
             this.numberInput.focus();
             pass = false;
-        }else if(this.props.checkOrdersInfo.contactNumber.length < 6){
+        }else if(this.props.checkOrdersInfo.contactNumber.length < 8){
             this.setState({contactNumberHint: "contactNumberHint_length"});
             this.numberInput.focus();
             pass = false;
