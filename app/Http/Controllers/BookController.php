@@ -72,7 +72,7 @@ class BookController extends Controller
 			$i = 0;
 			while($start_time <= $end_time){
 				$time_list[$i]['time'] = date("H:i:s", $start_time);
-				$time_list[$i]['detail'] = $this->time_option($start_time, $service->time, $service->shower,$shop_id);
+				$time_list[$i]['detail'] = $this->time_option($date, $start_time, $service->time, $service->shower,$shop_id);
 				$start_time = strtotime("+30 min", $start_time); 
 				$i++;
 			}
@@ -87,48 +87,67 @@ class BookController extends Controller
 		}
 			
 	}
-	private function time_option($datetime, $service_time, $shower,$shop_id){
+	private function time_option($date, $start_time, $service_time, $shower,$shop_id){
 		
-		$start_time = $datetime;
+		$month = date("Y-m", strtotime($date));
+
 		$end_time = strtotime("+".$service_time." min", $start_time);
 
-		$service_providers = ServiceProvider::with(['leaves' => function ($query) use ($start_time, $end_time) {
+		$service_providers = ServiceProvider::whereHas('shifts' ,function ($query) use ($month) {
+		    $query->where('month', $month);
+		})->with(['shifts' => function ($query) use ($month) {
+		    $query->where('month', $month);
+		}])->whereDoesntHave('leaves' ,function ($query) use ($start_time, $end_time) {
 		    $query->where('start_time', '<', date("Y/m/d H:i:s", $end_time));
 		    $query->where('end_time', '>', date("Y/m/d H:i:s", $start_time));
-		}])->with(['orders' => function ($query) use ($start_time, $end_time) {
-				$query->where('status', '!=', 3);
-				$query->where('status', '!=', 4);
+		})->whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
+			$query->where('status', '!=', 3);
+			$query->where('status', '!=', 4);
 		    $query->where('start_time', '<', date("Y/m/d H:i:s", $end_time));
 		    $query->where('end_time', '>', date("Y/m/d H:i:s", $start_time));
-		}])->where('shop_id', $shop_id)->get();
-		
-		$result['service_provider_list'] = null;
+		})->where('shop_id', $shop_id)->get();
 
+		$result['service_provider_list'] = array();
+		
 		foreach($service_providers as $service_provider){
-			if($service_provider->leaves->count() == 0){
-				if($service_provider->orders->count() == 0){
-					$result['service_provider_list'][] = ['id' => $service_provider->id, 'name' => $service_provider->name, 'shop_id' => $service_provider->shop_id];
-				}
+			$shift = $service_provider->shifts->first();
+			$on_duty = strtotime($date." ".$shift->start_time);
+			$off_duty = strtotime($date." ".$shift->end_time);
+			if($off_duty < $on_duty){
+				$off_duty = strtotime("+1 day", $start_time);
+			}
+			
+			if($on_duty <= $start_time && $off_duty >= $end_time){
+				$result['service_provider_list'][] = ['id' => $service_provider->id, 'name' => $service_provider->name];
 			}
 		}
-		$rooms = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
-				$query->where('status', '!=', 3);
-				$query->where('status', '!=', 4);
+
+
+		$rooms = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
+			$query->where('status', '!=', 3);
+			$query->where('status', '!=', 4);
 		    $query->where('start_time', '<', date("Y/m/d H:i:s", $end_time));
 		    $query->where('end_time', '>', date("Y/m/d H:i:s", $start_time));
-		}])->where('shop_id', $shop_id);
+		})->where('shop_id', $shop_id);
 		if($shower == 2){
 			$rooms = $rooms->where('shower', 1);
 		}
 		$rooms = $rooms->orderBy("shower", "asc")->get();
-		$result['room'] = null;
-		foreach($rooms as $room){
-			if($room->orders->count() == 0){
-				$result['room'][] = ['id' => $room->id, 'shower' => $room->shower, 'shop_id' => $room->shop_id, 'person' => $room->person];
+		
+		if(count($result['service_provider_list']) > 0){
+			array_unshift($result['service_provider_list'], ['id' => 0,'name' => '不指定']);
+			foreach($rooms as $room){
+				if($room->orders->count() == 0){
+					$result['room'][] = ['id' => $room->id, 'shower' => $room->shower, 'shop_id' => $room->shop_id, 'person' => $room->person];
+				}
 			}
+		}
+		else{
+			$result['room'] = null;
 		}
 		return $result;
 	}
+
 	public function api_order(Request $request){
 		try{
 			$shop_id = $request->shop_id;
@@ -158,16 +177,13 @@ class BookController extends Controller
 			if(!$person){
 				throw new Exception("缺少人數", 1);
 			}
-			if(!$service_provider_id){
-				throw new Exception("缺少師傅ID", 1);
-			}
 			if(!$name){
 				throw new Exception("缺少預約客姓名", 1);
 			}
 			if(!$phone){
 				throw new Exception("缺少預約客電話", 1);
 			}
-			if(!is_null(BlackList::where('phone', $phone)->first())){
+			if(!is_null(BlackList::where('name', $name)->where('phone', $phone)->first())){
 				throw new Exception("系統錯誤", 1);
 			}
 			$service_provider_id_list = explode(",", $service_provider_id);
@@ -205,6 +221,7 @@ class BookController extends Controller
 			$order->name = $name;
 			$order->phone = $phone;
 			$order->status = 1;
+			$order->person = $person;
 			$order->service_id = $service_id;
 			$order->room_id = $room_id;
 			$order->shop_id = $shop_id;

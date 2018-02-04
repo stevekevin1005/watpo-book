@@ -20,6 +20,10 @@ class ServiceProvider extends Model {
   {
     return $this->belongsTo('App\Models\Shop', 'shop_id');
   }
+  public function shifts()
+  {
+    return $this->hasMany('App\Models\Shift', 'service_provider_id');
+  }
 }
 
 /*
