@@ -65,77 +65,6 @@
                                 </button>
                                 <span class="clearfix"></span>
                             </div>
-
-                           {{--  <ul class="nav navbar-nav navbar-right pull-right">
-
-                                <li class="dropdown hidden-xs">
-                                    <a href="/#" data-target="#" class="dropdown-toggle waves-effect waves-light"
-                                       data-toggle="dropdown" aria-expanded="true">
-                                        <i class="md md-notifications"></i> <span
-                                            class="badge badge-xs badge-pink">3</span>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-lg">
-                                        <li class="text-center notifi-title">Notification</li>
-                                        <li class="list-group nicescroll notification-list">
-                                            <!-- list item-->
-                                            <a href="/javascript:void(0);" class="list-group-item">
-                                                <div class="media">
-                                                    <div class="pull-left p-r-10">
-                                                        <em class="fa fa-diamond noti-primary"></em>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h5 class="media-heading">A new order has been placed A new
-                                                            order has been placed</h5>
-                                                        <p class="m-0">
-                                                            <small>There are new settings available</small>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </a>
-
-                                            <!-- list item-->
-                                            <a href="/javascript:void(0);" class="list-group-item">
-                                                <div class="media">
-                                                    <div class="pull-left p-r-10">
-                                                        <em class="fa fa-cog noti-warning"></em>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h5 class="media-heading">New settings</h5>
-                                                        <p class="m-0">
-                                                            <small>There are new settings available</small>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </a>
-
-                                            <!-- list item-->
-                                            <a href="/javascript:void(0);" class="list-group-item">
-                                                <div class="media">
-                                                    <div class="pull-left p-r-10">
-                                                        <em class="fa fa-bell-o noti-success"></em>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h5 class="media-heading">Updates</h5>
-                                                        <p class="m-0">
-                                                            <small>There are <span class="text-primary">2</span> new
-                                                                updates available
-                                                            </small>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </a>
-
-                                        </li>
-
-                                        <li>
-                                            <a href="/javascript:void(0);" class=" text-right">
-                                                <small><b>See all notifications</b></small>
-                                            </a>
-                                        </li>
-
-                                    </ul>
-                                </li>
-                            </ul> --}}
                         </div>
                         <!--/.nav-collapse -->
                     </div>
@@ -168,7 +97,7 @@
                             </li>
 
                             <li>
-                                <a href="/admin/leave" class="waves-effect waves-primary"><i class="md md-face-unlock"></i><span> 出勤管理 </span></a>
+                                <a href="/admin/leave" class="waves-effect waves-primary"><i class="md md-face-unlock"></i><span> 休假管理 </span></a>
                             </li>
                             <li>
                                 <a href="/admin/order" class="waves-effect waves-primary"><i class="md md-view-list"></i><span> 訂單列表 </span></a>
@@ -181,6 +110,9 @@
                             </li>
                             @if(session('account_level') == 1)
                             <li class="text-muted menu-title">管理功能選單</li>
+                            <li>
+                                <a href="/admin/shift" class="waves-effect waves-primary"><i class="md md-face-unlock"></i><span> 排班設定 </span></a>
+                            </li>
                             <li>
                                 <a href="#" class="waves-effect waves-primary"><i class="md md-people"></i><span> 員工管理 </span></a>
                                 <ul class="list-unstyled">

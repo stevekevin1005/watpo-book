@@ -47,7 +47,9 @@
 	"operator": "按摩師",
 	"roomNumber": "房號",
 	"guestNum": "人數",
+	"reserveSuccess": "預約成功",
 	"reservatorName": "預約人姓名",
+	"reservatorDate": "預約日期",
 	"contactNumber": "連絡電話",
 	"showerOrNot": "是否需要衛浴?",
 	"jan": "一月",
@@ -91,5 +93,6 @@
 	"orderCanceled": "您的預約已取消",
 	"name": "姓名",
 	"phone": "電話",
-	"time": "預約時間"
+	"time": "預約時間",
+	"reserveNotice": "請截圖此畫面以便紀錄預約"
 }

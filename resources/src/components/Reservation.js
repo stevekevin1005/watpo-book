@@ -144,8 +144,8 @@ class Reservation extends React.Component{
               that.setState({
                   success: true,
                   showAlert: true,
-                  alertTitle: t("success"),
-                  alertText: reservation.name + " " + reservation.date + " " + reservation.time + " " + serviceName + " " + reservation.guestNum + " "+ (reservation.guestNum>1?t("people"):t("person")) +" " + t("success")
+                  alertTitle: t("reserveSuccess"),
+                  alertText: t("reservatorName") + ": " +reservation.name + "\n" + t("reservatorDate") + ": "+reservation.date + " " + reservation.time + "\n服務: " + serviceName + "\n人數: " + reservation.guestNum +" " + (reservation.guestNum>1?t("people"):t("person"))+ "\n" + t("reserveNotice")
               });
           }else{
               // show failure alert

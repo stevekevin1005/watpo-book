@@ -54,6 +54,7 @@ class CheckDetail extends React.Component{
     setOperator(event){
         const value = parseInt(event.target.options[event.target.selectedIndex].value), // id
               index = parseInt(event.target.getAttribute("data-index")); // index to save at
+        console.log(value,index);
         this.props.setReservation("operator", {
             index: index,
             data: value
@@ -75,20 +76,20 @@ class CheckDetail extends React.Component{
         // set guest number and set room id
         this.props.setReservation("guestNum", value);
         this.setState({guestNum: value, prevGuestNum: this.state.guestNum},()=>{
-        this.setRoomId();
+            this.setRoomId();
 
             // set default operator data
-            if(value > this.state.prevGuestNum){
-                // 把師傅資料全部重設
-                for(let i=0;i<value;i++){
-                    this.props.setReservation("operator", {
-                        index: i,
-                        data: data.service_provider_list[i].id
-                    });
-                }
-            }else{
+            // if(value > this.state.prevGuestNum){
+            //     // 把師傅資料全部重設
+            //     for(let i=0;i<value;i++){
+            //         this.props.setReservation("operator", {
+            //             index: i,
+            //             data: data.service_provider_list[i].id
+            //         });
+            //     }
+            // }else{
                 this.props.clearReservation("operator", null, value);
-            }
+            // }
 
         });
     }
@@ -242,11 +243,11 @@ class CheckDetail extends React.Component{
         if(this.state.guestNum>0){
             for(let i = 0; i < this.state.guestNum;i++){
                 // options of operators
-                operators.push(<FormControl bsClass="form-control operatorOption" componentClass="select" id={"operator"+i} data-index={i} onChange={this.setOperator} defaultValue={this.props.reservation.operator[i]}>
+                operators.push(<FormControl bsClass="form-control operatorOption" componentClass="select" id={"operator"+i} data-index={i} onChange={this.setOperator} defaultValue={this.props.reservation.operator[0]}>
                     {data.service_provider_list.map((operator, index)=>{
                         let selected = false;
                         for(let j = 0 ; j < selectedOperators.length ; j++){
-                            if(j === i) continue; // 當前的不用確認
+                            if(j === i || index === 0) continue; // 當前的跟不指定不用確認
                             if(operator.id == selectedOperators[j]){
                               selected = true;
                               break;
@@ -263,7 +264,7 @@ class CheckDetail extends React.Component{
         return(
             <Grid>
             <Row className="show-grid">
-            <FormGroup controlId="formControlsSelect">
+            <FormGroup>
                 <Col md={5}>
                     {this.props.reservation.room?<div><ControlLabel>{t("guestNum")}</ControlLabel>
                     <FormControl componentClass="select" placeholder="select" value={this.state.guestNum} onChange={this.setGuestNum}>
