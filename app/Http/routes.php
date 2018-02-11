@@ -71,6 +71,7 @@ Route::group(['middleware' => ['web']], function () {
 		
 		Route::get('/calendar/{shop_id}', ['uses' => 'CalendarController@api_shop_calendar', 'as' => 'apiShopClander']);
 		
+		Route::get('/order/schedule', ['uses' => 'CalendarController@api_order_list', 'as' => 'apiOrderList']);
 		Route::post('/order/confirm', ['uses' => 'CalendarController@api_order_confirm', 'as' => 'apiOrderConfirm']);
 		Route::post('/order/cancel', ['uses' => 'CalendarController@api_order_cancel', 'as' => 'apiOrderCancel']);
 	
@@ -80,6 +81,7 @@ Route::group(['middleware' => ['web']], function () {
 	Route::group(['prefix' => '/api'], function () {
 		Route::get('/shop_list', ['uses' => 'BookController@api_shop_list', 'as' => 'apiShopList']);
 		Route::get('/service_list', ['uses' => 'BookController@api_service_list', 'as' => 'apiServiceList']);
+		Route::get('/service_provider_and_room_list', ['uses' => 'BookController@api_service_provider_and_room_list', 'as' => 'apiServiceProviderAndRoomList']);
 		Route::get('/time_list', ['uses' => 'BookController@api_time_list', 'as' => 'apiTimeList']);
 		Route::get('/order/list', ['uses' => 'BookController@api_order_list', 'as' => 'apiOrderList']);
 		Route::post('/order/customer/cancel', ['uses' => 'BookController@api_order_customer_cancel', 'as' => 'apiOrderCustomerCancel']);

@@ -10,7 +10,7 @@ use App\Models\Room;
 use App\Models\BlackList;
 class BookController extends Controller
 {
-	
+	const headers = array('Content-Type' => 'application/json; <a href="http://superlevin.ifengyuan.tw/tag/charset/">charset</a>=utf-8');
 	public function index()
 	{
 		$view_data = [];
@@ -45,6 +45,55 @@ class BookController extends Controller
 			return response()->json('資料庫錯誤, 請洽系統商!', 400);
 		}
 	}
+
+	public function api_service_provider_and_room_list(Request $request)
+	{
+		try{
+			$service_id = $request->service_id;
+			
+			if(!$service_id){
+				throw new Exception("缺少服務ID", 1);;
+			}
+
+			$service_providers = new ServiceProvider;
+			$rooms = new Room;
+
+			if($service_id == 1 || $service_id == 2){
+				$service_providers = $service_providers->where('service_1', true);
+				$rooms = $rooms->where('service_1', true);
+			}
+			else if($service_id == 3 || $service_id == 4){
+				$service_providers = $service_providers->where('service_2', true);
+				$rooms = $rooms->where('service_2', true);
+			}
+			else{
+				$service_providers = $service_providers->where('service_3', true);
+				$rooms = $rooms->where('service_3', true);
+			}
+			$service_providers = $service_providers->get();
+			$rooms = $rooms->get();
+
+			$result = [];
+			$result['service_provider_list'] = null;
+			$result['room'] = null;
+			
+			foreach($service_providers as $service_provider){
+				$result['service_provider_list'][] = ['id' => $service_provider->id, 'name' => $service_provider->name];
+			}
+			foreach($rooms as $room){
+				$result['room'][] = ['id' => $room->id, 'shower' => $room->shower, 'shop_id' => $room->shop_id, 'person' => $room->person];
+			}
+
+			return response()->json($result);
+		}
+		catch(Exception $e){
+			return response()->json($e->getMessage(), 400, self::headers, JSON_UNESCAPED_UNICODE);
+		}
+		catch(\Illuminate\Database\QueryException $e){
+			return response()->json('資料庫錯誤, 請洽系統商!', 400, self::headers, JSON_UNESCAPED_UNICODE);
+		}
+	}
+
 	public function api_time_list(Request $request)
 	{
 		try{

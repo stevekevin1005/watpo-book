@@ -29,6 +29,9 @@ class ServiceProvider extends Model {
 /*
 	id: int(255) pk
 	name: varchar(20)
+  service_1: boolean //指壓
+  service_2: boolean //油壓
+  service_3: boolean //油壓去角質
 	shop_id: int(255)
 	created_at: datetime
 	updated_at: datetime
