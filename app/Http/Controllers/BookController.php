@@ -160,21 +160,23 @@ class BookController extends Controller
 
 		$service_provider_id_list = explode(",", $service_provider_id);
 
-		foreach ($service_provider_id_list as $service_provider_id) {
-			$service_provider = ServiceProvider::whereHas('shifts' ,function ($query) use ($month) {
-			    $query->where('month', $month);
-			})->with(['shifts' => function ($query) use ($month) {
-			    $query->where('month', $month);
-			}])->whereDoesntHave('leaves' ,function ($query) use ($start_time, $end_time) {
-			    $query->where('start_time', '<', date("Y/m/d H:i:s", $end_time));
-			    $query->where('end_time', '>', date("Y/m/d H:i:s", $start_time));
-			})->whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
-				$query->where('status', '!=', 3);
-				$query->where('status', '!=', 4);
-			    $query->where('start_time', '<', date("Y/m/d H:i:s", $end_time));
-			    $query->where('end_time', '>', date("Y/m/d H:i:s", $start_time));
-			})->where('id', $service_provider_id)->first();
+		
+		$service_providers = ServiceProvider::whereHas('shifts' ,function ($query) use ($month) {
+		    $query->where('month', $month);
+		})->with(['shifts' => function ($query) use ($month) {
+		    $query->where('month', $month);
+		}])->whereDoesntHave('leaves' ,function ($query) use ($start_time, $end_time) {
+		    $query->where('start_time', '<', date("Y/m/d H:i:s", $end_time));
+		    $query->where('end_time', '>', date("Y/m/d H:i:s", $start_time));
+		})->whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
+			$query->where('status', '!=', 3);
+			$query->where('status', '!=', 4);
+		    $query->where('start_time', '<', date("Y/m/d H:i:s", $end_time));
+		    $query->where('end_time', '>', date("Y/m/d H:i:s", $start_time));
+		})->where('shop_id', $shop_id)->get();
 
+		$service_provider_list = [];
+		foreach($service_providers as $service_provider){
 			$shift = $service_provider->shifts->first();
 			$on_duty = strtotime($date." ".$shift->start_time);
 			$off_duty = strtotime($date." ".$shift->end_time);
@@ -182,9 +184,17 @@ class BookController extends Controller
 				$off_duty = strtotime("+1 day", $start_time);
 			}
 			
-			if($on_duty > $start_time && $off_duty < $end_time){
-				return false;
+			if($on_duty <= $start_time && $off_duty >= $end_time){
+				$service_provider_list[] = $service_provider->id;
 			}
+		}
+
+		if(!empty(array_diff($service_provider_id_list, $service_provider_list))){
+			return false;
+		}
+
+		if(count($service_provider_list) < $person){
+			return false;
 		}
 
 		$room = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
