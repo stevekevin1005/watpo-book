@@ -1,7 +1,9 @@
 @extends('admin.layout')
 @section('head')
+<link rel='stylesheet' href='/assets/plugins/fullcalendar/fullcalendar.css' />
+<link href='/assets/plugins/fullcalendar/fullcalendar.print.min.css' rel='stylesheet' media='print' />
+<link href='/assets/plugins/fullcalendar/scheduler.min.css' rel='stylesheet' />
 <link rel="stylesheet" href="/assets/css/bootstrap-select.min.css">
-<link rel="stylesheet" href="/bower_components/jquery-timepicker-wvega/jquery.timepicker.css">
 <style type="text/css">
     .fc-event{
         cursor: pointer;
@@ -17,13 +19,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="page-title-box">
-                        <h4 class="page-title">{{ $shop->name }} - 預約管理
-                            &nbsp;&nbsp;&nbsp;
-                            <input type="date" class="form-control-inline" value="{{ date('Y-m-d')}}" id="date">
-                            &nbsp;&nbsp;&nbsp;
-                            <button class="btn btn-primary" id="new_order">新建預約單</button> 
-                            &nbsp;&nbsp;&nbsp;
-                            <button class="btn btn-warning" id="leave_apply">師傅請假</button> 
+                        <h4 class="page-title">{{ $shop->name }} - 預約管理&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" id="new_order">新建預約單</button> 
                         </h4>
                         <a href="#" style="color:#3ddcf7;">●</a> - 客戶預定
                         <a href="#" style="color:#1d7dca;">●</a> - 櫃檯預定
@@ -40,39 +36,7 @@
             </div>
             <div class="panel">
                 <div class="panel-body">
-                    <table class="table table-striped" id="order_list">
-                        <thead>
-                            <th>訂單編號</th>
-                            <th>預約時間</th>
-                            <th>顧客姓名</th>
-                            <th>手機號碼</th>
-                            <th>師傅</th>
-                            <th>房間</th>
-                            <th>方案</th>             
-                        </thead>
-                        <tbody>
-                            @foreach($order_list as $order)
-                            <tr id="order_list" style="background-color: {{ $order->color }};cursor: pointer;color: white;"
-                                data-id="{{$order->id}}"
-                                data-name="{{$order->name}}"
-                                data-phone="{{$order->phone}}"
-                                data-person="{{$order->person}}"
-                                data-service_id="{{$order->service_id}}"
-                                data-start_time="{{$order->start_time}}"
-                                data-room_id="{{$order->room_id}}"
-                                data-end_time="{{$order->end_time}}"
-                            >
-                                <td>{{ $order->id }}</td>
-                                <td>{{ $order->time }}</td>
-                                <td>{{ $order->name }}</td>
-                                <td>{{ $order->phone }}</td>
-                                <td>{{ $order->provider }}</td>
-                                <td>{{ $order->room }}</td>
-                                <td>{{ $order->service }}</td>    
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    <div id='calendar'></div>
                 </div>
                 <!-- end: page -->
             </div> 
@@ -90,7 +54,8 @@
 @stop
 @section('script')
 <script src="/assets/plugins/bootstrap-select.min.js"></script>
-<script src="/bower_components/jquery-timepicker-wvega/jquery.timepicker.js"></script>
+<script src='/assets/plugins/fullcalendar/fullcalendar.js'></script>
+<script src='/assets/plugins/fullcalendar/scheduler.min.js'></script>
 <script id="order_form_template" type="x-jsrender">
     <form class="container" style="height:500px;" method="post" action="@{{:url}}">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -175,13 +140,23 @@
 </script>
 <script id="check_form_template" type="x-jsrender">
     <div class="container" style="height:200x;">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>姓名: @{{:name}} 電話: @{{:phone}}</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h4>人數: @{{:person}} 服務: @{{:service}} 房號: @{{:room}}</h4>
+            </div>
+        </div>
         <div class="row" style="margin-top: 15px;">
             <div class="col-md-4">
-                <button type="button" class="btn btn-danger order_cancel" data-id="@{{:id}}" style="font-size:20px;">取消訂單</button>
+                <button type="button" class="btn btn-danger order_cancel" data-id="@{{:order_id}}" style="font-size:20px;">取消訂單</button>
             </div>
             <div class="col-md-4">
                 <button type="button" class="btn btn-info order_update" 
-                    data-id="@{{:id}}" 
+                    data-id="@{{:order_id}}" 
                     data-name="@{{:name}}" 
                     data-phone="@{{:phone}}" 
                     data-start_time='@{{:start_time}}'
@@ -191,72 +166,14 @@
                     style="font-size:20px;">更改訂單</button>
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-success order_confirm" data-id="@{{:id}}" style="font-size:20px;">確認訂單</button>
-            </div>
-        </div>
-    </div>
-</script>
-<script id="order_list_template" type="x-jsrender">
-    <thead>
-        <th>訂單編號</th>
-        <th>預約時間</th>
-        <th>顧客姓名</th>
-        <th>手機號碼</th>
-        <th>師傅</th>
-        <th>房間</th>
-        <th>方案</th>             
-    </thead>
-    <tbody>
-        @{{for order_list}}
-        <tr id="order_list" style="background-color: @{{:color}};cursor: pointer;color: white"
-            data-id="@{{:id}}"
-            data-name="@{{:name}}"
-            data-phone="@{{:phone}}"
-            data-person="@{{:person}}"
-            data-service_id="@{{:service_id}}"
-            data-start_time="@{{:start_time}}"
-            data-room_id="@{{:room_id}}"
-            data-end_time="@{{:end_time}}"
-        >
-            <td>@{{:id}}</td>
-            <td>@{{:time}}</td>
-            <td>@{{:name}}</td>
-            <td>@{{:phone}}</td>
-            <td>@{{:provider}}</td>
-            <td>@{{:room}}</td>
-            <td>@{{:service}}</td>    
-        </tr>
-        @{{/for}}
-    </tbody>
-</script>
-<script id="leave_template" type="x-jsrender">
-    <div class="container" style="height:200x;">
-        <div class="row" style="margin-top: 15px;">
-            <div class="col-md-4">
-                <select class="form-control">
-                    <option value="" selected disabled hidden>Choose here</option>
-                    @foreach($shop_service_providers as $service_provider)
-                    <option value="{{ $service_provider['id'] }}">{{ $service_provider['title'] }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-md-2">
-                <input type="text" class="form-control timepicker" value="09:30">
-            </div>
-            <div class="col-md-2">
-                <input type="text" class="form-control timepicker" value="09:30">
-            </div>
-            <div class="col-md-4">
-                <button type="button" class="btn btn-success order_confirm" style="font-size:20px;">確認</button>
+                <button type="button" class="btn btn-success order_confirm" data-id="@{{:order_id}}" style="font-size:20px;">確認訂單</button>
             </div>
         </div>
     </div>
 </script>
 <script type="text/javascript">
     $(function() { // document ready
-        
-
-        $( "#new_order" ).on("click", function() {
+        $( "#new_order" ).on( "click", function() {
             var myTemplate = $.templates("#order_form_template");
             var html = myTemplate.render({
                 url: '/admin/calendar/{{$shop_id}}/add_order'
@@ -281,75 +198,62 @@
                 size: 4
             });
         });
-
-        $("#leave_apply").on("click", function(){
-            var myTemplate = $.templates("#leave_template");
-            var html = myTemplate.render();
-
-            swal({
-                title: '師傅臨時請假',
-                html: html,
-                width: "70%",
-                allowOutsideClick: false,
-                showCancelButton: false,
-                focusConfirm: false,
-                cancelButtonText:'取消',
-                showConfirmButton: false,
-                showCloseButton: true,
-            })
-
-            $('.timepicker').timepicker({
-                timeFormat: 'h:mm p',
-                interval: 60,
-                minTime: '10',
-                maxTime: '6:00pm',
-                defaultTime: '11',
-                startTime: '10:00',
-                dynamic: false,
-                dropdown: true,
-                scrollbar: true
-            });
-        });
-
         $(".open-left").trigger('click');
         $(".open-left").trigger('touchstart');
 
-        $('#order_list').on('click', 'tbody tr',function(){
-            var id = $(this).data('id');
-            var name = $(this).data('name');
-            var phone = $(this).data('phone');
-            var person = $(this).data('person');
-            var service = $(this).data('service');
-            var room = $(this).data('room');
-            var service_providers = $(this).data('service_providers');
-            var start_time = $(this).data('start_time');
-            var end_time = $(this).data('end_time');
-            var service_id = $(this).data('service_id');
-            var room_id = $(this).data('room_id');
-            var myTemplate = $.templates("#check_form_template"); 
-            var html = myTemplate.render({
-                id: id,
-                name: name,
-                phone: phone,
-                person: person,
-                service_providers: service_providers,
-                end_time: end_time,
-                start_time: start_time,
-                service_id: service_id,
-                room_id: room_id
-            });
-            swal({
-                title: '#'+id+' 預約單確認',
-                html: html,
-                width: "50%",
-                allowOutsideClick: false,
-                showCancelButton: false,
-                focusConfirm: false,
-                cancelButtonText:'取消',
-                showConfirmButton: false,
-                showCloseButton: true,
-            });
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'today prev,next',
+                center: 'title',
+                right: 'timelineDay,timelineThreeDays,agendaWeek,month,listWeek'
+            },
+            now: "{{ $today }}",
+            resources: [ 
+                @foreach($shop_service_providers as $shop_service_provider)
+                { id: {{$shop_service_provider['id']}}, title: "{{$shop_service_provider['title']}}"},
+                @endforeach
+            ],
+            resourceLabelText: '師傅',
+            views: {
+                timelineThreeDays: {
+                    type: 'timeline',
+                    duration: { days: 3 }
+                }
+            },
+            defaultView: 'timelineDay',
+            aspectRatio: 1.8,
+            events: '/api/calendar/{{ $shop_id }}',
+            eventClick: function(calEvent, jsEvent, view) {
+                var myTemplate = $.templates("#check_form_template"); 
+                var html = myTemplate.render({
+                    order_id: calEvent.order_id,
+                    name: calEvent.title,
+                    phone: calEvent.phone,
+                    person: calEvent.person,
+                    service: calEvent.service,
+                    room: calEvent.room,
+                    service_providers: calEvent.service_providers,
+                    end_time: calEvent.end_time,
+                    start_time: calEvent.start_time,
+                    service_id: calEvent.service_id,
+                    room_id: calEvent.room_id
+                });
+                swal({
+                    title: '預約單確認',
+                    html: html,
+                    width: "50%",
+                    allowOutsideClick: false,
+                    showCancelButton: false,
+                    focusConfirm: false,
+                    cancelButtonText:'取消',
+                    showConfirmButton: false,
+                    showCloseButton: true,
+                });
+            },
+            schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source'
         });
+        
+        $('#calendar').fullCalendar('refetchEventSources', "/api/calendar/{{$shop_id}}" );
 
         $('body').on('click', '.order_cancel', function(){
             var order_id = $(this).data('id');
@@ -362,7 +266,7 @@
                 },
                 success: function(data){
                     swal.close();
-                    render_order_list();
+                    $('#calendar').fullCalendar('refetchEventSources', "/api/calendar/{{$shop_id}}" );
                 },
                 error: function(e){
                     alert('訂單取消失敗 請洽系統商!');
@@ -381,7 +285,7 @@
                 },
                 success: function(data){
                     swal.close();
-                    render_order_list();
+                    $('#calendar').fullCalendar('refetchEventSources', "/api/calendar/{{$shop_id}}" );
                 },
                 error: function(e){
                     alert('訂單確認失敗 請洽系統商!');
@@ -428,44 +332,6 @@
                 size: 4
             });
         });
-        
-        $("#date").on('change', function(e){
-            render_order_list();
-        });
-
-        function render_order_list(){
-            var date =  $("#date").val();
-            $.ajax({
-                url: '/api/order/schedule',
-                type: 'get',
-                data: {
-                    date: date,
-                    shop_id: {{ $shop->id }}
-                },
-                success: function(data){
-                    var myTemplate = $.templates("#order_list_template"); 
-                    var html = myTemplate.render(data);
-                    $("#order_list").html(html);
-                },
-                error: function(){
-
-                }
-            });
-        }
-        var oTimerId;
-        var t;
-        function Timeout(){
-            render_order_list();
-            t = setTimeout(Timeout, 1*1000*30);
-        }
-        function ReCalculate(){
-            clearTimeout(oTimerId);
-            clearTimeout(t);
-            oTimerId = setTimeout(Timeout, 1*1000*30);
-        }
-        document.onmousedown = ReCalculate;
-        document.onmousemove = ReCalculate;
-        ReCalculate();
     });
 </script>
 @stop
