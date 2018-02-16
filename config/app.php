@@ -156,7 +156,10 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        /*
+         * BackUp DB provider
+         */ 
+        Spatie\Backup\BackupServiceProvider::class,
     ],
 
     /*

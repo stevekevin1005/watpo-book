@@ -18,6 +18,10 @@
 	"watpoAddr2": "台北市松山区光復北路34号",
 	"hour": "時間",
 	"hours": "時間",
+	"min": "分",
+	"massage": "按摩",
+	"shower": "沖澡",
+	"Foot bath": "泡腳",
 	"price1": "価格",
 	"price2": "価格",
 	"price3": "価格",
@@ -42,7 +46,9 @@
 	"service": "サービス",
 	"operator": "サービススタッフ",
 	"guestNum": "人数",
+	"reserveSuccess": "預約成功",
 	"reservatorName": "お名前",
+	"reservatorDate": "預約日期",
 	"contactNumber": "電話番号",
 	"showerOrNot": "シャワーを浴びますか?",
 	"jan": "一月",
@@ -86,5 +92,6 @@
 	"orderCanceled": "予約がキャンセルされました",
 	"name": "名前",
 	"phone": "電話",
-	"time": "予約時間"
+	"time": "予約時間",
+	"reserveNotice": "請截圖此畫面以便紀錄預約"
 }

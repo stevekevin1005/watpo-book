@@ -46,122 +46,30 @@ class CalendarController extends Controller
 		$view_data['shop_id'] = $shop_id;
 
 		$date = date('Y-m-d');
-
 		$view_data['today'] = $date;
 
-		
+		$shop = Shop::where('id', $shop_id)->first();
 		$shop_service_providers = ServiceProvider::where('shop_id', $shop_id)->get();
 
-		/* shop_service_providers */
+		$view_data['start_time'] = $shop->start_time;
+
+
+		$start_time = strtotime($date.' '.$shop->start_time);
+
 		$view_data['shop_service_providers'] = [];
 		foreach ($shop_service_providers as $key => $shop_service_provider) {
 			$view_data['shop_service_providers'][] = ['id'=> $shop_service_provider->id, 'title'=>$shop_service_provider->name];
 		}
 
-
-		$order_list = $this->order_list($date, $shop_id);
-		$view_data['order_list'] = $order_list;
-
 		return view('admin.calendar.index', $view_data);
 	}
-
-	private function order_list($date, $shop_id)
-	{
-
-		$shop = Shop::where('id', $shop_id)->first();
-		$shop_start_time = strtotime($date.' '.$shop->start_time);
-		$shop_end_time = strtotime($date.' '.$shop->end_time);
-		
-		if($shop_end_time <= $shop_start_time){
-			$shop_end_time = strtotime("+1 day", $shop_end_time);
-		}
-		/* order */
-		$orders = Order::with('service')
-						->with('room')
-						->with('serviceProviders')
-						->where('shop_id', $shop_id)
-						->where('start_time', '>=', date("Y-m-d H:i:s", $shop_start_time))
-						->where('end_time', '<=', date("Y-m-d H:i:s", $shop_end_time))
-						->orderBy('start_time', 'asc')
-						->get();
-		$order_list = [];
-
-		foreach ($orders as $key => $order) {
-			$data = (object)[];
-			$data->id = $order->id;
-			$data->name = $order->name;
-			$data->phone = $order->phone;
-			$data->status = $order->status;
-			$data->person = $order->person;
-			$data->room = $order->room->name;
-			$data->room_id = $order->room->id;
-			$data->service = $order->service->title;
-			$data->service_id = $order->room->service_id;
-			$data->start_time = $order->start_time;
-			$data->end_time = $order->end_time;
-			$data->time = date("H:i" ,strtotime($order->start_time))." - ".date("H:i" ,strtotime($order->end_time));
-
-			$data->provider = "";
-			$person = $order->person;
-			$service_provider_count = 0;	
-			foreach ($order->serviceProviders as $key => $serviceProvider) {
-				$data->provider .= $serviceProvider->name." ";
-				$service_provider_count++;
-			}
-			for($i = $service_provider_count;$i < $order->person;$i++){
-				$data->provider .= "不指定 ";
-			}
-
-			switch ($order->status) {
-				case 1:
-					$data->color = "#3ddcf7";
-					break;
-				case 2:
-					$data->color = "#1d7dca";
-					break;
-				case 3:
-					$data->color = "";
-					break;
-				case 4:
-					$data->color = "#ffaa00";
-					break;
-				case 5:
-					$data->color = "#5cb85c";
-					break;
-				default:
-					$data->color = "";
-					break;
-			}
-			$order_list[] = $data;
-		}
-
-		return $order_list;
-	}
-
-	public function api_order_list(Request $request)
-	{	
-		try{
-			$date = $request->date;
-			$shop_id = $request->shop_id;
-
-			$result['order_list'] = $this->order_list($date, $shop_id);
-
-			return response()->json($result, 200);
-		}
-		catch(Exception $e){
-			return response()->json($e->getMessage(), 400);
-		}
-		catch(\Illuminate\Database\QueryException $e){
-			return response()->json('資料庫錯誤, 請洽系統商!', 400);
-		}
-	}
-
 
 	public function api_shop_calendar(Request $request, $shop_id)
 	{	
 		try{
 			$date = date('Y-m-d');
 			$shop = Shop::where('id', $shop_id)->first();
+			$start_time = strtotime($date.' '.$shop->start_time);
 
 			$order = new Order;
 			if($request->start){

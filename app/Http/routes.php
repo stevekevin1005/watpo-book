@@ -20,27 +20,41 @@
 |
 */
 Route::group(['middleware' => ['web']], function () {
+	
 	Route::get('/admin/login', ['uses' => 'LoginController@index', 'as' => 'login']);
 	Route::get('/admin/logout', ['uses' => 'LoginController@logout', 'as' => 'logout']);
 	Route::post('/auth/logincheck', ['uses' => 'LoginController@loginCheck', 'as' => 'loginCheck']);
+	
 	Route::group(['prefix' => '/admin', 'middleware' => 'auth.login'], function () {
+		
 		Route::get('/serviceprovider/list', ['uses' => 'ServiceProviderController@index', 'as' => 'serviceProviderIndex']);
+		
 		Route::get('/blacklist/list', ['uses' => 'BlackListController@index', 'as' => 'blackListIndex']);
 		Route::post('/blacklist/add', ['uses' => 'BlackListController@add', 'as' => 'blackListAdd']);
 		Route::post('/blacklist/delete', ['uses' => 'BlackListController@delete', 'as' => 'blackListDelete']);
+		
 		Route::get('/leave', ['uses' => 'LeaveController@index', 'as' => 'leaveIndex']);
 		Route::post('/leave/add', ['uses' => 'LeaveController@add', 'as' => 'leaveAdd']);
+
 		Route::get('/calendar/{shop_id}', ['uses' => 'CalendarController@index', 'as' => 'calendarIndex']);
 		Route::post('/calendar/{shop_id}/add_order', ['uses' => 'CalendarController@add_order', 'as' => 'calendarAddOrder']);
 		Route::post('/calendar/order/{order_id}/update', ['uses' => 'CalendarController@update_order', 'as' => 'calendarUpdateOrder']);
+		
 		Route::get('/dashboard', ['uses' => 'DashboardController@index', 'as' => 'dashboardIndex']);
+		
 		Route::group(['middleware' => 'auth.level'], function () {
+			
 			Route::get('/order', ['uses' => 'OrderController@index', 'as' => 'orderIndex']);
 			Route::get('/order/export', ['uses' => 'OrderController@export', 'as' => 'orderExport']);
+			
 			Route::get('/log', ['uses' => 'LogController@index', 'as' => 'logIndex']);
 			Route::get('/log/export', ['uses' => 'LogController@export', 'as' => 'logExport']);
+			
 			Route::get('/account', ['uses' => 'AccountController@index', 'as' => 'accountIndex']);
 			Route::post('/account/update_password', ['uses' => 'AccountController@update_password', 'as' => 'accountUpdatePassword']);
+		
+			Route::get('/shift', ['uses' => 'ShiftController@index', 'as' => 'ShiftIndex']);
+			Route::post('/shift/update', ['uses' => 'ShiftController@update', 'as' => 'ShiftUpdate']);
 		});
 	});
 
@@ -48,18 +62,26 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/serviceprovider/list', ['uses' => 'ServiceProviderController@api_list', 'as' => 'apiServiceProviderList']);
 		Route::post('/serviceprovider/add', ['uses' => 'ServiceProviderController@api_add', 'as' => 'apiServiceProviderAdd']);
 		Route::post('/serviceprovider/delete', ['uses' => 'ServiceProviderController@api_delete', 'as' => 'apiServiceProviderDelete']);
+		
 		Route::post('/leave/delete', ['uses' => 'LeaveController@api_delete', 'as' => 'apiLeaveDelete']);
+		
 		Route::post('/account/add', ['uses' => 'AccountController@api_add', 'as' => 'apiAccountAdd']);
 		Route::post('/account/delete', ['uses' => 'AccountController@api_delete', 'as' => 'apiAccountDelete']);
 		Route::post('/account/reset_password', ['uses' => 'AccountController@api_reset_password', 'as' => 'apiAccountResetPassword']);
+		
 		Route::get('/calendar/{shop_id}', ['uses' => 'CalendarController@api_shop_calendar', 'as' => 'apiShopClander']);
+		
+		Route::get('/order/schedule', ['uses' => 'CalendarController@api_order_list', 'as' => 'apiOrderList']);
 		Route::post('/order/confirm', ['uses' => 'CalendarController@api_order_confirm', 'as' => 'apiOrderConfirm']);
 		Route::post('/order/cancel', ['uses' => 'CalendarController@api_order_cancel', 'as' => 'apiOrderCancel']);
+	
+		Route::get('/shift/list', ['uses' => 'ShiftController@api_list', 'as' => 'apiShiftList']);
 	});
 
 	Route::group(['prefix' => '/api'], function () {
 		Route::get('/shop_list', ['uses' => 'BookController@api_shop_list', 'as' => 'apiShopList']);
 		Route::get('/service_list', ['uses' => 'BookController@api_service_list', 'as' => 'apiServiceList']);
+		Route::get('/service_provider_and_room_list', ['uses' => 'BookController@api_service_provider_and_room_list', 'as' => 'apiServiceProviderAndRoomList']);
 		Route::get('/time_list', ['uses' => 'BookController@api_time_list', 'as' => 'apiTimeList']);
 		Route::get('/order/list', ['uses' => 'BookController@api_order_list', 'as' => 'apiOrderList']);
 		Route::post('/order/customer/cancel', ['uses' => 'BookController@api_order_customer_cancel', 'as' => 'apiOrderCustomerCancel']);

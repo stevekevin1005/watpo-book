@@ -18,6 +18,10 @@
 	"watpoAddr2": "No.34, Guang-Fu N Rd., Taipei City",
 	"hour": "hour",
 	"hours": "hours",
+	"min": "min",
+	"Foot bath": "Foot bath",
+	"massage": "massage",
+	"shower": "shower",
 	"price1": "Price",
 	"price2": "Price",
 	"price3": "Price",
@@ -43,7 +47,9 @@
 	"operator": "Operator",
 	"roomNumber": "Room Number",
 	"guestNum": "Number of Guests",
+	"reserveSuccess": "Success",
 	"reservatorName": "Name",
+	"reservatorDate": "Date",
 	"contactNumber": "Contact Number",
 	"showerOrNot": "Do you need shower?",
 	"jan": "January",
@@ -87,5 +93,6 @@
 	"orderCanceled": "Your reservation is canceled",
 	"name": "Name",
 	"phone": "Phone",
-	"time": "Time"
+	"time": "Time",
+	"reserveNotice": "please screenshot this view to check reservation"
 }

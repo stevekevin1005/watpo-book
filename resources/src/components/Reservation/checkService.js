@@ -35,7 +35,7 @@ class CheckService extends React.Component{
             <Grid>
                 <Row>
                     <Col md={7}>
-                        <FormGroup controlId="formControlsSelect">
+                        <FormGroup>
                             <ControlLabel bsClass="control-label branch">{t("branch")}</ControlLabel>
                             <FormControl componentClass="select" id="shop" placeholder="..." defaultValue={this.props.reservation.shop} onChange={this.setReservation}>
                                 {sourceData.shops && sourceData.shops.map((shop,index)=>{
@@ -43,7 +43,7 @@ class CheckService extends React.Component{
                                 })}
                             </FormControl>
                         </FormGroup>
-                        <FormGroup controlId="formControlsSelect">
+                        <FormGroup>
                             <ControlLabel>{t("service")}</ControlLabel>
                             <FormControl componentClass="select" id="service" defaultValue={this.props.reservation.service} placeholder="..." onChange={this.setReservation}>
                                 {sourceData.services && sourceData.services.map((service,index)=>{

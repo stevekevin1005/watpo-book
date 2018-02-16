@@ -11,7 +11,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="page-title-box">
-                        <h4 class="page-title">出勤管理</h4>
+                        <h4 class="page-title">休假管理</h4>
                     </div>
                 </div>
             </div>
