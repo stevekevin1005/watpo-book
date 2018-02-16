@@ -1,10 +1,13 @@
 // 負責渲染和清理資料
 
+import Steps from "./Reservation/Steps";
+import Step from "./Reservation/Step";
 import CheckDetail from "./Reservation/checkDetail";
 import CheckService from "./Reservation/checkService";
 import CheckTime from "./Reservation/checkTime";
-import { Link } from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
 import { translate } from 'react-i18next';
+
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import LoadingAnimation from "./LoadingAnimation";
@@ -26,47 +29,134 @@ class Reservation extends React.Component{
             showAlert: false,
             alertTitle: "",
             alertText: "",
-            success: false
-        };
-        
-        this.nextStep = this.nextStep.bind(this);
-        this.send = this.send.bind(this);
-    }
-    componentWillReceiveProps(nextProps){
+            success: false,
 
-        // 清資料
-        const reservation = this.props.reservation;
-        switch(nextProps.match.params.step){
-            case "0":
-                // step1 => step0
-                if(reservation.time!=undefined || reservation.date!=undefined){
-                    this.props.clearReservation("step1");
-                    this.props.clearSourceData("selectedDetail");
-                    this.props.clearSourceData("timeList");
-                    if(((reservation.operator.length>2 || reservation.room!=undefined) || (reservation.guestNum > 1 ||reservation.name!=undefined)) || reservation.contactNumber!=undefined){
-                        this.props.clearReservation("step2");
-                    } 
-                }
-                break;
-            case "1":
-                // step2 => step1
-                if(((reservation.operator.length>2 || reservation.room!=undefined) || (reservation.guestNum > 1 ||reservation.name!=undefined)) || reservation.contactNumber!=undefined){
-                    this.props.clearReservation("step2");
-                } 
-                break;
-            case "2":
-                if(nextProps.sourceData.timeList === undefined || nextProps.sourceData.selectedDetail === undefined)
-                    this.props.history.push('/reservation/0');
-        }
+            reservation: {
+                shop: 0,
+                service: 0,
+
+                guestNum: 0,
+                shower: false,
+                operator: null,
+
+                name: null,
+                number: null,
+
+                date: null,
+                time: null
+            },
+
+            sourceData: {
+                shops: null,
+                services: null,
+                timeList: null,
+                selectedDetail: null
+            },
+
+            loading: false
+        };
+
+        this.setReservation = this.setReservation.bind(this);
+        this.setSourceData = this.setSourceData.bind(this);
+        this.clearSourceData = this.clearSourceData.bind(this);
+        this.toggleLoading = this.toggleLoading.bind(this);
+        this.send = this.send.bind(this);
+
+        this.getStep1SourceData = this.getStep1SourceData.bind(this);
     }
+    // componentDidMount(){
+    //     if(this.props.checkOrdersInfo != {}){
+    //         this.props.clearCheckOrdersInfo("name");
+    //         this.props.clearCheckOrdersInfo("contactNumber");
+    //     }
+    // }
     componentDidMount(){
-        if(this.props.checkOrdersInfo != {}){
-            this.props.clearCheckOrdersInfo("name");
-            this.props.clearCheckOrdersInfo("contactNumber");
-        }
+        this.getStep1SourceData();
     }
-    nextStep(){
-        this.props.history.push('/reservation/' + (parseInt(this.props.match.params.step) + 1));
+    getStep1SourceData(){
+            // get data of shops and services
+            const sourceData = this.state.sourceData;
+    
+            // if not, fetch data of shops and services
+            const that = this,
+                  csrf_token = document.querySelector('input[name="_token"]').value;
+            let finished = 0;
+            
+            if(!sourceData.shops){
+                this.toggleLoading();
+    
+                axios({
+                    method: "get",
+                    url: "../api/shop_list",
+                    headers: {'X-CSRF-TOKEN': csrf_token},
+                    responseType: 'json'
+                })
+                .then(function (response) {
+                    if(response.statusText == "OK"){
+                        that.setSourceData("shops", response.data);
+    
+                        if(finished == 2) this.toggleLoading();;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+    
+                    if(finished == 2) this.toggleLoading();;
+                });
+            }else{
+                finished += 1;
+            }
+    
+            if(!sourceData.services){
+                this.toggleLoading();
+    
+                axios({
+                    method: "get",
+                    url: "../api/service_list",
+                    responseType: 'json',
+                    headers: {'X-CSRF-TOKEN': csrf_token}
+                })
+                .then(function (response) {
+                    if(response.statusText == "OK"){
+                        that.setSourceData("services", response.data);
+                        finished += 1;
+                        if(finished == 2) this.toggleLoading();;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+    
+                    if(finished == 2) this.toggleLoading();;
+                });
+            }else{
+                finished += 1;
+            }
+    }
+    setSourceData(key, value){
+        const sourceData = JSON.parse(JSON.stringify(this.state.sourceData));
+        sourceData[key] = value;
+        this.setState({
+            sourceData
+        });
+    }
+    clearSourceData(key){
+        const sourceData = JSON.parse(JSON.stringify(this.state.sourceData));
+        sourceData[key] = null;
+        this.setState({
+            sourceData
+        });
+    }
+    setReservation(key, value){
+        const reservation = JSON.parse(JSON.stringify(this.state.reservation));
+        reservation[key] = value;
+        this.setState({
+            reservation
+        });
+    }
+    toggleLoading(){
+        this.setState(prevState=>{
+            return {loading: !prevState.loading};
+        });
     }
     send(){
         const { t } = this.props;
@@ -168,63 +258,28 @@ class Reservation extends React.Component{
       });
     }
     render(){
-        const { t } = this.props;
+        const Step_ = props => {
+            return (<Step 
+                        {...props} 
+                        setReservation = {this.setReservation}
+                        clearSourceData = {this.clearSourceData}
+                        setSourceData = {this.setSourceData}
+                        toggleLoading = {this.toggleLoading}
+                        send = {this.send}
 
-        // set up steps
-        const currentStep = parseInt(this.props.match.params.step),
-              stepsData = [t("chooseService"),t("chooseTime"),t("checkDetails")], pointer = {cursor: "pointer"}, currentStepStyle = {cursor:"pointer",color: "#914327"};
-
-        let steps = stepsData.map((step, index,arr)=>{
-                let divider = index < arr.length - 1 && <span> <i className="fa fa-angle-right" aria-hidden="true"></i> </span>;
-                if(currentStep > index)return (
-                    <span key={index}>
-                        <Link to={"/reservation/"+index}>
-                            <span 
-                                style = {currentStep === index?currentStepStyle: null}
-                            >{step}</span>
-                        </Link>
-                    {divider}</span>);
-                return (
-                    <span>
-                            <span 
-                                style = {currentStep === index?currentStepStyle: null}
-                            >{step}</span>
-                    {divider}</span>);
-              });
-
-        // content to show
-        let el;
-        switch(currentStep){
-            case 0:
-                el = (
-                    <CheckService nextStep={this.nextStep}/>);
-                break;
-            case 1:
-                el = <CheckTime nextStep={this.nextStep}/>;
-                break;
-            case 2:
-                el = <CheckDetail send={this.send}/>;
-                break;
-            default:
-                return;
+                        reservation = {this.state.reservation}
+                        sourceData = {this.state.sourceData}
+                    />);
         }
 
         return(
             <Grid>
             <div className="reservationContainer">
                 <Row className="reservationGrid">
-                <Col md={12}>
-                    <div className="steps">
-                        {steps}
-                    </div>
-                </Col>
-                {currentStep > 0 && <Col md={12} >
-                <p className="prevStap"><Link to={"/reservation/"+ (currentStep - 1)}><span><i className="fa fa-angle-left" aria-hidden="true"></i>{" "+t("prevStep")}</span></Link></p>
-                </Col>}
                     <div className="reservationContent" style={{padding:"16px 0"}}>
-                        {el}
+                        <Route path="/reservation/:step" component={Step_}/>
                     </div>    
-                {this.props.loading && <Col md={12}><LoadingAnimation /></Col>}
+                {this.state.loading && <Col md={12}><LoadingAnimation /></Col>}
                 </Row>                
                 </div>
                 <SweetAlert
@@ -241,24 +296,18 @@ class Reservation extends React.Component{
     }
 }
 
-const mapStateToProps = (state)=>{
-    return {
-        loading: state.loading,
-        reservation: state.reservation,
-        sourceData: state.sourceData,
-        checkOrdersInfo: state.checkOrdersInfo
-    }
-}
+// const mapStateToProps = (state)=>{
+//     return {
+//         checkOrdersInfo: state.checkOrdersInfo
+//     }
+// }
 
-const mapDispatchToProps = (dispatch)=>{
-    return bindActionCreators({
-        clearReservation: clearReservation,
-        clearSourceData: clearSourceData,
-        clearCheckOrdersInfo: clearCheckOrdersInfo,
-        toggleLoading: toggleLoading
-    },dispatch);
-}
+// const mapDispatchToProps = (dispatch)=>{
+//     return bindActionCreators({
+//         clearCheckOrdersInfo: clearCheckOrdersInfo
+//     },dispatch);
+// }
   
-Reservation = connect(mapStateToProps, mapDispatchToProps)(Reservation);
+// Reservation = connect(mapStateToProps, mapDispatchToProps)(Reservation);
 
 module.exports = translate()(Reservation);

@@ -1,12 +1,6 @@
 // 負責寫資料(日期,時段)到global state
 import { translate } from 'react-i18next';
 import Calendar from "./Calendar";
-import {connect} from "react-redux";
-import {bindActionCreators} from "redux";
-import toggleLoading from "../../dispatchers/toggleLoading";
-import setReservation from "../../dispatchers/setReservation";
-import setSourceData from "../../dispatchers/setSourceData";
-import clearSourceData from "../../dispatchers/clearSourceData";
 import Button from "./Button";
 
 const Grid = ReactBootstrap.Grid,
@@ -23,43 +17,55 @@ class CheckTime extends React.Component{
 
         this.getTimePeriods = this.getTimePeriods.bind(this);
         this.setTime = this.setTime.bind(this);
-    }
+    }    
     getTimePeriods(year,month,day){
         const that = this, 
-              date = year+"/"+ (month<10?"0"+month:month) +"/"+ (day<10?"0"+day:day),
-              csrf_token = document.querySelector('input[name="_token"]').value;
+        date = year+"/"+ (month<10?"0"+month:month) +"/"+ (day<10?"0"+day:day),
+        csrf_token = document.querySelector('input[name="_token"]').value;
 
         // clear selected detail index
         this.props.clearSourceData("selectedDetail");
 
-        // set loading state
-        that.setState({hint: ""});
         this.props.toggleLoading(true);
 
         this.props.setReservation("date", date);
-        this.props.setSourceData("timelist",
-            {
-                shop: this.props.sourceData.shops[this.props.reservation.shop].id, 
-                service: this.props.sourceData.services[this.props.reservation.service].id,
-                date: date,
-                token: csrf_token
+
+        axios({
+            method: "get",
+            url: "../api/time_list",
+            params: {
+                shop_id: this.props.sourceData.shops[this.props.reservation.shop].id, 
+                service_id: this.props.sourceData.services[this.props.reservation.service].id,
+                date: date
             },
-            (length)=>{
+            headers: {'X-CSRF-TOKEN': csrf_token},
+            responseType: 'json'
+        })
+        .then(function (response) {
+            console.log("response", response);
+            if(response.statusText == "OK"){
+
+                that.props.setSourceData("timeList", response.data);
+
                 that.props.toggleLoading(false);
-                if(length === 0) that.setState({hint: "calendarError_noTimelist"});
-            },()=>{
-                that.props.toggleLoading(false);
-                that.setState({hint: "errorHint_system"});
-            });
+                if(response.data.length === 0) that.setState({hint: "calendarError_noTimelist"});
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+            that.props.toggleLoading(false);
+            that.setState({hint: "errorHint_system"});
+        });
     }
     setTime(event){
         const value = event.target.innerHTML,
-              index = event.target.getAttribute("data-index");
+              index = +event.target.dataset.index;
         this.props.setReservation("time", value);
-        this.props.setSourceData("selectedDetail", parseInt(index));
+        this.props.setSourceData("selectedDetail", index);
     }
     render(){
-        if(this.props.reservation.shop === undefined || this.props.reservation.service === undefined) location.href = '../reservation/0';
+        console.log(this.props.reservation);
+        if(!(this.props.reservation.shop || this.props.reservation.shop === 0) || !( this.props.reservation.service || this.props.reservation.service === 0)) location.href = '../reservation/0';
         const reservation = this.props.reservation,
               disabled = (!reservation.date || !reservation.time),
               { t } = this.props;;
@@ -86,24 +92,5 @@ class CheckTime extends React.Component{
         );
     }
 }
-
-const mapStateToProps = (state)=>{
-    return {
-        loading: state.loading,
-        reservation: state.reservation,
-        sourceData: state.sourceData
-    }
-}
-
-const mapDispatchToProps = (dispatch)=>{
-    return bindActionCreators({
-        toggleLoading: toggleLoading,
-        setReservation: setReservation,
-        setSourceData: setSourceData,
-        clearSourceData: clearSourceData
-    },dispatch);
-  }
-  
-CheckTime = connect(mapStateToProps,mapDispatchToProps)(CheckTime);  
 
 module.exports = translate()(CheckTime);
