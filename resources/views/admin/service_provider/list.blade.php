@@ -53,6 +53,50 @@
 		    -webkit-transform: scaleY(1.0);
 		  }
 		}
+        .material-switch > input[type="checkbox"] {
+            display: none;   
+        }
+
+        .material-switch > label {
+            cursor: pointer;
+            height: 0px;
+            position: relative; 
+            width: 40px;  
+        }
+
+        .material-switch > label::before {
+            background: rgb(0, 0, 0);
+            box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            content: '';
+            height: 16px;
+            margin-top: -8px;
+            position:absolute;
+            opacity: 0.3;
+            transition: all 0.4s ease-in-out;
+            width: 40px;
+        }
+        .material-switch > label::after {
+            background: rgb(255, 255, 255);
+            border-radius: 16px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+            content: '';
+            height: 24px;
+            left: -4px;
+            margin-top: -8px;
+            position: absolute;
+            top: -4px;
+            transition: all 0.3s ease-in-out;
+            width: 24px;
+        }
+        .material-switch > input[type="checkbox"]:checked + label::before {
+            background: inherit;
+            opacity: 0.5;
+        }
+        .material-switch > input[type="checkbox"]:checked + label::after {
+            background: inherit;
+            left: 20px;
+        }
  	</style>
 @stop
 @section('content')
@@ -114,19 +158,39 @@
 
 @stop
 @section('script')
-
 <script id="serviceProviderListTemplate" type="x-jsrender">
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>師傅名稱</th>
-                <th></th>
+                <th>指壓</th>
+                <th>油壓</th>
+                <th>油壓去角質</th>
+                <th>刪除</th>
             </tr>
         </thead>
         <tbody>
             @{{for serviceProviders}}
             <tr class="gradeX">
                 <td>@{{:name}}</td>
+                <td>
+                    <div class="material-switch">
+                        <input id="@{{:id}}_service1" data-id=@{{:id}} data-service=1 @{{if service_1}} checked @{{/if}} type="checkbox"/>
+                        <label for="@{{:id}}_service1" class="label-success"></label>
+                    </div>
+                </td>
+                <td>
+                    <div class="material-switch">
+                        <input id="@{{:id}}_service2" data-id=@{{:id}} data-service=2 @{{if service_2}} checked @{{/if}} type="checkbox"/>
+                        <label for="@{{:id}}_service2" class="label-success"></label>
+                    </div>
+                </td>
+                <td>
+                    <div class="material-switch">
+                        <input id="@{{:id}}_service3" data-id=@{{:id}} data-service=3 @{{if service_3}} checked @{{/if}} type="checkbox"/>
+                        <label for="@{{:id}}_service3" class="label-success"></label>
+                    </div>
+                </td>
                 <td class="actions">
                     <a href="#" class="on-default remove-row" data-id=@{{:id}} data-shop_id=@{{:shop_id}}><i class="fa fa-trash-o"></i></a>
                 </td>
@@ -244,5 +308,27 @@
             } 
         });
     })
+
+    $("#serviceProviderContainer ").on('change', 'input[type=checkbox]',function(e){
+        var id = $(this).data('id');
+        var service = $(this).data('service');
+        $.ajax({
+            url: '/api/serviceprovider/service',
+            type: 'post',
+            data: {
+                id: id,
+                service: service
+            },
+            success: function(data){
+            },
+            error: function(e){
+                swal(
+                  '系統發生錯誤',
+                  '更改失敗 請洽系統管理商!',
+                  'error'
+                )
+            }
+        });
+    });
 </script>
 @stop

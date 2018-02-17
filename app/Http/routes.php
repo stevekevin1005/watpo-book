@@ -62,6 +62,8 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/serviceprovider/list', ['uses' => 'ServiceProviderController@api_list', 'as' => 'apiServiceProviderList']);
 		Route::post('/serviceprovider/add', ['uses' => 'ServiceProviderController@api_add', 'as' => 'apiServiceProviderAdd']);
 		Route::post('/serviceprovider/delete', ['uses' => 'ServiceProviderController@api_delete', 'as' => 'apiServiceProviderDelete']);
+		Route::get('/serviceprovider/leave', ['uses' => 'ServiceProviderController@api_leave', 'as' => 'apiServiceProviderLeave']);
+		Route::post('/serviceprovider/service', ['uses' => 'ServiceProviderController@api_service', 'as' => 'apiServiceProviderService']);
 		
 		Route::post('/leave/delete', ['uses' => 'LeaveController@api_delete', 'as' => 'apiLeaveDelete']);
 		

@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Shop;
 use App\Models\ServiceProvider;
-use Hash, Exception;
+use Hash, Exception, Datetime, DateInterval;
 
 class ServiceProviderController extends Controller
 {
+	const headers = array('Content-Type' => 'application/json; <a href="http://superlevin.ifengyuan.tw/tag/charset/">charset</a>=utf-8');
 	public function index()
 	{
 		$shops = Shop::all();
@@ -22,10 +23,13 @@ class ServiceProviderController extends Controller
 		try{
 			$serviceProviders = ServiceProvider::where('shop_id', $request->id)->get();
 			$response['serviceProviders'] = $serviceProviders;
-			return response()->json($response);
+			return response()->json($response, 200, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 		catch(Exception $e){
-			return response()->json('系統獲取列表失敗 請洽系統管理商');
+			return response()->json('系統錯誤 請洽系統管理商', 400, self::headers, JSON_UNESCAPED_UNICODE);
+		}
+		catch(\Illuminate\Database\QueryException $e){
+			return response()->json('資料庫錯誤 請洽系統管理商', 400, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 	}
 
@@ -37,10 +41,13 @@ class ServiceProviderController extends Controller
 			$serviceProvider->shop_id	 = $request->id;
 			$serviceProvider->save();
 
-			return response()->json('新增成功');
+			return response()->json('新增成功', 200, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 		catch(Exception $e){
-			return response()->json('新增失敗 請洽系統管理商');
+			return response()->json('系統錯誤 請洽系統管理商', 400, self::headers, JSON_UNESCAPED_UNICODE);
+		}
+		catch(\Illuminate\Database\QueryException $e){
+			return response()->json('資料庫錯誤 請洽系統管理商', 400, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 	}
 
@@ -52,10 +59,85 @@ class ServiceProviderController extends Controller
 			$serviceProvider = $serviceProvider->where('id', $request->id)->first();
 			$serviceProvider->delete();
 
-			return response()->json('刪除成功');
+			return response()->json('刪除成功', 200, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 		catch(Exception $e){
-			return response()->json('刪除失敗 請洽系統管理商');
+			return response()->json('系統錯誤 請洽系統管理商', 400, self::headers, JSON_UNESCAPED_UNICODE);
+		}
+		catch(\Illuminate\Database\QueryException $e){
+			return response()->json('資料庫錯誤 請洽系統管理商', 400, self::headers, JSON_UNESCAPED_UNICODE);
+		}
+	}
+
+	public function api_leave(Request $request)
+	{
+		try{
+			$date = $request->date;
+			$shop_id = $request->shop_id;
+			$shop = Shop::where('id', $shop_id)->first();
+			$shop_start_time = new DateTime($date.' '.$shop->start_time);
+			$shop_end_time = new DateTime($date.' '.$shop->end_time);
+
+			if($shop_end_time <= $shop_start_time){
+				$shop_end_time->add(new DateInterval("P1D"));
+			}
+
+			$serviceProviders = ServiceProvider::with(['leaves' => function ($query) use($shop_start_time, $shop_end_time) {
+    			$query->where('start_time', '<=', $shop_end_time);
+    			$query->where('end_time', '>=', $shop_start_time);
+    		}])->where('shop_id', $shop_id)->get();
+			
+			$result['serviceProviders'] = [];
+
+			foreach ($serviceProviders as $serviceProvider) {
+				if(count($serviceProvider->leaves) == 0 ){
+					$result['serviceProviders'][] = ['id' => $serviceProvider->id, 'name' => $serviceProvider->name, 'leave_id' => null, 'leave_status' => '無'];
+				}
+				else{
+					$result['serviceProviders'][] = ['id' => $serviceProvider->id, 'name' => $serviceProvider->name, 'leave_id' => $serviceProvider->leaves[0]->id, 'leave_status' => '有', 'leave_start_time' => date("H:i", strtotime($serviceProvider->leaves[0]->start_time)), 'leave_end_time' => date("H:i", strtotime($serviceProvider->leaves[0]->end_time))];
+				}
+			}
+
+			return response()->json($result, 200, self::headers, JSON_UNESCAPED_UNICODE);
+		}
+		catch(Exception $e){
+			return response()->json('系統錯誤 請洽系統管理商', 400, self::headers, JSON_UNESCAPED_UNICODE);
+		}
+		catch(\Illuminate\Database\QueryException $e){
+			return response()->json('資料庫錯誤 請洽系統管理商', 400, self::headers, JSON_UNESCAPED_UNICODE);
+		}
+	}
+
+	public function api_service(Request $request)
+	{
+		try {
+			$id = $request->id;
+			$service = $request->service;
+
+			$service_provider = ServiceProvider::where('id', $id)->first();
+			switch ($service) {
+				case 1:
+					$service_provider->service_1 = !$service_provider->service_1;
+					break;
+
+				case 2:
+					$service_provider->service_2 = !$service_provider->service_2;
+					break;
+
+				case 3:
+					$service_provider->service_3 = !$service_provider->service_3;
+					break;
+				default:
+					break;
+			}
+			$service_provider->save();
+
+			return response()->json("ok", 200, self::headers, JSON_UNESCAPED_UNICODE);
+		} catch (Exception $e) {
+			return response()->json('系統錯誤 請洽系統管理商', 400, self::headers, JSON_UNESCAPED_UNICODE);
+		}
+		catch(\Illuminate\Database\QueryException $e){
+			return response()->json('資料庫錯誤 請洽系統管理商', 400, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 	}
 
