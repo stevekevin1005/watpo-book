@@ -6,6 +6,9 @@
     .fc-event{
         cursor: pointer;
     }
+    td{
+        font-size: 22px;
+    }
 </style>
 @stop
 @section('content')
@@ -23,12 +26,13 @@
                             &nbsp;&nbsp;&nbsp;
                             <button class="btn btn-primary" id="new_order">新建預約單</button> 
                             &nbsp;&nbsp;&nbsp;
-                            <button class="btn btn-warning" id="leave_apply">師傅請假</button> 
+                            <button class="btn btn-warning" id="leave_status">師傅出勤</button> 
                         </h4>
                         <a href="#" style="color:#3ddcf7;">●</a> - 客戶預定
                         <a href="#" style="color:#1d7dca;">●</a> - 櫃檯預定
                         <a href="#" style="color:#ffaa00;">●</a> - 櫃檯取消
                         <a href="#" style="color:#5cb85c;">●</a> - 訂單成立
+                         <a href="#" style="color:red;">●</a> - 逾期取消
                         @if ($errors->has('fail'))
                         <a href="#" style="color:red;">{{ $errors->first('fail') }}</a>
                         @endif
@@ -177,10 +181,10 @@
     <div class="container" style="height:200x;">
         <div class="row" style="margin-top: 15px;">
             <div class="col-md-4">
-                <button type="button" class="btn btn-danger order_cancel" data-id="@{{:id}}" style="font-size:20px;">取消訂單</button>
+                <button type="button" class="btn btn-warning order_cancel" data-id="@{{:id}}" style="font-size:20px;">取消訂單</button>
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-info order_update" 
+                <button type="button" class="btn btn-primary order_update" 
                     data-id="@{{:id}}" 
                     data-name="@{{:name}}" 
                     data-phone="@{{:phone}}" 
@@ -230,27 +234,45 @@
     </tbody>
 </script>
 <script id="leave_template" type="x-jsrender">
-    <div class="container" style="height:200x;">
-        <div class="row" style="margin-top: 15px;">
-            <div class="col-md-4">
-                <select class="form-control">
-                    <option value="" selected disabled hidden>Choose here</option>
-                    @foreach($shop_service_providers as $service_provider)
-                    <option value="{{ $service_provider['id'] }}">{{ $service_provider['title'] }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-md-2">
-                <input type="text" class="form-control timepicker" value="09:30">
-            </div>
-            <div class="col-md-2">
-                <input type="text" class="form-control timepicker" value="09:30">
-            </div>
-            <div class="col-md-4">
-                <button type="button" class="btn btn-success order_confirm" style="font-size:20px;">確認</button>
-            </div>
-        </div>
-    </div>
+    <table class="table table-striped" >
+        <thead>
+            <tr>
+                <th>師傅</th>
+                <th>休假狀況</th>
+                <th>開始時間</th>
+                <th>結束時間</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{{for serviceProviders}}
+            <tr>
+                <td>@{{:name}}</td>
+                <td>@{{:leave_status}}</td>
+                
+                @{{if leave_id}}
+                <td>@{{:leave_start_time}}</td>
+                <td>@{{:leave_end_time}}</td>
+                <td><button class="btn btn-danger leave_cancel" data-id=@{{:leave_id}} >刪除</button></td>
+                @{{else}}
+                <td><div class='input-group date datetimepicker'>
+                                    <input type='text' id="@{{:id}}_start" class="form-control"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div></td>
+                <td><div class='input-group date datetimepicker'>
+                                    <input type='text' id="@{{:id}}_end" class="form-control"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div></td>
+                <td><button class="btn btn-primary leave_add" data-id=@{{:id}}>新增</button></td>
+                @{{/if}}
+            </tr>
+            @{{/for}}
+        </tbody>
+    </table>
 </script>
 <script type="text/javascript">
     $(function() { // document ready
@@ -282,32 +304,104 @@
             });
         });
 
-        $("#leave_apply").on("click", function(){
-            var myTemplate = $.templates("#leave_template");
-            var html = myTemplate.render();
+        $("#leave_status").on("click", function(){
 
+            var date =  $("#date").val();
+            $.ajax({
+                url: '/api/serviceprovider/leave',
+                type: 'get',
+                dataType: 'json',
+                data: {
+                    date: date,
+                    shop_id: {{ $shop->id }}
+                },
+                success: function(data){
+                    var myTemplate = $.templates("#leave_template");
+                    var html = myTemplate.render(data);
+                    swal({
+                        title: date + ' 師傅出勤狀況',
+                        html: html,
+                        width: "70%",
+                        allowOutsideClick: false,
+                        showCancelButton: false,
+                        focusConfirm: false,
+                        cancelButtonText:'取消',
+                        showConfirmButton: false,
+                        showCloseButton: true,
+                    });
+                    $('.datetimepicker').datetimepicker({
+                        format: "HH:mm",
+                    });
+                },
+                error: function(e){
+                    alert('師傅出勤獲取失敗 請洽系統管理商!');
+                }
+            });
+        });
+
+        $("body").on('click', '.leave_cancel', function(){
+            var id = $(this).data('id');
             swal({
-                title: '師傅臨時請假',
-                html: html,
-                width: "70%",
-                allowOutsideClick: false,
-                showCancelButton: false,
-                focusConfirm: false,
-                cancelButtonText:'取消',
-                showConfirmButton: false,
-                showCloseButton: true,
-            })
+                title: '刪除此筆休假?',
+                text: "此動作無法恢復",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: '取消',
+                confirmButtonText: '確定'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: '/api/leave/delete',
+                        type: 'post',
+                        data: {
+                            id: id,
+                        },
+                        success: function(data){
+                            swal.close();
+                        },
+                        error: function(e){
+                            swal(
+                            '系統發生錯誤',
+                            '新增失敗 請洽系統管理商!',
+                            'error'
+                            )
+                        }
+                    });
+                }
+            });
+        });
 
-            $('.timepicker').timepicker({
-                timeFormat: 'h:mm p',
-                interval: 60,
-                minTime: '10',
-                maxTime: '6:00pm',
-                defaultTime: '11',
-                startTime: '10:00',
-                dynamic: false,
-                dropdown: true,
-                scrollbar: true
+        $("body").on('click', '.leave_add', function(){
+            var service_provider_id = $(this).data('id');
+            var date =  $("#date").val();
+
+            var start_time = new Date(date+" "+$('#'+service_provider_id+'_start').val());
+            var end_time = new Date(date+" "+$('#'+service_provider_id+'_end').val());
+            
+            if(start_time > end_time){
+                end_time.setDate(end_time.getDate()+1);
+            }
+            
+            $.ajax({
+                url: '/api/leave/add',
+                type: 'post',
+                data: {
+                    service_provider_id: service_provider_id,
+                    start_time: start_time,
+                    end_time: end_time
+                },
+                success: function(data){
+                    swal.close();
+                },
+                error: function(e){
+                    swal(
+                    '系統發生錯誤',
+                    e.responseText,
+                    'error'
+                    )
+                }
             });
         });
 

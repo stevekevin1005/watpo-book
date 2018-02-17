@@ -152,13 +152,16 @@
 										$status = "<button class='btn btn-primary'>櫃檯預定</button>";
 										break;
 									case 3:
-										$status = "<button class='btn btn-danger'>客戶取消</button>";
+										$status = "<button class='btn btn-light'>客戶取消</button>";
 										break;
 									case 4:
 										$status = "<button class='btn btn-warning'>櫃檯取消</button>";
 										break;
 									case 5:
 										$status = "<button class='btn btn-success'>訂單成立</button>";
+										break;
+									case 6:
+										$status = "<button class='btn btn-danger'>逾期取消</button>";
 										break;
 									default:
 										$status = "<button class='btn btn-info'>客戶預定</button>";

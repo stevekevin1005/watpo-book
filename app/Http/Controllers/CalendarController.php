@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Hash, Exception;
+use Hash, Exception, Datetime;
 use App\Models\ServiceProvider;
 use App\Models\Shop;
 use App\Models\Room;
@@ -91,7 +91,7 @@ class CalendarController extends Controller
 			$data->id = $order->id;
 			$data->name = $order->name;
 			$data->phone = $order->phone;
-			$data->status = $order->status;
+			
 			$data->person = $order->person;
 			$data->room = $order->room->name;
 			$data->room_id = $order->room->id;
@@ -101,11 +101,23 @@ class CalendarController extends Controller
 			$data->end_time = $order->end_time;
 			$data->time = date("H:i" ,strtotime($order->start_time))." - ".date("H:i" ,strtotime($order->end_time));
 
+			if(strtotime(date('Y-m-d H:i:s')) - strtotime($order->start_time) >= 600 && ($order->status == 1 || $order->status == 2)){
+				$order->status = 6;
+				$order->save();
+			}
+
+			$data->status = $order->status;
+
 			$data->provider = "";
 			$person = $order->person;
 			$service_provider_count = 0;	
 			foreach ($order->serviceProviders as $key => $serviceProvider) {
-				$data->provider .= $serviceProvider->name." ";
+				if($serviceProvider->shop_id == $shop_id){
+					$data->provider .= $serviceProvider->name." ";
+				}
+				else{
+					$data->provider .= $serviceProvider->name."(調) ";
+				}
 				$service_provider_count++;
 			}
 			for($i = $service_provider_count;$i < $order->person;$i++){
@@ -127,6 +139,9 @@ class CalendarController extends Controller
 					break;
 				case 5:
 					$data->color = "#5cb85c";
+					break;
+				case 6:
+					$data->color = "red";
 					break;
 				default:
 					$data->color = "";
@@ -364,13 +379,14 @@ class CalendarController extends Controller
 				throw new Exception("沒有選擇師傅", 1);
 			}
 
-			$order = Order::with('service')->with('shop')->where('id', $order_id)->first();
+			$order = Order::with('serviceProviders')->with('service')->with('shop')->where('id', $order_id)->first();
 			$order->serviceProviders()->detach();
 			$order->name = $name;
 			$order->phone = $phone;
 			$order->status = 2;
 			$order->service_id = $service_id;
-			
+			$order->person = $person;
+		
 			if($order->room_id != $room_id){
 				$room = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
 					$query->where('status', '!=', 3);
