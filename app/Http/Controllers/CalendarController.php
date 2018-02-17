@@ -112,7 +112,12 @@ class CalendarController extends Controller
 			$person = $order->person;
 			$service_provider_count = 0;	
 			foreach ($order->serviceProviders as $key => $serviceProvider) {
-				$data->provider .= $serviceProvider->name." ";
+				if($serviceProvider->shop_id == $shop_id){
+					$data->provider .= $serviceProvider->name." ";
+				}
+				else{
+					$data->provider .= $serviceProvider->name."(調) ";
+				}
 				$service_provider_count++;
 			}
 			for($i = $service_provider_count;$i < $order->person;$i++){
@@ -374,13 +379,14 @@ class CalendarController extends Controller
 				throw new Exception("沒有選擇師傅", 1);
 			}
 
-			$order = Order::with('service')->with('shop')->where('id', $order_id)->first();
+			$order = Order::with('serviceProviders')->with('service')->with('shop')->where('id', $order_id)->first();
 			$order->serviceProviders()->detach();
 			$order->name = $name;
 			$order->phone = $phone;
 			$order->status = 2;
 			$order->service_id = $service_id;
-			
+			$order->person = $person;
+		
 			if($order->room_id != $room_id){
 				$room = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
 					$query->where('status', '!=', 3);

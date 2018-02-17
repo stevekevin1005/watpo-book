@@ -181,10 +181,10 @@
     <div class="container" style="height:200x;">
         <div class="row" style="margin-top: 15px;">
             <div class="col-md-4">
-                <button type="button" class="btn btn-danger order_cancel" data-id="@{{:id}}" style="font-size:20px;">取消訂單</button>
+                <button type="button" class="btn btn-warning order_cancel" data-id="@{{:id}}" style="font-size:20px;">取消訂單</button>
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-info order_update" 
+                <button type="button" class="btn btn-primary order_update" 
                     data-id="@{{:id}}" 
                     data-name="@{{:name}}" 
                     data-phone="@{{:phone}}" 
