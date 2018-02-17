@@ -50,13 +50,14 @@ class BookController extends Controller
 	{
 		try{
 			$service_id = $request->service_id;
-			
+			$shop_id = $request->shop_id;
+
 			if(!$service_id){
 				throw new Exception("缺少服務ID", 1);;
 			}
 
-			$service_providers = new ServiceProvider;
-			$rooms = new Room;
+			$service_providers = ServiceProvider::where('shop_id', $shop_id);
+			$rooms = Room::where('shop_id', $shop_id);
 
 			if($service_id == 1 || $service_id == 2){
 				$service_providers = $service_providers->where('service_1', true);
