@@ -34,7 +34,7 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('/blacklist/delete', ['uses' => 'BlackListController@delete', 'as' => 'blackListDelete']);
 		
 		Route::get('/leave', ['uses' => 'LeaveController@index', 'as' => 'leaveIndex']);
-		Route::post('/leave/add', ['uses' => 'LeaveController@add', 'as' => 'leaveAdd']);
+
 
 		Route::get('/calendar/{shop_id}', ['uses' => 'CalendarController@index', 'as' => 'calendarIndex']);
 		Route::post('/calendar/{shop_id}/add_order', ['uses' => 'CalendarController@add_order', 'as' => 'calendarAddOrder']);
@@ -66,7 +66,9 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('/serviceprovider/service', ['uses' => 'ServiceProviderController@api_service', 'as' => 'apiServiceProviderService']);
 		
 		Route::post('/leave/delete', ['uses' => 'LeaveController@api_delete', 'as' => 'apiLeaveDelete']);
-		
+		Route::post('/leave/add', ['uses' => 'LeaveController@api_add', 'as' => 'apiLeaveAdd']);
+		Route::get('{service_provider_id}/leave/list', ['uses' => 'LeaveController@api_list', 'as' => 'apiLeaveList']);
+
 		Route::post('/account/add', ['uses' => 'AccountController@api_add', 'as' => 'apiAccountAdd']);
 		Route::post('/account/delete', ['uses' => 'AccountController@api_delete', 'as' => 'apiAccountDelete']);
 		Route::post('/account/reset_password', ['uses' => 'AccountController@api_reset_password', 'as' => 'apiAccountResetPassword']);
