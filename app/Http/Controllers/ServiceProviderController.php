@@ -76,7 +76,13 @@ class ServiceProviderController extends Controller
 			$date = $request->date;
 			$shop_id = $request->shop_id;
 			$shop = Shop::where('id', $shop_id)->first();
-			$shop_start_time = new DateTime($date.' '.$shop->start_time);
+			if($date == date('Y:m:d')){
+				$shop_start_time = new DateTime(date('Y:m:d H:i:s'));
+			}
+			else{
+				$shop_start_time = new DateTime($date.' '.$shop->start_time);
+			}
+			
 			$shop_end_time = new DateTime($date.' '.$shop->end_time);
 
 			if($shop_end_time <= $shop_start_time){

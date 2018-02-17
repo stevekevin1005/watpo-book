@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Hash, Exception;
+use Hash, Exception, Datetime;
 use App\Models\ServiceProvider;
 use App\Models\Shop;
 use App\Models\Room;
@@ -91,7 +91,7 @@ class CalendarController extends Controller
 			$data->id = $order->id;
 			$data->name = $order->name;
 			$data->phone = $order->phone;
-			$data->status = $order->status;
+			
 			$data->person = $order->person;
 			$data->room = $order->room->name;
 			$data->room_id = $order->room->id;
@@ -100,6 +100,13 @@ class CalendarController extends Controller
 			$data->start_time = $order->start_time;
 			$data->end_time = $order->end_time;
 			$data->time = date("H:i" ,strtotime($order->start_time))." - ".date("H:i" ,strtotime($order->end_time));
+
+			if(strtotime(date('Y-m-d H:i:s')) - strtotime($order->start_time) >= 600 && ($order->status == 1 || $order->status == 2)){
+				$order->status = 6;
+				$order->save();
+			}
+
+			$data->status = $order->status;
 
 			$data->provider = "";
 			$person = $order->person;
@@ -127,6 +134,9 @@ class CalendarController extends Controller
 					break;
 				case 5:
 					$data->color = "#5cb85c";
+					break;
+				case 6:
+					$data->color = "red";
 					break;
 				default:
 					$data->color = "";

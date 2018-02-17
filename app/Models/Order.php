@@ -35,7 +35,7 @@ class Order extends Model {
 	phone: varchar(20)
   person: int(2)
 	status: enum("1", "2", "3", "4", "5") 
-					1: customer book 2: staff book 3: customer cancel 4: staff cancel 5: order success
+					1: customer book 2: staff book 3: customer cancel 4: staff cancel 5: order success 6: system cancel
 	service_id: service table
 	room_id: room table
   shop_id: shop table
