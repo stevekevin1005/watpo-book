@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Shop;
+use App\Models\Log;
 use App\Models\ServiceProvider;
 use Hash, Exception, Datetime, DateInterval;
 
@@ -40,7 +41,7 @@ class ServiceProviderController extends Controller
 			$serviceProvider->name = $request->name;
 			$serviceProvider->shop_id	 = $request->id;
 			$serviceProvider->save();
-
+			Log::create(['description' => '增加師傅id '.$serviceProvider->id]);
 			return response()->json('新增成功', 200, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 		catch(Exception $e){
@@ -58,7 +59,7 @@ class ServiceProviderController extends Controller
 			$serviceProvider = new ServiceProvider;
 			$serviceProvider = $serviceProvider->where('id', $request->id)->first();
 			$serviceProvider->delete();
-
+			Log::create(['description' => '刪除師傅id '.$serviceProvider->id]);
 			return response()->json('刪除成功', 200, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 		catch(Exception $e){
@@ -114,24 +115,24 @@ class ServiceProviderController extends Controller
 			$id = $request->id;
 			$service = $request->service;
 
-			$service_provider = ServiceProvider::where('id', $id)->first();
+			$serviceProvider = ServiceProvider::where('id', $id)->first();
 			switch ($service) {
 				case 1:
-					$service_provider->service_1 = !$service_provider->service_1;
+					$serviceProvider->service_1 = !$serviceProvider->service_1;
 					break;
 
 				case 2:
-					$service_provider->service_2 = !$service_provider->service_2;
+					$serviceProvider->service_2 = !$serviceProvider->service_2;
 					break;
 
 				case 3:
-					$service_provider->service_3 = !$service_provider->service_3;
+					$serviceProvider->service_3 = !$serviceProvider->service_3;
 					break;
 				default:
 					break;
 			}
-			$service_provider->save();
-
+			$serviceProvider->save();
+			Log::create(['description' => '更改師傅id '.$serviceProvider->id.' 服務 '.$service]);
 			return response()->json("ok", 200, self::headers, JSON_UNESCAPED_UNICODE);
 		} catch (Exception $e) {
 			return response()->json('系統錯誤 請洽系統管理商', 400, self::headers, JSON_UNESCAPED_UNICODE);
