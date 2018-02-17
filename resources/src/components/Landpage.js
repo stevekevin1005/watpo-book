@@ -2,8 +2,6 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { translate } from 'react-i18next';
 import i18n from '../i18n';
 import {connect} from "react-redux";
-import clearReservation from "../dispatchers/clearReservation";
-import clearSourceData from "../dispatchers/clearSourceData";
 import clearCheckOrdersInfo from "../dispatchers/clearCheckOrdersInfo";
 import {bindActionCreators} from "redux";
 
@@ -20,11 +18,6 @@ class Landpage extends React.Component{
         this.scroll = this.scroll.bind(this);
     }
     componentDidMount(){
-        if(this.props.reservation !== null){
-            this.props.clearReservation("all");
-            this.props.clearSourceData("timeList");
-            this.props.clearSourceData("selectedDetail");
-        }
         if(this.props.checkOrdersInfo != {}){
             this.props.clearCheckOrdersInfo("name");
             this.props.clearCheckOrdersInfo("contactNumber");
@@ -174,14 +167,11 @@ class Landpage extends React.Component{
 
 const mapStateToProps = (state)=>{
     return {
-        reservation: state.reservation,
         checkOrdersInfo: state.checkOrdersInfo
     }
 }
 const mapDispatchToProps = (dispatch)=>{
     return bindActionCreators({
-        clearReservation: clearReservation,
-        clearSourceData: clearSourceData,
         clearCheckOrdersInfo: clearCheckOrdersInfo
     },dispatch);
 }
