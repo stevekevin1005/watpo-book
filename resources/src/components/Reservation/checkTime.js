@@ -37,7 +37,7 @@ class CheckTime extends React.Component{
                 service_id: reservation.service,
                 date: date,
                 person: reservation.guestNum,
-                service_provider_id: reservation.operator.join(""),
+                service_provider_id: reservation.operator.join(),
                 room_id: reservation.roomId
             },
             headers: {'X-CSRF-TOKEN': csrf_token},
@@ -47,7 +47,7 @@ class CheckTime extends React.Component{
             if(response.statusText == "OK"){
                 that.props.setSourceData({timeList: response.data});
 
-                that.props.toggleLoading();
+                if(that.props.loading) that.props.toggleLoading();
                 if(response.data.length === 0) that.setState({hint: "calendarError_noTimelist"});
             }
         })

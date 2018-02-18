@@ -11,7 +11,6 @@ import { translate } from 'react-i18next';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import LoadingAnimation from "./LoadingAnimation";
-import toggleLoading from "../dispatchers/toggleLoading";
 import clearCheckOrdersInfo from "../dispatchers/clearCheckOrdersInfo";
 
 const Grid = ReactBootstrap.Grid,
@@ -105,7 +104,9 @@ class Reservation extends React.Component{
         sourceData[key] = null;
         this.setState({
             sourceData
-        }, this.toggleLoading());
+        },()=>{
+            if(this.state.loading) this.setState({loading: false});
+        });
     }
     clearData(step){
         let sourceData = JSON.parse(JSON.stringify(this.state.sourceData)),
@@ -133,14 +134,18 @@ class Reservation extends React.Component{
                 this.setState({ 
                     sourceData, 
                     reservation: newReservationData
-                }, this.toggleLoading());
+                }, ()=>{
+                    if(this.state.loading) this.setState({loading: false});
+                });
                 break;
             case 1:
                 this.toggleLoading();
                 reservation["date"] = null;
                 reservation["time"] = null;
                 sourceData["timeList"] = null;
-                this.setState({ sourceData, reservation}, this.toggleLoading);
+                this.setState({ sourceData, reservation}, ()=>{
+                    if(this.state.loading) this.setState({loading: false});
+                });
                 break;
             case 2:
         }
