@@ -1,8 +1,4 @@
 import { translate } from 'react-i18next';
-import {connect} from "react-redux";
-import clearSourceData from "../../dispatchers/clearSourceData";
-import clearReservation from "../../dispatchers/clearReservation";
-import {bindActionCreators} from "redux";
 
 class Calendar extends React.Component{
     constructor(props){
@@ -10,10 +6,10 @@ class Calendar extends React.Component{
         const date = new Date(),
               firstDay = new Date(date.getFullYear(),date.getMonth(),1),
               lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate(),
-              inputtedDate = this.props.reservation.date?this.props.reservation.date.split("/"):null;
+              inputtedDate = this.props.date?this.props.date.split("/"):null;
 
         this.state = {
-            displayingYear: inputtedDate?parseInt(inputtedDate[0]):date.getFullYear(),
+            displayingYear: inputtedDate?+inputtedDate[0]:date.getFullYear(),
             displayingMonth: inputtedDate?inputtedDate[1]:date.getMonth() + 1, // 1-based
             firstWeekDay: firstDay.getDay(), // 1-based
             dayNum: lastDayOfMonth, // 0-based, 0=>禮拜天, 1=>禮拜一...
@@ -39,17 +35,15 @@ class Calendar extends React.Component{
             dayNum: lastDayOfMonth
         });
 
-        // clear current displaying time periods
-        this.props.clearSourceData("timeList");
-        this.props.clearSourceData("selectedDetail");
-        this.props.clearReservation("step1");
+        // // clear current displaying time periods
+        this.props.changeMonthHandle();
     }
     selectDay(event){
         // send in year, month, day arguments
-        this.props.getTimePeriods(this.state.displayingYear, parseInt(this.state.displayingMonth), parseInt(event.target.innerHTML));
+        this.props.selectDayHandle(this.state.displayingYear, +this.state.displayingMonth, +event.target.innerHTML);
     }
     render(){
-        const { t } = this.props, selectedDay = this.props.reservation.date?parseInt(this.props.reservation.date.split("/")[2]):-1;
+        const { t } = this.props, selectedDay = this.props.date?+this.props.date.split("/")[2]:-1;
 
         const months = [t("jan"),t("feb"),t("mar"),t("apr"),t("may"),t("jun"),t("jul"),t("aug"),t("sep"),t("oct"),t("nov"),t("dec")],
               weekDays = [t("mon"),t("tue"),t("wed"),t("thu"),t("fri"),t("sat"),t("sun")],
@@ -99,20 +93,5 @@ class Calendar extends React.Component{
             </div>);
     }
 }
-
-const mapStateToProps = (state)=>{
-    return {
-        reservation: state.reservation
-    }
-}
-
-const mapDispatchToProps = (dispatch)=>{
-    return bindActionCreators({
-        clearSourceData: clearSourceData,
-        clearReservation: clearReservation
-    },dispatch);
-}
-  
-Calendar = connect(mapStateToProps,mapDispatchToProps)(Calendar);  
 
 module.exports = translate()(Calendar);

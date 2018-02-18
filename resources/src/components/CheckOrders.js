@@ -8,8 +8,6 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import LoadingAnimation from "./LoadingAnimation";
 import toggleLoading from "../dispatchers/toggleLoading";
-import clearReservation from "../dispatchers/clearReservation";
-import clearSourceData from "../dispatchers/clearSourceData";
 
 const Grid = ReactBootstrap.Grid,
     Row = ReactBootstrap.Row,
@@ -29,13 +27,6 @@ class CheckOrders extends React.Component{
         this.nextStep = this.nextStep.bind(this);
         this.getOrdersError = this.getOrdersError.bind(this);
         this.cancelSuccess = this.cancelSuccess.bind(this);
-    }
-    componentDidMount(){
-        if(this.props.reservation !== null){
-            this.props.clearReservation("all");
-            this.props.clearSourceData("timeList");
-            this.props.clearSourceData("selectedDetail");
-        }
     }
     nextStep(){
         this.props.history.push('/checkOrders/' + (parseInt(this.props.match.params.step) + 1));
@@ -128,16 +119,13 @@ class CheckOrders extends React.Component{
 const mapStateToProps = (state)=>{
     return {
         loading: state.loading,
-        reservation: state.reservation,
         checkOrdersInfo: state.checkOrdersInfo
     }
 }
 
 const mapDispatchToProps = (dispatch)=>{
     return bindActionCreators({
-        toggleLoading: toggleLoading,
-        clearReservation: clearReservation,
-        clearSourceData: clearSourceData
+        toggleLoading: toggleLoading
     },dispatch);
 }
   

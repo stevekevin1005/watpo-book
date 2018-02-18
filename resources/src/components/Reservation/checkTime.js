@@ -1,17 +1,10 @@
 // 負責寫資料(日期,時段)到global state
 import { translate } from 'react-i18next';
 import Calendar from "./Calendar";
-import {connect} from "react-redux";
-import {bindActionCreators} from "redux";
-import toggleLoading from "../../dispatchers/toggleLoading";
-import setReservation from "../../dispatchers/setReservation";
-import setSourceData from "../../dispatchers/setSourceData";
-import clearSourceData from "../../dispatchers/clearSourceData";
+import LoadingAnimation from "../LoadingAnimation";
 import Button from "./Button";
 
-const Grid = ReactBootstrap.Grid,
-    Row = ReactBootstrap.Row,
-    Col = ReactBootstrap.Col,
+const Col = ReactBootstrap.Col,
     ListGroupItem = ReactBootstrap.ListGroupItem,
     ListGroup = ReactBootstrap.ListGroup;
 
@@ -19,91 +12,91 @@ class CheckTime extends React.Component{
     constructor(props){
         super(props);
 
-        this.state = {hint: "calendarHint"};
+        this.state = {
+            hint: "calendarHint"
+        };
 
         this.getTimePeriods = this.getTimePeriods.bind(this);
         this.setTime = this.setTime.bind(this);
-    }
+        this.clearDateAndTimeAndTimeList = this.clearDateAndTimeAndTimeList.bind(this);
+    }    
     getTimePeriods(year,month,day){
         const that = this, 
-              date = year+"/"+ (month<10?"0"+month:month) +"/"+ (day<10?"0"+day:day),
-              csrf_token = document.querySelector('input[name="_token"]').value;
+            reservation = this.props.reservation,
+            date = year+"/"+ (month<10?"0"+month:month) +"/"+ (day<10?"0"+day:day),
+            csrf_token = document.querySelector('input[name="_token"]').value;
+        
+        this.props.setReservation({date});
 
-        // clear selected detail index
-        this.props.clearSourceData("selectedDetail");
-
-        // set loading state
-        that.setState({hint: ""});
-        this.props.toggleLoading(true);
-
-        this.props.setReservation("date", date);
-        this.props.setSourceData("timelist",
-            {
-                shop: this.props.sourceData.shops[this.props.reservation.shop].id, 
-                service: this.props.sourceData.services[this.props.reservation.service].id,
+        this.props.toggleLoading();
+        axios({
+            method: "get",
+            url: "../api/time_list",
+            params: {
+                shop_id: reservation.shop, 
+                service_id: reservation.service,
                 date: date,
-                token: csrf_token
+                person: reservation.guestNum,
+                service_provider_id: reservation.operator.join(""),
+                room_id: reservation.roomId
             },
-            (length)=>{
-                that.props.toggleLoading(false);
-                if(length === 0) that.setState({hint: "calendarError_noTimelist"});
-            },()=>{
-                that.props.toggleLoading(false);
-                that.setState({hint: "errorHint_system"});
-            });
+            headers: {'X-CSRF-TOKEN': csrf_token},
+            responseType: 'json'
+        })
+        .then(function (response) {
+            if(response.statusText == "OK"){
+                that.props.setSourceData({timeList: response.data});
+
+                that.props.toggleLoading();
+                if(response.data.length === 0) that.setState({hint: "calendarError_noTimelist"});
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+            that.props.toggleLoading();
+            that.setState({hint: "errorHint_system"});
+        });
     }
     setTime(event){
-        const value = event.target.innerHTML,
-              index = event.target.getAttribute("data-index");
-        this.props.setReservation("time", value);
-        this.props.setSourceData("selectedDetail", parseInt(index));
+        const time = event.target.innerHTML;
+        this.props.setReservation({time});
+    }
+    clearDateAndTimeAndTimeList(){
+        this.props.setReservation({
+            date: null,
+            time: null
+        },()=>{
+            this.props.setSourceData({timeList: null});
+        });
     }
     render(){
-        if(this.props.reservation.shop === undefined || this.props.reservation.service === undefined) location.href = '../reservation/0';
+        if(!this.props.reservation.roomId) location.href = '../reservation/0';
         const reservation = this.props.reservation,
-              disabled = (!reservation.date || !reservation.time),
-              { t } = this.props;;
+              disabled = (!reservation.date || !reservation.time) || this.props.loading,
+              { t } = this.props;
 
         return(
-            <Grid>
-            <Row className="show-grid">
-            <Col md={5}>
-                <Calendar getTimePeriods={this.getTimePeriods}/>
-            </Col>
-            <Col md={5}>
-                <div className="timePeriods">
-                    {this.props.sourceData.timeList?this.props.sourceData.timeList.map((time,index)=>{
-                        if(time.detail.service_provider_list === null || time.detail.room === null) return (<span className="timePeriod" key={index} data-index={index}>{time.time}</span>);
-                        else if(index === this.props.sourceData.selectedDetail) return (<span className="timePeriod selectedTime" key={index} data-index={index}>{time.time}</span>);
-                        return (<span className="timePeriod available" key={index} data-index={index} onClick={this.setTime}>{time.time}</span>);
-                    }):<p>{t(this.state.hint)}</p>}
-                </div>
-                <p className="hint">{t("timeHint")}</p>
-            </Col>
-            <Button currentStep={1} clickHandle={this.props.nextStep} disabled={disabled}/>
-            </Row>
-            </Grid>
+            <div>
+                <Col md={5}>
+                    <Calendar 
+                        selectDayHandle={this.getTimePeriods} 
+                        date={this.props.reservation.date}
+                        changeMonthHandle={this.clearDateAndTimeAndTimeList}
+                    />
+                </Col>
+                <Col md={5}>
+                    <div className="timePeriods">
+                        {this.props.sourceData.timeList?this.props.sourceData.timeList.map((time,index)=>{
+                            if(time.time == this.props.reservation.time) return (<span className="timePeriod selectedTime" key={index} data-index={index}>{time.time}</span>);
+                            return (<span className={time.select?"timePeriod available":"timePeriod"} key={index} data-index={index} onClick={time.select?this.setTime:null}>{time.time}</span>);
+                        }):<p>{t(this.state.hint)}</p>}
+                    </div>
+                    <p className="hint">{t("timeHint")}</p>
+                </Col>
+                <Button currentStep={2} clickHandle={this.props.send} disabled={disabled}/>
+            </div>
         );
     }
 }
-
-const mapStateToProps = (state)=>{
-    return {
-        loading: state.loading,
-        reservation: state.reservation,
-        sourceData: state.sourceData
-    }
-}
-
-const mapDispatchToProps = (dispatch)=>{
-    return bindActionCreators({
-        toggleLoading: toggleLoading,
-        setReservation: setReservation,
-        setSourceData: setSourceData,
-        clearSourceData: clearSourceData
-    },dispatch);
-  }
-  
-CheckTime = connect(mapStateToProps,mapDispatchToProps)(CheckTime);  
 
 module.exports = translate()(CheckTime);
