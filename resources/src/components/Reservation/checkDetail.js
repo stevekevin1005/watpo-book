@@ -25,18 +25,7 @@ class CheckDetail extends React.Component{
 
             // 程式選中的房間是否會附衛浴，影響房間配置，與客人實際需求無關
             shower: reservation.shower===null? shower : reservation.shower,
-            maxGuestNum: -1,
-
-            operator: reservation.operator || [],
-            guestNum: reservation.guestNum || -1,
-            roomId: reservation.roomId || null,
-            name: reservation.name || "",
-            contactNumber: reservation.contactNumber || "",
-
-            room: this.props.sourceData.room || null,
-            service_provider_list: this.props.sourceData.service_provider_list || null,
-
-            loading: false
+            maxGuestNum: -1
         };
 
         this.setOperator = this.setOperator.bind(this);
@@ -47,19 +36,17 @@ class CheckDetail extends React.Component{
 
         this.setMaxGuestNum = this.setMaxGuestNum.bind(this);
         this.setShower = this.setShower.bind(this);
-
-        this.save = this.save.bind(this);
-        this.toggleLoading = this.toggleLoading.bind(this);
+        this.nextStep = this.nextStep.bind(this);
     }
     componentDidMount(){
-        if(this.state.room){
+        if(this.props.sourceData.room){
             // 已輸入過此階段的資料，設定可選擇人數的最大值
             this.setMaxGuestNum();
         }else{
             const that = this,
             csrf_token = document.querySelector('input[name="_token"]').value;    
 
-            this.toggleLoading();
+            this.props.toggleLoading();
             axios({
                 method: "get",
                 url: "../api/service_provider_and_room_list",
@@ -72,53 +59,55 @@ class CheckDetail extends React.Component{
             })
             .then(function (response) {
                 if(response.statusText == "OK"){
-                    that.setState({
-                        service_provider_list: response.data.service_provider_list,
-                        room: response.data.room,
+                    that.props.setReservation({
                         guestNum: 1,
                         operator: [response.data.service_provider_list[0].id]
                     },()=>{
-                        that.setMaxGuestNum(that.setRoomId);
+                        that.props.setSourceData({
+                            service_provider_list: response.data.service_provider_list,
+                            room: response.data.room
+                        },()=>{
+                            that.setMaxGuestNum(that.setRoomId);
+                            that.props.toggleLoading();
+                        });
                     });
-                    that.toggleLoading();
                 }
             })
             .catch(function (error) {
                 console.log(error);
                 that.props.showErrorPopUp();
-                that.toggleLoading();
+                that.props.toggleLoading();
             });
         }
-    }
-    toggleLoading(){
-        this.setState({loading: !this.state.loading});
     }
     setOperator(event){
         const value = +event.target.options[event.target.selectedIndex].value, // id
               index = +event.target.dataset.index; // index to save at
 
-        let operator = JSON.parse(JSON.stringify(this.state.operator));
+        let operator = JSON.parse(JSON.stringify(this.props.reservation.operator));
         operator[index]=value;
 
-        this.setState({
-            operator
-        });
+        this.props.setReservation({operator});
     }
     setShower(event){
         const el = event.target.options[event.target.selectedIndex],
-              value = (el.value=="true");
+              shower = (el.value=="true"),
+              that = this;
               
         // get and set max guest num 
-        this.setState({shower: value, guestNum: 1},()=>{
-            this.setMaxGuestNum(this.setRoomId);
+        this.setState({shower},()=>{
+            that.props.setReservation({shower, guestNum: 1, operator: [this.props.sourceData.service_provider_list[0].id]},()=>{
+                that.setMaxGuestNum(that.setRoomId);
+            });
         });
     }
     setGuestNum(event){
-        const value = +event.target.options[event.target.selectedIndex].value,
-              operator = this.state.service_provider_list.slice(0, value).map(operator=>operator.id);
+        const guestNum = +event.target.options[event.target.selectedIndex].value,
+              operator = this.props.sourceData.service_provider_list.slice(0, guestNum).map(operator=>operator.id),
+              that = this;
 
-        this.setState({guestNum: value, operator},()=>{
-            this.setRoomId();
+        this.props.setReservation({guestNum, operator},()=>{
+            that.setRoomId();
         });
     }
     setName(){
@@ -126,29 +115,29 @@ class CheckDetail extends React.Component{
         if(this.state.nameHint !== "")this.setState({nameHint: ""});
 
         // set value to global state
-        const value = this.nameInput.value;
+        const name = this.nameInput.value;
 
         // set hint
-        this.setState({name: value});
-        if(value === "") this.setState({nameHint: "nameHint"});
+        this.props.setReservation({name});
+        if(name === "") this.setState({nameHint: "nameHint"});
     }
     setContactNumber(){
         // clear hint
         if(this.state.contactNumberHint !== "")this.setState({contactNumberHint: ""});
 
         // set value to global state
-        const value = this.numberInput.value;
-        this.setState({contactNumber: value});
+        const contactNumber = this.numberInput.value;
+        this.props.setReservation({contactNumber});
 
         // set hint
-        if(value === "") this.setState({contactNumberHint: "contactNumberHint_blank"});
-        else if(value.length < 8) this.setState({contactNumberHint: "contactNumberHint_length"});
+        if(contactNumber === "") this.setState({contactNumberHint: "contactNumberHint_blank"});
+        else if(contactNumber.length < 8 || isNaN(+contactNumber)) this.setState({contactNumberHint: "contactNumberHint_length"});
     }
     //
     setMaxGuestNum(fn){
         // max guest number is set in initializing, and whenever shower option changes, and is decided by service type
         const showerType = this.props.sourceData.services[this.props.reservation.service].shower,
-              rooms = this.state.room;
+              rooms = this.props.sourceData.room;
 
         let max = 0;
         switch(showerType){
@@ -180,9 +169,11 @@ class CheckDetail extends React.Component{
                     this.setState({shower: true});
                 // 客人想選有衛浴的房間但無符合項目
                 }else if(max === 0 && this.state.shower === true){
-                    this.setState({guestNum: -1});
-                    this.props.setReservation("guestNum", undefined);
-                    fn(true);
+                    this.props.setReservation({
+                        guestNum: 0,
+                        roomId: null,
+                        operator: []
+                    });
                     return;
                 }
                 break;
@@ -193,7 +184,7 @@ class CheckDetail extends React.Component{
                 }
         }
         // 確認目前可提供服務的師傅數量
-        const operatorNum = this.state.service_provider_list.length;
+        const operatorNum = this.props.sourceData.service_provider_list.length;
         if(operatorNum < max) max = operatorNum;
         
         this.setState({maxGuestNum: max},()=>{
@@ -202,10 +193,11 @@ class CheckDetail extends React.Component{
     }
     setRoomId(){
         // roomId is set in initializing and whenever shower option or guest number is set
-        const rooms = this.state.room,
-              guestNum = this.state.guestNum;
+        const rooms = this.props.sourceData.room,
+              guestNum = this.props.reservation.guestNum;
 
         let roomId;
+
         // 尋找人數剛好符合的房間
         for(let i = 0; i < rooms.length; i++){
             if(rooms[i].shower == this.state.shower && rooms[i].person == guestNum){
@@ -223,43 +215,36 @@ class CheckDetail extends React.Component{
                 }
             }
         }
-        this.setState({roomId});
+
+        this.props.setReservation({roomId});
     }
-    save(event){
+    nextStep(event){
         event.preventDefault();
 
         const { t } = this.props;
         let pass = true;
-        if(!this.state.name){
+        if(!this.props.reservation.name){
             this.setState({nameHint: "nameHint"});
             this.nameInput.focus();
             pass = false;
         }
-        if(!this.state.contactNumber){
+        if(!this.props.reservation.contactNumber){
             this.setState({contactNumberHint: "contactNumberHint_blank"});
             this.numberInput.focus();
             pass = false;
-        }else if(this.state.contactNumber.length < 8){
+        }else if(this.props.reservation.contactNumber.length < 8){
             this.setState({contactNumberHint: "contactNumberHint_length"});
             this.numberInput.focus();
             pass = false;
         }
         if(!pass) return;
 
-        this.props.saveReservationAndSourceData({
-            operator: this.state.operator,
-            guestNum: this.state.guestNum,
-            roomId: this.state.roomId,
-            name: this.state.name,
-            contactNumber: this.state.contactNumber,
-            shower: this.state.shower
-        },{
-            room: this.state.room,
-            service_provider_list: this.state.service_provider_list
-        }, this.props.nextStep);
+        this.props.nextStep();
     }
     render(){
-        const { t } = this.props;
+        const { t } = this.props,
+              reservation = this.props.reservation,
+              sourceData = this.props.sourceData;
 
         let guestNumEl = [], operators = [];
         if(this.state.maxGuestNum > 0){
@@ -269,22 +254,18 @@ class CheckDetail extends React.Component{
             }
         }
 
-        const selectedOperators = this.state.operator;
-        if(this.state.guestNum > 0 && this.state.service_provider_list){
-            for(let i = 0; i < this.state.guestNum;i++){
+        const selectedOperators = reservation.operator;
+        if(reservation.guestNum > 0 && sourceData.service_provider_list){
+            for(let i = 0; i < reservation.guestNum;i++){
                 // options of operators
-                operators.push(<FormControl bsClass="form-control operatorOption" componentClass="select" id={"operator"+i} data-index={i} onChange={this.setOperator} defaultValue={this.state.operator[i]?this.state.operator[i]:null} value={this.state.operator[i]?this.state.operator[i]:null}>
-                    {this.state.service_provider_list.map((operator, index)=>{
-                        let selected = false;
+                operators.push(<FormControl bsClass="form-control operatorOption" componentClass="select" id={"operator"+i} data-index={i} onChange={this.setOperator} defaultValue={reservation.operator[i]?reservation.operator[i]:null} value={reservation.operator[i]?reservation.operator[i]:null}>
+                    {sourceData.service_provider_list.map((operator, index)=>{
                         for(let j = 0 ; j < selectedOperators.length ; j++){
                             if(j === i) continue; // 當前的跟不指定不用確認
                             if(operator.id == selectedOperators[j]){
-                              selected = true;
-                              break;
+                                return null;
                            }
                          }
-                         
-                        if(selected) return null;
                         return (<option key={index} value={operator.id}>{operator.name}</option>);
                     })}
                 </FormControl>);
@@ -295,11 +276,11 @@ class CheckDetail extends React.Component{
             <div>
             <FormGroup>
                 <Col md={5}>
-                    {this.state.roomId && <div style={{marginBottom: "5px"}}><ControlLabel>{t("guestNum")}</ControlLabel>
-                    <FormControl componentClass="select" placeholder="select" defaultValue={this.state.guestNum} onChange={this.setGuestNum} value={this.state.guestNum}>
+                    {reservation.roomId && <div style={{marginBottom: "5px"}}><ControlLabel>{t("guestNum")}</ControlLabel>
+                    <FormControl componentClass="select" placeholder="select" defaultValue={reservation.guestNum} onChange={this.setGuestNum} value={reservation.guestNum}>
                         {guestNumEl}
                     </FormControl></div>}
-                    { (this.props.sourceData.services &&  this.props.reservation.service) && this.props.sourceData.services[this.props.reservation.service].shower === 1 && 
+                    { (sourceData.services &&  reservation.service) && sourceData.services[reservation.service].shower === 1 && 
                         <div style={{marginBottom: "5px"}}>
                             <ControlLabel>{t("showerOrNot")}</ControlLabel>
                             <FormControl componentClass="select" placeholder="select" defaultValue={this.state.shower} onChange={this.setShower}
@@ -309,7 +290,7 @@ class CheckDetail extends React.Component{
                             </FormControl>
                         </div>
                     }
-                    {this.state.roomId?<div>
+                    {reservation.roomId?<div>
                         <ControlLabel>{t("operator")}</ControlLabel>
                         {operators}
                     </div>:<p className="hint">{t("errorHint_noRoom")}</p>}
@@ -326,7 +307,7 @@ class CheckDetail extends React.Component{
                         placeholder={t("nameHint")+"..."}
                         inputRef={ref => { this.nameInput = ref; }}
                         onChange = {this.setName}
-                        defaultValue={this.state.name}
+                        defaultValue={reservation.name}
                     />
                     <FormControl.Feedback />
                     <p className="hint">{t(this.state.nameHint)}</p>
@@ -336,14 +317,13 @@ class CheckDetail extends React.Component{
                         placeholder="0912345678..."
                         inputRef={ref => { this.numberInput = ref; }}
                         onChange = {this.setContactNumber}
-                        defaultValue={this.state.contactNumber}
+                        defaultValue={reservation.contactNumber}
                     />
                     <FormControl.Feedback />
                     <p className="hint">{t(this.state.contactNumberHint)}</p>
                 </Col>
              </FormGroup>
-             <Button currentStep={1} clickHandle={this.save} disabled={this.state.loading}/>
-             {this.state.loading && <Col md={12}><LoadingAnimation /></Col>}
+             <Button currentStep={1} clickHandle={this.nextStep} disabled={this.props.loading}/>
             </div>
         );
     }

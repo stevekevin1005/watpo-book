@@ -36,11 +36,11 @@ class Calendar extends React.Component{
         });
 
         // // clear current displaying time periods
-        this.props.clearDateAndTimeAndTimeList();
+        this.props.changeMonthHandle();
     }
     selectDay(event){
         // send in year, month, day arguments
-        this.props.getTimePeriods(this.state.displayingYear, +this.state.displayingMonth, +event.target.innerHTML);
+        this.props.selectDayHandle(this.state.displayingYear, +this.state.displayingMonth, +event.target.innerHTML);
     }
     render(){
         const { t } = this.props, selectedDay = this.props.date?+this.props.date.split("/")[2]:-1;

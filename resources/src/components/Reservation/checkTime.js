@@ -13,103 +13,87 @@ class CheckTime extends React.Component{
         super(props);
 
         this.state = {
-            hint: "calendarHint",
-            date: null,
-            time: null,
-
-            timeList: null
+            hint: "calendarHint"
         };
 
         this.getTimePeriods = this.getTimePeriods.bind(this);
         this.setTime = this.setTime.bind(this);
         this.clearDateAndTimeAndTimeList = this.clearDateAndTimeAndTimeList.bind(this);
-        this.saveAndSend = this.saveAndSend.bind(this);
-        this.toggleLoading = this.toggleLoading.bind(this);
     }    
-    toggleLoading(){
-        this.setState({loading: !this.state.loading});
-    }
     getTimePeriods(year,month,day){
         const that = this, 
-        date = year+"/"+ (month<10?"0"+month:month) +"/"+ (day<10?"0"+day:day),
-        csrf_token = document.querySelector('input[name="_token"]').value;
+            reservation = this.props.reservation,
+            date = year+"/"+ (month<10?"0"+month:month) +"/"+ (day<10?"0"+day:day),
+            csrf_token = document.querySelector('input[name="_token"]').value;
         
-        this.setState({date});
+        this.props.setReservation({date});
 
-        this.toggleLoading();
+        this.props.toggleLoading();
         axios({
             method: "get",
             url: "../api/time_list",
             params: {
-                shop_id: this.props.reservation.shop, 
-                service_id: this.props.reservation.service,
+                shop_id: reservation.shop, 
+                service_id: reservation.service,
                 date: date,
-                person: this.props.reservation.guestNum,
-                service_provider_id: this.props.reservation.operator.join(""),
-                room_id: this.props.reservation.roomId
+                person: reservation.guestNum,
+                service_provider_id: reservation.operator.join(""),
+                room_id: reservation.roomId
             },
             headers: {'X-CSRF-TOKEN': csrf_token},
             responseType: 'json'
         })
         .then(function (response) {
             if(response.statusText == "OK"){
-                that.setState({timeList: response.data});
+                that.props.setSourceData({timeList: response.data});
 
-                that.toggleLoading();
+                that.props.toggleLoading();
                 if(response.data.length === 0) that.setState({hint: "calendarError_noTimelist"});
             }
         })
         .catch(function (error) {
             console.log(error);
-            that.toggleLoading();
+            that.props.toggleLoading();
             that.setState({hint: "errorHint_system"});
         });
     }
     setTime(event){
         const time = event.target.innerHTML;
-        this.setState({time});
+        this.props.setReservation({time});
     }
     clearDateAndTimeAndTimeList(){
-        this.setState({
+        this.props.setReservation({
             date: null,
-            time: null,
-            timeList: null
+            time: null
+        },()=>{
+            this.props.setSourceData({timeList: null});
         });
-    }
-    saveAndSend(){
-        this.props.saveReservationAndSourceData({
-            time: this.state.time,
-            date: this.state.date
-        }, {
-            timeList: this.state.timeList
-        }, this.props.send);
     }
     render(){
         if(!this.props.reservation.roomId) location.href = '../reservation/0';
         const reservation = this.props.reservation,
-              disabled = (!this.state.date || !this.state.time) || this.props.loading,
+              disabled = (!reservation.date || !reservation.time) || this.props.loading,
               { t } = this.props;
 
         return(
             <div>
                 <Col md={5}>
                     <Calendar 
-                        getTimePeriods={this.getTimePeriods} 
-                        date={this.state.date}
-                        clearDateAndTimeAndTimeList={this.clearDateAndTimeAndTimeList}
+                        selectDayHandle={this.getTimePeriods} 
+                        date={this.props.reservation.date}
+                        changeMonthHandle={this.clearDateAndTimeAndTimeList}
                     />
                 </Col>
                 <Col md={5}>
                     <div className="timePeriods">
-                        {this.state.timeList?this.state.timeList.map((time,index)=>{
-                            if(time.time == this.state.time) return (<span className="timePeriod selectedTime" key={index} data-index={index}>{time.time}</span>);
+                        {this.props.sourceData.timeList?this.props.sourceData.timeList.map((time,index)=>{
+                            if(time.time == this.props.reservation.time) return (<span className="timePeriod selectedTime" key={index} data-index={index}>{time.time}</span>);
                             return (<span className={time.select?"timePeriod available":"timePeriod"} key={index} data-index={index} onClick={time.select?this.setTime:null}>{time.time}</span>);
                         }):<p>{t(this.state.hint)}</p>}
                     </div>
                     <p className="hint">{t("timeHint")}</p>
                 </Col>
-                <Button currentStep={2} clickHandle={this.saveAndSend} disabled={disabled}/>
-                {this.state.loading && <Col md={12}><LoadingAnimation /></Col>}
+                <Button currentStep={2} clickHandle={this.props.send} disabled={disabled}/>
             </div>
         );
     }

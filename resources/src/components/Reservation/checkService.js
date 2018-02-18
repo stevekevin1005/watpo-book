@@ -9,17 +9,60 @@ const Col = ReactBootstrap.Col,
 class CheckService extends React.Component{
     constructor(props){
         super(props);
-        
-        this.state={
-            shop: this.props.reservation.shop || 1,
-            service: this.props.reservation.service || 1,
-
-            services: this.props.sourceData.services || null,
-            shops: this.props.sourceData.shops || null
-        };
-
         this.setReservation = this.setReservation.bind(this);
-        this.save = this.save.bind(this);
+    }
+    componentDidMount(){
+        if(!this.props.sourceData.services || !this.props.sourceData.shops){
+            const that = this,
+                csrf_token = document.querySelector('input[name="_token"]').value;    
+            let finished = 0;
+
+            this.props.toggleLoading();
+
+            axios({
+                method: "get",
+                url: "../api/shop_list",
+                headers: {'X-CSRF-TOKEN': csrf_token},
+                responseType: 'json'
+            })
+            .then(function (response) {
+                if(response.statusText == "OK"){
+                    that.props.setSourceData({shops: response.data});
+                    finished += 1;
+                    if(finished == 2){
+                        that.props.toggleLoading();
+                        that.props.setReservation({shop: 1, service: 1});
+                    }
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                if(finished == 2) that.props.toggleLoading();
+                that.props.showErrorPopUp();
+            });
+
+            axios({
+                method: "get",
+                url: "../api/service_list",
+                responseType: 'json',
+                headers: {'X-CSRF-TOKEN': csrf_token}
+            })
+            .then(function (response) {
+                if(response.statusText == "OK"){
+                    that.props.setSourceData({services: response.data});
+                    finished += 1;
+                    if(finished == 2){
+                        that.props.toggleLoading();
+                        that.props.setReservation({shop: 1, service: 1});
+                    }
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                if(finished == 2) that.props.toggleLoading();
+                that.props.showErrorPopUp();
+            });
+        }
     }
     setReservation(event){
         const el = event.target,
@@ -28,44 +71,35 @@ class CheckService extends React.Component{
 
         let data = {};
         data[group] = index;
-        this.setState(data);
-    }
-    save(){
-        this.props.saveReservationAndSourceData({
-            shop: this.state.shop,
-            service: this.state.service
-        },{
-            shops: this.state.shops,
-            services: this.state.services
-        },
-            this.props.nextStep
-        );
+        this.props.setReservation(data);
     }
     render(){
         const { t } = this.props,
-              disabled = ( !this.state.shop || !this.state.service ) || this.props.loading;
+              reservation = this.props.reservation,
+              sourceData = this.props.sourceData,
+              disabled = ( !reservation.shop || !reservation.service ) || this.props.loading;
 
         return(
                 <div style={{paddingTop: "5px"}}>
                     <Col md={7}>
                         <FormGroup>
                             <ControlLabel bsClass="control-label branch">{t("branch")}</ControlLabel>
-                            <FormControl componentClass="select" id="shop" placeholder="..." defaultValue={this.state.shop} onChange={this.setReservation}>
-                                {this.state.shops && this.state.shops.map((shop,index)=>{
+                            <FormControl componentClass="select" id="shop" placeholder="..." defaultValue={reservation.shop} onChange={this.setReservation}>
+                                {sourceData.shops && sourceData.shops.map((shop,index)=>{
                                     return (<option key={index} value={shop.id}>{shop.name}</option>);
                                 })}
                             </FormControl>
                         </FormGroup>
                         <FormGroup>
                             <ControlLabel>{t("service")}</ControlLabel>
-                            <FormControl componentClass="select" id="service" defaultValue={this.state.service} placeholder="..." onChange={this.setReservation}>
-                                {this.state.services && this.state.services.map((service,index)=>{
+                            <FormControl componentClass="select" id="service" defaultValue={reservation.service} placeholder="..." onChange={this.setReservation}>
+                                {sourceData.services && sourceData.services.map((service,index)=>{
                                     return (<option key={index} value={service.id}>{service.title}</option>);
                                 })}
                             </FormControl>
                         </FormGroup>
                     </Col>
-                    <Button currentStep={0} clickHandle={this.save} disabled={disabled}/>
+                    <Button currentStep={0} clickHandle={this.props.nextStep} disabled={disabled}/>
                 </div>
         );
     }

@@ -34,14 +34,15 @@ class Reservation extends React.Component{
                 service: null,
 
                 guestNum: 0,
-                shower: null,
                 operator: [],
                 roomId: null,
                 name: null,
                 contactNumber: null,
 
                 date: null,
-                time: null
+                time: null,
+
+                shower: false
             },
 
             sourceData: {
@@ -50,100 +51,61 @@ class Reservation extends React.Component{
                 timeList: null,
                 service_provider_list: null,
                 room: null
-            }
+            },
+
+            loading: false
         };
 
-        this.saveReservationAndSourceData = this.saveReservationAndSourceData.bind(this);
+        this.setReservation = this.setReservation.bind(this);
         this.clearData = this.clearData.bind(this);
+        this.setSourceData = this.setSourceData.bind(this);
         this.clearSourceData = this.clearSourceData.bind(this);
         this.send = this.send.bind(this);
         this.showErrorPopUp = this.showErrorPopUp.bind(this);
+        this.toggleLoading = this.toggleLoading.bind(this);
     }
     componentDidMount(){
         if(this.props.checkOrdersInfo != {}){
             this.props.clearCheckOrdersInfo("name");
             this.props.clearCheckOrdersInfo("contactNumber");
         }
+    }
+    toggleLoading(){
+        this.setState({loading: !this.state.loading});
+    }
+    setSourceData(data, callback){
+        let sourceData = JSON.parse(JSON.stringify(this.state.sourceData));
 
-            const that = this,
-                  csrf_token = document.querySelector('input[name="_token"]').value;    
-            let finished = 0;
+        Object.keys(data).forEach((key,i)=>{
+            sourceData[key] = data[key];
+        });
 
-            this.props.toggleLoading(true);
-    
-            axios({
-                method: "get",
-                url: "../api/shop_list",
-                headers: {'X-CSRF-TOKEN': csrf_token},
-                responseType: 'json'
-            })
-            .then(function (response) {
-                if(response.statusText == "OK"){
-                    let sourceData = JSON.parse(JSON.stringify(that.state.sourceData));
-                    sourceData["shops"] = response.data;
-                    that.setState({sourceData});
-                    finished += 1;
-                    if(finished == 2) that.props.toggleLoading(false);;
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-                if(finished == 2) that.props.toggleLoading(false);
-                that.showErrorPopUp();
-            });
+        this.setState({
+            sourceData
+        },()=>{
+            if(callback) callback();
+        });
+    }
+    setReservation(data, callback){
+        let reservation = JSON.parse(JSON.stringify(this.state.reservation));
 
-            axios({
-                method: "get",
-                url: "../api/service_list",
-                responseType: 'json',
-                headers: {'X-CSRF-TOKEN': csrf_token}
-            })
-            .then(function (response) {
-                if(response.statusText == "OK"){
-                    let sourceData = JSON.parse(JSON.stringify(that.state.sourceData));
-                    sourceData["services"] = response.data;
-                    that.setState({sourceData});
-                    finished += 1;
-                    if(finished == 2) that.props.toggleLoading(false);
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-                if(finished == 2) that.props.toggleLoading(false);
-                that.showErrorPopUp();
-            });
+        Object.keys(data).forEach((key,i)=>{
+            reservation[key] = data[key];
+        });
+
+        this.setState({
+            reservation
+        },()=>{
+            if(callback) callback();
+        });
     }
     clearSourceData(key){
-        this.props.toggleLoading(true);
+        this.toggleLoading();
         const sourceData = JSON.parse(JSON.stringify(this.state.sourceData));
         sourceData[key] = null;
         this.setState({
             sourceData
-        }, this.props.toggleLoading(false));
-    }
-    saveReservationAndSourceData(newReservationData, newSourceData, callback){
-        const reservation = JSON.parse(JSON.stringify(this.state.reservation)),
-              sourceData = JSON.parse(JSON.stringify(this.state.sourceData));
-
-        if(newReservationData){
-            Object.keys(newReservationData).forEach((key,i)=>{
-                reservation[key] = newReservationData[key];
-            });
-        }
-        if(newSourceData){
-            Object.keys(newSourceData).forEach((key,i)=>{
-                sourceData[key] = newSourceData[key];
-            });
-        }
-
-        this.props.toggleLoading(true);
-        this.setState({
-            reservation,
-            sourceData
-        },()=>{
-            if(callback) callback();
-            this.props.toggleLoading(false);
-        });
+        }, this.toggleLoading());
     }
     clearData(step){
         let sourceData = JSON.parse(JSON.stringify(this.state.sourceData)),
@@ -151,7 +113,7 @@ class Reservation extends React.Component{
         
         switch(step){
             case 0:
-                this.props.toggleLoading(true);
+                this.toggleLoading();
                 sourceData["service_provider_list"] = null;
                 sourceData["room"] = null;
                 const newReservationData = {
@@ -171,14 +133,14 @@ class Reservation extends React.Component{
                 this.setState({ 
                     sourceData, 
                     reservation: newReservationData
-                }, this.props.toggleLoading.bind(null, false));
+                }, this.toggleLoading());
                 break;
             case 1:
-                this.props.toggleLoading(true);
+                this.toggleLoading();
                 reservation["date"] = null;
                 reservation["time"] = null;
                 sourceData["timeList"] = null;
-                this.setState({ sourceData, reservation}, this.props.toggleLoading.bind(null, false));
+                this.setState({ sourceData, reservation}, this.toggleLoading);
                 break;
             case 2:
         }
@@ -227,7 +189,7 @@ class Reservation extends React.Component{
         }
 
         // call API
-        this.props.toggleLoading(true);
+        this.toggleLoading();
         axios({
             method: "post",
             url: "/api/order",
@@ -247,7 +209,7 @@ class Reservation extends React.Component{
         }).then(function(response){
             if(response.statusText == "OK"){
                 // show success alert
-                that.props.toggleLoading(false);
+                that.toggleLoading();
                 that.setState({
                     success: true,
                     showAlert: true,
@@ -256,7 +218,7 @@ class Reservation extends React.Component{
                 });
             }else{
                 // show failure alert
-                that.props.toggleLoading(false);
+                that.toggleLoading();
                 that.setState({
                     showAlert: true,
                     alertTitle: t("error"),
@@ -266,7 +228,7 @@ class Reservation extends React.Component{
         }).catch(function(error){
             console.log(error);
             // error handle
-            that.props.toggleLoading(false);
+            that.toggleLoading();
             that.showErrorPopUp();
         });
     }
@@ -279,28 +241,28 @@ class Reservation extends React.Component{
         });
     }
     render(){
-        const Step_ = props => {
-            return (<Step 
-                        {...props} 
-                        saveReservationAndSourceData = {this.saveReservationAndSourceData}
-                        clearSourceData = {this.clearSourceData}
-                        send = {this.send}
-                        clearData = {this.clearData}
-                        showErrorPopUp = {this.showErrorPopUp}
-
-                        reservation = {this.state.reservation}
-                        sourceData = {this.state.sourceData}
-                    />);
-        }
-
         return(
             <Grid>
                 <div className="reservationContainer">
                     <Row className="reservationGrid">
                         <div className="reservationContent" style={{padding:"16px 0"}}>
-                            <Route path="/reservation/:step" component={Step_}/>
+                            <Step 
+                                {...this.props} 
+                                saveReservationAndSourceData = {this.saveReservationAndSourceData}
+                                setReservation = {this.setReservation}
+                                setSourceData = {this.setSourceData}
+                                clearSourceData = {this.clearSourceData}
+                                send = {this.send}
+                                clearData = {this.clearData}
+                                showErrorPopUp = {this.showErrorPopUp}
+                                toggleLoading = {this.toggleLoading}
+
+                                reservation = {this.state.reservation}
+                                sourceData = {this.state.sourceData}
+                                loading = {this.state.loading}
+                            />
                         </div>    
-                    {this.props.loading && <Col md={12}><LoadingAnimation /></Col>}
+                    {this.state.loading && <Col md={12}><LoadingAnimation /></Col>}
                     </Row>                
                 </div>
                 <SweetAlert
@@ -309,6 +271,7 @@ class Reservation extends React.Component{
                     text={this.state.alertText}
                     onConfirm={() => {
                         this.setState({ showAlert: false });
+                        if(this.state.loading) this.setState({loading: false});
                         if(this.state.success) location.reload();
                     }}
                 />
@@ -319,15 +282,13 @@ class Reservation extends React.Component{
 
 const mapStateToProps = (state)=>{
     return {
-        checkOrdersInfo: state.checkOrdersInfo,
-        loading: state.loading
+        checkOrdersInfo: state.checkOrdersInfo
     }
 }
 
 const mapDispatchToProps = (dispatch)=>{
     return bindActionCreators({
-        clearCheckOrdersInfo: clearCheckOrdersInfo,
-        toggleLoading: toggleLoading
+        clearCheckOrdersInfo: clearCheckOrdersInfo
     },dispatch);
 }
   
