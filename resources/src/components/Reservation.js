@@ -2,9 +2,9 @@
 
 import Steps from "./Reservation/Steps";
 import Step from "./Reservation/Step";
-import CheckDetail from "./Reservation/checkDetail";
-import CheckService from "./Reservation/checkService";
-import CheckTime from "./Reservation/checkTime";
+import CheckDetail from "./Reservation/CheckDetail";
+import CheckService from "./Reservation/CheckService";
+import CheckTime from "./Reservation/CheckTime";
 import { Link, Route } from 'react-router-dom';
 import { translate } from 'react-i18next';
 
