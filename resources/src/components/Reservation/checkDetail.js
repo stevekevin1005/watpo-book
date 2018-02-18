@@ -68,7 +68,7 @@ class CheckDetail extends React.Component{
                             room: response.data.room
                         },()=>{
                             that.setMaxGuestNum(that.setRoomId);
-                            that.props.toggleLoading();
+                            if(that.props.loading) that.props.toggleLoading();
                         });
                     });
                 }
@@ -201,7 +201,6 @@ class CheckDetail extends React.Component{
         // 尋找人數剛好符合的房間
         for(let i = 0; i < rooms.length; i++){
             if(rooms[i].shower == this.state.shower && rooms[i].person == guestNum){
-                // console.log(rooms[i]);
                 roomId = rooms[i].id;
                 break;
             }
@@ -232,7 +231,7 @@ class CheckDetail extends React.Component{
             this.setState({contactNumberHint: "contactNumberHint_blank"});
             this.numberInput.focus();
             pass = false;
-        }else if(this.props.reservation.contactNumber.length < 8){
+        }else if(this.props.reservation.contactNumber.length < 8 || isNaN(+this.props.reservation.contactNumber)){
             this.setState({contactNumberHint: "contactNumberHint_length"});
             this.numberInput.focus();
             pass = false;
@@ -259,6 +258,7 @@ class CheckDetail extends React.Component{
             for(let i = 0; i < reservation.guestNum;i++){
                 // options of operators
                 operators.push(<FormControl bsClass="form-control operatorOption" componentClass="select" id={"operator"+i} data-index={i} onChange={this.setOperator} defaultValue={reservation.operator[i]?reservation.operator[i]:null} value={reservation.operator[i]?reservation.operator[i]:null}>
+                    <option key={-1} value={0}>不指定</option>
                     {sourceData.service_provider_list.map((operator, index)=>{
                         for(let j = 0 ; j < selectedOperators.length ; j++){
                             if(j === i) continue; // 當前的跟不指定不用確認
@@ -293,7 +293,7 @@ class CheckDetail extends React.Component{
                     {reservation.roomId?<div>
                         <ControlLabel>{t("operator")}</ControlLabel>
                         {operators}
-                    </div>:<p className="hint">{t("errorHint_noRoom")}</p>}
+                    </div>:sourceData.room?<p className="hint">{t("errorHint_noRoom")}</p>:null}
                </Col>
                
                <Col md={1}>

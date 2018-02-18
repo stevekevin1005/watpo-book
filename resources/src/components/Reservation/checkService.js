@@ -30,7 +30,7 @@ class CheckService extends React.Component{
                     that.props.setSourceData({shops: response.data});
                     finished += 1;
                     if(finished == 2){
-                        that.props.toggleLoading();
+                        if(that.props.loading) that.props.toggleLoading();
                         that.props.setReservation({shop: 1, service: 1});
                     }
                 }
@@ -52,7 +52,7 @@ class CheckService extends React.Component{
                     that.props.setSourceData({services: response.data});
                     finished += 1;
                     if(finished == 2){
-                        that.props.toggleLoading();
+                        if(that.props.loading) that.props.toggleLoading();
                         that.props.setReservation({shop: 1, service: 1});
                     }
                 }

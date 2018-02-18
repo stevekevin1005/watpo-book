@@ -27,7 +27,7 @@ class Step extends React.Component{
                 break;
             case 1:
                 if(!this.props.reservation.shop || !this.props.reservation.service) location.href = '../reservation/0';
-                if(this.props.reservation.time && this.props.reservation.date) this.props.clearData(+this.props.match.params.step);
+                if(this.props.reservation.date) this.props.clearData(+this.props.match.params.step);
                 if(this.props.sourceData.timeList) this.props.clearSourceData("timeList");
                 break;
             case 2:
