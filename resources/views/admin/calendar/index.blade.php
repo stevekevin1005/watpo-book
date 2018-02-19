@@ -550,12 +550,12 @@
         var t;
         function Timeout(){
             render_order_list();
-            t = setTimeout(Timeout, 1*1000*30);
+            t = setTimeout(Timeout, 1*1000*10);
         }
         function ReCalculate(){
             clearTimeout(oTimerId);
             clearTimeout(t);
-            oTimerId = setTimeout(Timeout, 1*1000*30);
+            oTimerId = setTimeout(Timeout, 1*1000*10);
         }
         document.onmousedown = ReCalculate;
         document.onmousemove = ReCalculate;

@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use Hash, Exception, DB;
+use Hash, Exception, DB, DateTime, DateInterval;
 use App\Models\Shop;
 use App\Models\Service;
 use App\Models\ServiceProvider;
@@ -118,28 +118,31 @@ class BookController extends Controller
 			if(!$person){
 				throw new Exception("缺少人數", 1);
 			}
-			if(!$service_provider_id){
-				throw new Exception("缺少師傅ID", 1);
-			}
-			if(!$room_id){
-				throw new Exception("缺少房間ID", 1);
-			}
-
 
 
 			$service = Service::where('id', $service_id)->first();
 			$shop = Shop::where('id', $shop_id)->first();
 			
-			$start_time = strtotime($date.' '.$shop->start_time);
-			$end_time = strtotime($date.' '.$shop->end_time);
+
+			$start_time = new DateTime($date.' '.$shop->start_time);
+
+			$end_time = new DateTime($date.' '.$shop->end_time);
 			if($end_time <= $start_time){
-				$end_time = strtotime("+1 day", $end_time);
+				$end_time->add(new DateInterval("P1D"));
 			}
+			
 			$i = 0;
 			while($start_time <= $end_time){
-				$time_list[$i]['time'] = date("H:i:s", $start_time);
-				$time_list[$i]['select'] = $this->time_option($date, $start_time, $service->time, $service->shower, $shop_id, $person, $service_provider_id, $room_id);
-				$start_time = strtotime("+30 min", $start_time); 
+				$time_list[$i]['time'] = $start_time->format('H:i:s');
+
+				if(new DateTime(date("Y-m-d H:i:s")) > $start_time){
+					$time_list[$i]['select'] = false;
+				}
+				else{
+					$time_list[$i]['select'] = $this->time_option($date, $start_time->format('Y-m-d H:i:s'), $service->time, $service->shower, $shop_id, $person, $service_provider_id);
+				}
+				$start_time->add(new DateInterval("PT30M"));
+
 				$i++;
 			}
 
@@ -153,38 +156,43 @@ class BookController extends Controller
 		}
 			
 	}
-	private function time_option($date, $start_time, $service_time, $shower,$shop_id, $person, $service_provider_id, $room_id){
+	private function time_option($date, $start, $service_time, $shower,$shop_id, $person, $service_provider_id){
 		
 		$month = date("Y-m", strtotime($date));
 
-		$end_time = strtotime("+".$service_time." min", $start_time);
+		$start_time = new Datetime($start);
+		$end_time = new Datetime($start);
+		$end_time->add(new DateInterval("PT".$service_time."M"));
 
 		$service_provider_id_list = explode(",", $service_provider_id);
-
+		foreach($service_provider_id_list as $index => $service_provider_id){
+			if($service_provider_id == '0'){
+				unset($service_provider_id_list[$index]);
+			}
+		}
 		
 		$service_providers = ServiceProvider::whereHas('shifts' ,function ($query) use ($month) {
 		    $query->where('month', $month);
 		})->with(['shifts' => function ($query) use ($month) {
 		    $query->where('month', $month);
 		}])->whereDoesntHave('leaves' ,function ($query) use ($start_time, $end_time) {
-		    $query->where('start_time', '<', date("Y/m/d H:i:s", $end_time));
-		    $query->where('end_time', '>', date("Y/m/d H:i:s", $start_time));
+		    $query->where('start_time', '<', $end_time);
+		    $query->where('end_time', '>', $start_time);
 		})->whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
 			$query->where('status', '!=', 3);
 			$query->where('status', '!=', 4);
-		    $query->where('start_time', '<', date("Y/m/d H:i:s", $end_time));
-		    $query->where('end_time', '>', date("Y/m/d H:i:s", $start_time));
+		    $query->where('start_time', '<', $end_time);
+		    $query->where('end_time', '>', $start_time);
 		})->where('shop_id', $shop_id)->get();
 
 		$service_provider_list = [];
 		foreach($service_providers as $service_provider){
 			$shift = $service_provider->shifts->first();
-			$on_duty = strtotime($date." ".$shift->start_time);
-			$off_duty = strtotime($date." ".$shift->end_time);
+			$on_duty = new DateTime($date." ".$shift->start_time);
+			$off_duty =  new DateTime($date." ".$shift->end_time);
 			if($off_duty < $on_duty){
-				$off_duty = strtotime("+1 day", $start_time);
+				$off_duty->add(new DateInterval("P1D"));
 			}
-			
 			if($on_duty <= $start_time && $off_duty >= $end_time){
 				$service_provider_list[] = $service_provider->id;
 			}
@@ -198,12 +206,13 @@ class BookController extends Controller
 			return false;
 		}
 
+		$start_time->sub(new DateInterval('PT30M'));
 		$room = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
 			$query->where('status', '!=', 3);
 			$query->where('status', '!=', 4);
-		    $query->where('start_time', '<', date("Y/m/d H:i:s", $end_time));
-		    $query->where('end_time', '>', date("Y/m/d H:i:s", $start_time));
-		})->where('id', $room_id)->first();
+		    $query->where('start_time', '<=', $end_time);
+		    $query->where('end_time', '>=', $start_time);
+		})->where('person', '>=', $person)->first();
 
 		if(!$room){
 			return false;
@@ -270,14 +279,15 @@ class BookController extends Controller
 					throw new Exception("該師傅該時段已有約 請重新選擇", 1);
 				}
 			}
-			$room = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
-					$query->where('status', '!=', 3);
-					$query->where('status', '!=', 4);
-			    $query->where('start_time', '<', $end_time);
-			    $query->where('end_time', '>', $start_time);
-			}])->where('id', $room_id)->first();
 
-			if($room->orders->count() > 0){
+			$room = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
+				$query->where('status', '!=', 3);
+				$query->where('status', '!=', 4);
+			    $query->where('start_time', '<=', $end_time);
+			    $query->where('end_time', '>=', $start_time);
+			})->where('person', '>=', $person)->orderBy('person', 'asc')->first();
+
+			if(!$room){
 				throw new Exception("該時段房間已有預訂 請重新選擇", 1);
 			}
 
@@ -287,7 +297,7 @@ class BookController extends Controller
 			$order->status = 1;
 			$order->person = $person;
 			$order->service_id = $service_id;
-			$order->room_id = $room_id;
+			$order->room_id = $room->id;
 			$order->shop_id = $shop_id;
 			$order->start_time = $start_time;
 			$order->end_time = $end_time;
@@ -297,13 +307,13 @@ class BookController extends Controller
 				$service_provider->orders()->save($order);
 			}
 
-			return response()->json('預約成功', 200);
+			return response()->json('預約成功', 200, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 		catch(Exception $e){
-			return response()->json($e->getMessage(), 400);
+			return response()->json($e->getMessage(), 400, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 		catch(\Illuminate\Database\QueryException $e){
-			return response()->json('資料庫錯誤, 請洽系統商!', 400);
+			return response()->json('資料庫錯誤, 請洽系統商!', 400, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 	}
 
@@ -333,13 +343,13 @@ class BookController extends Controller
 			$order = Order::where('id', $order_id)->where('phone', $phone)->where('name', $name)->first();
 			$order->status = 3;
 			$order->save();
-			return response()->json('預約取消成功!', 200);
+			return response()->json('預約取消成功!', 200, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 		catch(Exception $e){
-			return response()->json($e->getMessage(), 400);
+			return response()->json($e->getMessage(), 400, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 		catch(\Illuminate\Database\QueryException $e){
-			return response()->json('資料庫錯誤, 請洽系統商!', 400);
+			return response()->json('資料庫錯誤, 請洽系統商!', 400, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 	}
 }
