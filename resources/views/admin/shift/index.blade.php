@@ -67,14 +67,14 @@
             <thead>
                 <th>師傅</th>
                 <th>上班時間</th>
-                <th>下班時間</th>
+                <th>下班時間@{{:start_time}}</th>
             </thead>
             <tbody>
                 @{{for serviceProviders}}
                 <tr class="gradeX">
                     <td>@{{:name}}<input type="hidden" name="shifts[@{{:#index}}][id]" value="@{{:id}}" class="form-control"></td>
-                    <td><input type="time" name="shifts[@{{:#index}}][start_time]" class="form-control" @{{if start_time}} value="@{{:start_time}}" @{{/if}} required></td>
-                    <td><input type="time" name="shifts[@{{:#index}}][end_time]" class="form-control" @{{if end_time}} value="@{{:end_time}}" @{{/if}} required></td>
+                    <td><input type="time" name="shifts[@{{:#index}}][start_time]" class="form-control" @{{if start_time}} value="@{{:start_time}}" @{{else}} value="@{{:start_time}}" @{{/if}}  required></td>
+                    <td><input type="time" name="shifts[@{{:#index}}][end_time]" class="form-control" @{{if end_time}} value="@{{:end_time}}" @{{else}} value="@{{:end_time}}" @{{/if}} required></td>
                 </tr>
                 @{{/for}}
             </tbody>

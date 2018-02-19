@@ -31,6 +31,8 @@ class ShiftController extends Controller
 			$shop_id = $request->shop_id;
 			$month = $request->month;
 
+			$shop = Shop::where('id', $shop_id)->first();
+
 			$serviceProviders = ServiceProvider::where('shop_id', $shop_id)->with(['shifts' => function($query) use ($month){
 				$query->where('month', $month);
 			}])->get();
@@ -41,8 +43,8 @@ class ShiftController extends Controller
 					$serviceProvider->end_time = $serviceProvider->shifts[0]['end_time'];
 				}
 				else{
-					$serviceProvider->start_time = null;
-					$serviceProvider->end_time = null;
+					$serviceProvider->start_time = $shop->start_time;
+					$serviceProvider->end_time = $shop->end_time;
 				}
 			}
 
