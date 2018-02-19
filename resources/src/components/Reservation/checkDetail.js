@@ -236,8 +236,11 @@ class CheckDetail extends React.Component{
             this.numberInput.focus();
             pass = false;
         }
-        if(!pass) return;
+        if(!this.props.reservation.roomId){
+            pass = false;
+        }
 
+        if(!pass) return;
         this.props.nextStep();
     }
     render(){
