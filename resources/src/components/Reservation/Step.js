@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { translate } from 'react-i18next';
 import Steps from './Steps';
-import CheckService from './CheckService';
-import CheckTime from './CheckTime';
-import CheckDetail from './CheckDetail';
+import CheckService from './checkService';
+import CheckTime from './checkTime';
+import CheckDetail from './checkDetail';
 
 const Col = ReactBootstrap.Col;
 

@@ -28,7 +28,7 @@ class Nav extends React.Component{
           <Navbar.Header>
             <Navbar.Brand>
               <LinkContainer to="/">
-              <span>泰和殿 Wat Po</span>
+              <span>泰和殿 </span>
               </LinkContainer>
             </Navbar.Brand>
             <Navbar.Toggle />
