@@ -81,7 +81,7 @@
 	"success": "成功",
 	"person": "人",
 	"people": "人",
-	"errorHint_system": "某處發生錯誤，請重新嘗試",
+	"errorHint_system": "某處發生錯誤，請刷新頁面重新輸入",
 	"errorHint_noRoom": "此時段無符合您需求的房間",
 	"yes": "是",
 	"no": "否",
@@ -94,5 +94,5 @@
 	"name": "姓名",
 	"phone": "電話",
 	"time": "預約時間",
-	"reserveNotice": "請截圖此畫面以便紀錄預約"
+	"reserveNotice": "請截圖此畫面以便紀錄預約(預約保留10分鐘)"
 }
