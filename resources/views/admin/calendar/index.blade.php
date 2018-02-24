@@ -158,7 +158,7 @@
             </div>
             <div class="col-md-3">
                 <div class='input-group date datetimepicker'>
-                    <input type='text' name="start_time" class="form-control" @{{if start_time}} value="@{{:start_time}}" @{{/if}} required/>
+                    <input type='datetime-local' name="start_time" class="form-control" @{{if start_time}} value="@{{:start_time}}" @{{/if}} required/>
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -169,7 +169,7 @@
             </div>
             <div class="col-md-3">
                 <div class='input-group date datetimepicker'>
-                    <input type='text' name="end_time" class="form-control" @{{if end_time}} value="@{{:end_time}}" @{{/if}} required/>
+                    <input type='datetime-local' name="end_time" class="form-control" @{{if end_time}} value="@{{:end_time}}" @{{/if}} required/>
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -266,13 +266,13 @@
                 <td><button class="btn btn-danger leave_cancel" data-id=@{{:leave_id}} >刪除</button></td>
                 @{{else}}
                 <td><div class='input-group date datetimepicker'>
-                                    <input type='text' id="@{{:id}}_start" class="form-control"/>
+                                    <input type='time' id="@{{:id}}_start" class="form-control"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                                 </div></td>
                 <td><div class='input-group date datetimepicker'>
-                                    <input type='text' id="@{{:id}}_end" class="form-control"/>
+                                    <input type='time' id="@{{:id}}_end" class="form-control"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -306,9 +306,9 @@
                 showCloseButton: true,
             });
 
-            $('.datetimepicker').datetimepicker({
-                format: "YYYY-MM-DD HH:mm"
-            });
+            // $('.datetimepicker').datetimepicker({
+            //     format: "YYYY-MM-DD HH:mm"
+            // });
             $('.selectpicker').selectpicker({
                 size: 4
             });
@@ -339,9 +339,9 @@
                         showConfirmButton: false,
                         showCloseButton: true,
                     });
-                    $('.datetimepicker').datetimepicker({
-                        format: "HH:mm",
-                    });
+                    // $('.datetimepicker').datetimepicker({
+                    //     format: "HH:mm",
+                    // });
                 },
                 error: function(e){
                     alert('師傅出勤獲取失敗 請洽系統管理商!');
@@ -525,9 +525,9 @@
                 showCloseButton: true,
             });
 
-            $('.datetimepicker').datetimepicker({
-                format: "YYYY-MM-DD HH:mm"
-            });
+            // $('.datetimepicker').datetimepicker({
+            //     format: "YYYY-MM-DD HH:mm"
+            // });
             $('.selectpicker').selectpicker({
                 size: 4
             });
