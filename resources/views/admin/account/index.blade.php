@@ -55,8 +55,57 @@
 										<td><button class="btn btn-primary" id="add_account">新增帳號</button></td>
 									</tr>
 
-									@foreach($accounts as $account)
+									@foreach($counter_accounts as $account)
 									<tr>
+										<td><input type="text" class="form-control" value="{{$account->account}}" readonly></td>
+										<td><input type="text" class="form-control" id="new_password_{{$account->id}}" maxlength="20" minlength="4"></td>
+										<td><button class="btn btn-info reset_password" data-id="{{ $account->id }}">重置密碼</button><button class="btn btn-danger delete_account" data-id="{{ $account->id }}">刪除帳號</button></td>
+									</tr>
+									@endforeach
+								</tbody>
+							</table>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="card-box">
+						<h4 class="text-dark  header-title m-t-0">師傅帳號列表</h4>
+						<select class="form-control" id="choose_shop" name="shop_id" required>
+            				<option disabled selected value>選擇店家</option>
+            				@foreach ($shops as $key => $shop)
+            				<option value="{{ $shop->id }}" {{(isset($shop_id) && $shop_id == $shop->id) ? "selected": ""}}>{{ $shop->name }}</option>
+            				@endforeach
+            			</select>
+						<div class="row">
+							<table class="table table-striped">
+								<thead>
+									<th>帳號</th>
+									<th>密碼</th>
+									<th>師傅</th>
+								</thead>
+								<tbody>
+									<tr>
+										<td><input type="text" class="form-control" id="new_worker_account"></td>
+										<td><input type="password" class="form-control" id="new_worker_password"></td>
+										<td>
+											<select class="form-control" id="choose_service_provider" name="service_provider_id" required>
+				                				<option disabled selected value>選擇師傅</option>
+				                				@foreach ($shops as $shop)
+				                				@foreach ($shop->serviceProviders()->get() as $serviceProvider)
+				                				<option value="{{ $serviceProvider->id }}" data-id="{{ $serviceProvider->shop_id }}" style=display:none>{{ $serviceProvider->name }}</option>
+				                				@endforeach
+				                				@endforeach
+				                			</select>
+				                		</td>
+										<td><button class="btn btn-primary" id="add_work_account">新增帳號</button></td>
+									</tr>
+
+									@foreach($worker_accounts as $account)
+									<tr class="">
 										<td><input type="text" class="form-control" value="{{$account->account}}" readonly></td>
 										<td><input type="text" class="form-control" id="new_password_{{$account->id}}" maxlength="20" minlength="4"></td>
 										<td><button class="btn btn-info reset_password" data-id="{{ $account->id }}">重置密碼</button><button class="btn btn-danger delete_account" data-id="{{ $account->id }}">刪除帳號</button></td>
@@ -81,6 +130,16 @@
 </div>
 @stop
 @section('script')
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#choose_shop").on('change', function(){
+			var shop_id = $(this).val();
+			$("#choose_service_provider > option").hide();
+			$("#choose_service_provider").not(this).prop('selectedIndex',0);     
+			$("#choose_service_provider > option[data-id="+shop_id+"]").show();
+		})
+	});
+</script>
 <script type="text/javascript">
 	$("#add_account").on('click', function(){
 		var account = $("#new_account").val();
@@ -108,6 +167,62 @@
 			data: {
 				account: account,
 				password: password
+			},
+			success: function(){
+				swal(
+					'新增結果',
+					'成功!',
+					'success'
+				).then((result) => {
+					location.reload();
+				});
+			},
+			error: function(e){
+				swal(
+				  '資料格式錯誤',
+				  e.responseJSON,
+				  'error'
+				);
+			}
+		});
+	});
+
+	$("#add_work_account").on('click', function(){
+		var account = $("#new_worker_account").val();
+		var password = $("#new_worker_password").val();
+		var worker_id = $("#choose_service_provider").val();
+		if(account.length < 4 || account.length > 20){
+			swal(
+			  '資料格式錯誤',
+			  '帳號最少四個字元最多二十個字元!',
+			  'error'
+			);
+			return;
+		}
+		if(password.length < 4 || password.length > 20){
+			swal(
+			  '資料格式錯誤',
+			  '密碼最少四個字元最多二十個字元!',
+			  'error'
+			);
+			return;
+		}
+		if(!worker_id || worker_id == ''){
+			swal(
+			  '資料格式錯誤',
+			  '沒有選擇師傅',
+			  'error'
+			);
+			return;
+		}
+		$.ajax({
+			url: '/api/worker_account/add',
+			type: 'post',
+			dataType: 'json',
+			data: {
+				account: account,
+				password: password,
+				worker_id: worker_id
 			},
 			success: function(){
 				swal(

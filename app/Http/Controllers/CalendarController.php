@@ -10,7 +10,7 @@ use App\Models\Room;
 use App\Models\Order;
 use App\Models\Service;
 use App\Models\Log;
-
+use Session;
 
 class CalendarController extends Controller
 {
@@ -76,14 +76,22 @@ class CalendarController extends Controller
 			$shop_end_time = strtotime("+1 day", $shop_end_time);
 		}
 		/* order */
-		$orders = Order::with('service')
-						->with('room')
-						->with('serviceProviders')
-						->where('shop_id', $shop_id)
-						->where('start_time', '>=', date("Y-m-d H:i:s", $shop_start_time))
-						->where('end_time', '<=', date("Y-m-d H:i:s", $shop_end_time))
-						->orderBy('start_time', 'asc')
-						->get();
+		$orders =	new Order;
+		if(Session::has('service_provider_id')){
+			$service_provider_id = Session::get('service_provider_id');
+			$orders = $orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
+			    $query->where('id', $service_provider_id);
+			});
+		}
+
+		$orders =	$orders->with('service')
+							->with('room')
+							->with('serviceProviders')
+							->where('shop_id', $shop_id)
+							->where('start_time', '>=', date("Y-m-d H:i:s", $shop_start_time))
+							->where('end_time', '<=', date("Y-m-d H:i:s", $shop_end_time))
+							->orderBy('start_time', 'asc')
+							->get();
 		$order_list = [];
 
 		foreach ($orders as $key => $order) {

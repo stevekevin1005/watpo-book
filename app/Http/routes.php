@@ -70,6 +70,7 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('{service_provider_id}/leave/list', ['uses' => 'LeaveController@api_list', 'as' => 'apiLeaveList']);
 
 		Route::post('/account/add', ['uses' => 'AccountController@api_add', 'as' => 'apiAccountAdd']);
+		Route::post('/worker_account/add', ['uses' => 'AccountController@api_worker_add', 'as' => 'apiWorkerAccountAdd']);
 		Route::post('/account/delete', ['uses' => 'AccountController@api_delete', 'as' => 'apiAccountDelete']);
 		Route::post('/account/reset_password', ['uses' => 'AccountController@api_reset_password', 'as' => 'apiAccountResetPassword']);
 		

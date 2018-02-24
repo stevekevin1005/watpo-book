@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Account;
+use App\Models\Shop;
 use Hash, Exception;
 
 class AccountController extends Controller
@@ -13,7 +14,9 @@ class AccountController extends Controller
 	public function index()
 	{
 
-		$view_data['accounts'] = Account::where('level', 2)->get();
+		$view_data['shops'] = Shop::with('serviceProviders')->get();
+		$view_data['counter_accounts'] = Account::where('level', 2)->get();
+		$view_data['worker_accounts'] = Account::where('level', 3)->get();
 		return view('admin.account.index', $view_data);
 	}
 
@@ -60,10 +63,34 @@ class AccountController extends Controller
 		}
 	}
 
+	public function api_worker_add(Request $request)
+	{
+		try{
+			if(is_null(Account::where('account', $request->account)->first())){
+				$account = new Account;
+				$account->account = $request->account;
+				$account->password	 = Hash::make($request->password1);
+				$account->level = 3;
+				$account->service_provider_id = $request->worker_id;
+				$account->save();
+				return response()->json('新增成功');
+			}
+			else{
+				throw new Exception("此帳號已存在");
+			}
+		}
+		catch(Exception $e){
+			return response()->json($e->getMessage(), 400);
+		}
+		catch(\Illuminate\Database\QueryException $e){
+			return response()->json('資料庫錯誤, 請洽系統商!', 400);
+		}
+	}
+
 	public function api_delete(Request $request)
 	{
 		try{
-			$account = Account::where('id', $request->id)->where('level', 2)->first();
+			$account = Account::where('id', $request->id)->whereIn('level', [2,3])->first();
 			if(!is_null($account)){
 				$account->delete();
 				return response()->json('刪除成功');
@@ -83,7 +110,7 @@ class AccountController extends Controller
 	public function api_reset_password(Request $request)
 	{
 		try{
-			$account = Account::where('id', $request->id)->where('level', 2)->first();
+			$account = Account::where('id', $request->id)->whereIn('level', [2,3])->first();
 			if(!is_null($account)){
 				$account->password = Hash::make($request->password);
 				$account->save();

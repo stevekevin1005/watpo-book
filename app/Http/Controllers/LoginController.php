@@ -20,11 +20,14 @@ class LoginController extends Controller
 
 		if ($account != null && Hash::check($request->password, $account->password))
 		{
-		  $request->session()->put('account', $request->account);
-		  $request->session()->put('account_id', $account->id);
-		  $request->session()->put('account_level', $account->level);
-		  Log::create(['description' => '登入系統']);
-		  return redirect('/admin/dashboard');
+			$request->session()->put('account', $request->account);
+			$request->session()->put('account_id', $account->id);
+			$request->session()->put('account_level', $account->level);
+			if($account->level == 3){
+				$request->session()->put('service_provider_id', $account->service_provider_id);
+			}
+			Log::create(['description' => '登入系統']);
+			return redirect('/admin/dashboard');
 		}
 		return redirect('/admin/login')->withErrors(['fail'=>'帳號或密碼錯誤']);
 	}

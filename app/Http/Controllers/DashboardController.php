@@ -12,7 +12,7 @@ class DashboardController extends Controller
 {
 	
 
-	public function index()
+	public function index(Request $request)
 	{
 		$view_data = [];
 		$shop_list = Shop::all();
@@ -38,7 +38,21 @@ class DashboardController extends Controller
 
 			$info['name'] = $shop->name;
 			
-			$day_orders = Order::with('service')->where('shop_id', $shop->id)->where('start_time', '<=', $day_end_time)->where('start_time', '>=', $day_start_time)->get();
+			$day_orders = new Order;
+			$week_orders = new Order;
+
+			if($request->session()->has('service_provider_id')){
+				$service_provider_id = $request->session()->get('service_provider_id');
+				$day_orders = $day_orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
+				    $query->where('id', $service_provider_id);
+				});
+				$week_orders = $week_orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
+				    $query->where('id', $service_provider_id);
+				});
+			}
+
+
+			$day_orders = $day_orders->with('service')->where('shop_id', $shop->id)->where('start_time', '<=', $day_end_time)->where('start_time', '>=', $day_start_time)->get();
 			$info['order_day'] = $day_orders->count();		
 			$info['revenue_day'] = 0;
 			foreach ($day_orders as $key => $order) {
@@ -47,8 +61,7 @@ class DashboardController extends Controller
 				}
 			}
 
-
-			$week_orders = Order::with('service')->where('shop_id', $shop->id)->where('start_time', '<=', $week_end_time)->where('start_time', '>=', $week_start_time)->get();
+			$week_orders = $week_orders->with('service')->where('shop_id', $shop->id)->where('start_time', '<=', $week_end_time)->where('start_time', '>=', $week_start_time)->get();
 			$info['order_week'] = $week_orders->count();
 			$info['revenue_week'] = 0;
 			foreach ($week_orders as $key => $order) {
@@ -56,7 +69,7 @@ class DashboardController extends Controller
 					$info['revenue_week'] += $order->service->price * $order->person;
 				}
 			}
-
+	
 			$view_data['shop_list'][] = $info;
 		}
 		return view('admin.dashboard.index', $view_data);

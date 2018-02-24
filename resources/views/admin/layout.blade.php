@@ -80,12 +80,10 @@
                     <div id="sidebar-menu">
                         <ul>
                             <li class="text-muted menu-title">一般功能選單</li>
-
                             <li>
                                 <a href="/admin/dashboard" class="waves-effect waves-primary "><i
                                         class="md md-dashboard"></i><span> 總覽 </span></a>
                             </li>
-
                             <li>
                                 <a href="#" class="waves-effect waves-primary"><i class="md md-event-note"></i>
                                     <span> 預約排程 </span> 
@@ -95,7 +93,7 @@
                                     <li><a href="/admin/calendar/2">光復店</a></li>
                                 </ul>
                             </li>
-
+                             @if(session('account_level') != 3)
                             <li>
                                 <a href="/admin/leave" class="waves-effect waves-primary"><i class="md md-face-unlock"></i><span> 休假管理 </span></a>
                             </li>
@@ -105,6 +103,7 @@
                             <li>
                                 <a href="/admin/blacklist/list" class="waves-effect waves-primary"><i class="md md-error"></i><span> 黑名單 </span></a>
                             </li>
+                            @endif
                             <li>
                                 <a href="/admin/logout" class="waves-effect waves-primary"><i class="md  md-reply"></i><span> 登出 </span></a>
                             </li>

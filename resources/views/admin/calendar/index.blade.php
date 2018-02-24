@@ -23,10 +23,12 @@
                         <h4 class="page-title">{{ $shop->name }} - 預約管理
                             &nbsp;&nbsp;&nbsp;
                             <input type="date" class="form-control-inline" value="{{ date('Y-m-d')}}" id="date">
+                            @if(session('account_level') != 3)
                             &nbsp;&nbsp;&nbsp;
                             <button class="btn btn-primary" id="new_order">新建預約單</button> 
                             &nbsp;&nbsp;&nbsp;
-                            <button class="btn btn-warning" id="leave_status">師傅出勤</button> 
+                            <button class="btn btn-warning" id="leave_status">師傅出勤</button>
+                            @endif
                         </h4>
                         <a href="#" style="color:#3ddcf7;">●</a> - 客戶預定
                         <a href="#" style="color:#1d7dca;">●</a> - 櫃檯預定
@@ -48,8 +50,10 @@
                         <thead>
                             <th>訂單編號</th>
                             <th>預約時間</th>
+                            @if(session('account_level') != 3)
                             <th>顧客姓名</th>
                             <th>手機號碼</th>
+                            @endif
                             <th>師傅</th>
                             <th>房間</th>
                             <th>方案</th>             
@@ -68,8 +72,10 @@
                             >
                                 <td>{{ $order->id }}</td>
                                 <td>{{ $order->time }}</td>
+                                @if(session('account_level') != 3)
                                 <td>{{ $order->name }}</td>
                                 <td>{{ $order->phone }}</td>
+                                @endif
                                 <td>{{ $order->provider }}</td>
                                 <td>{{ $order->room }}</td>
                                 <td>{{ $order->service }}</td>    
@@ -204,8 +210,10 @@
     <thead>
         <th>訂單編號</th>
         <th>預約時間</th>
+        @if(session('account_level') != 3)
         <th>顧客姓名</th>
         <th>手機號碼</th>
+        @endif
         <th>師傅</th>
         <th>房間</th>
         <th>方案</th>             
@@ -224,8 +232,10 @@
         >
             <td>@{{:id}}</td>
             <td>@{{:time}}</td>
+             @if(session('account_level') != 3)
             <td>@{{:name}}</td>
             <td>@{{:phone}}</td>
+            @endif
             <td>@{{:provider}}</td>
             <td>@{{:room}}</td>
             <td>@{{:service}}</td>    
@@ -407,7 +417,7 @@
 
         $(".open-left").trigger('click');
         $(".open-left").trigger('touchstart');
-
+        @if(session('account_level') != 3)
         $('#order_list').on('click', 'tbody tr',function(){
             var id = $(this).data('id');
             var name = $(this).data('name');
@@ -522,7 +532,7 @@
                 size: 4
             });
         });
-        
+        @endif
         $("#date").on('change', function(e){
             render_order_list();
         });
