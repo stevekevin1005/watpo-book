@@ -31,7 +31,7 @@
 	                            <select class="form-control" id="choose_service_provider" name="service_provider_id" required>
 	                				<option disabled selected value>選擇師傅</option>
 	                				@foreach ($shops as $shop)
-	                				@foreach ($shop->serviceProviders()->get() as $serviceProvider)
+	                				@foreach ($shop->serviceProviders as $serviceProvider)
 	                				<option value="{{ $serviceProvider->id }}" data-id="{{ $serviceProvider->shop_id }}" 
 	       {{(isset($service_provider_id) && $service_provider_id == $serviceProvider->id) ? "selected": ''}} 
 {{(isset($shop_id) && $shop_id == $serviceProvider->shop_id) ? "": 'style=display:none'}} 
@@ -109,12 +109,19 @@
 <script src='/assets/plugins/fullcalendar/fullcalendar.js'></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$("#choose_shop").on('change', function(){
-			var shop_id = $(this).val();
-			$("#choose_service_provider > option").hide();
-			$("#choose_service_provider").prop('selectedIndex',0);     
-			$("#choose_service_provider > option[data-id="+shop_id+"]").show();
-		})
+		if(isiPhone()){
+           $("#choose_service_provider > option").attr('disabled', true);
+        }
+        $("#choose_shop").on('change', function(){
+            var shop_id = $(this).val();
+            $("#choose_service_provider > option").hide();
+            $("#choose_service_provider").prop('selectedIndex',0);     
+            $("#choose_service_provider > option[data-id="+shop_id+"]").show();
+            if(isiPhone()){
+               $("#choose_service_provider > option").attr('disabled', true);
+               $("#choose_service_provider > option[data-id="+shop_id+"]").attr('disabled', false);
+            }
+        });
 	});
 </script>
 @if(isset($service_provider_id))

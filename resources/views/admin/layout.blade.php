@@ -244,6 +244,12 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+            function isiPhone(){
+                return (
+                    (navigator.platform.indexOf("iPhone") != -1) ||
+                    (navigator.platform.indexOf("iPod") != -1)
+                );
+            }
         </script>
         @yield('script')
     </body>

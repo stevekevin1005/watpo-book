@@ -132,11 +132,18 @@
 @section('script')
 <script type="text/javascript">
 	$(document).ready(function() {
+		if(isiPhone()){
+		   $("#choose_service_provider > option").attr('disabled', true);
+		}
 		$("#choose_shop").on('change', function(){
 			var shop_id = $(this).val();
 			$("#choose_service_provider > option").hide();
 			$("#choose_service_provider").prop('selectedIndex',0);     
 			$("#choose_service_provider > option[data-id="+shop_id+"]").show();
+			if(isiPhone()){
+			   $("#choose_service_provider > option").attr('disabled', true);
+			   $("#choose_service_provider > option[data-id="+shop_id+"]").attr('disabled', false);
+			}
 		})
 	});
 </script>

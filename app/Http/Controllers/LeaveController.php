@@ -15,7 +15,10 @@ class LeaveController extends Controller
 
 	public function index(Request $request)
 	{
-		$shops = Shop::with('serviceProviders')->orderBy('name', 'asc')->get();
+		$shops = Shop::with(['serviceProviders' => function($query){
+			$query->orderBy('name', 'asc')->get();
+		}])->get();
+		// dd($shops);
 		$view_data['shops'] = $shops;
 		if($request->shop_id && $request->service_provider_id){
 			$view_data['shop_id'] = $request->shop_id;
