@@ -121,7 +121,7 @@ class Landpage extends React.Component{
                         </div>
                         <div className="sectionItem">
                             <h4><i className="fa fa-caret-right" aria-hidden="true"></i> {t("ThaiOilMassage")}</h4>
-                            <h5>{t("price2") + ": " + t("servicePrice2_1hr")+ " (50"+t("min")+t("massage")+" 10"+t("min")+t("Foot bath")+") / "+ t("servicePrice2_2hr")+ " (1" + t("hours") +"50"+t("min")+t("massage")+" 10"+t("min")+t("shower")+")"}</h5>
+                            <h5>{t("price2") + ": " + t("servicePrice2_1hr")+ " (50"+t("min")+t("massage")+" 10"+t("min")+t("shower")+") / "+ t("servicePrice2_2hr")+ " (1" + t("hours") +"50"+t("min")+t("massage")+" 10"+t("min")+t("shower")+")"}</h5>
                             <div className="contentBlock">
                                 <p>
                                     {t("ThaiOilMassageDes")}
