@@ -9,7 +9,7 @@
     td{
         font-size: 22px;
     }
-    
+
 </style>
 @stop
 @section('content')
@@ -31,11 +31,11 @@
                             <button class="btn btn-warning" id="leave_status">師傅出勤</button>
                             @endif
                         </h4>
-                        <a href="#" style="color:#3ddcf7;">●</a> - 客戶預定
-                        <a href="#" style="color:#1d7dca;">●</a> - 櫃檯預定
+                        <a href="#" style="color:#3ddcf7;">●</a> - 客戶預訂
+                        <a href="#" style="color:#1d7dca;">●</a> - 櫃檯預訂
                         <a href="#" style="color:#ffaa00;">●</a> - 櫃檯取消
                         <a href="#" style="color:#5cb85c;">●</a> - 訂單成立
-                         <a href="#" style="color:red;">●</a> - 逾期取消
+                         <a href="#" style="color:red;">●</a> - 逾時取消
                         @if ($errors->has('fail'))
                         <a href="#" style="color:red;">{{ $errors->first('fail') }}</a>
                         @endif
@@ -158,23 +158,13 @@
                 開始:
             </div>
             <div class="col-md-3">
-                <div class='input-group date datetimepicker'>
-                    <input type='datetime-local' name="start_time" class="form-control" @{{if start_time}} value="@{{:start_time}}" @{{/if}} required/>
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
+                <input type='datetime-local' name="start_time" class="form-control" @{{if start_time}} value="@{{:start_time}}" @{{/if}} required/>
             </div>
             <div class="col-md-1"  style="text-align:left;">
                 結束:
             </div>
             <div class="col-md-3">
-                <div class='input-group date datetimepicker'>
-                    <input type='datetime-local' name="end_time" class="form-control" @{{if end_time}} value="@{{:end_time}}" @{{/if}} required/>
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
+                <input type='datetime-local' name="end_time" class="form-control" @{{if end_time}} value="@{{:end_time}}" @{{/if}} required/>
             </div>
         </div>
         <div class="row" style="margin-top:50px;">
