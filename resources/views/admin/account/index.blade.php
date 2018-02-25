@@ -144,7 +144,7 @@
 	$("#add_account").on('click', function(){
 		var account = $("#new_account").val();
 		var password = $("#new_password").val();
-		if(account.length < 4 || account.length > 20){
+		if(account.length <= 2 || account.length > 20){
 			swal(
 			  '資料格式錯誤',
 			  '帳號最少四個字元最多二十個字元!',
