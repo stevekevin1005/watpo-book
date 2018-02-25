@@ -100,7 +100,7 @@
 @stop
 @section('script')
 <script src="/assets/plugins/bootstrap-select.min.js"></script>
-<script src="/bower_components/jquery-timepicker-wvega/jquery.timepicker.js"></script>
+{{-- <script src="/bower_components/jquery-timepicker-wvega/jquery.timepicker.js"></script> --}}
 <script id="order_form_template" type="x-jsrender">
     <form class="container" style="height:500px;" method="post" action="@{{:url}}">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
