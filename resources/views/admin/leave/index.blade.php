@@ -34,7 +34,7 @@
 	                				@foreach ($shop->serviceProviders as $serviceProvider)
 	                				<option value="{{ $serviceProvider->id }}" data-id="{{ $serviceProvider->shop_id }}" 
 	       {{(isset($service_provider_id) && $service_provider_id == $serviceProvider->id) ? "selected": ''}} 
-{{(isset($shop_id) && $shop_id == $serviceProvider->shop_id) ? "": 'style=display:none'}} 
+{{(isset($shop_id) && $shop_id == $serviceProvider->shop_id) ? "": 'style=display:none;visibility=hidden;'}} 
 	                					>{{ $serviceProvider->name }}</option>
 	                				@endforeach
 	                				@endforeach
@@ -110,7 +110,8 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		if(isiPhone()){
-           $("#choose_service_provider > option").attr('disabled', true);
+            $("#choose_service_provider > option").attr('disabled', true);
+            $("#choose_service_provider > option").attr('visibility', 'hidden');
         }
         $("#choose_shop").on('change', function(){
             var shop_id = $(this).val();
@@ -120,6 +121,8 @@
             if(isiPhone()){
                $("#choose_service_provider > option").attr('disabled', true);
                $("#choose_service_provider > option[data-id="+shop_id+"]").attr('disabled', false);
+               $("#choose_service_provider > option").attr('visibility', 'hidden');
+               $("#choose_service_provider > option[data-id="+shop_id+"]").attr('visibility', 'initial');
             }
         });
 	});
