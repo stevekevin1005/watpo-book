@@ -14,7 +14,8 @@ class CheckDetail extends React.Component{
 
         let shower;
         if(this.props.sourceData.services &&  this.props.reservation.service){
-            if(this.props.sourceData.services[this.props.reservation.service]) shower = this.props.sourceData.services[this.props.reservation.service].shower > 1;
+            console.log(this.props.sourceData.services);
+            if(this.props.sourceData.services[this.props.reservation.service - 1]) shower = this.props.sourceData.services[this.props.reservation.service - 1].shower > 1;
         }
             
         const reservation = this.props.reservation;
@@ -136,7 +137,7 @@ class CheckDetail extends React.Component{
     //
     setMaxGuestNum(fn){
         // max guest number is set in initializing, and whenever shower option changes, and is decided by service type
-        const showerType = this.props.sourceData.services[this.props.reservation.service].shower,
+        const showerType = this.props.sourceData.services[this.props.reservation.service - 1].shower,
               rooms = this.props.sourceData.room;
 
         let max = 0;
@@ -283,7 +284,7 @@ class CheckDetail extends React.Component{
                     <FormControl componentClass="select" placeholder="select" defaultValue={reservation.guestNum} onChange={this.setGuestNum} value={reservation.guestNum}>
                         {guestNumEl}
                     </FormControl></div>}
-                    { (sourceData.services &&  reservation.service) && sourceData.services[reservation.service].shower === 1 && 
+                    { (sourceData.services &&  reservation.service) && sourceData.services[reservation.service - 1].shower === 1 && 
                         <div style={{marginBottom: "5px"}}>
                             <ControlLabel>{t("showerOrNot")}</ControlLabel>
                             <FormControl componentClass="select" placeholder="select" defaultValue={this.state.shower} onChange={this.setShower}
