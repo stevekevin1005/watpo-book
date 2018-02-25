@@ -9,6 +9,9 @@
     td{
         font-size: 22px;
     }
+    .content-page{
+        min-height: 1000px;
+    }
 </style>
 @stop
 @section('content')
