@@ -158,13 +158,13 @@
                 開始:
             </div>
             <div class="col-md-3">
-                <input type='datetime-local' name="start_time" class="form-control" @{{if start_time}} value="@{{:start_time}}" @{{/if}} required/>
+                <input type='datetime-local' name="start_time" class="form-control" @{{if start_time}} value="@{{:start_time}}" @{{/if}} />
             </div>
             <div class="col-md-1"  style="text-align:left;">
                 結束:
             </div>
             <div class="col-md-3">
-                <input type='datetime-local' name="end_time" class="form-control" @{{if end_time}} value="@{{:end_time}}" @{{/if}} required/>
+                <input type='datetime-local' name="end_time" class="form-control" @{{if end_time}} value="@{{:end_time}}" @{{/if}} />
             </div>
         </div>
         <div class="row" style="margin-top:50px;">
