@@ -112,7 +112,7 @@
 		$("#choose_shop").on('change', function(){
 			var shop_id = $(this).val();
 			$("#choose_service_provider > option").hide();
-			$("#choose_service_provider").not(this).prop('selectedIndex',0);     
+			$("#choose_service_provider").prop('selectedIndex',0);     
 			$("#choose_service_provider > option[data-id="+shop_id+"]").show();
 		})
 	});

@@ -22,7 +22,7 @@ class ServiceProviderController extends Controller
 	public function api_list(Request $request)
 	{
 		try{
-			$serviceProviders = ServiceProvider::where('shop_id', $request->id)->get();
+			$serviceProviders = ServiceProvider::where('shop_id', $request->id)->orderBy('name', 'asc')->get();
 			$response['serviceProviders'] = $serviceProviders;
 			return response()->json($response, 200, self::headers, JSON_UNESCAPED_UNICODE);
 		}
