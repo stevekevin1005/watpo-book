@@ -62,7 +62,7 @@ class CheckDetail extends React.Component{
                 if(response.statusText == "OK"){
                     that.props.setReservation({
                         guestNum: 1,
-                        operator: [response.data.service_provider_list[0].id]
+                        operator: ['0']
                     },()=>{
                         that.props.setSourceData({
                             service_provider_list: response.data.service_provider_list,
@@ -97,16 +97,18 @@ class CheckDetail extends React.Component{
               
         // get and set max guest num 
         this.setState({shower},()=>{
-            that.props.setReservation({shower, guestNum: 1, operator: [this.props.sourceData.service_provider_list[0].id]},()=>{
+            that.props.setReservation({shower, guestNum: 1, operator: ['0']},()=>{
                 that.setMaxGuestNum(that.setRoomId);
             });
         });
     }
     setGuestNum(event){
         const guestNum = +event.target.options[event.target.selectedIndex].value,
-              operator = this.props.sourceData.service_provider_list.slice(0, guestNum).map(operator=>operator.id),
               that = this;
-
+        let operator = [];
+        for(let i = 0;i < guestNum ;i++){
+            operator.push('0');
+        }
         this.props.setReservation({guestNum, operator},()=>{
             that.setRoomId();
         });

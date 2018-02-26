@@ -358,7 +358,7 @@ p
 
 .selectedDay
   color: white
-  &::after
+  &::after, &:hover::after
     content: ""
     width: 25px
     height: 25px
@@ -500,3 +500,7 @@ iframe
     margin: 16px 0
   .branch
     padding-top: 0
+  .calendar .days .day:not(.selectedDay):not(.pastDay):hover
+    color: #333
+    &::after
+      display: none
