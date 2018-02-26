@@ -33,15 +33,16 @@
 	                				@foreach ($shops as $shop)
                                     @foreach ($shop->serviceProviders as $serviceProvider)
                                     <?php
-                                        if(isset($option[$serviceProvider->shop_id])){
-                                            $option[$serviceProvider->shop_id] .= "<option value=$serviceProvider->id > $serviceProvider->name</option>";
-                                        }
-                                        else{
+                                        if(!isset($option[$serviceProvider->shop_id])){
                                             $option[$serviceProvider->shop_id] = '';
                                         }
                                         
+                                        
+                                       $option[$serviceProvider->shop_id] .= "<option value=$serviceProvider->id > $serviceProvider->name</option>";
                                     ?>
-                                    
+                                    @if(isset($shop_id) && $shop_id == $serviceProvider->shop_id)
+                                    <option value="{{$serviceProvider->id}}" {{(isset($service_provider_id) && $service_provider_id == $serviceProvider->id) ? "selected": ""}}> {{$serviceProvider->name}}</option>
+                                    @endif
                                     @endforeach
                                     @endforeach
 	                			</select>
