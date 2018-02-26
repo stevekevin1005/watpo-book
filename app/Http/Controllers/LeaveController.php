@@ -55,7 +55,7 @@ class LeaveController extends Controller
 			$leave_start = new DateTime($request->start_time);
 			$leave_end = new DateTime($request->start_time);
 
-			while ($leave_end <= $end_time) {
+			while ($leave_end < $end_time) {
 				
 				if($shop_daily_end_time > $shop_daily_start_time){
 					$leave_end->setTime($shop_daily_end_time->format('H'), $shop_daily_end_time->format('i'), $shop_daily_end_time->format('s'));
