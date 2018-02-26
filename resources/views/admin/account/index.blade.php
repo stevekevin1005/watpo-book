@@ -95,8 +95,17 @@
 											<select class="form-control" id="choose_service_provider" name="service_provider_id" required>
 				                				<option disabled selected value>選擇師傅</option>
 				                				@foreach ($shops as $shop)
-				                				@foreach ($shop->serviceProviders()->get() as $serviceProvider)
-				                				<option value="{{ $serviceProvider->id }}" data-id="{{ $serviceProvider->shop_id }}" style=display:none>{{ $serviceProvider->name }}</option>
+				                				@foreach ($shop->serviceProviders as $serviceProvider)
+				                				<?php
+				                					if(isset($option[$serviceProvider->shop_id])){
+				                						$option[$serviceProvider->shop_id] .= "<option value=$serviceProvider->id > $serviceProvider->name</option>";
+				                					}
+				                					else{
+				                						$option[$serviceProvider->shop_id] = '';
+				                					}
+				                					
+				                				?>
+				                				
 				                				@endforeach
 				                				@endforeach
 				                			</select>
@@ -131,22 +140,19 @@
 @stop
 @section('script')
 <script type="text/javascript">
+	
 	$(document).ready(function() {
-		if(isiPhone()){
-            $("#choose_service_provider > option").attr('disabled', true);
-            $("#choose_service_provider > option").attr('visibility', 'hidden');
-        }
         $("#choose_shop").on('change', function(){
             var shop_id = $(this).val();
-            $("#choose_service_provider > option").hide();
-            $("#choose_service_provider").prop('selectedIndex',0);     
-            $("#choose_service_provider > option[data-id="+shop_id+"]").show();
-            if(isiPhone()){
-               $("#choose_service_provider > option").attr('disabled', true);
-               $("#choose_service_provider > option[data-id="+shop_id+"]").attr('disabled', false);
-               $("#choose_service_provider > option").attr('visibility', 'hidden');
-               $("#choose_service_provider > option[data-id="+shop_id+"]").attr('visibility', 'initial');
+            var option1 = "<?php echo $option[1];?>";
+            var option2 = "<?php echo $option[2];?>";
+            if(shop_id == 1){
+            	$("#choose_service_provider").html(option1);
             }
+            else{
+            	$("#choose_service_provider").html(option2);
+            }
+           	
         });
 	});
 </script>
