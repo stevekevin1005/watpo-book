@@ -282,7 +282,9 @@
         $( "#new_order" ).on("click", function() {
             var myTemplate = $.templates("#order_form_template");
             var html = myTemplate.render({
-                url: '/admin/calendar/{{$shop_id}}/add_order'
+                url: '/admin/calendar/{{$shop_id}}/add_order',
+                start_time: '{{ date("Y-m-d\TH:i") }}',
+                end_time: '{{ date("Y-m-d\TH:i") }}'
             });
 
             swal({
