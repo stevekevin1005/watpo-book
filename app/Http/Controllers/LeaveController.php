@@ -34,6 +34,10 @@ class LeaveController extends Controller
 		try{
 			$start_time = new DateTime($request->start_time);
 			$end_time = new DateTime($request->end_time);
+			//remove secound (ipod, iphone)
+			$start_time->setTime($start_time->format("H"), $start_time->format("i"), 0);
+			$end_time->setTime($end_time->format("H"), $end_time->format("i"), 0);
+
 			$service_provider_id = $request->service_provider_id;
 
 			if($start_time >= $end_time){
@@ -49,34 +53,29 @@ class LeaveController extends Controller
 				throw new Exception("此時間區間已有休假");
 			}
 
-			$shop_daily_start_time = new DateTime($service_provider->shop->start_time);
-			$shop_daily_end_time = new DateTime($service_provider->shop->end_time);
-			
-			$leave_start = new DateTime($request->start_time);
-			$leave_end = new DateTime($request->start_time);
+			$shop_daily_start_time = new DateTime($start_time->format('Y-m-d').$service_provider->shop->start_time);
+			$shop_daily_end_time = new DateTime($start_time->format('Y-m-d').$service_provider->shop->end_time);
+			if($shop_daily_end_time < $shop_daily_start_time){
+				$shop_daily_end_time->add(new DateInterval("P1D"));
+			}
+			$leave_start = clone $start_time;
+			$leave_end = clone $end_time;
 
-			while ($leave_end < $end_time) {
-			
-
-				if($shop_daily_end_time > $shop_daily_start_time){
-					$leave_end->setTime($shop_daily_end_time->format('H'), $shop_daily_end_time->format('i'), $shop_daily_end_time->format('s'));
-				}
-				else{
-					$leave_end->add(new DateInterval("P1D"))->setTime($shop_daily_end_time->format('H'), $shop_daily_end_time->format('i'), $shop_daily_end_time->format('s'));
-				}
+			while (true) {
 
 				$leave = new Leave;
 				$leave->service_provider_id = $service_provider_id;
 				$leave->start_time	= $leave_start;
 
-				if($leave_end >= $end_time){
-					$leave->end_time = $end_time;
+				if($leave_end <= $shop_daily_end_time){
+					$leave->end_time = $leave_end;
 				}
 				else{
-					$leave->end_time = $leave_end;
-					$leave_start->add(new DateInterval("P1D"))->setTime($shop_daily_start_time->format('H'), $shop_daily_start_time->format('i'), $shop_daily_start_time->format('s'));
+					$leave->end_time = $shop_daily_end_time;
 				}
 				$leave->save();
+				$leave_start = $shop_daily_start_time->add(new DateInterval("P1D"));
+				$shop_daily_end_time->add(new DateInterval("P1D"));
 				if($end_time < $leave_start) break;
 			}
 			Log::create(['description' => '設置 '.$leave->ServiceProvider()->first()->name.'('.$leave->ServiceProvider()->first()->shop()->first()->name.') 休假 開始時間:'.$start_time->format('Y-m-d H:i:s').' 結束時間:'.$end_time->format('Y-m-d H:i:s')]);
