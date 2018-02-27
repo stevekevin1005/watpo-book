@@ -56,6 +56,7 @@ class LeaveController extends Controller
 			$leave_end = new DateTime($request->start_time);
 
 			while ($leave_end < $end_time) {
+				if($leave_start > $leave_end) break;
 				
 				if($shop_daily_end_time > $shop_daily_start_time){
 					$leave_end->setTime($shop_daily_end_time->format('H'), $shop_daily_end_time->format('i'), $shop_daily_end_time->format('s'));
@@ -64,27 +65,21 @@ class LeaveController extends Controller
 					$leave_end->add(new DateInterval("P1D"))->setTime($shop_daily_end_time->format('H'), $shop_daily_end_time->format('i'), $shop_daily_end_time->format('s'));
 				}
 
-				if($leave_end > $end_time){
-					$leave = new Leave;
-					$leave->service_provider_id = $service_provider_id;
-					$leave->start_time	= $leave_start;
+				$leave = new Leave;
+				$leave->service_provider_id = $service_provider_id;
+				$leave->start_time	= $leave_start;
+
+				if($leave_end >= $end_time){
 					$leave->end_time = $end_time;
-					$leave->save();
-					
-					Log::create(['description' => '設置 '.$leave->ServiceProvider()->first()->name.'('.$leave->ServiceProvider()->first()->shop()->first()->name.') 休假 開始時間:'.$leave->start_time->format('Y-m-d H:i:s').' 結束時間:'.$leave->end_time->format('Y-m-d H:i:s')]);
 				}
 				else{
-					$leave = new Leave;
-					$leave->service_provider_id = $service_provider_id;
-					$leave->start_time	= $leave_start;
 					$leave->end_time = $leave_end;
-					$leave->save();
 					$leave_start->add(new DateInterval("P1D"))->setTime($shop_daily_start_time->format('H'), $shop_daily_start_time->format('i'), $shop_daily_start_time->format('s'));
-
-					Log::create(['description' => '設置 '.$leave->ServiceProvider()->first()->name.'('.$leave->ServiceProvider()->first()->shop()->first()->name.') 休假 開始時間:'.$leave->start_time->format('Y-m-d H:i:s').' 結束時間:'.$leave->end_time->format('Y-m-d H:i:s')]);
 				}
+				$leave->save();
+				
 			}
-			
+			Log::create(['description' => '設置 '.$leave->ServiceProvider()->first()->name.'('.$leave->ServiceProvider()->first()->shop()->first()->name.') 休假 開始時間:'.$start_time.' 結束時間:'.$end_time]);
 			return response()->json('新增成功', 200, self::headers, JSON_UNESCAPED_UNICODE);
 
 		}
