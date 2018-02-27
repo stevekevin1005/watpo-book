@@ -56,8 +56,8 @@ class LeaveController extends Controller
 			$leave_end = new DateTime($request->start_time);
 
 			while ($leave_end < $end_time) {
-				if($leave_start > $leave_end) break;
-				
+			
+
 				if($shop_daily_end_time > $shop_daily_start_time){
 					$leave_end->setTime($shop_daily_end_time->format('H'), $shop_daily_end_time->format('i'), $shop_daily_end_time->format('s'));
 				}
@@ -77,9 +77,9 @@ class LeaveController extends Controller
 					$leave_start->add(new DateInterval("P1D"))->setTime($shop_daily_start_time->format('H'), $shop_daily_start_time->format('i'), $shop_daily_start_time->format('s'));
 				}
 				$leave->save();
-				
+				if($end_time < $leave_start) break;
 			}
-			Log::create(['description' => '設置 '.$leave->ServiceProvider()->first()->name.'('.$leave->ServiceProvider()->first()->shop()->first()->name.') 休假 開始時間:'.$start_time.' 結束時間:'.$end_time]);
+			Log::create(['description' => '設置 '.$leave->ServiceProvider()->first()->name.'('.$leave->ServiceProvider()->first()->shop()->first()->name.') 休假 開始時間:'.$start_time->format('Y-m-d H:i:s').' 結束時間:'.$end_time->format('Y-m-d H:i:s')]);
 			return response()->json('新增成功', 200, self::headers, JSON_UNESCAPED_UNICODE);
 
 		}
