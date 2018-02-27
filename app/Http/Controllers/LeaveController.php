@@ -64,7 +64,7 @@ class LeaveController extends Controller
 					$leave_end->add(new DateInterval("P1D"))->setTime($shop_daily_end_time->format('H'), $shop_daily_end_time->format('i'), $shop_daily_end_time->format('s'));
 				}
 
-				if($leave_end >= $end_time){
+				if($leave_end > $end_time){
 					$leave = new Leave;
 					$leave->service_provider_id = $service_provider_id;
 					$leave->start_time	= $leave_start;
