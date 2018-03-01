@@ -226,7 +226,6 @@ class BookController extends Controller
 			$shop_id = $request->shop_id;
 			$start_time = $request->start_time;
 			$end_time = $request->end_time;
-			$room_id = $request->room_id;
 			$service_id = $request->service_id;
 			$person = $request->person;
 			$service_provider_id = $request->service_provider_id;
@@ -243,9 +242,6 @@ class BookController extends Controller
 			}
 			if(!$service_id){
 				throw new Exception("缺少服務ID", 1);
-			}
-			if(!$room_id){
-				throw new Exception("缺少房間ID", 1);
 			}
 			if(!$person){
 				throw new Exception("缺少人數", 1);
@@ -285,7 +281,7 @@ class BookController extends Controller
 				$query->where('status', '!=', 4);
 			    $query->where('start_time', '<=', $end_time);
 			    $query->where('end_time', '>=', $start_time);
-			})->where('person', '>=', $person)->orderBy('person', 'asc')->first();
+			})->where('shop_id', $shop_id)->where('person', '>=', $person)->orderBy('person', 'asc')->first();
 
 			if(!$room){
 				throw new Exception("該時段房間已有預訂 請重新選擇", 1);
