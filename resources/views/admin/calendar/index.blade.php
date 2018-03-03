@@ -37,12 +37,6 @@
                         <a href="#" style="color:#ffaa00;">●</a> - 櫃檯取消
                         <a href="#" style="color:#5cb85c;">●</a> - 訂單成立
                         <a href="#" style="color:red;">●</a> - 逾時取消
-                        @if ($errors->has('fail'))
-                        <a href="#" style="color:red;">{{ $errors->first('fail') }}</a>
-                        @endif
-                        @if (old('message'))
-                        <a href="#" style="color:green;">{{ old('message') }}</a>
-                        @endif
                     </div>
                 </div>
             </div>
@@ -279,7 +273,20 @@
 <script type="text/javascript">
     $(function() { // document ready
         
-
+        @if ($errors->has('fail'))
+        swal(
+          '失敗',
+          "{{ $errors->first('fail') }}",
+          'error'
+        )
+        @endif
+        @if (old('message'))
+        swal(
+          '成功',
+          "{{ old('message') }}",
+          'success'
+        )
+        @endif
         $( "#new_order" ).on("click", function() {
             var myTemplate = $.templates("#order_form_template");
             var html = myTemplate.render({

@@ -23,7 +23,7 @@ class CalendarController extends Controller
 		else{
 			$service_providers = ServiceProvider::with('shop')->orderBy('shop_id', 'asc')->get();
 		}
-		$rooms = Room::where('shop_id', $shop_id)->get();
+		$rooms = Room::where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
 
 		foreach ($service_providers as $key => $service_provider) {
 			$service_provider_name = $service_provider->name."(".$service_provider->shop->name.")";
