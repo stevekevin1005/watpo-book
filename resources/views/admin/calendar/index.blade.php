@@ -33,9 +33,10 @@
                         </h4>
                         <a href="#" style="color:#3ddcf7;">●</a> - 客戶預訂
                         <a href="#" style="color:#1d7dca;">●</a> - 櫃檯修改
+                        <a href="#" style="color:gray;">●</a> - 客戶取消
                         <a href="#" style="color:#ffaa00;">●</a> - 櫃檯取消
                         <a href="#" style="color:#5cb85c;">●</a> - 訂單成立
-                         <a href="#" style="color:red;">●</a> - 逾時取消
+                        <a href="#" style="color:red;">●</a> - 逾時取消
                         @if ($errors->has('fail'))
                         <a href="#" style="color:red;">{{ $errors->first('fail') }}</a>
                         @endif

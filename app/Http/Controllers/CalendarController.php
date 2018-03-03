@@ -140,7 +140,7 @@ class CalendarController extends Controller
 					$data->color = "#1d7dca";
 					break;
 				case 3:
-					$data->color = "";
+					$data->color = "gray";
 					break;
 				case 4:
 					$data->color = "#ffaa00";
