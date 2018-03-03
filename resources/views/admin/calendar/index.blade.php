@@ -55,9 +55,9 @@
                             @if(session('account_level') != 3)
                             <th>顧客姓名</th>
                             <th>手機號碼</th>
-                            @endif
                             <th>師傅</th>
                             <th>房間</th>
+                            @endif
                             <th>方案</th>             
                         </thead>
                         <tbody>
@@ -77,9 +77,9 @@
                                 @if(session('account_level') != 3)
                                 <td>{{ $order->name }}</td>
                                 <td>{{ $order->phone }}</td>
-                                @endif
                                 <td>{{ $order->provider }}</td>
                                 <td>{{ $order->room }}</td>
+                                 @endif
                                 <td>{{ $order->service }}</td>    
                             </tr>
                             @endforeach
@@ -205,9 +205,9 @@
         @if(session('account_level') != 3)
         <th>顧客姓名</th>
         <th>手機號碼</th>
-        @endif
         <th>師傅</th>
         <th>房間</th>
+         @endif
         <th>方案</th>             
     </thead>
     <tbody>
@@ -227,9 +227,9 @@
              @if(session('account_level') != 3)
             <td>@{{:name}}</td>
             <td>@{{:phone}}</td>
-            @endif
             <td>@{{:provider}}</td>
             <td>@{{:room}}</td>
+             @endif
             <td>@{{:service}}</td>    
         </tr>
         @{{/for}}

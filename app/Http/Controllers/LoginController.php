@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Account;
+use App\Models\ServiceProvider;
 use Hash;
 use App\Models\Log;
 
@@ -25,6 +26,8 @@ class LoginController extends Controller
 			$request->session()->put('account_level', $account->level);
 			if($account->level == 3){
 				$request->session()->put('service_provider_id', $account->service_provider_id);
+				$shop_id = ServiceProvider::where('id', $account->service_provider_id)->first()->shop_id;
+				$request->session()->put('account_shop_id', $shop_id);
 			}
 			Log::create(['description' => '登入系統']);
 			return redirect('/admin/dashboard');

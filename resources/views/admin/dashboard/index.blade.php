@@ -7,6 +7,8 @@
 	<div class="content">
 		<div class="container">
 			@foreach($shop_list as $shop)
+        
+            @if(is_null(session('account_shop_id')) || session('account_shop_id') == $shop['id'])
 			<div class="row">
 				<h1>{{ $shop['name'] }}</h1>
 			</div>
@@ -23,7 +25,7 @@
                         <p class="text-white">一週預約</p>
                     </div>
                 </div>
-
+                @if(session('account_level') != 3)
                 <div class="col-sm-6 col-lg-3">
                     <div class="widget-simple text-center card-box bg-pink">
                         <h3 class="text-white">$ <span class="counter">{{ $shop['revenue_day'] }}</span></h3>
@@ -37,7 +39,9 @@
                         <p class="text-white">一週營業額</p>
                     </div>
                 </div>
+                @endif
             </div>
+            @endif
             @endforeach
 		    <!-- end Panel -->
 		</div>

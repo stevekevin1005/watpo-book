@@ -69,7 +69,7 @@ class DashboardController extends Controller
 					$info['revenue_week'] += $order->service->price * $order->person;
 				}
 			}
-	
+			$info['id'] = $shop->id;
 			$view_data['shop_list'][] = $info;
 		}
 		return view('admin.dashboard.index', $view_data);

@@ -48,7 +48,7 @@ class AccountController extends Controller
 			if(is_null(Account::where('account', $request->account)->first())){
 				$account = new Account;
 				$account->account = $request->account;
-				$account->password	 = Hash::make($request->password1);
+				$account->password	 = Hash::make($request->password);
 				$account->level = 2;
 				$account->save();
 				return response()->json('新增成功');
@@ -71,7 +71,7 @@ class AccountController extends Controller
 			if(is_null(Account::where('account', $request->account)->first())){
 				$account = new Account;
 				$account->account = $request->account;
-				$account->password	 = Hash::make($request->password1);
+				$account->password	 = Hash::make($request->password);
 				$account->level = 3;
 				$account->service_provider_id = $request->worker_id;
 				$account->save();
