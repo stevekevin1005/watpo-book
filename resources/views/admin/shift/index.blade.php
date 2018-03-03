@@ -60,6 +60,11 @@
 @stop
 @section('script')
 <script id="shiftTemplate" type="x-jsrender">
+    @{{if is_set}}
+    <h1 style="color: green;">排班狀態: 已設定</h1>
+    @{{else}}
+    <h1 style="color: red;">排班狀態: 未設定</h1>
+    @{{/if}}
     <form action="/admin/shift/update" method="post">
         {{ csrf_field() }}
         <input type="hidden" name="month" value="@{{:month}}" class="form-control">
@@ -73,8 +78,8 @@
                 @{{for serviceProviders}}
                 <tr class="gradeX">
                     <td>@{{:name}}<input type="hidden" name="shifts[@{{:#index}}][id]" value="@{{:id}}" class="form-control"></td>
-                    <td><input type="time" name="shifts[@{{:#index}}][start_time]" class="form-control" @{{if start_time}} value="@{{:start_time}}" @{{else}} value="@{{:start_time}}" @{{/if}}  required></td>
-                    <td><input type="time" name="shifts[@{{:#index}}][end_time]" class="form-control" @{{if end_time}} value="@{{:end_time}}" @{{else}} value="@{{:end_time}}" @{{/if}} required></td>
+                    <td><input type="time" name="shifts[@{{:#index}}][start_time]" class="form-control" value="@{{:start_time}}" required></td>
+                    <td><input type="time" name="shifts[@{{:#index}}][end_time]" class="form-control" value="@{{:end_time}}" required></td>
                 </tr>
                 @{{/for}}
             </tbody>

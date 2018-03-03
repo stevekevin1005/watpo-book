@@ -37,10 +37,12 @@ class ShiftController extends Controller
 				$query->where('month', $month);
 			}])->orderBy('name', 'asc')->get();
 
+			$is_set = false;
 			foreach ($serviceProviders as $key => $serviceProvider) {
 				if(count($serviceProvider->shifts ) > 0){
 					$serviceProvider->start_time = $serviceProvider->shifts[0]['start_time'];
 					$serviceProvider->end_time = $serviceProvider->shifts[0]['end_time'];
+					$is_set = True;
 				}
 				else{
 					$serviceProvider->start_time = $shop->start_time;
@@ -50,6 +52,7 @@ class ShiftController extends Controller
 
 			$response['serviceProviders'] = $serviceProviders;
 			$response['month'] = $month;
+			$response['is_set'] = $is_set;
 			return response()->json($response, 200, $headers, JSON_UNESCAPED_UNICODE);
 		}
 		catch(Exception $e){
