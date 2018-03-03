@@ -66,7 +66,7 @@
     						<label class="col-sm-1 col-form-label">開始時間</label>
     						<div class="col-sm-4">
                                 <div class='input-group date datetimepicker'>
-                                    <input type='datetime-local' name="start_time" id="start_time" class="form-control" required/>
+                                    <input type='datetime-local' name="start_time" id="start_time" class="form-control" value="{{$start_time}}" required/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -75,7 +75,7 @@
     						<label class="col-sm-1 col-form-label">結束時間</label>
     						<div class="col-sm-4">
       							<div class='input-group date datetimepicker'>
-                                    <input type='datetime-local' name="end_time" id="end_time" class="form-control" required/>
+                                    <input type='datetime-local' name="end_time" id="end_time" class="form-control" value="{{$end_time}}" required/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>

@@ -21,11 +21,27 @@ class LeaveController extends Controller
 
 		$view_data['shops'] = $shops;
 		if($request->shop_id && $request->service_provider_id){
-			$view_data['shop_id'] = $request->shop_id;
+			$shop_id = $request->shop_id;
+			$view_data['shop_id'] = $shop_id;
 			$view_data['service_provider_id'] = $request->service_provider_id;
 			$leaves = Leave::where('service_provider_id', $request->service_provider_id)->get();
 			$view_data['leaves'] = $leaves;
+
+			
+			$shop = Shop::where('id', $shop_id)->first();
+
+			$start_time = new DateTime(date('Y-m-d').' '.$shop->start_time);
+
+			$end_time = new DateTime(date('Y-m-d').' '.$shop->end_time);
+			if($end_time <= $start_time){
+				$end_time->add(new DateInterval("P1D"));
+			}
+
+			$view_data['start_time'] = $start_time->format("Y-m-d\TH:i");
+			$view_data['end_time'] = $end_time->format("Y-m-d\TH:i");
+			// dd($end_time);
 		}
+		
 		return view('admin.leave.index', $view_data);
 	}
 
