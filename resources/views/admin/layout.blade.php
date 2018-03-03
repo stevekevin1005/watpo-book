@@ -94,7 +94,8 @@
                                 <ul class="list-unstyled">
                                      @if(is_null(session('account_shop_id')) || session('account_shop_id') == 1)
                                     <li><a href="/admin/calendar/1">民生店</a></li>
-                                    @elseif(is_null(session('account_shop_id')) || session('account_shop_id') == 2)
+                                    @endif
+                                    @if(is_null(session('account_shop_id')) || session('account_shop_id') == 2)
                                     <li><a href="/admin/calendar/2">光復店</a></li>
                                     @endif
                                 </ul>
