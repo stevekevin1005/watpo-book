@@ -99,41 +99,41 @@ class OrderController extends Controller
 		$order_list = $order_list->get();
 
 		return Excel::create('泰和殿訂單列表', function($excel) use ($order_list){
-	    $excel->sheet('訂單', function($sheet) use ($order_list){
-	    	$fromArrayData[] = [ "訂單編號", "姓名", "電話", "人數", "服務項目", "房間", "開始時間", "結束時間", "訂單時間", "訂單狀態"];
-	    	foreach ($order_list as $key => $order) {
-	    		if($order->room->shower){
-						$shower = "可沖洗";
-					}
-					else{
-						$shower = "";
-					}
-					$status = "";
-					switch ($order->status) {
-						case '1':
-							$status = "客戶預定";
-							break;
-						case '2':
-							$status = "櫃檯預定";
-							break;
-						case '3':
-							$status = "客戶取消";
-							break;
-						case '4':
-							$status = "櫃檯取消";
-							break;
-						case '5':
-							$status = "訂單成立";
-							break;
-						default:
-							# code...
-							break;
-					}
-					$room_name = $order->room->name."(".$order->room->person."人房 ".$shower.")";
-	    		$fromArrayData[] = [ $order->id, $order->name, $order->phone, $order->person, $order->service->title, $room_name, $order->start_time, $order->end_time, $order->created_at, $status];
-	    	}
-	    	$sheet->fromArray($fromArrayData);
-	    });
+		    $excel->sheet('訂單', function($sheet) use ($order_list){
+		    	$fromArrayData[] = [ "訂單編號", "姓名", "電話", "人數", "服務項目", "房間", "開始時間", "結束時間", "訂單時間", "訂單狀態"];
+		    	foreach ($order_list as $key => $order) {
+		    		if($order->room->shower){
+							$shower = "可沖洗";
+						}
+						else{
+							$shower = "";
+						}
+						$status = "";
+						switch ($order->status) {
+							case '1':
+								$status = "客戶預定";
+								break;
+							case '2':
+								$status = "櫃檯預定";
+								break;
+							case '3':
+								$status = "客戶取消";
+								break;
+							case '4':
+								$status = "櫃檯取消";
+								break;
+							case '5':
+								$status = "訂單成立";
+								break;
+							default:
+								# code...
+								break;
+						}
+						$room_name = $order->room->name."(".$order->room->person."人房 ".$shower.")";
+		    		$fromArrayData[] = [ $order->id, $order->name, $order->phone, $order->person, $order->service->title, $room_name, $order->start_time, $order->end_time, $order->created_at, $status];
+		    	}
+		    	$sheet->fromArray($fromArrayData);
+		    });
 		})->export('xlsx');
 	}
 

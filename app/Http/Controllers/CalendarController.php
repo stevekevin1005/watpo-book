@@ -17,17 +17,21 @@ class CalendarController extends Controller
 	
 	public function index(Request $request, $shop_id)
 	{
-		if($shop_id == 2){
-			$service_providers = ServiceProvider::with('shop')->orderBy('shop_id', 'desc')->get();
-		}
-		else{
-			$service_providers = ServiceProvider::with('shop')->orderBy('shop_id', 'asc')->get();
-		}
+	
+		$service_providers = ServiceProvider::with('shop')->orderBy('name', 'asc')->get();
+		
 		$rooms = Room::where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
 
+		$view_data['service_providers_1'] = [];
+		$view_data['service_providers_2'] = [];
 		foreach ($service_providers as $key => $service_provider) {
 			$service_provider_name = $service_provider->name."(".$service_provider->shop->name.")";
-			$view_data['service_providers'][] = ['id' => $service_provider->id, 'name' => $service_provider_name];
+			if($service_provider->shop_id == $shop_id){
+				$view_data['service_providers_1'][] = ['id' => $service_provider->id, 'name' => $service_provider_name];
+			}
+			else{
+				$view_data['service_providers_2'][] = ['id' => $service_provider->id, 'name' => $service_provider_name];
+			}
 		}
 
 		foreach ($rooms as $key => $room) {
@@ -105,6 +109,7 @@ class CalendarController extends Controller
 			$data->room_id = $order->room->id;
 			$data->service = $order->service->title;
 			$data->service_id = $order->room->service_id;
+			$data->account = $order->account->account;
 			$data->start_time = date("Y-m-d\TH:i" ,strtotime($order->start_time));
 			$data->end_time = date("Y-m-d\TH:i" ,strtotime($order->end_time));
 			$data->time = date("H:i" ,strtotime($order->start_time))." - ".date("H:i" ,strtotime($order->end_time));
@@ -323,13 +328,14 @@ class CalendarController extends Controller
 			$order = new Order;
 			$order->name = $name;
 			$order->phone = $phone;
-			$order->status = 2;
+			$order->status = 1;
 			$order->service_id = $service_id;
 			$order->room_id = $room_id;
 			$order->shop_id = $shop_id;
 			$order->person = count($service_provider_list);
 			$order->start_time = $start_time;
 			$order->end_time = $end_time;
+			$order->account_id = $request->session()->get('account_id');
 			$order->save();
 
 			foreach ($service_provider_list as $key => $service_provider) {

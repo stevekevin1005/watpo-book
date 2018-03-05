@@ -17,6 +17,11 @@ class Account extends Model {
     {
         return $this->belongsTo('App\Models\ServiceProvider', 'service_provider_id');
     }
+
+    public function orders()
+    {
+        return $this->hasMany('App\Models\Order', 'account_id');
+    }
 }
 
 /*

@@ -51,6 +51,7 @@
                             <th>手機號碼</th>
                             <th>師傅</th>
                             <th>房間</th>
+                            <th>預約人</th>
                             @endif
                             <th>方案</th>             
                         </thead>
@@ -73,7 +74,8 @@
                                 <td>{{ $order->phone }}</td>
                                 <td>{{ $order->provider }}</td>
                                 <td>{{ $order->room }}</td>
-                                 @endif
+                                <td>{{ $order->account }}</td>
+                                @endif
                                 <td>{{ $order->service }}</td>    
                             </tr>
                             @endforeach
@@ -129,8 +131,8 @@
                 師傅:
             </div>
             <div class="col-md-6">
-                <select name="service_provider_list[]" class="selectpicker" multiple data-max-options="4" data-width="100%" required>
-                    @foreach($service_providers as $service_provider)
+                <select name="service_provider_list[]" class="selectpicker1" multiple data-max-options="4" data-width="100%" required>
+                    @foreach($service_providers_1 as $service_provider)
                     <option value="{{ $service_provider['id'] }}">{{ $service_provider['name'] }}</option>
                     @endforeach
                 </select>
@@ -141,9 +143,16 @@
                 服務:
             </div>
             <div class="col-md-3">
-                <select name="service_id" class="form-control" required>
+                <select name="service_id" id="select_service" class="form-control" required>
                     @foreach($service_list as $service)
                     <option value="{{ $service->id }}" {{if service_id && service_id == <?php echo $service->id?>}} selected="selected" @{{/if}}>{{ $service->title }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-6 col-md-offset-1">
+                <select name="service_provider_list[]" class="selectpicker2" multiple data-max-options="4" data-width="100%" required>
+                    @foreach($service_providers_2 as $service_provider)
+                    <option value="{{ $service_provider['id'] }}">{{ $service_provider['name'] }}</option>
                     @endforeach
                 </select>
             </div>
@@ -153,13 +162,13 @@
                 開始:
             </div>
             <div class="col-md-3">
-                <input type='datetime-local' name="start_time" class="form-control" @{{if start_time}} value="@{{:start_time}}" @{{/if}} />
+                <input type='datetime-local' id="start_time" name="start_time" class="form-control" @{{if start_time}} value="@{{:start_time}}" @{{/if}} />
             </div>
             <div class="col-md-1"  style="text-align:left;">
                 結束:
             </div>
             <div class="col-md-3">
-                <input type='datetime-local' name="end_time" class="form-control" @{{if end_time}} value="@{{:end_time}}" @{{/if}} />
+                <input type='datetime-local' id="end_time" name="end_time" class="form-control" @{{if end_time}} value="@{{:end_time}}" @{{/if}} />
             </div>
         </div>
         <div class="row" style="margin-top:50px;">
@@ -201,6 +210,7 @@
         <th>手機號碼</th>
         <th>師傅</th>
         <th>房間</th>
+        <th>預約人</th>
          @endif
         <th>方案</th>             
     </thead>
@@ -223,6 +233,7 @@
             <td>@{{:phone}}</td>
             <td>@{{:provider}}</td>
             <td>@{{:room}}</td>
+            <td>@{{:account}}</td>
              @endif
             <td>@{{:service}}</td>    
         </tr>
@@ -234,7 +245,6 @@
         <thead>
             <tr>
                 <th>師傅</th>
-                <th>休假狀況</th>
                 <th>開始時間</th>
                 <th>結束時間</th>
                 <th>操作</th>
@@ -244,28 +254,33 @@
             @{{for serviceProviders}}
             <tr>
                 <td>@{{:name}}</td>
-                <td>@{{:leave_status}}</td>
-                
-                @{{if leave_id}}
+
+                <td><div class='input-group date datetimepicker'>
+                        <input type='time' id="@{{:id}}_start" class="form-control" step="1800"/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </td>
+                <td><div class='input-group date datetimepicker'>
+                    <input type='time' id="@{{:id}}_end" class="form-control" step="1800"/>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                    </div>
+                </td>
+                <td><button class="btn btn-primary leave_add" data-id=@{{:id}}>新增</button></td>
+            </tr>
+            @{{if leave_list}}
+            @{{for leave_list}}
+            <tr>
+                <td>休</td>
                 <td>@{{:leave_start_time}}</td>
                 <td>@{{:leave_end_time}}</td>
                 <td><button class="btn btn-danger leave_cancel" data-id=@{{:leave_id}} >刪除</button></td>
-                @{{else}}
-                <td><div class='input-group date datetimepicker'>
-                                    <input type='time' id="@{{:id}}_start" class="form-control"/>
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                </div></td>
-                <td><div class='input-group date datetimepicker'>
-                                    <input type='time' id="@{{:id}}_end" class="form-control"/>
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                </div></td>
-                <td><button class="btn btn-primary leave_add" data-id=@{{:id}}>新增</button></td>
-                @{{/if}}
             </tr>
+             @{{/for}}
+            @{{/if}}
             @{{/for}}
         </tbody>
     </table>
@@ -307,10 +322,11 @@
                 showCloseButton: true,
             });
 
-            // $('.datetimepicker').datetimepicker({
-            //     format: "YYYY-MM-DD HH:mm"
-            // });
-            $('.selectpicker').selectpicker({
+
+            $('.selectpicker1').selectpicker({
+                size: 4
+            });
+            $('.selectpicker2').selectpicker({
                 size: 4
             });
         });
@@ -340,9 +356,7 @@
                         showConfirmButton: false,
                         showCloseButton: true,
                     });
-                    // $('.datetimepicker').datetimepicker({
-                    //     format: "HH:mm",
-                    // });
+           
                 },
                 error: function(e){
                     alert('師傅出勤獲取失敗 請洽系統管理商!');
@@ -526,12 +540,24 @@
                 showCloseButton: true,
             });
 
-            // $('.datetimepicker').datetimepicker({
-            //     format: "YYYY-MM-DD HH:mm"
-            // });
-            $('.selectpicker').selectpicker({
+            $('.selectpicker1').selectpicker({
                 size: 4
             });
+            $('.selectpicker2').selectpicker({
+                size: 4
+            });
+        });
+
+        $('body').on('change', '#select_service, #start_time', function(){
+            var service_id = $("#select_service").val();
+            var start_time = new Date($("#start_time").val());
+            if(service_id == 1 || service_id == 3){
+                start_time.setMinutes(start_time.getMinutes() + 60 + 480);
+            }
+            else{
+                start_time.setMinutes(start_time.getMinutes() + 120 + 480);
+            }
+           document.getElementById("end_time").valueAsNumber  = start_time.getTime();
         });
         @endif
         $("#date").on('change', function(e){

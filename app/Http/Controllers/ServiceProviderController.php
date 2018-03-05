@@ -98,10 +98,14 @@ class ServiceProviderController extends Controller
 
 			foreach ($serviceProviders as $serviceProvider) {
 				if(count($serviceProvider->leaves) == 0 ){
-					$result['serviceProviders'][] = ['id' => $serviceProvider->id, 'name' => $serviceProvider->name, 'leave_id' => null, 'leave_status' => '無'];
+					$result['serviceProviders'][] = ['id' => $serviceProvider->id, 'name' => $serviceProvider->name, 'leave_list' => false];
 				}
 				else{
-					$result['serviceProviders'][] = ['id' => $serviceProvider->id, 'name' => $serviceProvider->name, 'leave_id' => $serviceProvider->leaves[0]->id, 'leave_status' => '有', 'leave_start_time' => date("H:i", strtotime($serviceProvider->leaves[0]->start_time)), 'leave_end_time' => date("H:i", strtotime($serviceProvider->leaves[0]->end_time))];
+					$leave_list = [];
+					foreach ($serviceProvider->leaves as $key => $leave) {
+						$leave_list[] = ['leave_id' => $leave->id, 'leave_start_time' => date("H:i", strtotime($leave->start_time)), 'leave_end_time' => date("H:i", strtotime($leave->end_time))];
+					}
+					$result['serviceProviders'][] = ['id' => $serviceProvider->id, 'name' => $serviceProvider->name, 'leave_list' => $leave_list];
 				}
 			}
 
