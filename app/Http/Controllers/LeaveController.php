@@ -48,11 +48,20 @@ class LeaveController extends Controller
 	public function api_add(Request $request)
 	{
 		try{
+			$now = new DateTime();
+			
 			$start_time = new DateTime($request->start_time);
 			$end_time = new DateTime($request->end_time);
 			//remove secound (ipod, iphone)
 			$start_time->setTime($start_time->format("H"), $start_time->format("i"), 0);
 			$end_time->setTime($end_time->format("H"), $end_time->format("i"), 0);
+
+			if($start_time < $now){
+				$start_time->add(new DateInterval("P1D"));
+			}
+			if($end_time < $now){
+				$end_time->add(new DateInterval("P1D"));
+			}
 
 			$service_provider_id = $request->service_provider_id;
 
@@ -131,8 +140,8 @@ class LeaveController extends Controller
 			foreach ($leaves as $leave) {
 				$result[] = [
 					'id' => $leave->id,
-					'start' => $leave->start_time,
-					'end' => $leave->end_time,
+					'start' => date('Y-m-d', strtotime($leave->start_time)),
+					'end' => date('Y-m-d', strtotime($leave->end_time)),
 					'title' => date('H:i', strtotime($leave->start_time)).' - '.date('H:i', strtotime($leave->end_time)),
 					'color' => 'green',
 					'allDay' => true
