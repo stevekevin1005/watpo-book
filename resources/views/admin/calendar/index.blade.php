@@ -143,14 +143,14 @@
                 服務:
             </div>
             <div class="col-md-3">
-                <select name="service_id" id="select_service" class="form-control" required>
+                <select name="service_id" id="select_service" class="form-control">
                     @foreach($service_list as $service)
                     <option value="{{ $service->id }}" {{if service_id && service_id == <?php echo $service->id?>}} selected="selected" @{{/if}}>{{ $service->title }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="col-md-6 col-md-offset-1">
-                <select name="service_provider_list[]" class="selectpicker2" multiple data-max-options="4" data-width="100%" required>
+                <select name="service_provider_list[]" class="selectpicker2" multiple data-max-options="4" data-width="100%">
                     @foreach($service_providers_2 as $service_provider)
                     <option value="{{ $service_provider['id'] }}">{{ $service_provider['name'] }}</option>
                     @endforeach
