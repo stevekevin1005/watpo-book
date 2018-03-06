@@ -131,7 +131,7 @@
                 師傅:
             </div>
             <div class="col-md-6">
-                <select name="service_provider_list[]" class="selectpicker1" multiple data-max-options="4" data-width="100%" required>
+                <select name="service_provider_list[]" class="selectpicker1" multiple data-max-options="4" data-width="100%">
                     @foreach($service_providers_1 as $service_provider)
                     <option value="{{ $service_provider['id'] }}">{{ $service_provider['name'] }}</option>
                     @endforeach
