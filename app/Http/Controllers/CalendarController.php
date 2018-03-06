@@ -109,7 +109,13 @@ class CalendarController extends Controller
 			$data->room_id = $order->room->id;
 			$data->service = $order->service->title;
 			$data->service_id = $order->room->service_id;
-			$data->account = $order->account->account;
+			if($order->account != null){
+				$data->account = $order->account->account;
+			}
+			else
+			{
+				$data->account = null;
+			}
 			$data->start_time = date("Y-m-d\TH:i" ,strtotime($order->start_time));
 			$data->end_time = date("Y-m-d\TH:i" ,strtotime($order->end_time));
 			$data->time = date("H:i" ,strtotime($order->start_time))." - ".date("H:i" ,strtotime($order->end_time));

@@ -552,10 +552,10 @@
             var service_id = $("#select_service").val();
             var start_time = new Date($("#start_time").val());
             if(service_id == 1 || service_id == 3){
-                start_time.setMinutes(start_time.getMinutes() + 60 + 480);
+                start_time.setMinutes(start_time.getMinutes() + 60);
             }
             else{
-                start_time.setMinutes(start_time.getMinutes() + 120 + 480);
+                start_time.setMinutes(start_time.getMinutes() + 120);
             }
            document.getElementById("end_time").valueAsNumber  = start_time.getTime();
         });
