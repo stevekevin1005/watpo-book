@@ -2,6 +2,7 @@
 
 import Steps from "./Reservation/Steps";
 import Step from "./Reservation/Step";
+import Alert from "./Reservation/Alert";
 import CheckDetail from "./Reservation/checkDetail";
 import CheckService from "./Reservation/checkService";
 import CheckTime from "./Reservation/checkTime";
@@ -12,6 +13,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import LoadingAnimation from "./LoadingAnimation";
 import clearCheckOrdersInfo from "../dispatchers/clearCheckOrdersInfo";
+import { renderToStaticMarkup } from 'react-dom/server';
 
 const Grid = ReactBootstrap.Grid,
     Row = ReactBootstrap.Row,
@@ -219,7 +221,7 @@ class Reservation extends React.Component{
                     success: true,
                     showAlert: true,
                     alertTitle: t("reserveSuccess"),
-                    alertText: t("reservatorName") + ": " +reservation.name + "\n" + t("reservatorDate") + ": "+reservation.date + " " + reservation.time + "\n服務: " + serviceName + "\n人數: " + reservation.guestNum +" " + (reservation.guestNum>1?t("people"):t("person"))+ "\n" + t("reserveNotice")
+                    alertText: <Alert notice={t("reserveNotice2")} text={t("reservatorName") + ": " +reservation.name + "\n" + t("reservatorDate") + ": "+reservation.date + " " + reservation.time + "\n服務: " + serviceName + "\n人數: " + reservation.guestNum +" " + (reservation.guestNum>1?t("people"):t("person"))+ "\n" + t("reserveNotice1")}/>
                 });
             }else{
                 // show failure alert
@@ -246,6 +248,7 @@ class Reservation extends React.Component{
         });
     }
     render(){
+        console.log(typeof this.state.alertText);
         return(
             <Grid>
                 <div className="reservationContainer">
@@ -273,7 +276,8 @@ class Reservation extends React.Component{
                 <SweetAlert
                     show={this.state.showAlert}
                     title={this.state.alertTitle}
-                    text={this.state.alertText}
+                    html
+                    text={typeof this.state.alertText == "object"?renderToStaticMarkup(this.state.alertText):this.state.alertText}
                     onConfirm={() => {
                         this.setState({ showAlert: false });
                         if(this.state.loading) this.setState({loading: false});

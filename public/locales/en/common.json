@@ -94,5 +94,6 @@
 	"name": "Name",
 	"phone": "Phone",
 	"time": "Time",
-	"reserveNotice": "please screenshot this view to check reservation"
+	"reserveNotice1": "please screenshot this view to check reservation",
+	"reserveNotice2": ""
 }
