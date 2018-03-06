@@ -92,7 +92,7 @@ class ServiceProviderController extends Controller
 			$serviceProviders = ServiceProvider::with(['leaves' => function ($query) use($shop_start_time, $shop_end_time) {
     			$query->where('start_time', '<=', $shop_end_time);
     			$query->where('end_time', '>=', $shop_start_time);
-    		}])->where('shop_id', $shop_id)->get();
+    		}])->where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
 			
 			$result['serviceProviders'] = [];
 

@@ -71,7 +71,7 @@ class BookController extends Controller
 				$service_providers = $service_providers->where('service_3', true);
 				$rooms = $rooms->where('service_3', true);
 			}
-			$service_providers = $service_providers->get();
+			$service_providers = $service_providers->orderBy('name', 'asc')->get();
 			$rooms = $rooms->get();
 
 			$result = [];
