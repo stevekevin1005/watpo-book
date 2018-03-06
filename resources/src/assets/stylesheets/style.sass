@@ -333,19 +333,7 @@ p
       cursor: pointer
       z-index: 1
       position: relative
-      &:hover
-        color: white
-        &::after
-          content: ""
-          width: 25px
-          height: 25px
-          position: absolute
-          top: 50%
-          left: 50%
-          transform: translate(-50%,-50%)
-          background-color: $highlight
-          z-index: -1
-          border-radius: 16px
+      
   & .next, .prev
     position: absolute
     cursor: pointer
@@ -358,7 +346,7 @@ p
 
 .selectedDay
   color: white
-  &::after, &:hover::after
+  &::after
     content: ""
     width: 25px
     height: 25px
@@ -500,7 +488,3 @@ iframe
     margin: 16px 0
   .branch
     padding-top: 0
-  .calendar .days .day:not(.selectedDay):not(.pastDay):hover
-    color: #333
-    &::after
-      display: none
