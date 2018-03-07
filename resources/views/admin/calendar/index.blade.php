@@ -115,6 +115,12 @@
             <div class="col-md-3">
                 <input type="text" class="form-control" name="phone" placeholder="現場客" @{{if phone}} value="@{{:phone}}" @{{/if}}>
             </div>
+            <div class="col-md-1" style="text-align:left;">
+                人數:
+            </div>
+            <div class="col-md-3">
+                <input type="number" class="form-control" @{{if person}} value="@{{:person}}" @{{/if}} readonly>
+            </div>
         </div>
         <div class="row" style="margin-top:10px">
             <div class="col-md-1" style="text-align:left;">
@@ -189,6 +195,7 @@
                     data-id="@{{:id}}" 
                     data-name="@{{:name}}" 
                     data-phone="@{{:phone}}" 
+                    data-person="@{{:person}}" 
                     data-start_time='@{{:start_time}}'
                     data-end_time='@{{:end_time}}'
                     data-room_id='@{{:room_id}}'
@@ -516,6 +523,7 @@
             var start_time = $(this).data('start_time');
             var end_time = $(this).data('end_time');
             var service_id = $(this).data('service_id');
+            var person = $(this).data('person');
 
             var myTemplate = $.templates("#order_form_template");
             var html = myTemplate.render({
@@ -525,7 +533,8 @@
                 room_id: room_id,
                 start_time: start_time,
                 end_time: end_time,
-                service_id: service_id
+                service_id: service_id,
+                person: person
             });
 
             swal({
