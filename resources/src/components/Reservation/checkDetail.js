@@ -196,6 +196,7 @@ class CheckDetail extends React.Component{
               guestNum = this.props.reservation.guestNum;
         console.log(rooms);
         console.log(guestNum);
+        console.log(this.state.shower);
         let roomId;
 
         // 尋找人數剛好符合的房間
