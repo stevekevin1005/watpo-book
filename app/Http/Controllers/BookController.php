@@ -128,7 +128,7 @@ class BookController extends Controller
 
 			$end_time = new DateTime($date.' '.$shop->end_time);
 			if($end_time <= $start_time){
-				$end_time->add(new DateInterval("P1D"));
+				$end_time->add(new DateInterval("P1D"))->modify("-2 hour");
 			}
 			
 			$i = 0;
