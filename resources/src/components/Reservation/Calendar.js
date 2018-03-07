@@ -49,7 +49,7 @@ class Calendar extends React.Component{
               weekDays = [t("mon"),t("tue"),t("wed"),t("thu"),t("fri"),t("sat"),t("sun")],
               unit = 100 / 7,
               isCurrentMonth = (this.state.displayingMonth == new Date().getMonth() + 1) &&(this.state.displayingYear == new Date().getFullYear()),
-              today = new Date().getDate();
+              yesterday = new Date(new Date().getTime() - 24*60*60*1000).getDate();
         const days = [], spanStyle = {display:"inline-block",width: unit + "%"},
               firstDayStyle = {
                   display:"inline-block",
@@ -58,7 +58,7 @@ class Calendar extends React.Component{
                   :unit * 6 +"%"};
 
         for(let i = 1;i <= this.state.dayNum; i++){
-                let isPastDay = isCurrentMonth && i < today;
+                let isPastDay = isCurrentMonth && i < yesterday;
                 if(i===1) days.push(<span key={i} className={i===selectedDay?"day selectedDay":(isPastDay?"day pastDay":"day")} style={firstDayStyle} onClick={isPastDay?null:this.selectDay}>{i}</span>);
                 else days.push(<span key={i} className={i===selectedDay?"day selectedDay":(isPastDay?"day pastDay":"day")} style={spanStyle} onClick={isPastDay?null:this.selectDay}>{i}</span>);
         }
