@@ -40,46 +40,42 @@ class CheckDetail extends React.Component{
         this.nextStep = this.nextStep.bind(this);
     }
     componentDidMount(){
-        if(this.props.sourceData.room){
-            // 已輸入過此階段的資料，設定可選擇人數的最大值
-            this.setMaxGuestNum();
-        }else{
-            const that = this,
-            csrf_token = document.querySelector('input[name="_token"]').value;    
 
-            this.props.toggleLoading();
-            axios({
-                method: "get",
-                url: "../api/service_provider_and_room_list",
-                params: {
-                    service_id: this.props.reservation.service,
-                    shop_id: this.props.reservation.shop
-                },
-                headers: {'X-CSRF-TOKEN': csrf_token},
-                responseType: 'json'
-            })
-            .then(function (response) {
-                if(response.statusText == "OK"){
-                    that.props.setReservation({
-                        guestNum: 1,
-                        operator: ['0']
+        const that = this,
+        csrf_token = document.querySelector('input[name="_token"]').value;    
+
+        this.props.toggleLoading();
+        axios({
+            method: "get",
+            url: "../api/service_provider_and_room_list",
+            params: {
+                service_id: this.props.reservation.service,
+                shop_id: this.props.reservation.shop
+            },
+            headers: {'X-CSRF-TOKEN': csrf_token},
+            responseType: 'json'
+        })
+        .then(function (response) {
+            if(response.statusText == "OK"){
+                that.props.setReservation({
+                    guestNum: 1,
+                    operator: ['0']
+                },()=>{
+                    that.props.setSourceData({
+                        service_provider_list: response.data.service_provider_list,
+                        room: response.data.room
                     },()=>{
-                        that.props.setSourceData({
-                            service_provider_list: response.data.service_provider_list,
-                            room: response.data.room
-                        },()=>{
-                            that.setMaxGuestNum(that.setRoomId);
-                            if(that.props.loading) that.props.toggleLoading();
-                        });
+                        that.setMaxGuestNum(that.setRoomId);
+                        if(that.props.loading) that.props.toggleLoading();
                     });
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-                that.props.showErrorPopUp();
-                that.props.toggleLoading();
-            });
-        }
+                });
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+            that.props.showErrorPopUp();
+            that.props.toggleLoading();
+        });
     }
     setOperator(event){
         const value = +event.target.options[event.target.selectedIndex].value, // id
@@ -198,7 +194,7 @@ class CheckDetail extends React.Component{
         // roomId is set in initializing and whenever shower option or guest number is set
         const rooms = this.props.sourceData.room,
               guestNum = this.props.reservation.guestNum;
-
+        console.log(rooms);
         let roomId;
 
         // 尋找人數剛好符合的房間
