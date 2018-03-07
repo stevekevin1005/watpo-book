@@ -195,6 +195,7 @@ class CheckDetail extends React.Component{
         const rooms = this.props.sourceData.room,
               guestNum = this.props.reservation.guestNum;
         console.log(rooms);
+        console.log(guestNum);
         let roomId;
 
         // 尋找人數剛好符合的房間
@@ -213,7 +214,7 @@ class CheckDetail extends React.Component{
                 }
             }
         }
-
+        console.log(roomId);
         this.props.setReservation({roomId});
     }
     nextStep(event){
