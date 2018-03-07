@@ -71,6 +71,8 @@ class CheckService extends React.Component{
 
         let data = {};
         data[group] = index;
+        if(index === 5)data['shower'] = true;
+        else data['shower'] = false;
         this.props.setReservation(data);
     }
     render(){
