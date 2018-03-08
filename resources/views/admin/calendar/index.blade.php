@@ -409,14 +409,13 @@
             var service_provider_id = $(this).data('id');
             var date =  $("#date").val();
             
-            var start_time = new Date(date+"T"+$('#'+service_provider_id+'_start').val()+"Z");
-            var end_time = new Date(date+"T"+$('#'+service_provider_id+'_end').val()+"Z");
+            var start_time = new Date(date+"T"+$('#'+service_provider_id+'_start').val()+"+08:00");
+            var end_time = new Date(date+"T"+$('#'+service_provider_id+'_end').val()+"+08:00");
             
             if(start_time > end_time){
                 end_time.setDate(end_time.getDate()+1);
             }
-            alert(start_time);
-            alert(end_time);
+            
             $.ajax({
                 url: '/api/leave/add',
                 type: 'post',
