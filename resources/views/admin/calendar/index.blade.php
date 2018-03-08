@@ -23,7 +23,7 @@
                     <div class="page-title-box">
                         <h4 class="page-title">{{ $shop->name }} - 預約管理
                             &nbsp;&nbsp;&nbsp;
-                            <input type="date" class="form-control-inline" value="{{ date('Y-m-d')}}" id="date">
+                            <input type="date" class="form-control-inline" value="{{ $today }}" id="date">
                             @if(session('account_level') != 3)
                             &nbsp;&nbsp;&nbsp;
                             <button class="btn btn-primary" id="new_order">新建預約單</button> 

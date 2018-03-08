@@ -45,13 +45,18 @@ class CalendarController extends Controller
 			$view_data['rooms'][] = ['id' => $room->id, 'name' => $room_name ];
 		}
 
-		$view_data['shop'] = Shop::where('id', $shop_id)->first();
+		$shop = Shop::where('id', $shop_id)->first();
+		$view_data['shop'] = $shop;
 		$view_data['service_list'] = Service::all();
-		$view_data['shop_id'] = $shop_id;
+		$view_data['shop_id'] = $shop->id;
 
-		$date = date('Y-m-d');
+		$start_time = new DateTime($shop->start_time);
+		$date = new DateTime();
+		if($date < $start_time){
+			$date->modify("-1 day");
+		}
 
-		$view_data['today'] = $date;
+		$view_data['today'] = $date->format('Y-m-d');
 
 		
 		$shop_service_providers = ServiceProvider::where('shop_id', $shop_id)->get();
@@ -63,7 +68,7 @@ class CalendarController extends Controller
 		}
 
 
-		$order_list = $this->order_list($date, $shop_id);
+		$order_list = $this->order_list($date->format('Y-m-d'), $shop_id);
 		$view_data['order_list'] = $order_list;
 
 		return view('admin.calendar.index', $view_data);
