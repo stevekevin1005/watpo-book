@@ -263,14 +263,14 @@
                 <td>@{{:name}}</td>
 
                 <td><div class='input-group date datetimepicker'>
-                        <input type='time' id="@{{:id}}_start" class="form-control" step="1800"/>
+                        <input type='time' id="@{{:id}}_start" class="form-control"/>
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                         </span>
                     </div>
                 </td>
                 <td><div class='input-group date datetimepicker'>
-                    <input type='time' id="@{{:id}}_end" class="form-control" step="1800"/>
+                    <input type='time' id="@{{:id}}_end" class="form-control"/>
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
