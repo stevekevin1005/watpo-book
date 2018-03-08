@@ -415,7 +415,8 @@
             if(start_time > end_time){
                 end_time.setDate(end_time.getDate()+1);
             }
-            
+            alert(start_time);
+            alert(end_time);
             $.ajax({
                 url: '/api/leave/add',
                 type: 'post',
