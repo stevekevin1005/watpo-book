@@ -408,9 +408,9 @@
         $("body").on('click', '.leave_add', function(){
             var service_provider_id = $(this).data('id');
             var date =  $("#date").val();
-            alert(date+" "+$('#'+service_provider_id+'_start').val());
-            var start_time = new Date(date+" "+$('#'+service_provider_id+'_start').val());
-            var end_time = new Date(date+" "+$('#'+service_provider_id+'_end').val());
+            
+            var start_time = new Date(date+"T"+$('#'+service_provider_id+'_start').val()+"Z");
+            var end_time = new Date(date+"T"+$('#'+service_provider_id+'_end').val()+"Z");
             
             if(start_time > end_time){
                 end_time.setDate(end_time.getDate()+1);
