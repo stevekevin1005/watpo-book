@@ -48,8 +48,8 @@ class LeaveController extends Controller
 	public function api_add(Request $request)
 	{
 		try{
-			$now = new DateTime();
-			return response()->json($request->start_time, 400, self::headers, JSON_UNESCAPED_UNICODE);
+			// $now = new DateTime();
+			return response()->json($request, 400, self::headers, JSON_UNESCAPED_UNICODE);
 			$start_time = new DateTime($request->start_time);
 			$end_time = new DateTime($request->end_time);
 			//remove secound (ipod, iphone)
