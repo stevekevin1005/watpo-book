@@ -49,16 +49,16 @@ class LeaveController extends Controller
 	{
 		try{
 			$now = new DateTime();
-			
+			$now->setTime(9, 0, 0);
 			$start_time = new DateTime($request->start_time);
 			$end_time = new DateTime($request->end_time);
 			//remove secound (ipod, iphone)
 			$start_time->setTime($start_time->format("H"), $start_time->format("i"), 0);
 			$end_time->setTime($end_time->format("H"), $end_time->format("i"), 0);
 
-			// if($start_time < $now){
-			// 	$start_time->add(new DateInterval("P1D"));
-			// }
+			if($start_time < $now){
+				$start_time->add(new DateInterval("P1D"));
+			}
 			if($end_time < $now){
 				$end_time->add(new DateInterval("P1D"));
 			}
