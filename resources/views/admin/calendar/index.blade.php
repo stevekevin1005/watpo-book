@@ -408,7 +408,7 @@
         $("body").on('click', '.leave_add', function(){
             var service_provider_id = $(this).data('id');
             var date =  $("#date").val();
-
+            alert(date+" "+$('#'+service_provider_id+'_start').val());
             var start_time = new Date(date+" "+$('#'+service_provider_id+'_start').val());
             var end_time = new Date(date+" "+$('#'+service_provider_id+'_end').val());
             
