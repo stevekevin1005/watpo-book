@@ -80,7 +80,7 @@ class CheckTime extends React.Component{
                 <Col md={5}>
                     <Calendar 
                         selectDayHandle={this.getTimePeriods} 
-                        date={this.props.reservation.date}
+                        date={reservation.date}
                         changeMonthHandle={this.clearDateAndTimeAndTimeList}
                     />
                 </Col>
