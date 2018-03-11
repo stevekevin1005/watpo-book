@@ -148,7 +148,7 @@ class Landpage extends React.Component{
                         {branches}
                     </Col>
                 </Row>
-                <div className="topBg" data-arrow="&#xf078;"></div>
+                <div className="topBg"></div>
                 <Row className="footerContainer">
                 <Col md={12}>
                 <footer>

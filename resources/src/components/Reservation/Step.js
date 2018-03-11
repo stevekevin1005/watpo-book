@@ -11,6 +11,7 @@ class Step extends React.Component{
     constructor(props){
         super(props);
         this.nextStep = this.nextStep.bind(this);
+        this.getTodaysDate = this.getTodaysDate.bind(this);
     }
     nextStep(){
         this.props.history.push('/reservation/' + (+this.props.match.params.step + 1));
@@ -32,8 +33,24 @@ class Step extends React.Component{
                 break;
             case 2:
                 if(!this.props.reservation.shop || !this.props.reservation.service || !this.props.reservation.guestNum || !this.props.reservation.roomId || !this.props.reservation.operator || !this.props.reservation.name || !this.props.reservation.contactNumber) location.href = '../reservation/0';
+                if(!this.props.reservation.date){
+                    const today = this.getTodaysDate();
+                    this.props.setReservation({date: today});
+                }
                 break;
         }
+    }
+    getTodaysDate(){
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1;
+        var yyyy = today.getFullYear();
+        
+        if(dd<10) dd = '0'+dd
+        if(mm<10) mm = '0'+mm
+        
+        today = yyyy+ '/' + mm + '/' + dd;
+        return today;
     }
     render(){
         const { t } = this.props;

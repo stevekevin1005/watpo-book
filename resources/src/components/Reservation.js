@@ -56,7 +56,7 @@ class Reservation extends React.Component{
 
             loading: false
         };
-
+        
         this.setReservation = this.setReservation.bind(this);
         this.clearData = this.clearData.bind(this);
         this.setSourceData = this.setSourceData.bind(this);
@@ -248,7 +248,6 @@ class Reservation extends React.Component{
         });
     }
     render(){
-        console.log(typeof this.state.alertText);
         return(
             <Grid>
                 <div className="reservationContainer">
