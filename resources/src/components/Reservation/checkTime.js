@@ -20,6 +20,13 @@ class CheckTime extends React.Component{
         this.setTime = this.setTime.bind(this);
         this.clearDateAndTimeAndTimeList = this.clearDateAndTimeAndTimeList.bind(this);
     }    
+    componentDidMount(){
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1;
+        var yyyy = today.getFullYear();
+        this.getTimePeriods(yyyy, mm, dd);
+    }
     getTimePeriods(year,month,day){
         const that = this, 
             reservation = this.props.reservation,
