@@ -228,18 +228,17 @@ class BookController extends Controller
 	public function api_order(Request $request){
 		try{
 			$shop_id = $request->shop_id;
-			$start_time = $request->start_time;
-			$end_time = $request->end_time;
+			$start_time = new DateTime($request->start_time);
+			$end_time = new DateTime($request->start_time);
 			$service_id = $request->service_id;
 			$person = $request->person;
 			$service_provider_id = $request->service_provider_id;
 			$name = $request->name;
 			$phone = $request->phone;
+			$shower = $request->shower;
+
 			if(!$start_time){
 				throw new Exception("缺少開始時間", 1);
-			}
-			if(!$end_time){
-				throw new Exception("缺少結束時間", 1);
 			}
 			if(!$shop_id){
 				throw new Exception("缺少店家ID", 1);
@@ -259,6 +258,10 @@ class BookController extends Controller
 			if(!is_null(BlackList::where('name', $name)->where('phone', $phone)->first())){
 				throw new Exception("系統錯誤", 1);
 			}
+
+			$service = Service::where('id', $service_id)->first();
+			$end_time = $end_time->add(new DateInterval("PT".$service->time."M"));
+
 			$service_provider_id_list = explode(",", $service_provider_id);
 
 			$service_provider_list = ServiceProvider::with(['leaves' => function ($query) use ($start_time, $end_time) {
@@ -285,10 +288,17 @@ class BookController extends Controller
 				$query->where('status', '!=', 4);
 			    $query->where('start_time', '<=', $end_time);
 			    $query->where('end_time', '>=', $start_time);
-			})->where('shop_id', $shop_id)->where('person', '>=', $person)->orderBy('person', 'asc')->first();
+			})->where('shop_id', $shop_id)->where('person', '>=', $person);
+			
+			if($shower){
+				$room = $room->orderBy('shower', 'asc')->orderBy('person', 'asc')->first();
+			}
+			else{
+				$room = $room->orderBy('shower', 'desc')->orderBy('person', 'asc')->first();
+			}
 
 			if(!$room){
-				throw new Exception("該時段房間已有預訂 請重新選擇", 1);
+				throw new Exception("該時段房間已滿 請重新選擇", 1);
 			}
 
 			$order = new Order;

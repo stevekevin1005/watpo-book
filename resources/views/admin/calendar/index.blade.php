@@ -49,6 +49,7 @@
                             @if(session('account_level') != 3)
                             <th>顧客姓名</th>
                             <th>手機號碼</th>
+                            <th>人數</th>
                             <th>師傅</th>
                             <th>房間</th>
                             <th>預約人</th>
@@ -72,6 +73,7 @@
                                 @if(session('account_level') != 3)
                                 <td>{{ $order->name }}</td>
                                 <td>{{ $order->phone }}</td>
+                                <td>{{ $order->person }}</td>
                                 <td>{{ $order->provider }}</td>
                                 <td>{{ $order->room }}</td>
                                 <td>{{ $order->account }}</td>
@@ -216,6 +218,7 @@
         <th>顧客姓名</th>
         <th>手機號碼</th>
         <th>師傅</th>
+        <th>人數</th>
         <th>房間</th>
         <th>預約人</th>
          @endif
@@ -239,6 +242,7 @@
             <td>@{{:name}}</td>
             <td>@{{:phone}}</td>
             <td>@{{:provider}}</td>
+            <td>@{{:person}}</td>
             <td>@{{:room}}</td>
             <td>@{{:account}}</td>
              @endif

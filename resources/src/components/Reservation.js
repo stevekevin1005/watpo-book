@@ -154,7 +154,7 @@ class Reservation extends React.Component{
     }
     send(){
         const { t } = this.props;
-      
+        
         // get info: service, shop
         const reservation = this.state.reservation,
               serviceIndex = this.state.sourceData.services.reduce((result, service, index)=>{return result + (service.id == reservation.service? index:0)}, 0),
@@ -209,7 +209,8 @@ class Reservation extends React.Component{
                 room_id: reservation.roomId,
                 person: reservation.guestNum,
                 service_provider_id: reservation.operator.join(),
-                name: reservation.name
+                name: reservation.name,
+                shower: reservation.shower
             },
             headers: {'X-CSRF-TOKEN': token},
             responseType: 'json'
