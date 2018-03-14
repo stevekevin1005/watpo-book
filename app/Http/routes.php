@@ -90,7 +90,7 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/time_list', ['uses' => 'BookController@api_time_list', 'as' => 'apiTimeList']);
 		Route::get('/order/list', ['uses' => 'BookController@api_order_list', 'as' => 'apiOrderList']);
 		Route::post('/order/customer/cancel', ['uses' => 'BookController@api_order_customer_cancel', 'as' => 'apiOrderCustomerCancel']);
-		Route::post('/order', ['uses' => 'BookController@api_order', 'as' => 'apiOrder']);
+		Route::get('/order', ['uses' => 'BookController@api_order', 'as' => 'apiOrder']);
 	});
 	//admin redirect
 	Route::get('/admin/{path?}', ['where' => ['path' => '.*'], function(){
