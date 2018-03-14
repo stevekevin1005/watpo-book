@@ -211,12 +211,19 @@ class BookController extends Controller
 		}
 
 		$start_time->sub(new DateInterval('PT30M'));
+
 		$room = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
 			$query->where('status', '!=', 3);
 			$query->where('status', '!=', 4);
 		    $query->where('start_time', '<=', $end_time);
 		    $query->where('end_time', '>=', $start_time);
-		})->where('person', '>=', $person)->first();
+		})->where('person', '>=', $person);
+
+		if($shower){
+			$room = $room->where('shower', 1);
+		}
+
+		$room = $room->first();
 
 		if(!$room){
 			return false;
@@ -291,11 +298,11 @@ class BookController extends Controller
 			})->where('shop_id', $shop_id)->where('person', '>=', $person);
 			
 			if($shower){
-				$room = $room->orderBy('shower', 'asc')->orderBy('person', 'asc')->first();
+				$room = $room->where('shower', 1);
 			}
-			else{
-				$room = $room->orderBy('shower', 'desc')->orderBy('person', 'asc')->first();
-			}
+	
+			$room = $room->orderBy('person', 'asc')->first();
+			
 
 			if(!$room){
 				throw new Exception("該時段房間已滿 請重新選擇", 1);
