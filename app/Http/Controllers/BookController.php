@@ -199,8 +199,10 @@ class BookController extends Controller
 		}
 
 		$order_person_count = Order::
-									where('start_time', '<=', $end_time)->
-									where('end_time', '>=', $start_time)->
+									where('start_time', '<', $end_time)->
+									where('end_time', '>', $start_time)->
+									where('status', '!=', 3)->
+									where('status', '!=', 4)->
 									where('shop_id', $shop_id)->get()->sum('person');
 		if(!empty(array_diff($service_provider_id_list, $service_provider_list))){
 			return false;
