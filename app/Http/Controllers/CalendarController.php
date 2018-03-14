@@ -146,7 +146,7 @@ class CalendarController extends Controller
 				$service_provider_count++;
 			}
 			for($i = $service_provider_count;$i < $order->person;$i++){
-				$data->provider .= "待 ";
+				$data->provider .= "排 ";
 			}
 
 			switch ($order->status) {
