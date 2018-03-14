@@ -171,6 +171,8 @@ class BookController extends Controller
 			}
 		}
 		
+		$start_time->sub(new DateInterval('PT15M'));
+
 		$service_providers = ServiceProvider::whereHas('shifts' ,function ($query) use ($month) {
 		    $query->where('month', $month);
 		})->with(['shifts' => function ($query) use ($month) {
@@ -198,21 +200,30 @@ class BookController extends Controller
 			}
 		}
 
+		$service_providers_count = ServiceProvider::whereHas('orders' ,function ($query) use ($start_time, $end_time) {
+			$query->where('status', '!=', 3);
+			$query->where('status', '!=', 4);
+		    $query->where('start_time', '<', $end_time);
+		    $query->where('end_time', '>', $start_time);
+		})->where('shop_id', $shop_id)->count();
+
 		$order_person_count = Order::
 									where('start_time', '<', $end_time)->
 									where('end_time', '>', $start_time)->
 									where('status', '!=', 3)->
 									where('status', '!=', 4)->
 									where('shop_id', $shop_id)->get()->sum('person');
+
 		if(!empty(array_diff($service_provider_id_list, $service_provider_list))){
 			return false;
 		}
 
-		if(count($service_provider_list) - $order_person_count < $person){
+	
+		if(count($service_provider_list) - $order_person_count + $service_providers_count< $person){
 			return false;
 		}
 
-		$start_time->sub(new DateInterval('PT30M'));
+		$start_time->sub(new DateInterval('PT15M'));
 
 		$room = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
 			$query->where('status', '!=', 3);
