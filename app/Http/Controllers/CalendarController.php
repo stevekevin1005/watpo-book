@@ -99,6 +99,7 @@ class CalendarController extends Controller
 							->where('shop_id', $shop_id)
 							->where('start_time', '>=', date("Y-m-d H:i:s", $shop_start_time))
 							->where('end_time', '<=', date("Y-m-d H:i:s", $shop_end_time))
+							->where('end_time', '>=', date("Y-m-d H:i:s"))
 							->orderBy('start_time', 'asc')
 							->get();
 		$order_list = [];
