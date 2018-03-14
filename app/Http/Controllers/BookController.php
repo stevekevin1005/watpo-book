@@ -300,10 +300,9 @@ class BookController extends Controller
 			if($shower){
 				$room = $room->where('shower', 1);
 			}
-			
+		
 			$room = $room->orderBy('person', 'asc')->first();
-			dd($room);
-
+			
 			if(!$room){
 				throw new Exception("該時段房間已滿 請重新選擇", 1);
 			}
