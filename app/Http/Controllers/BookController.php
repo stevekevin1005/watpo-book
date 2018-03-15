@@ -232,7 +232,7 @@ class BookController extends Controller
 		    $query->where('end_time', '>=', $start_time);
 		})->where('person', '>=', $person);
 
-		if($shower == true){
+		if($shower == "true"){
 			$room = $room->where('shower', 1);
 		}
 
@@ -310,10 +310,11 @@ class BookController extends Controller
 			    $query->where('end_time', '>=', $start_time);
 			})->where('shop_id', $shop_id)->where('person', '>=', $person);
 			
-			if($shower == true){
+			if($shower == "true"){
 				$room = $room->where('shower', 1);
 			}
-		
+			
+
 			$room = $room->orderBy('shower', 'asc')->orderBy('person', 'asc')->first();
 			
 			if(!$room){

@@ -153,7 +153,7 @@
             <div class="col-md-3">
                 <select name="service_id" id="select_service" class="form-control">
                     @foreach($service_list as $service)
-                    <option value="{{ $service->id }}" {{if service_id && service_id == <?php echo $service->id?>}} selected="selected" @{{/if}}>{{ $service->title }}</option>
+                    <option value="{{ $service->id }}" @{{if service_id && service_id == <?php echo $service->id?>}} selected="selected" @{{/if}}>{{ $service->title }}</option>
                     @endforeach
                 </select>
             </div>
