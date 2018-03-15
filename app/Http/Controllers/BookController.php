@@ -317,7 +317,7 @@ class BookController extends Controller
 			$room = $room->orderBy('person', 'asc')->first();
 			
 			if(!$room){
-				throw new Exception("該時段房間已滿 請重新選擇", 1);
+				throw new Exception("$start_time  $end_time該時段房間已滿 請重新選擇", 1);
 			}
 
 			$order = new Order;
