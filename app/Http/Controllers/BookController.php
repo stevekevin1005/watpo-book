@@ -232,7 +232,7 @@ class BookController extends Controller
 		    $query->where('end_time', '>=', $start_time);
 		})->where('person', '>=', $person);
 
-		if($shower){
+		if($shower == true){
 			$room = $room->where('shower', 1);
 		}
 
@@ -310,14 +310,14 @@ class BookController extends Controller
 			    $query->where('end_time', '>=', $start_time);
 			})->where('shop_id', $shop_id)->where('person', '>=', $person);
 			
-			if($shower){
+			if($shower == true){
 				$room = $room->where('shower', 1);
 			}
 		
-			$room = $room->orderBy('person', 'asc')->first();
+			$room = $room->orderBy('shower', 'asc')->orderBy('person', 'asc')->first();
 			
 			if(!$room){
-				throw new Exception("$start_time  $end_time該時段房間已滿 請重新選擇", 1);
+				throw new Exception("該時段房間已滿 請重新選擇", 1);
 			}
 
 			$order = new Order;
