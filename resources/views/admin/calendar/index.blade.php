@@ -562,6 +562,7 @@
         $('body').on('change', '#select_service, #start_time', function(){
             var service_id = $("#select_service").val();
             var start_time = new Date($("#start_time").val());
+            start_time = new Date(start_time - start_time.getTimezoneOffset() * 60000);
             if(service_id == 1 || service_id == 3){
                 start_time.setMinutes(start_time.getMinutes() + 60);
             }

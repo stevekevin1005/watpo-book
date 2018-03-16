@@ -171,7 +171,9 @@ class BookController extends Controller
 			}
 		}
 		
+		//師傅預約15分鐘
 		$start_time->sub(new DateInterval('PT15M'));
+		$end_time->add(new DateInterval('PT15M'));
 
 		$service_providers = ServiceProvider::whereHas('shifts' ,function ($query) use ($month) {
 		    $query->where('month', $month);
@@ -186,6 +188,9 @@ class BookController extends Controller
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
 		})->where('shop_id', $shop_id)->get();
+		//扣回 避免出勤錯誤
+		$start_time->add(new DateInterval('PT15M'));
+		$end_time->sub(new DateInterval('PT15M'));
 
 		$service_provider_list = [];
 		foreach($service_providers as $service_provider){
@@ -215,7 +220,7 @@ class BookController extends Controller
 									where('shop_id', $shop_id)->get()->sum('person');
 
 		if(!empty(array_diff($service_provider_id_list, $service_provider_list))){
-			return false;
+			return $start_time;
 		}
 
 	
@@ -223,7 +228,10 @@ class BookController extends Controller
 			return false;
 		}
 
-		$start_time->sub(new DateInterval('PT15M'));
+		//房間預約30分鐘
+		$start_time->sub(new DateInterval('PT30M'));
+		$end_time->add(new DateInterval('PT30M'));
+
 
 		$room = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
 			$query->where('status', '!=', 3);
@@ -232,6 +240,10 @@ class BookController extends Controller
 		    $query->where('end_time', '>=', $start_time);
 		})->where('person', '>=', $person);
 
+		//扣回
+		$start_time->add(new DateInterval('PT30M'));
+		$end_time->sub(new DateInterval('PT30M'));
+
 		if($shower == "true"){
 			$room = $room->where('shower', 1);
 		}
@@ -239,7 +251,7 @@ class BookController extends Controller
 		$room = $room->first();
 
 		if(!$room){
-			return false;
+			return $start_time;
 		}
 
 		return true;
