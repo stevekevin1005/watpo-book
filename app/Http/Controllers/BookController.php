@@ -251,7 +251,7 @@ class BookController extends Controller
 		$room = $room->first();
 
 		if(!$room){
-			return $start_time;
+			return false;
 		}
 
 		return true;
