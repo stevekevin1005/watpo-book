@@ -406,12 +406,12 @@ class CalendarController extends Controller
 			// }
 
 			$order = Order::with('serviceProviders')->with('service')->with('shop')->where('id', $order_id)->first();
-			$order->serviceProviders()->detach();
 			$order->name = $name;
 			$order->phone = $phone;
 			$order->status = 2;
 			$order->service_id = $service_id;
 			if($person > 0){
+				$order->serviceProviders()->detach();
 				$order->person = $person;
 				$service_provider_list = ServiceProvider::with(['leaves' => function ($query) use ($start_time, $end_time) {
 				    $query->where('start_time', '<', $end_time);
