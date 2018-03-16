@@ -45,7 +45,8 @@ class CheckTime extends React.Component{
                 date: date,
                 person: reservation.guestNum,
                 service_provider_id: reservation.operator.join(),
-                room_id: reservation.roomId
+                room_id: reservation.roomId,
+                shower: reservation.shower
             },
             headers: {'X-CSRF-TOKEN': csrf_token},
             responseType: 'json'

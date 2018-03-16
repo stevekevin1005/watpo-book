@@ -105,7 +105,7 @@ class BookController extends Controller
 			$person = $request->person;
 			$service_provider_id = $request->service_provider_id;
 			$room_id = $request->room_id;
-
+			$shower = $request->shower;
 			if(!$date){
 				throw new Exception("缺少日期", 1);
 			}
@@ -139,7 +139,7 @@ class BookController extends Controller
 					$time_list[$i]['select'] = false;
 				}
 				else{
-					$time_list[$i]['select'] = $this->time_option($date, $start_time->format('Y-m-d H:i:s'), $service->time, $service->shower, $shop_id, $person, $service_provider_id);
+					$time_list[$i]['select'] = $this->time_option($date, $start_time->format('Y-m-d H:i:s'), $service->time, $shower, $shop_id, $person, $service_provider_id);
 				}
 				$start_time->add(new DateInterval("PT30M"));
 
@@ -220,7 +220,7 @@ class BookController extends Controller
 									where('shop_id', $shop_id)->get()->sum('person');
 
 		if(!empty(array_diff($service_provider_id_list, $service_provider_list))){
-			return $start_time;
+			return $false;
 		}
 
 	
@@ -238,7 +238,7 @@ class BookController extends Controller
 			$query->where('status', '!=', 4);
 		    $query->where('start_time', '<=', $end_time);
 		    $query->where('end_time', '>=', $start_time);
-		})->where('person', '>=', $person);
+		})->where('shop_id', $shop_id)->where('person', '>=', $person);
 
 		//扣回
 		$start_time->add(new DateInterval('PT30M'));
