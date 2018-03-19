@@ -344,7 +344,7 @@ class CalendarController extends Controller
 			$order->service_id = $service_id;
 			$order->room_id = $room_id;
 			$order->shop_id = $shop_id;
-			$order->person = count($service_provider_list);
+			$order->person = $person;
 			$order->start_time = $start_time;
 			$order->end_time = $end_time;
 			$order->account_id = $request->session()->get('account_id');

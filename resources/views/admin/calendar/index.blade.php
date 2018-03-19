@@ -141,6 +141,9 @@
             </div>
             <div class="col-md-6">
                 <select name="service_provider_list[]" class="selectpicker1" multiple data-max-options="4" data-width="100%">
+                    <option value="0">不指定</option>
+                    <option value="0">不指定</option>
+                    <option value="0">不指定</option>
                     @foreach($service_providers_1 as $service_provider)
                     <option value="{{ $service_provider['id'] }}">{{ $service_provider['name'] }}</option>
                     @endforeach
@@ -342,7 +345,7 @@
             $('.selectpicker2').selectpicker({
                 size: 4
             });
-            var today = new Date().toISOString().substr(0, 19);
+            var today = new Date().toISOString().substr(0, 16);
             document.getElementById("start_time").value  = today;
         });
 
@@ -566,8 +569,6 @@
             $('.selectpicker2').selectpicker({
                 size: 4
             });
-            var today = new Date().toISOString().substr(0, 19);
-            document.getElementById("start_time").value  = today;
         });
 
         $('body').on('change', '#select_service, #start_time', function(){
