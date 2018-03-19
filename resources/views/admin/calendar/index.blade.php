@@ -342,8 +342,8 @@
             $('.selectpicker2').selectpicker({
                 size: 4
             });
-            var today = new Date();
-            document.getElementById("start_time").valueAsNumber  = today.getTime();
+            var today = new Date().toISOString().substr(0, 19);
+            document.getElementById("start_time").value  = today;
         });
 
         $("#leave_status").on("click", function(){
@@ -566,8 +566,8 @@
             $('.selectpicker2').selectpicker({
                 size: 4
             });
-            var today = new Date();
-            document.getElementById("start_time").valueAsNumber  = today.getTime();
+            var today = new Date().toISOString().substr(0, 19);
+            document.getElementById("start_time").value  = today;
         });
 
         $('body').on('change', '#select_service, #start_time', function(){

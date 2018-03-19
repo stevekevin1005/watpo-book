@@ -242,8 +242,8 @@
             });
 
             $("#choose_time").on('click', function(){
-                var today = new Date();
-                document.getElementById("choose_time").valueAsNumber  = today.getTime();
+                var today = new Date().toISOString().substr(0, 19);
+                document.getElementById("start_time").value  = today;
             });
 
             $("#choose_time,#choose_shop").on('change', function(){
