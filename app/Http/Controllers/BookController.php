@@ -220,7 +220,7 @@ class BookController extends Controller
 									where('shop_id', $shop_id)->get()->sum('person');
 
 		if(!empty(array_diff($service_provider_id_list, $service_provider_list))){
-			return $false;
+			return false;
 		}
 
 	
