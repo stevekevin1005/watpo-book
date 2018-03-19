@@ -251,7 +251,7 @@ class CalendarController extends Controller
 					'service'=>$order->service->title, 
 					'room'=> $order->room->name, 
 					'room_id'=> $order->room_id,
-					
+					'status' => $order->status,
 				];
 				$i++;
 			}
@@ -320,10 +320,10 @@ class CalendarController extends Controller
 			
 			foreach ($service_provider_list as $key => $service_provider) {
 				if($service_provider->leaves->count() > 0){
-					throw new Exception("該師傅該時段請假 請重新選擇", 1);
+					throw new Exception($service_provider->name."號 師傅該時段請假 請重新選擇", 1);
 				}
 				if($service_provider->orders->count() > 0){
-					throw new Exception("該師傅該時段已有約 請重新選擇", 1);
+					throw new Exception($service_provider->name."號 師傅該時段已有約 請重新選擇", 1);
 				}
 			}
 			$room = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
@@ -425,10 +425,10 @@ class CalendarController extends Controller
 				
 				foreach ($service_provider_list as $key => $service_provider) {
 					if($service_provider->leaves->count() > 0){
-						throw new Exception("該師傅該時段請假 請重新選擇", 1);
+						throw new Exception($service_provider->name."號 師傅該時段請假 請重新選擇", 1);
 					}
 					if($service_provider->orders->count() > 0){
-						throw new Exception("該師傅該時段已有約 請重新選擇", 1);
+						throw new Exception($service_provider->name."號 師傅該時段已有約 請重新選擇", 1);
 					}
 				}
 				

@@ -308,10 +308,10 @@ class BookController extends Controller
 			
 			foreach ($service_provider_list as $key => $service_provider) {
 				if($service_provider->leaves->count() > 0){
-					throw new Exception("該師傅該時段請假 請重新選擇", 1);
+					throw new Exception($service_provider->name."號 該時段請假 請重新選擇", 1);
 				}
 				if($service_provider->orders->count() > 0){
-					throw new Exception("該師傅該時段已有約 請重新選擇", 1);
+					throw new Exception($service_provider->name."號 該時段已有約 請重新選擇", 1);
 				}
 			}
 

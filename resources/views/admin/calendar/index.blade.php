@@ -67,6 +67,7 @@
                                 data-start_time="{{$order->start_time}}"
                                 data-room_id="{{$order->room_id}}"
                                 data-end_time="{{$order->end_time}}"
+                                data-status = "{{ $order->status }}"
                             >
                                 <td>{{ $order->id }}</td>
                                 <td>{{ $order->time }}</td>
@@ -204,9 +205,11 @@
                     data-service_id='@{{:service_id}}'
                     style="font-size:20px;">更改訂單</button>
             </div>
+            @{{if status != 6}}
             <div class="col-md-4">
                 <button type="button" class="btn btn-success order_confirm" data-id="@{{:id}}" style="font-size:20px;">確認訂單</button>
             </div>
+            @{{/if}}
         </div>
     </div>
 </script>
@@ -234,6 +237,7 @@
             data-start_time="@{{:start_time}}"
             data-room_id="@{{:room_id}}"
             data-end_time="@{{:end_time}}"
+            data-status = "@{{:status}}"
         >
             <td>@{{:id}}</td>
             <td>@{{:time}}</td>
@@ -318,7 +322,7 @@
                 start_time: '{{ date("Y-m-d\TH:i") }}',
                 end_time: '{{ date("Y-m-d\TH:i") }}'
             });
-
+            
             swal({
                 title: '新建預約單',
                 html: html,
@@ -338,6 +342,8 @@
             $('.selectpicker2').selectpicker({
                 size: 4
             });
+            var today = new Date();
+            document.getElementById("start_time").valueAsNumber  = today.getTime();
         });
 
         $("#leave_status").on("click", function(){
@@ -454,6 +460,7 @@
             var end_time = $(this).data('end_time');
             var service_id = $(this).data('service_id');
             var room_id = $(this).data('room_id');
+            var status = $(this).data('status');
             var myTemplate = $.templates("#check_form_template"); 
             var html = myTemplate.render({
                 id: id,
@@ -464,7 +471,8 @@
                 end_time: end_time,
                 start_time: start_time,
                 service_id: service_id,
-                room_id: room_id
+                room_id: room_id,
+                status: status
             });
             swal({
                 title: '#'+id+' 預約單確認',
@@ -518,6 +526,7 @@
         });
 
         $('body').on('click', '.order_update', function(){
+            
             var order_id = $(this).data('id');
             var name = $(this).data('name');
             var phone = $(this).data('phone');
@@ -557,6 +566,8 @@
             $('.selectpicker2').selectpicker({
                 size: 4
             });
+            var today = new Date();
+            document.getElementById("start_time").valueAsNumber  = today.getTime();
         });
 
         $('body').on('change', '#select_service, #start_time', function(){

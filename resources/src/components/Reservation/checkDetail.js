@@ -109,6 +109,9 @@ class CheckDetail extends React.Component{
         for(let i = 0;i < guestNum ;i++){
             operator.push('0');
         }
+        if(guestNum > 2){
+            this.setState({shower: true});
+        }
         this.props.setReservation({guestNum, operator},()=>{
             that.setRoomId();
         });
@@ -143,49 +146,54 @@ class CheckDetail extends React.Component{
               rooms = this.props.sourceData.room;
 
         let max = 0;
-        switch(showerType){
-            case 0:
-                for(let i = 0; i < rooms.length; i++){
-                    // 搜尋無衛浴的房間
-                    if(rooms[i].shower === 0 && rooms[i].person > max) max = rooms[i].person;
-                }
-                if(max === 0){
-                    this.setState({shower: true});
-                    for(let i = 0; i < rooms.length; i++){
-                        // 搜尋附衛浴的房間
-                        if(rooms[i].shower === 1 && rooms[i].person > max) max = rooms[i].person;
-                    }
-                }
-                break;
-            case 1:
-                // 先搜尋符合客人需求的房間
-                for(let i = 0; i < rooms.length; i++){
-                    // 1 == true, 0 == false ...
-                    if(rooms[i].shower == this.state.shower && rooms[i].person > max) max = rooms[i].person;
-                }
-                // 客人想選無衛浴的房間但無符合項目，於是配有衛浴的房間
-                if(max === 0 && this.state.shower === false){
-                    for(let i = 0; i < rooms.length; i++){
-                        // 1 == true, 0 == false ...
-                        if(rooms[i].shower == true && rooms[i].person > max) max = rooms[i].person;   
-                    }
-                    this.setState({shower: true});
-                // 客人想選有衛浴的房間但無符合項目
-                }else if(max === 0 && this.state.shower === true){
-                    this.props.setReservation({
-                        guestNum: 0,
-                        roomId: null,
-                        operator: []
-                    });
-                    return;
-                }
-                break;
-            case 2:
-                // API傳回的房間皆附衛浴
-                for(let i = 0; i < rooms.length; i++){
-                    if(rooms[i].shower === 1 && rooms[i].person > max) max = rooms[i].person;
-                }
+
+        for(let i = 0; i < rooms.length; i++){
+            if(rooms[i].person > max) max = rooms[i].person;
         }
+
+        // switch(showerType){
+        //     case 0:
+        //         for(let i = 0; i < rooms.length; i++){
+        //             // 搜尋無衛浴的房間
+        //             if(rooms[i].shower === 0 && rooms[i].person > max) max = rooms[i].person;
+        //         }
+        //         if(max === 0){
+        //             this.setState({shower: true});
+        //             for(let i = 0; i < rooms.length; i++){
+        //                 // 搜尋附衛浴的房間
+        //                 if(rooms[i].shower === 1 && rooms[i].person > max) max = rooms[i].person;
+        //             }
+        //         }
+        //         break;
+        //     case 1:
+        //         // 先搜尋符合客人需求的房間
+        //         for(let i = 0; i < rooms.length; i++){
+        //             // 1 == true, 0 == false ...
+        //             if(rooms[i].shower == this.state.shower && rooms[i].person > max) max = rooms[i].person;
+        //         }
+        //         // 客人想選無衛浴的房間但無符合項目，於是配有衛浴的房間
+        //         if(max === 0 && this.state.shower === false){
+        //             for(let i = 0; i < rooms.length; i++){
+        //                 // 1 == true, 0 == false ...
+        //                 if(rooms[i].shower == true && rooms[i].person > max) max = rooms[i].person;   
+        //             }
+        //             this.setState({shower: true});
+        //         // 客人想選有衛浴的房間但無符合項目
+        //         }else if(max === 0 && this.state.shower === true){
+        //             this.props.setReservation({
+        //                 guestNum: 0,
+        //                 roomId: null,
+        //                 operator: []
+        //             });
+        //             return;
+        //         }
+        //         break;
+        //     case 2:
+        //         // API傳回的房間皆附衛浴
+        //         for(let i = 0; i < rooms.length; i++){
+        //             if(rooms[i].shower === 1 && rooms[i].person > max) max = rooms[i].person;
+        //         }
+        // }
         // 確認目前可提供服務的師傅數量
         const operatorNum = this.props.sourceData.service_provider_list.length;
         if(operatorNum < max) max = operatorNum;
