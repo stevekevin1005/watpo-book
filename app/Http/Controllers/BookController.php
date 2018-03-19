@@ -185,6 +185,7 @@ class BookController extends Controller
 		})->whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
 			$query->where('status', '!=', 3);
 			$query->where('status', '!=', 4);
+			$query->where('status', '!=', 6);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
 		})->where('shop_id', $shop_id)->get();
@@ -208,6 +209,7 @@ class BookController extends Controller
 		$service_providers_count = ServiceProvider::whereHas('orders' ,function ($query) use ($start_time, $end_time) {
 			$query->where('status', '!=', 3);
 			$query->where('status', '!=', 4);
+			$query->where('status', '!=', 6);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
 		})->where('shop_id', $shop_id)->count();
@@ -236,6 +238,7 @@ class BookController extends Controller
 		$room = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
 			$query->where('status', '!=', 3);
 			$query->where('status', '!=', 4);
+			$query->where('status', '!=', 6);
 		    $query->where('start_time', '<=', $end_time);
 		    $query->where('end_time', '>=', $start_time);
 		})->where('shop_id', $shop_id)->where('person', '>=', $person);
@@ -302,6 +305,7 @@ class BookController extends Controller
 			}])->with(['orders' => function ($query) use ($start_time, $end_time) {
 					$query->where('status', '!=', 3);
 					$query->where('status', '!=', 4);
+					$query->where('status', '!=', 6);
 			    $query->where('start_time', '<', $end_time);
 			    $query->where('end_time', '>',$start_time);
 			}])->whereIn('id', $service_provider_id_list)->get();
@@ -318,6 +322,7 @@ class BookController extends Controller
 			$room = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
 				$query->where('status', '!=', 3);
 				$query->where('status', '!=', 4);
+				$query->where('status', '!=', 6);
 			    $query->where('start_time', '<=', $end_time);
 			    $query->where('end_time', '>=', $start_time);
 			})->where('shop_id', $shop_id)->where('person', '>=', $person);

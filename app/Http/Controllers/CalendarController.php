@@ -314,6 +314,7 @@ class CalendarController extends Controller
 			}])->with(['orders' => function ($query) use ($start_time, $end_time) {
 					$query->where('status', '!=', 3);
 					$query->where('status', '!=', 4);
+					$query->where('status', '!=', 6);
 			    $query->where('start_time', '<', $end_time);
 			    $query->where('end_time', '>',$start_time);
 			}])->whereIn('id', $service_provider_id_list)->get();
@@ -329,6 +330,7 @@ class CalendarController extends Controller
 			$room = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
 					$query->where('status', '!=', 3);
 					$query->where('status', '!=', 4);
+					$query->where('status', '!=', 6);
 			    $query->where('start_time', '<', $end_time);
 			    $query->where('end_time', '>', $start_time);
 			}])->where('id', $room_id)->first();
@@ -417,8 +419,9 @@ class CalendarController extends Controller
 				    $query->where('start_time', '<', $end_time);
 				    $query->where('end_time', '>', $start_time);
 				}])->with(['orders' => function ($query) use ($start_time, $end_time) {
-						$query->where('status', '!=', 3);
-						$query->where('status', '!=', 4);
+					$query->where('status', '!=', 3);
+					$query->where('status', '!=', 4);
+					$query->where('status', '!=', 6);
 				    $query->where('start_time', '<', $end_time);
 				    $query->where('end_time', '>',$start_time);
 				}])->whereIn('id', $service_provider_id_list)->get();
@@ -428,6 +431,7 @@ class CalendarController extends Controller
 						throw new Exception($service_provider->name."號 師傅該時段請假 請重新選擇", 1);
 					}
 					if($service_provider->orders->count() > 0){
+						dd($service_provider);
 						throw new Exception($service_provider->name."號 師傅該時段已有約 請重新選擇", 1);
 					}
 				}
@@ -442,6 +446,7 @@ class CalendarController extends Controller
 				$room = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
 					$query->where('status', '!=', 3);
 					$query->where('status', '!=', 4);
+					$query->where('status', '!=', 6);
 			    $query->where('start_time', '<', $end_time);
 			    $query->where('end_time', '>', $start_time);
 				}])->where('id', $room_id)->first();

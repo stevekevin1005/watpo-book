@@ -55,6 +55,7 @@ class StaffController extends Controller
 		})->whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
 			$query->where('status', '!=', 3);
 			$query->where('status', '!=', 4);
+			$query->where('status', '!=', 6);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
 		})->where('shop_id', $shop_id)->get();
@@ -77,6 +78,7 @@ class StaffController extends Controller
 		$rooms = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
 			$query->where('status', '!=', 3);
 			$query->where('status', '!=', 4);
+			$query->where('status', '!=', 6);
 		    $query->where('start_time', '<=', $end_time);
 		    $query->where('end_time', '>=', $start_time);
 		})->where('shop_id', $shop_id)->get();
@@ -101,6 +103,7 @@ class StaffController extends Controller
 		})->whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
 			$query->where('status', '!=', 3);
 			$query->where('status', '!=', 4);
+			$query->where('status', '!=', 6);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
 		})->where('shop_id', $shop_id)->get();
@@ -123,6 +126,7 @@ class StaffController extends Controller
 		$rooms = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
 			$query->where('status', '!=', 3);
 			$query->where('status', '!=', 4);
+			$query->where('status', '!=', 6);
 		    $query->where('start_time', '<=', $end_time);
 		    $query->where('end_time', '>=', $start_time);
 		})->where('shop_id', $shop_id)->get();
