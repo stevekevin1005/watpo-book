@@ -153,7 +153,7 @@
             <div class="col-md-3">
                 <select name="service_id" id="select_service" class="form-control">
                     @foreach($service_list as $service)
-                    <option value="{{ $service->id }}" @{{if service_id && service_id == <?php echo $service->id?>}} selected="selected" @{{/if}}>{{ $service->title }}</option>
+                    <option value="{{ $service->id }}" {{if service_id && service_id == <?php echo $service->id?>}} selected="selected" @{{/if}}>{{ $service->title }}</option>
                     @endforeach
                 </select>
             </div>
@@ -563,7 +563,7 @@
             var service_id = $("#select_service").val();
             var start_time = new Date($("#start_time").val());
             // start_time = new Date(start_time - start_time.getTimezoneOffset() * 60000);
-            if(service_id == 1 || service_id == 3){
+            if(service_id == 4 || service_id == 3){
                 start_time.setMinutes(start_time.getMinutes() + 60);
             }
             else{

@@ -25,6 +25,10 @@ Route::group(['middleware' => ['web']], function () {
 	Route::get('/admin/logout', ['uses' => 'LoginController@logout', 'as' => 'logout']);
 	Route::post('/auth/logincheck', ['uses' => 'LoginController@loginCheck', 'as' => 'loginCheck']);
 	
+	Route::get('/staff/login', ['uses' => 'LoginController@staff_index', 'as' => 'login']);
+	Route::post('/staff/auth/logincheck', ['uses' => 'LoginController@staffLoginCheck', 'as' => 'staffLoginCheck']);
+	Route::get('/staff/index', ['uses' => 'StaffController@index', 'as' => 'staffIndex']);
+
 	Route::group(['prefix' => '/admin', 'middleware' => 'auth.login'], function () {
 		
 		Route::get('/serviceprovider/list', ['uses' => 'ServiceProviderController@index', 'as' => 'serviceProviderIndex']);
@@ -81,6 +85,9 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('/order/cancel', ['uses' => 'CalendarController@api_order_cancel', 'as' => 'apiOrderCancel']);
 	
 		Route::get('/shift/list', ['uses' => 'ShiftController@api_list', 'as' => 'apiShiftList']);
+
+		Route::get('/staff/order', ['uses' => 'StaffController@api_order', 'as' => 'apiStaffOrder']);
+		Route::get('/staff/check_status', ['uses' => 'StaffController@api_check_status', 'as' => 'apiCheckStatus']);
 	});
 
 	Route::group(['prefix' => '/api'], function () {

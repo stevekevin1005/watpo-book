@@ -15,6 +15,29 @@ class LoginController extends Controller
 		return view('admin.login');
 	}
 
+	public function staff_index()
+	{
+		return view('staff.login');
+	}
+
+	public function staffLoginCheck(Request $request)
+	{
+		$account = Account::where('account', $request->account)->first();
+
+		if ($account != null && Hash::check($request->password, $account->password))
+		{
+			$request->session()->put('account', $request->account);
+			$request->session()->put('account_id', $account->id);
+			$request->session()->put('account_level', $account->level);
+			if($account->level == 3){
+				return redirect('/admin/logout');
+			}
+			Log::create(['description' => '登入櫃檯系統']);
+			return redirect('/staff/index');
+		}
+		return redirect('/admin/login')->withErrors(['fail'=>'帳號或密碼錯誤']);
+	}
+
 	public function loginCheck(Request $request)
 	{
 		$account = Account::where('account', $request->account)->first();
