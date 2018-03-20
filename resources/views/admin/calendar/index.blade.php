@@ -345,8 +345,9 @@
             $('.selectpicker2').selectpicker({
                 size: 4
             });
-            var today = new Date().toISOString().substr(0, 16);
-            document.getElementById("start_time").value  = today;
+            var today = new Date();
+            today.setTime(today.getTime()+1000*60*60*8);
+            document.getElementById("start_time").value  = today.toISOString().substr(0, 16);
         });
 
         $("#leave_status").on("click", function(){
