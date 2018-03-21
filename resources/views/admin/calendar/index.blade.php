@@ -68,6 +68,7 @@
                                 data-room_id="{{$order->room_id}}"
                                 data-end_time="{{$order->end_time}}"
                                 data-status = "{{ $order->status }}"
+                                data-provider= "{{$order->provider}}"
                             >
                                 <td>{{ $order->id }}</td>
                                 <td>{{ $order->time }}</td>
@@ -118,12 +119,14 @@
             <div class="col-md-3">
                 <input type="text" class="form-control" name="phone" placeholder="現場客" @{{if phone}} value="@{{:phone}}" @{{/if}}>
             </div>
-            <div class="col-md-1" style="text-align:left;">
-                人數:
+            @{{if provider}}
+            <div class="col-md-2" style="text-align:left;">
+                原安排師傅:
             </div>
-            <div class="col-md-3">
-                <input type="number" class="form-control" @{{if person}} value="@{{:person}}" @{{/if}} readonly>
+            <div class="col-md-2" style="text-align:left;">
+                 @{{:provider}} 
             </div>
+            @{{/if}}
         </div>
         <div class="row" style="margin-top:10px">
             <div class="col-md-1" style="text-align:left;">
@@ -206,6 +209,7 @@
                     data-end_time='@{{:end_time}}'
                     data-room_id='@{{:room_id}}'
                     data-service_id='@{{:service_id}}'
+                    data-provider='@{{:provider}}'
                     style="font-size:20px;">更改訂單</button>
             </div>
             @{{if status != 6}}
@@ -241,6 +245,7 @@
             data-room_id="@{{:room_id}}"
             data-end_time="@{{:end_time}}"
             data-status = "@{{:status}}"
+            data-provider= "@{{:provider}}"
         >
             <td>@{{:id}}</td>
             <td>@{{:time}}</td>
@@ -348,6 +353,8 @@
             var today = new Date();
             today.setTime(today.getTime()+1000*60*60*8);
             document.getElementById("start_time").value  = today.toISOString().substr(0, 16);
+            today.setMinutes(today.getMinutes() + 120);
+            document.getElementById("end_time").value  = today.toISOString().substr(0, 16);
         });
 
         $("#leave_status").on("click", function(){
@@ -420,33 +427,46 @@
         $("body").on('click', '.leave_add', function(){
             var service_provider_id = $(this).data('id');
             var date =  $("#date").val();
+            if($('#'+service_provider_id+'_start').val() != "" && $('#'+service_provider_id+'_end').val() !=  ""){
+                var start_time = new Date(date+"T"+$('#'+service_provider_id+'_start').val()+"+08:00");
+                var end_time = new Date(date+"T"+$('#'+service_provider_id+'_end').val()+"+08:00");
             
-            var start_time = new Date(date+"T"+$('#'+service_provider_id+'_start').val()+"+08:00");
-            var end_time = new Date(date+"T"+$('#'+service_provider_id+'_end').val()+"+08:00");
-            
-            if(start_time > end_time){
-                end_time.setDate(end_time.getDate()+1);
-            }
-            
-            $.ajax({
-                url: '/api/leave/add',
-                type: 'post',
-                data: {
-                    service_provider_id: service_provider_id,
-                    start_time: start_time,
-                    end_time: end_time
-                },
-                success: function(data){
-                    swal.close();
-                },
-                error: function(e){
-                    swal(
-                    '系統發生錯誤',
-                    e.responseText,
-                    'error'
-                    )
+                if(start_time > end_time){
+                    end_time.setDate(end_time.getDate()+1);
                 }
-            });
+                
+                $.ajax({
+                    url: '/api/leave/add',
+                    type: 'post',
+                    data: {
+                        service_provider_id: service_provider_id,
+                        start_time: start_time,
+                        end_time: end_time
+                    },
+                    success: function(data){
+                        swal.close();
+                        swal(
+                        '新增休假',
+                        '成功',
+                        'success'
+                        )
+                    },
+                    error: function(e){
+                        swal(
+                        '系統發生錯誤',
+                        e.responseText,
+                        'error'
+                        )
+                    }
+                });
+            }
+            else{
+                swal(
+                    '請輸入時間',
+                    '尚未輸入時間',
+                    'error'
+                )
+            }
         });
 
         $(".open-left").trigger('click');
@@ -465,6 +485,7 @@
             var service_id = $(this).data('service_id');
             var room_id = $(this).data('room_id');
             var status = $(this).data('status');
+            var provider = $(this).data('provider');
             var myTemplate = $.templates("#check_form_template"); 
             var html = myTemplate.render({
                 id: id,
@@ -476,7 +497,8 @@
                 start_time: start_time,
                 service_id: service_id,
                 room_id: room_id,
-                status: status
+                status: status,
+                provider: provider
             });
             swal({
                 title: '#'+id+' 預約單確認',
@@ -539,6 +561,7 @@
             var end_time = $(this).data('end_time');
             var service_id = $(this).data('service_id');
             var person = $(this).data('person');
+            var provider = $(this).data('provider');
 
             var myTemplate = $.templates("#order_form_template");
             var html = myTemplate.render({
@@ -549,7 +572,8 @@
                 start_time: start_time,
                 end_time: end_time,
                 service_id: service_id,
-                person: person
+                person: person,
+                provider: provider
             });
 
             swal({
@@ -582,7 +606,7 @@
             else{
                 start_time.setMinutes(start_time.getMinutes() + 120);
             }
-           document.getElementById("end_time").valueAsNumber  = start_time.getTime();
+           document.getElementById("end_time").value  = start_time.toISOString().substr(0, 16);
         });
         @endif
         $("#date").on('change', function(e){
