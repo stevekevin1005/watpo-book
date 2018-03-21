@@ -36,6 +36,7 @@ class Reservation extends React.Component{
 
                 guestNum: 0,
                 operator: [],
+                operator_text: [],
                 roomId: null,
                 name: null,
                 contactNumber: null,
@@ -217,12 +218,17 @@ class Reservation extends React.Component{
         }).then(function(response){
             if(response.statusText == "OK"){
                 // show success alert
+                let operator_text = "";
+                reservation.operator_text.forEach(function(operator) {
+                    operator_text += (" "+operator);
+                });
+
                 that.toggleLoading();
                 that.setState({
                     success: true,
                     showAlert: true,
                     alertTitle: t("reserveSuccess"),
-                    alertText: <Alert notice={t("reserveNotice2")} text={t("reservatorName") + ": " +reservation.name + "\n" + t("reservatorDate") + ": "+reservation.date + " " + reservation.time + "\n服務: " + serviceName + "\n人數: " + reservation.guestNum +" " + (reservation.guestNum>1?t("people"):t("person"))+ "\n" + t("reserveNotice1")}/>
+                    alertText: <Alert notice={t("reserveNotice2")} text={t("reservatorName") + ": " +reservation.name + "\n" + t("contactNumber") + ": " +reservation.contactNumber + "\n" + t("reservatorDate") + ": "+reservation.date + " " + reservation.time + "\n服務: " + serviceName + "\n人數: " + reservation.guestNum +" " + (reservation.guestNum>1?t("people"):t("person"))+" "+t("operator")+": "+operator_text+"\n" + t("reserveNotice1")+ "\n" + t("reserveNotice3")}/>
                 });
             }else{
                 // show failure alert

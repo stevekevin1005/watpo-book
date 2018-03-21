@@ -93,6 +93,7 @@
 	"name": "名前",
 	"phone": "電話",
 	"time": "予約時間",
-	"reserveNotice1": "請截圖此畫面以便紀錄預約",
-	"reserveNotice2": "預約保留10分鐘"
+	"reserveNotice1": "この画面のスクリーンショットを取って予約を記録してください",
+	"reserveNotice2": "予約10分",
+	"reserveNotice3": "会社はマスターの権利を変更する権利を留保します"
 }

@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use Hash, Exception, DB, DateTime, DateInterval;
+use Hash, Exception, DB, DateTime, DateInterval, Session;
 use App\Models\Shop;
 use App\Models\Service;
 use App\Models\ServiceProvider;
@@ -13,13 +13,16 @@ class StaffController extends Controller
 	const headers = array('Content-Type' => 'application/json; <a href="http://superlevin.ifengyuan.tw/tag/charset/">charset</a>=utf-8');
 	public function index()
 	{
+		if (!Session::has('account')) {
+          return redirect('/staff/login');
+        }
 		$shops = Shop::all();
 		$view_data['shops'] = $shops;
 		return view('staff/index', $view_data);
 		
 	}
 
-	public function api_order(Request $request)
+	public function order(Request $request)
 	{
 		dd($request);
 	}

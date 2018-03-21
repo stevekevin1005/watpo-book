@@ -33,9 +33,9 @@
 	"ThaiOilMassage": "Traditional Thai Oil Massage",
 	"ThaiOilMassageDes": "The Traditional Thai Oil Massage master will massage our body with oil. By this way, our body will absorb the oil and make our body relax.",
 	"ThaiTraditionalMassage": "Thai Traditional Massage",
-	"ThaiTraditionalMassageDes":"泰國古式按摩源於印度的瑜珈術泰式是在地板上或高床上進行，按摩師運用雙手、手指、手軸和膝蓋、臂膀和腳的力量，循著身體各部位施以按壓、揉捏、彎曲、扭轉等動作，使身體更加放鬆及達到舒壓的效果，並同時促進血液循環。",
-	"massageAndSpa":"泰式全身去角質+芳香精油SPA",
-	"massageAndSpaDes":"隔絕身心壓力及都市污染，泰和殿為您準備的洗塵儀式開始，您今天的 SPA 專屬時空已經替您預留。沐浴的開始即是SPA芳香舒壓的開始 ~~~",
+	"ThaiTraditionalMassageDes":"Thai ancient massage is derived from Indian yoga. Thai is performed on the floor or on a high bed. The masseur uses his hands, fingers, axes and knees, arms and feet to push and knead along various parts of the body. , bending, twisting and other movements to make the body more relaxed and relieve pressure, and at the same time promote blood circulation.",
+	"massageAndSpa":"Thai Body Exfoliating + Aromatic Oil SPA",
+	"massageAndSpaDes":"To isolate physical and psychological pressure and urban pollution, the dust-washing ceremony prepared by Taihe Dian begins. Your SPA's exclusive time and space has been reserved for you. The beginning of the bath is the beginning of SPA aromatic pressure relief ~~~",
 	"chooseService": "Choose Service",
 	"chooseTime": "Choose Time",
 	"checkDetails": "Check Details",
@@ -95,5 +95,6 @@
 	"phone": "Phone",
 	"time": "Time",
 	"reserveNotice1": "please screenshot this view to check reservation",
-	"reserveNotice2": ""
+	"reserveNotice2": "Reserve reservation 10 minutes",
+	"reserveNotice3": "The company reserves the right to change the rights of the master"
 }

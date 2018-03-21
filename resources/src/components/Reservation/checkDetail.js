@@ -62,7 +62,8 @@ class CheckDetail extends React.Component{
                 if(response.statusText == "OK"){
                     that.props.setReservation({
                         guestNum: 1,
-                        operator: ['0']
+                        operator: ['0'],
+                        operator_text: ['不指定'],
                     },()=>{
                         that.props.setSourceData({
                             service_provider_list: response.data.service_provider_list,
@@ -83,12 +84,15 @@ class CheckDetail extends React.Component{
     }
     setOperator(event){
         const value = +event.target.options[event.target.selectedIndex].value, // id
+              text  = +event.target.options[event.target.selectedIndex].text,
               index = +event.target.dataset.index; // index to save at
-
+       
         let operator = JSON.parse(JSON.stringify(this.props.reservation.operator));
+        let operator_text = JSON.parse(JSON.stringify(this.props.reservation.operator_text));
         operator[index]=value;
-
-        this.props.setReservation({operator});
+        operator_text[index]= (value != 0 ) ? text+"號" : "不指定";
+        this.props.setReservation({operator, operator_text});
+        
     }
     setShower(event){
         const el = event.target.options[event.target.selectedIndex],
@@ -105,14 +109,15 @@ class CheckDetail extends React.Component{
     setGuestNum(event){
         const guestNum = +event.target.options[event.target.selectedIndex].value,
               that = this;
-        let operator = [];
+        let operator = [], operator_text = [];
         for(let i = 0;i < guestNum ;i++){
             operator.push('0');
+            operator_text.push('不指定');
         }
         if(guestNum > 2){
             this.setState({shower: true});
         }
-        this.props.setReservation({guestNum, operator},()=>{
+        this.props.setReservation({guestNum, operator, operator_text},()=>{
             that.setRoomId();
         });
     }

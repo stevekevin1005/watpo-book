@@ -87,7 +87,7 @@ class OrdersInfo extends React.Component{
         if(this.props.checkOrdersInfo.name === undefined || this.props.checkOrdersInfo.contactNumber === undefined) location.href = '../checkOrders/0';
         
         const { t } = this.props,
-        ths = ["name","phone","guestNum","time",""].map((th, index)=>{
+        ths = ["services","name","phone","guestNum","time",""].map((th, index)=>{
             return (<th key={index}>{t(th)}</th>);
         });
 
@@ -105,6 +105,7 @@ class OrdersInfo extends React.Component{
                     {this.state.orders.length>0?this.state.orders.map((order,index)=>{
                         return (
                             <tr>
+                                <td>{order.service.title}</td>
                                 <td>{order.name}</td>
                                 <td>{order.phone}</td>
                                 <td>{order.person}</td>
