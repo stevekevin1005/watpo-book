@@ -28,6 +28,7 @@ Route::group(['middleware' => ['web']], function () {
 	Route::get('/staff/login', ['uses' => 'LoginController@staff_index', 'as' => 'login']);
 	Route::post('/staff/auth/logincheck', ['uses' => 'LoginController@staffLoginCheck', 'as' => 'staffLoginCheck']);
 	Route::get('/staff/index', ['uses' => 'StaffController@index', 'as' => 'staffIndex']);
+	Route::post('/staff/order', ['uses' => 'StaffController@order', 'as' => 'staffOrder']);
 
 	Route::group(['prefix' => '/admin', 'middleware' => 'auth.login'], function () {
 		
@@ -86,7 +87,6 @@ Route::group(['middleware' => ['web']], function () {
 	
 		Route::get('/shift/list', ['uses' => 'ShiftController@api_list', 'as' => 'apiShiftList']);
 
-		Route::get('/staff/order', ['uses' => 'StaffController@api_order', 'as' => 'apiStaffOrder']);
 		Route::get('/staff/check_status', ['uses' => 'StaffController@api_check_status', 'as' => 'apiCheckStatus']);
 	});
 

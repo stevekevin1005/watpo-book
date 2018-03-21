@@ -59,18 +59,17 @@ class BookController extends Controller
 			$service_providers = ServiceProvider::where('shop_id', $shop_id);
 			$rooms = Room::where('shop_id', $shop_id);
 
-			if($service_id == 1 || $service_id == 2){
+			if($service_id == 1 || $service_id == 3){
 				$service_providers = $service_providers->where('service_1', true);
-				$rooms = $rooms->where('service_1', true);
 			}
-			else if($service_id == 3 || $service_id == 4){
+			else if($service_id == 2 || $service_id == 4){
 				$service_providers = $service_providers->where('service_2', true);
-				$rooms = $rooms->where('service_2', true);
 			}
 			else{
 				$service_providers = $service_providers->where('service_3', true);
-				$rooms = $rooms->where('service_3', true);
+				$rooms = $rooms->where('shower', true);
 			}
+
 			$service_providers = $service_providers->orderBy('name', 'asc')->get();
 			$rooms = $rooms->get();
 
@@ -328,11 +327,16 @@ class BookController extends Controller
 			})->where('shop_id', $shop_id)->where('person', '>=', $person);
 			
 			if($shower == "true"){
-				$room = $room->where('shower', 1);
+				$room = $room->where('shower', 1)->orderBy('person', 'asc');
 			}
-			
+			else if($shower != "true" && ($service_id == 2 || $service_id == 4)){
+				$room = $room->orderBy('service_2', 'desc');
+			}
+			else{
+				$room = $room->orderBy('service_1', 'desc');
+			}
 
-			$room = $room->orderBy('shower', 'asc')->orderBy('person', 'asc')->first();
+			$room = $room->first();
 			
 			if(!$room){
 				throw new Exception("該時段房間已滿 請重新選擇", 1);
