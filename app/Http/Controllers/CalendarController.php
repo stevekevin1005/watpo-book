@@ -412,50 +412,110 @@ class CalendarController extends Controller
 			$order->phone = $phone;
 			$order->status = 2;
 			$order->service_id = $service_id;
-			if($person > 0){
-				$order->serviceProviders()->detach();
-				$order->person = $person;
-				$service_provider_list = ServiceProvider::with(['leaves' => function ($query) use ($start_time, $end_time) {
-				    $query->where('start_time', '<', $end_time);
-				    $query->where('end_time', '>', $start_time);
-				}])->with(['orders' => function ($query) use ($start_time, $end_time) {
-					$query->where('status', '!=', 3);
-					$query->where('status', '!=', 4);
-					$query->where('status', '!=', 6);
-				    $query->where('start_time', '<', $end_time);
-				    $query->where('end_time', '>',$start_time);
-				}])->whereIn('id', $service_provider_id_list)->get();
-				
-				foreach ($service_provider_list as $key => $service_provider) {
-					if($service_provider->leaves->count() > 0){
-						throw new Exception($service_provider->name."號 師傅該時段請假 請重新選擇", 1);
-					}
-					if($service_provider->orders->count() > 0){
-						dd($service_provider);
-						throw new Exception($service_provider->name."號 師傅該時段已有約 請重新選擇", 1);
-					}
-				}
-				
-				foreach ($service_provider_list as $key => $service_provider) {
-					$service_provider->orders()->save($order);
-				}
-			}
 			
-		
-			if($order->room_id != $room_id){
+			
+			if($order->start_time != $start_time || $order->end_time != $end_time){
 				$room = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
-					$query->where('status', '!=', 3);
-					$query->where('status', '!=', 4);
-					$query->where('status', '!=', 6);
+						$query->where('status', '!=', 3);
+						$query->where('status', '!=', 4);
+						$query->where('status', '!=', 6);
 			    $query->where('start_time', '<', $end_time);
 			    $query->where('end_time', '>', $start_time);
 				}])->where('id', $room_id)->first();
-				if($room->orders->count() > 0){
-					throw new Exception("該時段房間已有預訂 請重新選擇", 1);
+				foreach ($room->orders as $room_order) {
+					if($room_order->id != $order->id){
+						throw new Exception("該時段房間已有預訂 請重新選擇", 1);
+					}
 				}
+
 				$order->room_id = $room_id;
+				if($person > 0){
+					$order->serviceProviders()->detach();
+					$order->person = $person;
+					$service_provider_list = ServiceProvider::with(['leaves' => function ($query) use ($start_time, $end_time) {
+					    $query->where('start_time', '<', $end_time);
+					    $query->where('end_time', '>', $start_time);
+					}])->with(['orders' => function ($query) use ($start_time, $end_time) {
+						$query->where('status', '!=', 3);
+						$query->where('status', '!=', 4);
+						$query->where('status', '!=', 6);
+					    $query->where('start_time', '<', $end_time);
+					    $query->where('end_time', '>',$start_time);
+					}])->whereIn('id', $service_provider_id_list)->get();
+					
+					foreach ($service_provider_list as $key => $service_provider) {
+						if($service_provider->leaves->count() > 0){
+							throw new Exception($service_provider->name."號 師傅該時段請假 請重新選擇", 1);
+						}
+						if($service_provider->orders->count() > 0){
+							throw new Exception($service_provider->name."號 師傅該時段已有約 請重新選擇", 1);
+						}
+					}
+					
+					foreach ($service_provider_list as $key => $service_provider) {
+						$service_provider->orders()->save($order);
+					}
+				}
+				else{
+					foreach ($order->serviceProviders as $key => $service_provider) {
+						$orders = Order::whereHas('ServiceProviders', function($query) use ($service_provider){
+							$query->where('id', $service_provider->id);
+						})
+						->where('status', '!=', 3)
+						->where('status', '!=', 4)
+						->where('status', '!=', 6)
+						->where('start_time', '<', $end_time)
+						->where('end_time', '>',$start_time)->get();
+						foreach ($orders as $service_provider_order) {
+							if($service_provider_order->id != $order->id){
+								throw new Exception($service_provider->name."號 師傅該時段已有約 請重新選擇", 1);
+							}
+						}
+					}
+				}
 			}
-			
+			else{
+				if($order->room_id != $room_id){
+					$room = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
+						$query->where('status', '!=', 3);
+						$query->where('status', '!=', 4);
+						$query->where('status', '!=', 6);
+				    $query->where('start_time', '<', $end_time);
+				    $query->where('end_time', '>', $start_time);
+					}])->where('id', $room_id)->first();
+					if($room->orders->count() > 0){
+						throw new Exception("該時段房間已有預訂 請重新選擇", 1);
+					}
+					$order->room_id = $room_id;
+				}
+				if($person > 0){
+					$order->serviceProviders()->detach();
+					$order->person = $person;
+					$service_provider_list = ServiceProvider::with(['leaves' => function ($query) use ($start_time, $end_time) {
+					    $query->where('start_time', '<', $end_time);
+					    $query->where('end_time', '>', $start_time);
+					}])->with(['orders' => function ($query) use ($start_time, $end_time) {
+						$query->where('status', '!=', 3);
+						$query->where('status', '!=', 4);
+						$query->where('status', '!=', 6);
+					    $query->where('start_time', '<', $end_time);
+					    $query->where('end_time', '>',$start_time);
+					}])->whereIn('id', $service_provider_id_list)->get();
+					
+					foreach ($service_provider_list as $key => $service_provider) {
+						if($service_provider->leaves->count() > 0){
+							throw new Exception($service_provider->name."號 師傅該時段請假 請重新選擇", 1);
+						}
+						if($service_provider->orders->count() > 0){
+							throw new Exception($service_provider->name."號 師傅該時段已有約 請重新選擇", 1);
+						}
+					}
+					
+					foreach ($service_provider_list as $key => $service_provider) {
+						$service_provider->orders()->save($order);
+					}
+				}
+			}
 			$order->start_time = $start_time;
 			$order->end_time = $end_time;
 			$order->save();
