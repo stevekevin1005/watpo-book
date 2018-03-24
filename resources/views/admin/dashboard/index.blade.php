@@ -13,6 +13,16 @@
 				<h1>{{ $shop['name'] }}</h1>
 			</div>
 		    <div class="row">
+                @if(!is_null(session('account_shop_id')))
+                <div class="col-sm-6 col-lg-3">
+                    <a class="text-white" href="/admin/calendar/{{session('account_shop_id')}}">
+                        <div class="widget-simple text-center card-box bg-primary">
+                            <h3 class="text-white">預約列表</h3>
+                            <p class="text-white">&nbsp;</p>
+                        </div>
+                    </a>
+                </div>
+                @endif
                 <div class="col-sm-6 col-lg-3">
                     <div class="widget-simple text-center card-box bg-success">
                         <h3 class="text-white counter">{{ $shop['order_day'] }}</h3>
