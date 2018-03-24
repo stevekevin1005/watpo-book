@@ -47,9 +47,14 @@
                                     @endforeach
 	                			</select>
 	                        </div>
-	                        <div class="col-sm-6">
+	                        <div class="col-sm-2">
 	                            <button class="btn btn-primary waves-effect waves-light">確定</button>
 	                        </div>
+                            @if(isset($worker))
+                            <div class="col-sm-3" style="font-size:25px;color:red;">
+                                {{ $worker->name }}
+                            </div>
+                            @endif
 	                    </form>
                     </div>
                 </div>

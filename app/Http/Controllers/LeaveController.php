@@ -27,7 +27,8 @@ class LeaveController extends Controller
 			$leaves = Leave::where('service_provider_id', $request->service_provider_id)->get();
 			$view_data['leaves'] = $leaves;
 
-			
+			$view_data['worker'] = ServiceProvider::where('id', $request->service_provider_id)->first();
+
 			$shop = Shop::where('id', $shop_id)->first();
 
 			$start_time = new DateTime(date('Y-m-d').' '.$shop->start_time);
@@ -39,7 +40,6 @@ class LeaveController extends Controller
 
 			$view_data['start_time'] = $start_time->format("Y-m-d\TH:i");
 			$view_data['end_time'] = $end_time->format("Y-m-d\TH:i");
-			// dd($end_time);
 		}
 		
 		return view('admin.leave.index', $view_data);
