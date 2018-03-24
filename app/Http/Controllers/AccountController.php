@@ -18,7 +18,10 @@ class AccountController extends Controller
 			$query->orderBy('name', 'asc');
 		}])->get();
 		$view_data['counter_accounts'] = Account::where('level', 2)->get();
-		$view_data['worker_accounts'] = Account::where('level', 3)->get();
+		$view_data['worker_accounts'] = Account::where('level', 3)
+										->with(['service_provider' => function ($query) {
+										    $query->with('Shop');
+										}])->get();
 		return view('admin.account.index', $view_data);
 	}
 

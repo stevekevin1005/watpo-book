@@ -117,6 +117,7 @@
 									<tr class="">
 										<td><input type="text" class="form-control" value="{{$account->account}}" readonly></td>
 										<td><input type="text" class="form-control" id="new_password_{{$account->id}}" maxlength="20" minlength="4"></td>
+										<td>{{ $account->service_provider->name }}({{ $account->service_provider->shop->name}})</td>
 										<td><button class="btn btn-info reset_password" data-id="{{ $account->id }}">重置密碼</button><button class="btn btn-danger delete_account" data-id="{{ $account->id }}">刪除帳號</button></td>
 									</tr>
 									@endforeach
