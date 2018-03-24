@@ -15,7 +15,7 @@ class OrderController extends Controller
 	public function index(Request $request)
 	{
 
-		$order_list = Order::with('shop')->with('service')->with('serviceProviders');
+		$order_list = Order::with('shop')->with('service')->with('serviceProviders')->with('room');
 		$service_provider_list = ServiceProvider::with('shop')->get();
 
 		if($request->service_provider){

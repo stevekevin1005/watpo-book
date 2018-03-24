@@ -125,14 +125,16 @@
         	<div class="card-box">
 		        <table class="table table-striped">
 					<thead>
-						<th>訂單編號</th>
+						<th>編號</th>
 						<th>店家</th>
-						<th>顧客姓名</th>
+						<th>姓名</th>
 						<th>手機號碼</th>
 						<th>師傅</th>
+						<th>房間</th>
 						<th>方案</th>
+						<th>開始</th>
+						<th>結束</th>
 						<th>狀態</th>
-						<th>訂單日期</th>
 					</thead>
 					<tbody>
 						@foreach($order_list as $order)
@@ -140,7 +142,13 @@
 							<?php
 								$service_provider_list= "";
 								foreach ($order->serviceProviders as $key => $serviceProvider) {
-									$service_provider_list = $service_provider_list." ".$serviceProvider->name;
+									if($serviceProvider->shop_id == $order->shop_id){
+										$service_provider_list = $service_provider_list." ".$serviceProvider->name;
+									}
+									else{
+										$service_provider_list = $service_provider_list." ".$serviceProvider->name."(調)";
+									}
+									
 								}
 
 								$status = "";
@@ -173,9 +181,11 @@
 							<td>{{ $order->name }}</td>
 							<td>{{ $order->phone }}</td>
 							<td>{{ $service_provider_list }}</td>
+							<td>{{ $order->room->name }}</td>
 							<td>{{ $order->service->title }}</td>
+							<td>{{ $order->start_time }}</td>
+							<td>{{ $order->end_time }}</td>
 							<td>{!! $status !!}</td>
-							<td>{{ $order->created_at }}</td>
 						</tr>
 						@endforeach
 					</tbody>
