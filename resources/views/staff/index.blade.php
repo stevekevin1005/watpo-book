@@ -51,60 +51,63 @@
             <!-- ============================================================== -->
             <!-- End Right content here -->
             <!-- ============================================================== -->
-            <div class="card-box" style="position:fixed; z-index:1000; height:80px; width:100%;">
-                <div class="row">
-                    <div class="col-md-3">
-                        <select id="choose_shop" class="form-control">
-                            <option disabled selected value>選擇店家</option>
-                            @foreach ($shops as $key => $shop)
-                            <option value="{{ $shop->id }}">{{ $shop->name }}</option>
-                            @endforeach
-                        </select>
+            <form action="/staff/order" method="post">
+                <div class="card-box" style="position:fixed; z-index:1000; height:80px; width:100%;">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <select id="choose_shop" class="form-control" name="shop_id" required>
+                                <option disabled selected value>選擇店家</option>
+                                @foreach ($shops as $key => $shop)
+                                <option value="{{ $shop->id }}">{{ $shop->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4"><input type="datetime-local" id="choose_time" name="time" required></div>
+                        <div class="col-md-4"><button class="btn btn-primary" id="show_status">確認狀態</button></div>
                     </div>
-                    <div class="col-md-4"><input type="datetime-local" id="choose_time"></div>
-                    <div class="col-md-4"><button class="btn btn-primary" id="show_status">確認狀態</button></div>
                 </div>
-            </div>
-            <div class="content-page">
+                <div class="content-page">
                 <!-- Start content -->
-                <div class="content">
-                    <div class="container">
-                        
+                    <div class="content">
+                        <div class="container">
+                        {{ csrf_token() }}
                         <!-- Page-Title -->
-                        <div class="row" style="margin-top: 80px;">
-                            <div class="col-lg-12">
-                                <div class="card-box">
-                                    <div class="row">
-                                        <div class="col-md-1" style="text-align:left;">
-                                            姓名:
+                            <div class="row" style="margin-top: 80px;">
+                                <div class="col-lg-12">
+                                    <div class="card-box">
+                                        <div class="row">
+                                            <div class="col-md-1" style="text-align:left;">
+                                                姓名:
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" name="name" required>
+                                            </div>
+                                            <div class="col-md-1" style="text-align:left;">
+                                                電話:
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" name="phone" required>
+                                            </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <input type="text" class="form-control" name="name" placeholder="現場客">
+                                        <hr/>
+                                        <div class="detail">
                                         </div>
-                                        <div class="col-md-1" style="text-align:left;">
-                                            電話:
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="text" class="form-control" name="phone" placeholder="現場客">
-                                        </div>
-                                    </div>
-                                    <hr/>
-                                    <div id="submit_row" class="row" style="margin-top:10px">
-                                        <div class="col-md-12 text-right">
-                                            <button class="btn btn-primary" id="add_order">新增下一筆</button>
-                                            <button class="btn btn-danger" id="delete_order">刪除最後一筆</button>
-                                            <input class="btn btn-success" type="submit" value="送出">
+                                        <div id="submit_row" class="row" style="margin-top:10px">
+                                            <div class="col-md-12 text-right">
+                                                <div class="btn btn-primary" id="add_order">新增下一筆</div>
+                                                <input class="btn btn-success" type="submit" value="送出">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 <!-- end content -->
                 <!-- FOOTER -->
                 <!-- End FOOTER -->
-            </div>
+                </div>
+             </form>
 
         </div>
         <!-- END wrapper -->
@@ -127,20 +130,21 @@
         <script id="order_form_template" type="x-jsrender">
             <div class="row order@{{:order_index}}" style="margin-top:10px">
                 <div class="col-md-1" style="text-align:left;">
-                    房間:
+                    服務:
                 </div>
                 <div class="col-md-3">
-                    <select name="order[@{{:order_index}}][room_id]" class="form-control">
-                        @{{for room_status}}
-                        <option value="@{{>id}}">@{{>info}}</option>
-                        @{{/for}}
+                    <select name="order[@{{:order_index}}][service_id]" id="select_service" class="form-control selectpicker" title="選擇服務" required>
+                        @foreach($services as $service)
+                            <option value="$service->id">{{$service->title}}</option>
+                        @endforeach
+                        
                     </select>
                 </div>
                 <div class="col-md-1" style="text-align:left;">
                     師傅:
                 </div>
                 <div class="col-md-6">
-                    <select name="order[@{{:order_index}}][service_provider_list][]" class="selectpicker" multiple="" data-max-options="4" data-width="100%" tabindex="-98">
+                    <select name="order[@{{:order_index}}][service_provider_list][]" class="selectpicker selectWorker" multiple="" data-max-options="3" data-width="100%" tabindex="-98" title="選擇師傅" required>
                         <option value="0">不指定</option>
                         <option value="0">不指定</option>
                         <option value="0">不指定</option>
@@ -149,15 +153,21 @@
                         @{{/for}}
                     </select>
                 </div>
+                
             </div>
             <div class="row order@{{:order_index}}" style="margin-top:10px">
                 <div class="col-md-1" style="text-align:left;">
-                    服務:
+                    房間:
                 </div>
                 <div class="col-md-3">
-                    <select name="order[@{{:order_index}}][service_id]" id="select_service" class="form-control">
-                        <option value="1">泰式古法指壓 (1小時)</option>
+                    <select name="order[@{{:order_index}}][room_id]" class="form-control selectpicker" title="選擇房間" required>
+                        @{{for room_status}}
+                        <option value="@{{>id}}">@{{>info}}</option>
+                        @{{/for}}
                     </select>
+                </div>
+                <div class="col-md-1 col-md-offset-7">
+                    <div class="btn btn-danger delete_order" data-order_index="@{{:order_index}}">刪除</div>
                 </div>
             </div>
             <hr class="order@{{:order_index}}" />
@@ -223,9 +233,10 @@
                         service_provider_status: status_data.service_provider_status,
                         room_status: status_data.room_status
                     });
-                    $(html).insertBefore("#submit_row");
+
+                    $('.detail').append(html);
                     $('.selectpicker').selectpicker({
-                        size: 4
+                        size: 3
                     });
                     i++;
                 }
@@ -234,17 +245,35 @@
                 }
             });
 
-            $('#delete_order').on('click', function(){
-                if(i > 0){
-                    $(".order"+(i-1)).remove();
-                    i--;
-                }
+            $('body').on('click', '.delete_order',function(){
+                var order_index = $(this).data('order_index');
+                $(".order"+order_index).remove();
+            });
+
+            $('body').on('changed.bs.select', '.selectWorker', function(e){
+                console.log(e);
             });
 
             $("#choose_time").on('click', function(){
                 var today = new Date();
                 today.setTime(today.getTime()+1000*60*60*8);
-                document.getElementById("start_time").value  = today.toISOString().substr(0, 16);
+                document.getElementById("choose_time").value  = today.toISOString().substr(0, 16);
+                var shop = $("#choose_shop").val();
+                if(shop !== undefined && shop !== null){
+                    $.ajax({
+                        url: '/api/staff/check_status',
+                        type: 'get',
+                        dataType: 'json',
+                        data: {
+                            time: today.toISOString().substr(0, 16),
+                            shop_id: shop
+                        },
+                        success: function(data){
+                            status_data = data;
+                            $('.detail').html('');
+                        }
+                    });
+                }
             });
 
             $("#choose_time,#choose_shop").on('change', function(){
@@ -262,6 +291,7 @@
                         },
                         success: function(data){
                             status_data = data;
+                            $('.detail').html('');
                         }
                     });
                 }
