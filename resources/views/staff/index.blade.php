@@ -51,10 +51,10 @@
             <!-- ============================================================== -->
             <!-- End Right content here -->
             <!-- ============================================================== -->
-            <form action="/staff/order" method="post">
+            <form action="/staff/order" method="post" id="orderForm">
                 <div class="card-box" style="position:fixed; z-index:1000; height:80px; width:100%;">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-xs-3">
                             <select id="choose_shop" class="form-control" name="shop_id" required>
                                 <option disabled selected value>選擇店家</option>
                                 @foreach ($shops as $key => $shop)
@@ -62,8 +62,10 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4"><input type="datetime-local" id="choose_time" name="time" required></div>
-                        <div class="col-md-4"><button class="btn btn-primary" id="show_status">確認狀態</button></div>
+                        <div class="col-xs-4"><input class="form-control" type="datetime-local" id="choose_time" name="time" required></div>
+                        <div class="col-xs-1">限制時間：</div>
+                        <div class="col-xs-1"><input class="form-control" type="checkbox" id="limit_time" value="true" checked></div>
+                        <div class="col-xs-3"><div class="btn btn-primary" id="show_status">確認狀態</div></div>
                     </div>
                 </div>
                 <div class="content-page">
@@ -80,13 +82,13 @@
                                                 姓名:
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="text" class="form-control" name="name" required>
+                                                <input type="text" class="form-control" name="name" placeholder="現場客">
                                             </div>
                                             <div class="col-md-1" style="text-align:left;">
                                                 電話:
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="text" class="form-control" name="phone" required>
+                                                <input type="text" class="form-control" name="phone" placeholder="現場客">
                                             </div>
                                         </div>
                                         <hr/>
@@ -133,9 +135,9 @@
                     服務:
                 </div>
                 <div class="col-md-3">
-                    <select name="order[@{{:order_index}}][service_id]" id="select_service" class="form-control selectpicker" title="選擇服務" required>
+                    <select name="order[@{{:order_index}}][service_id]" id="select_service" class="form-control selectpicker" title="選擇服務" data-hide-disabled="true" required>
                         @foreach($services as $service)
-                            <option value="$service->id">{{$service->title}}</option>
+                            <option value="{{$service->id}}">{{$service->title}}</option>
                         @endforeach
                         
                     </select>
@@ -144,12 +146,16 @@
                     師傅:
                 </div>
                 <div class="col-md-6">
-                    <select name="order[@{{:order_index}}][service_provider_list][]" class="selectpicker selectWorker" multiple="" data-max-options="3" data-width="100%" tabindex="-98" title="選擇師傅" required>
+                    <select name="order[@{{:order_index}}][service_provider_list][]" class="selectpicker selectWorker" multiple="" data-max-options="3" data-width="100%" tabindex="-98" title="選擇師傅" data-hide-disabled="true" required>
                         <option value="0">不指定</option>
                         <option value="0">不指定</option>
                         <option value="0">不指定</option>
                         @{{for service_provider_status}}
-                        <option value="@{{>id}}">@{{>info}}</option>
+                        @{{if selected == false}}
+                        <option value="@{{>id}}" data-index="@{{:index}}">@{{>info}}</option>
+                        @{{else}}
+                        <option value="@{{>id}}" data-index="@{{:index}}" disabled>@{{>info}}</option>
+                        @{{/if}}
                         @{{/for}}
                     </select>
                 </div>
@@ -160,9 +166,13 @@
                     房間:
                 </div>
                 <div class="col-md-3">
-                    <select name="order[@{{:order_index}}][room_id]" class="form-control selectpicker" title="選擇房間" required>
+                    <select name="order[@{{:order_index}}][room_id]" class="form-control selectpicker selectRoom" title="選擇房間" data-hide-disabled="true" required>
                         @{{for room_status}}
-                        <option value="@{{>id}}">@{{>info}}</option>
+                        @{{if selected == false}}
+                        <option value="@{{>id}}" data-index="@{{:index}}">@{{>info}}</option>
+                        @{{else}}
+                        <option value="@{{>id}}" data-index="@{{:index}}" disabled>@{{>info}}</option>
+                        @{{/if}}
                         @{{/for}}
                     </select>
                 </div>
@@ -250,8 +260,65 @@
                 $(".order"+order_index).remove();
             });
 
-            $('body').on('changed.bs.select', '.selectWorker', function(e){
-                console.log(e);
+            function limitSelect(){
+                $('option').removeProp('disabled');
+                for(var i in status_data.service_provider_status){
+                    status_data.service_provider_status[i].selected = false;
+                }
+                for(var i in status_data.room_status){
+                    status_data.room_status[i].selected = false;
+                }
+                $('.selectWorker').each(function(){
+                    if($(this).context.localName == 'select'){
+                        var worker_list = $(this).selectpicker('val');
+                        for(var i in status_data.service_provider_status){
+                            for(var k in worker_list){
+                                if(worker_list[k] != 0 && status_data.service_provider_status[i].id == worker_list[k]){
+                                    status_data.service_provider_status[i].selected = true;
+                                }
+                            }
+                        }
+                        $('.selectWorker').not(this).each(function(){
+                            if($(this).context.localName == 'select'){
+                                $(this).children().each(function(index, el) {
+                                    for(var i in worker_list){
+                                        if(worker_list[i] != 0 && $(this).val() == worker_list[i]){
+                                            $(this).attr('disabled','disabled')
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+                $('.selectRoom').each(function(){
+                    if($(this).context.localName == 'select'){
+                        var room_id = $(this).selectpicker('val');
+                        console.log(room_id);
+                        for(var i in status_data.room_status){
+                            if(status_data.room_status[i].id == room_id){
+                                status_data.room_status[i].selected = true;
+                            }
+                        }
+                        $('.selectRoom').not(this).each(function(){
+                            if($(this).context.localName == 'select'){
+                                $(this).children().each(function(index, el) {
+                                    if($(this).val() == room_id){
+                                        $(this).attr('disabled','disabled')
+                                    } 
+                                });
+                            }
+                        });
+                    }
+                });
+                $('.selectWorker').selectpicker('refresh');
+                $('.selectRoom').selectpicker('refresh');
+                console.log(status_data);
+            }
+            $('body').on('changed.bs.select', '.selectWorker, .selectRoom', function(e, clickedIndex, newValue, oldValue){
+                if($(this).context.localName == 'select'){
+                    limitSelect();
+                }
             });
 
             $("#choose_time").on('click', function(){
@@ -276,10 +343,11 @@
                 }
             });
 
-            $("#choose_time,#choose_shop").on('change', function(){
+            $("#choose_time,#choose_shop,#limit_time").on('change', function(){
                 var time = $("#choose_time").val();
                 var shop = $("#choose_shop").val();
-
+                var limit = document.getElementById("limit_time").checked;
+                
                 if(time !== "" && shop !== undefined){
                     $.ajax({
                         url: '/api/staff/check_status',
@@ -287,7 +355,8 @@
                         dataType: 'json',
                         data: {
                             time: time,
-                            shop_id: shop
+                            shop_id: shop,
+                            limit_time: limit
                         },
                         success: function(data){
                             status_data = data;
@@ -299,6 +368,25 @@
 
             $("#show_status").on('click', function(){
                 show_status();
+            });
+
+            $('#orderForm').submit(function() {
+                var count = 0;
+                $('.selectWorker').each(function(){
+                    if($(this).context.localName == 'select'){
+                        var worker_list = $(this).selectpicker('val');
+                        count += worker_list.length;
+                    }
+                });
+                if(count == 0){
+                    alert("沒有選擇師傅");
+                    return false;
+                }
+                else if(count > status_data.service_provider_status.length){
+                    alert("可選擇師傅超過上限");
+                    return false;
+                }
+                return true;
             });
 
             function show_status(){
