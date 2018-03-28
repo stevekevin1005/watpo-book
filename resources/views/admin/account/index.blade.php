@@ -207,7 +207,7 @@
 		var account = $("#new_worker_account").val();
 		var password = $("#new_worker_password").val();
 		var worker_id = $("#choose_service_provider").val();
-		if(account.length < 2 || account.length > 20){
+		if(account.length <= 2 || account.length > 20){
 			swal(
 			  '資料格式錯誤',
 			  '帳號最少二個字元最多二十個字元!',
