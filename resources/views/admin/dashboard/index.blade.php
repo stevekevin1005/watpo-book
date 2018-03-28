@@ -31,8 +31,8 @@
                 </div>
                 <div class="col-sm-6 col-lg-3">
                     <div class="widget-simple text-center card-box bg-warning">
-                        <h3 class="text-white counter">{{ $shop['order_week'] }}</h3>
-                        <p class="text-white">一週預約</p>
+                        <h3 class="text-white counter">{{ $shop['order_month'] }}</h3>
+                        <p class="text-white">月預約</p>
                     </div>
                 </div>
                 @if(session('account_level') != 3)
@@ -45,8 +45,8 @@
 
                 <div class="col-sm-6 col-lg-3">
                     <div class="widget-simple text-center card-box bg-purple">
-                        <h3 class="text-white">$ <span class="counter">{{ $shop['revenue_week'] }}</span></h3>
-                        <p class="text-white">一週營業額</p>
+                        <h3 class="text-white">$ <span class="counter">{{ $shop['revenue_month'] }}</span></h3>
+                        <p class="text-white">月營業額</p>
                     </div>
                 </div>
                 @endif

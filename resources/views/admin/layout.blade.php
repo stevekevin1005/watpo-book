@@ -102,9 +102,6 @@
                             </li>
                              @if(session('account_level') != 3)
                             <li>
-                                <a href="/admin/leave" class="waves-effect waves-primary"><i class="md md-face-unlock"></i><span> 休假管理 </span></a>
-                            </li>
-                            <li>
                                 <a href="/admin/order" class="waves-effect waves-primary"><i class="md md-view-list"></i><span> 訂單列表 </span></a>
                             </li>
                             <li>
@@ -116,6 +113,9 @@
                             </li>
                             @if(session('account_level') == 1)
                             <li class="text-muted menu-title">管理功能選單</li>
+                            <li>
+                                <a href="/admin/leave" class="waves-effect waves-primary"><i class="md md-face-unlock"></i><span> 休假管理 </span></a>
+                            </li>
                             <li>
                                 <a href="/admin/shift" class="waves-effect waves-primary"><i class="md md-face-unlock"></i><span> 排班設定 </span></a>
                             </li>
