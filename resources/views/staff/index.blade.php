@@ -72,7 +72,7 @@
                 <!-- Start content -->
                     <div class="content">
                         <div class="container">
-                        {{ csrf_token() }}
+                        @csrf
                         <!-- Page-Title -->
                             <div class="row" style="margin-top: 80px;">
                                 <div class="col-lg-12">
@@ -222,9 +222,6 @@
         </script>
         <script type="text/javascript">
         $(function() {
-            $('.selectpicker').selectpicker({
-                size: 4
-            });
             var i = 0;
 
             var status_data = {
@@ -246,7 +243,7 @@
 
                     $('.detail').append(html);
                     $('.selectpicker').selectpicker({
-                        size: 3
+                        size: 7
                     });
                     i++;
                 }
