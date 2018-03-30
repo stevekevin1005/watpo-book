@@ -321,7 +321,7 @@
             $("#choose_time").on('click', function(){
                 var today = new Date();
                 today.setTime(today.getTime()+1000*60*60*8);
-                document.getElementById("choose_time").value  = today.toISOString().substr(0, 16);
+                document.getElementById("choose_time").value  = today.toISOString().substr(0, 16)+":00";
                 var shop = $("#choose_shop").val();
                 if(shop !== undefined && shop !== null){
                     $.ajax({
