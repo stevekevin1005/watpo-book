@@ -62,7 +62,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-xs-4"><input class="form-control" type="datetime-local" id="choose_time" name="time" required></div>
+                        <div class="col-xs-4"><input class="form-control" type="datetime-local" id="choose_time" name="time" formnovalidate></div>
                         <div class="col-xs-1">限制時間：</div>
                         <div class="col-xs-1"><input class="form-control" type="checkbox" id="limit_time" value="true" checked></div>
                         <div class="col-xs-3"><div class="btn btn-primary" id="show_status">確認狀態</div></div>
@@ -72,7 +72,6 @@
                 <!-- Start content -->
                     <div class="content">
                         <div class="container">
-                        @csrf
                         <!-- Page-Title -->
                             <div class="row" style="margin-top: 80px;">
                                 <div class="col-lg-12">
@@ -321,9 +320,9 @@
             $("#choose_time").on('click', function(){
                 var today = new Date();
                 today.setTime(today.getTime()+1000*60*60*8);
-                document.getElementById("choose_time").value  = today.toISOString().substr(0, 16)+":00";
+                document.getElementById("choose_time").value  = today.toISOString().substr(0, 16);
                 var shop = $("#choose_shop").val();
-                if(shop !== undefined && shop !== null){
+                if(shop !== undefined && shop !== null && shop !== ''){
                     $.ajax({
                         url: '/api/staff/check_status',
                         type: 'get',
@@ -345,7 +344,7 @@
                 var shop = $("#choose_shop").val();
                 var limit = document.getElementById("limit_time").checked;
                 
-                if(time !== "" && shop !== undefined){
+                if(time !== "" && shop !== undefined && shop !== null){
                     $.ajax({
                         url: '/api/staff/check_status',
                         type: 'get',
