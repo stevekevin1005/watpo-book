@@ -8,6 +8,7 @@ use App\Models\ServiceProvider;
 use App\Models\Order;
 use App\Models\Room;
 use App\Models\BlackList;
+use App\Models\Log;
 class StaffController extends Controller
 {
 	const headers = array('Content-Type' => 'application/json; <a href="http://superlevin.ifengyuan.tw/tag/charset/">charset</a>=utf-8');

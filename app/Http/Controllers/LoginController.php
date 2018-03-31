@@ -44,6 +44,7 @@ class LoginController extends Controller
 
 		if ($account != null && Hash::check($request->password, $account->password))
 		{
+			$request->session()->flush();
 			$request->session()->put('account', $request->account);
 			$request->session()->put('account_id', $account->id);
 			$request->session()->put('account_level', $account->level);
