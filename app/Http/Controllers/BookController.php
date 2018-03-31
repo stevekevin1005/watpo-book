@@ -205,19 +205,25 @@ class BookController extends Controller
 			}
 		}
 
-		$service_providers_count = ServiceProvider::whereHas('orders' ,function ($query) use ($start_time, $end_time) {
+		$service_providers = ServiceProvider::with(['orders' => function ($query) use ($start_time, $end_time) {
 			$query->where('status', '!=', 3);
 			$query->where('status', '!=', 4);
 			$query->where('status', '!=', 6);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
-		})->where('shop_id', $shop_id)->count();
+		}])->where('shop_id', $shop_id)->get();
+
+		$service_providers_count = 0;
+		foreach($service_providers as $service_provider){
+			$service_providers_count += $service_provider->orders->count();
+		}
 
 		$order_person_count = Order::
 									where('start_time', '<', $end_time)->
 									where('end_time', '>', $start_time)->
 									where('status', '!=', 3)->
 									where('status', '!=', 4)->
+									where('status', '!=', 6)->
 									where('shop_id', $shop_id)->get()->sum('person');
 
 		if(!empty(array_diff($service_provider_id_list, $service_provider_list))){
