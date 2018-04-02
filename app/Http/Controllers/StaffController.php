@@ -29,7 +29,7 @@ class StaffController extends Controller
 	{
 		$name = $request->name != "" ? $request->name : "現場客";
 		$phone = $request->phone != "" ? $request->phone : "現場客";
-		$start_time = $request->time;
+		$start_time = $request->date_time;
 		$shop_id = $request->shop_id;
 		$order_list = $request->order;
 		foreach ($order_list as $key => $order_info) {

@@ -62,7 +62,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-xs-4"><input class="form-control" type="datetime-local" id="choose_time" name="time" formnovalidate></div>
+                        <div class="col-xs-4"><input class="form-control" type="datetime-local" id="choose_time" name="date_time"></div>
                         <div class="col-xs-1">限制時間：</div>
                         <div class="col-xs-1"><input class="form-control" type="checkbox" id="limit_time" value="true" checked></div>
                         <div class="col-xs-3"><div class="btn btn-primary" id="show_status">確認狀態</div></div>
@@ -318,32 +318,32 @@
             });
 
             $("#choose_time").on('click', function(){
-                // var today = new Date();
-                // today.setTime(today.getTime()+1000*60*60*8);
-                // document.getElementById("choose_time").value  = today.toISOString().substr(0, 16);
-                // var shop = $("#choose_shop").val();
-                // if(shop !== undefined && shop !== null && shop !== ''){
-                //     $.ajax({
-                //         url: '/api/staff/check_status',
-                //         type: 'get',
-                //         dataType: 'json',
-                //         data: {
-                //             time: today.toISOString().substr(0, 16),
-                //             shop_id: shop
-                //         },
-                //         success: function(data){
-                //             status_data = data;
-                //             $('.detail').html('');
-                //         }
-                //     });
-                // }
+                var today = new Date();
+                today.setTime(today.getTime()+1000*60*60*8);
+                document.getElementById("choose_time").value  = today.toISOString().substr(0, 16);
+                var shop = $("#choose_shop").val();
+                if(shop !== undefined && shop !== null && shop !== ''){
+                    $.ajax({
+                        url: '/api/staff/check_status',
+                        type: 'get',
+                        dataType: 'json',
+                        data: {
+                            time: today.toISOString().substr(0, 16),
+                            shop_id: shop
+                        },
+                        success: function(data){
+                            status_data = data;
+                            $('.detail').html('');
+                        }
+                    });
+                }
             });
 
             $("#choose_time,#choose_shop,#limit_time").on('change', function(){
                 var time = $("#choose_time").val();
                 var shop = $("#choose_shop").val();
                 var limit = document.getElementById("limit_time").checked;
-                alert(time);
+                
                 if(time !== "" && shop !== undefined && shop !== null){
                     $.ajax({
                         url: '/api/staff/check_status',
