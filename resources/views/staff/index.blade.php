@@ -62,7 +62,8 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-xs-4"><input class="form-control" type="datetime-local" id="choose_time" name="date_time"></div>
+                        <div class="col-xs-4">
+                        <input type="datetime-local" id="choose_time" name="date_time" class="form-control" value=<?php echo date('Y-m-d\TH:i')?>></div>
                         <div class="col-xs-1">限制時間：</div>
                         <div class="col-xs-1"><input class="form-control" type="checkbox" id="limit_time" value="true" checked></div>
                         <div class="col-xs-3"><div class="btn btn-primary" id="show_status">確認狀態</div></div>
@@ -96,7 +97,7 @@
                                         <div id="submit_row" class="row" style="margin-top:10px">
                                             <div class="col-md-12 text-right">
                                                 <div class="btn btn-primary" id="add_order">新增下一筆</div>
-                                                <input class="btn btn-success" type="submit">
+                                                <input class="btn btn-success" type="submit" value="送出">
                                             </div>
                                         </div>
                                     </div>
