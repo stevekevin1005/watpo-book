@@ -318,32 +318,32 @@
             });
 
             $("#choose_time").on('click', function(){
-                var today = new Date();
-                today.setTime(today.getTime()+1000*60*60*8);
-                document.getElementById("choose_time").value  = today.toISOString().substr(0, 16);
-                var shop = $("#choose_shop").val();
-                if(shop !== undefined && shop !== null && shop !== ''){
-                    $.ajax({
-                        url: '/api/staff/check_status',
-                        type: 'get',
-                        dataType: 'json',
-                        data: {
-                            time: today.toISOString().substr(0, 16),
-                            shop_id: shop
-                        },
-                        success: function(data){
-                            status_data = data;
-                            $('.detail').html('');
-                        }
-                    });
-                }
+                // var today = new Date();
+                // today.setTime(today.getTime()+1000*60*60*8);
+                // document.getElementById("choose_time").value  = today.toISOString().substr(0, 16);
+                // var shop = $("#choose_shop").val();
+                // if(shop !== undefined && shop !== null && shop !== ''){
+                //     $.ajax({
+                //         url: '/api/staff/check_status',
+                //         type: 'get',
+                //         dataType: 'json',
+                //         data: {
+                //             time: today.toISOString().substr(0, 16),
+                //             shop_id: shop
+                //         },
+                //         success: function(data){
+                //             status_data = data;
+                //             $('.detail').html('');
+                //         }
+                //     });
+                // }
             });
 
             $("#choose_time,#choose_shop,#limit_time").on('change', function(){
                 var time = $("#choose_time").val();
                 var shop = $("#choose_shop").val();
                 var limit = document.getElementById("limit_time").checked;
-                
+                alert(time);
                 if(time !== "" && shop !== undefined && shop !== null){
                     $.ajax({
                         url: '/api/staff/check_status',
