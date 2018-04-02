@@ -96,7 +96,7 @@
                                         <div id="submit_row" class="row" style="margin-top:10px">
                                             <div class="col-md-12 text-right">
                                                 <div class="btn btn-primary" id="add_order">新增下一筆</div>
-                                                <input class="btn btn-success" type="submit" value="送出">
+                                                <input class="btn btn-success" type="submit">
                                             </div>
                                         </div>
                                     </div>
