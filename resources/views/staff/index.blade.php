@@ -288,31 +288,30 @@
                         });
                     }
                 });
-                $('.selectRoom').each(function(){
-                    if($(this).context.localName == 'select'){
-                        var room_id = $(this).selectpicker('val');
-                        console.log(room_id);
-                        for(var i in status_data.room_status){
-                            if(status_data.room_status[i].id == room_id){
-                                status_data.room_status[i].selected = true;
-                            }
-                        }
-                        $('.selectRoom').not(this).each(function(){
-                            if($(this).context.localName == 'select'){
-                                $(this).children().each(function(index, el) {
-                                    if($(this).val() == room_id){
-                                        $(this).attr('disabled','disabled')
-                                    } 
-                                });
-                            }
-                        });
-                    }
-                });
+                // $('.selectRoom').each(function(){
+                //     if($(this).context.localName == 'select'){
+                //         var room_id = $(this).selectpicker('val');
+                //         console.log(room_id);
+                //         for(var i in status_data.room_status){
+                //             if(status_data.room_status[i].id == room_id){
+                //                 status_data.room_status[i].selected = true;
+                //             }
+                //         }
+                //         $('.selectRoom').not(this).each(function(){
+                //             if($(this).context.localName == 'select'){
+                //                 $(this).children().each(function(index, el) {
+                //                     if($(this).val() == room_id){
+                //                         $(this).attr('disabled','disabled')
+                //                     } 
+                //                 });
+                //             }
+                //         });
+                //     }
+                // });
                 $('.selectWorker').selectpicker('refresh');
-                $('.selectRoom').selectpicker('refresh');
-                console.log(status_data);
+                // $('.selectRoom').selectpicker('refresh');
             }
-            $('body').on('changed.bs.select', '.selectWorker, .selectRoom', function(e, clickedIndex, newValue, oldValue){
+            $('body').on('changed.bs.select', '.selectWorker', function(e, clickedIndex, newValue, oldValue){
                 if($(this).context.localName == 'select'){
                     limitSelect();
                 }
