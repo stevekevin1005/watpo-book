@@ -19,6 +19,14 @@
 					<div class="card-box">
 						<form action="/admin/order" method="get" class="form-horizontal with-pagination">
 			                <div class="row row-m">
+			                	<div class="col-md-4">
+									<div class="form-group">
+										<label class="col-md-4 control-label">訂單編號</label>
+										<div class="col-md-8">
+											<input type="text" name="id" value="{{ $request->id }}" class="form-control">
+										</div>
+									</div>
+								</div>
 								<div class="col-md-4">
 									<div class="form-group">
 										<label class="col-md-4 control-label">顧客名稱</label>

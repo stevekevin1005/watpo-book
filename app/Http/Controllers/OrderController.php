@@ -25,6 +25,10 @@ class OrderController extends Controller
 			});
 		}
 
+		if($request->id){
+			$order_list = $order_list->where('id', $request->id);
+		}
+
 		if($request->name){
 			$order_list = $order_list->where('name', $request->name);
 		}
@@ -34,11 +38,11 @@ class OrderController extends Controller
 		}
 
 		if($request->start_time){
-			$order_list = $order_list->where('created_at', ">=", $request->start_time);
+			$order_list = $order_list->where('start_time', ">=", $request->start_time);
 		}
 
 		if($request->end_time){
-			$order_list = $order_list->where('created_at', "<=", $request->end_time);
+			$order_list = $order_list->where('end_time', "<=", $request->end_time);
 		}
 
 		if($request->service){
