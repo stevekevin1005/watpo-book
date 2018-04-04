@@ -58,7 +58,7 @@
                         </thead>
                         <tbody>
                             @foreach($order_list as $order)
-                            <tr id="order_list" style="background-color: {{ $order->color }};cursor: pointer;color: white;"
+                            <tr id="order_list" style="background-color: {{ $order->color }};cursor: pointer;color: white; {{$order->same_phone}}"
                                 data-id="{{$order->id}}"
                                 data-name="{{$order->name}}"
                                 data-phone="{{$order->phone}}"
