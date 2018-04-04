@@ -172,15 +172,19 @@ class CalendarController extends Controller
 					$data->color = "";
 					break;
 			}
-
-			if(($key - 1 >= 0 && $data->phone == $orders[$key-1]->phone ) || ($key + 1 < count($orders) && $data->phone == $orders[$key+1]->phone ) && $data->phone != '現場客' ){
-				$data->same_phone = 'border-left: 2px red solid;border-right: 2px red solid;';
-				if(!($key - 1 >= 0 && $data->phone == $orders[$key-1]->phone )) $data->same_phone .= 'border-top: 2px red solid;';
-				else if(!($key + 1 < count($orders) && $data->phone == $orders[$key+1]->phone )) $data->same_phone .= 'border-bottom: 2px red solid;';
+			if($data->phone != '現場客' ){
+				if(($key - 1 >= 0 && $data->phone == $orders[$key-1]->phone ) || ($key + 1 < count($orders) && $data->phone == $orders[$key+1]->phone )){
+					$data->same_phone = 'border-left: 2px red solid;border-right: 2px red solid;';
+					if(!($key - 1 >= 0 && $data->phone == $orders[$key-1]->phone )) $data->same_phone .= 'border-top: 2px red solid;';
+					else if(!($key + 1 < count($orders) && $data->phone == $orders[$key+1]->phone )) $data->same_phone .= 'border-bottom: 2px red solid;';
+				}
+				else{
+					$data->same_phone = '';
+				}
 			}
 			else{
 				$data->same_phone = '';
-			}
+			}	
 			
 			$order_list[] = $data;
 		}
