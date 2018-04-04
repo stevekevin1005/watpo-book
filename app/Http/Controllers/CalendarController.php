@@ -174,7 +174,9 @@ class CalendarController extends Controller
 			}
 
 			if(($key - 1 >= 0 && $data->phone == $orders[$key-1]->phone ) || ($key + 1 < count($orders) && $data->phone == $orders[$key+1]->phone )){
-				$data->same_phone = 'border:5px red solid;' ;
+				$data->same_phone = 'border-left: red solid;border-right: red solid;';
+				if(!($key - 1 >= 0 && $data->phone == $orders[$key-1]->phone )) $data->same_phone .= 'border-top: red solid;';
+				else if(!($key + 1 < count($orders) && $data->phone == $orders[$key+1]->phone )) $data->same_phone .= 'border-bottom: red solid;';
 			}
 			else{
 				$data->same_phone = '';
