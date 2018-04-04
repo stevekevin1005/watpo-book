@@ -136,7 +136,7 @@ class CalendarController extends Controller
 			$data->provider = "";
 			$person = $order->person;
 			$service_provider_count = 0;	
-			foreach ($order->serviceProviders as $key => $serviceProvider) {
+			foreach ($order->serviceProviders as $serviceProvider) {
 				if($serviceProvider->shop_id == $shop_id){
 					$data->provider .= $serviceProvider->name." ";
 				}
@@ -172,6 +172,14 @@ class CalendarController extends Controller
 					$data->color = "";
 					break;
 			}
+
+			if(($key - 1 >= 0 && $data->phone == $orders[$key-1]->phone ) || ($key + 1 < count($orders) && $data->phone == $orders[$key+1]->phone )){
+				$data->same_phone = 'border:5px red solid;' ;
+			}
+			else{
+				$data->same_phone = '';
+			}
+			
 			$order_list[] = $data;
 		}
 

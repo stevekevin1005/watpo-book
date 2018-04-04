@@ -235,7 +235,7 @@
     </thead>
     <tbody>
         @{{for order_list}}
-        <tr id="order_list" style="background-color: @{{:color}};cursor: pointer;color: white"
+        <tr id="order_list" style="background-color: @{{:color}};cursor: pointer;color: white; @{{:same_phone}}"
             data-id="@{{:id}}"
             data-name="@{{:name}}"
             data-phone="@{{:phone}}"

@@ -54,7 +54,7 @@
             <form action="/staff/order" method="post" id="orderForm">
                 <div class="card-box" style="position:fixed; z-index:1000; height:80px; width:100%;">
                     <div class="row">
-                        <div class="col-xs-3">
+                        <div class="col-xs-2">
                             <select id="choose_shop" class="form-control" name="shop_id" required>
                                 <option disabled selected value>選擇店家</option>
                                 @foreach ($shops as $key => $shop)
@@ -62,10 +62,12 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-xs-4">
+                        <div class="col-xs-3">
                         <input type="datetime-local" id="choose_time" name="date_time" class="form-control" value=<?php echo date('Y-m-d\TH:i')?>></div>
                         <div class="col-xs-1">限制時間：</div>
                         <div class="col-xs-1"><input class="form-control" type="checkbox" id="limit_time" value="true" checked></div>
+                        <div class="col-xs-1">限制房間：</div>
+                        <div class="col-xs-1"><input class="form-control" type="checkbox" id="limit_room" value="true" checked></div>
                         <div class="col-xs-3"><div class="btn btn-primary" id="show_status">確認狀態</div></div>
                     </div>
                 </div>
@@ -234,7 +236,7 @@
                 var time = $("#choose_time").val();
                 var shop = $("#choose_shop").val();
 
-                if(time !== "" && shop !== undefined){
+                if(time !== "" && shop !== undefined & shop !== null && shop != ''){
                     var html = myTemplate.render({
                         order_index: i,
                         service_provider_status: status_data.service_provider_status,
@@ -288,30 +290,35 @@
                         });
                     }
                 });
-                // $('.selectRoom').each(function(){
-                //     if($(this).context.localName == 'select'){
-                //         var room_id = $(this).selectpicker('val');
-                //         console.log(room_id);
-                //         for(var i in status_data.room_status){
-                //             if(status_data.room_status[i].id == room_id){
-                //                 status_data.room_status[i].selected = true;
-                //             }
-                //         }
-                //         $('.selectRoom').not(this).each(function(){
-                //             if($(this).context.localName == 'select'){
-                //                 $(this).children().each(function(index, el) {
-                //                     if($(this).val() == room_id){
-                //                         $(this).attr('disabled','disabled')
-                //                     } 
-                //                 });
-                //             }
-                //         });
-                //     }
-                // });
+            
+                if(document.getElementById("limit_room").checked){
+                    $('.selectRoom').each(function(){
+                        if($(this).context.localName == 'select'){
+                            var room_id = $(this).selectpicker('val');
+            
+                            for(var i in status_data.room_status){
+                                if(status_data.room_status[i].id == room_id){
+                                    status_data.room_status[i].selected = true;
+                                }
+                            }
+                            $('.selectRoom').not(this).each(function(){
+                                if($(this).context.localName == 'select'){
+                                    $(this).children().each(function(index, el) {
+                                        if($(this).val() == room_id){
+                                            $(this).attr('disabled','disabled')
+                                        } 
+                                    });
+                                }
+                            });
+                        }
+                    });
+                    $('.selectRoom').selectpicker('refresh');
+                }
+                  
                 $('.selectWorker').selectpicker('refresh');
-                // $('.selectRoom').selectpicker('refresh');
+                
             }
-            $('body').on('changed.bs.select', '.selectWorker', function(e, clickedIndex, newValue, oldValue){
+            $('body').on('changed.bs.select', '.selectWorker, .selectRoom', function(e, clickedIndex, newValue, oldValue){
                 if($(this).context.localName == 'select'){
                     limitSelect();
                 }
@@ -339,7 +346,7 @@
                 }
             });
 
-            $("#choose_time,#choose_shop,#limit_time").on('change', function(){
+            $("#choose_time,#choose_shop,#limit_time,#limit_room").on('change', function(){
                 var time = $("#choose_time").val();
                 var shop = $("#choose_shop").val();
                 var limit = document.getElementById("limit_time").checked;

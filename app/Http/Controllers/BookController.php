@@ -379,7 +379,7 @@ class BookController extends Controller
 		try{
 			$name = $request->name;
 			$phone = $request->phone;
-			$order_list = Order::with('service')->where('start_time', '>', date('Y-m-d H:i:s'))->where('name', $name)->where('phone', $phone)->where('status', 1)->get();
+			$order_list = Order::with('service')->where('start_time', '>', date('Y-m-d H:i:s'))->where('name', $name)->where('phone', $phone)->whereIn('status', [1,2])->get();
 			
 			return response()->json($order_list);
 		}
