@@ -324,6 +324,10 @@
                 }
             });
 
+            $('body').on('click', '.delete_order', function(e, clickedIndex, newValue, oldValue){
+                limitSelect();
+            });
+
             $("#choose_time").on('click', function(){
                 var today = new Date();
                 today.setTime(today.getTime()+1000*60*60*8);
@@ -350,7 +354,7 @@
                 var time = $("#choose_time").val();
                 var shop = $("#choose_shop").val();
                 var limit = document.getElementById("limit_time").checked;
-                
+
                 if(time !== "" && shop !== undefined && shop !== null){
                     $.ajax({
                         url: '/api/staff/check_status',
