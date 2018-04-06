@@ -429,18 +429,18 @@ class CalendarController extends Controller
 			
 			
 			if($order->start_time != $start_time || $order->end_time != $end_time){
-				$room = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
-						$query->where('status', '!=', 3);
-						$query->where('status', '!=', 4);
-						$query->where('status', '!=', 6);
-			    $query->where('start_time', '<', $end_time);
-			    $query->where('end_time', '>', $start_time);
-				}])->where('id', $room_id)->first();
-				foreach ($room->orders as $room_order) {
-					if($room_order->id != $order->id){
-						throw new Exception("該時段房間已有預訂 請重新選擇", 1);
-					}
-				}
+				// $room = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
+				// 		$query->where('status', '!=', 3);
+				// 		$query->where('status', '!=', 4);
+				// 		$query->where('status', '!=', 6);
+			 //    $query->where('start_time', '<', $end_time);
+			 //    $query->where('end_time', '>', $start_time);
+				// }])->where('id', $room_id)->first();
+				// foreach ($room->orders as $room_order) {
+				// 	if($room_order->id != $order->id){
+				// 		throw new Exception("該時段房間已有預訂 請重新選擇", 1);
+				// 	}
+				// }
 
 				$order->room_id = $room_id;
 				if($person > 0){
@@ -490,16 +490,16 @@ class CalendarController extends Controller
 			}
 			else{
 				if($order->room_id != $room_id){
-					$room = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
-						$query->where('status', '!=', 3);
-						$query->where('status', '!=', 4);
-						$query->where('status', '!=', 6);
-				    $query->where('start_time', '<', $end_time);
-				    $query->where('end_time', '>', $start_time);
-					}])->where('id', $room_id)->first();
-					if($room->orders->count() > 0){
-						throw new Exception("該時段房間已有預訂 請重新選擇", 1);
-					}
+					// $room = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
+					// 	$query->where('status', '!=', 3);
+					// 	$query->where('status', '!=', 4);
+					// 	$query->where('status', '!=', 6);
+				 //    $query->where('start_time', '<', $end_time);
+				 //    $query->where('end_time', '>', $start_time);
+					// }])->where('id', $room_id)->first();
+					// if($room->orders->count() > 0){
+					// 	throw new Exception("該時段房間已有預訂 請重新選擇", 1);
+					// }
 					$order->room_id = $room_id;
 				}
 				if($person > 0){
