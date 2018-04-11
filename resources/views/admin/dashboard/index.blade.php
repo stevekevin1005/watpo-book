@@ -35,7 +35,7 @@
                         <p class="text-white">月預約</p>
                     </div>
                 </div>
-                @if(session('account_level') != 3)
+                @if(session('account_level') == 1)
                 <div class="col-sm-6 col-lg-3">
                     <div class="widget-simple text-center card-box bg-pink">
                         <h3 class="text-white">$ <span class="counter">{{ $shop['revenue_day'] }}</span></h3>
@@ -47,6 +47,21 @@
                     <div class="widget-simple text-center card-box bg-purple">
                         <h3 class="text-white">$ <span class="counter">{{ $shop['revenue_month'] }}</span></h3>
                         <p class="text-white">月營業額</p>
+                    </div>
+                </div>
+                @endif
+                @if(session('account_level') == 2)
+                <div class="col-sm-6 col-lg-3">
+                    <div class="widget-simple text-center card-box bg-pink">
+                        <h3 class="text-white"><span class="counter">{{ $shop['cancel_day'] }}</span></h3>
+                        <p class="text-white">今日逾期</p>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-lg-3">
+                    <div class="widget-simple text-center card-box bg-purple">
+                        <h3 class="text-white"><span class="counter">{{ $shop['cancel_month'] }}</span></h3>
+                        <p class="text-white">月逾期</p>
                     </div>
                 </div>
                 @endif

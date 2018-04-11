@@ -52,30 +52,50 @@ class DashboardController extends Controller
 				});
 			}
 
+			if($request->session()->get('account_level') == 1){
+				$day_orders = $day_orders->with('service')->where('status', '!=', 3)->where('status', '!=', 4)->where('status', '!=', 6)->where('shop_id', $shop->id)->where('start_time', '<=', $day_end_time)->where('start_time', '>=', $day_start_time)->get();
+				$info['order_day'] = $day_orders->count();		
+				$info['revenue_day'] = 0;
+				foreach ($day_orders as $key => $order) {
+					if($order->status == 5){
+						$info['revenue_day'] += $order->service->price * $order->person;
+					}
+				}
 
-			$day_orders = $day_orders->with('service')->where('status', '!=', 3)->where('status', '!=', 4)->where('status', '!=', 6)->where('shop_id', $shop->id)->where('start_time', '<=', $day_end_time)->where('start_time', '>=', $day_start_time)->get();
-			$info['order_day'] = $day_orders->count();		
-			$info['revenue_day'] = 0;
-			foreach ($day_orders as $key => $order) {
-				if($order->status == 5){
-					$info['revenue_day'] += $order->service->price * $order->person;
+				$month_orders = $month_orders->with('service')->where('status', '!=', 3)->where('status', '!=', 4)->where('status', '!=', 6)->where('shop_id', $shop->id)->where('start_time', '<=', $month_end_time)->where('start_time', '>=', $month_start_time)->get();
+				$info['order_month'] = $month_orders->count();
+				$info['revenue_month'] = 0;
+				foreach ($month_orders as $key => $order) {
+					if($order->status == 5){
+						$info['revenue_month'] += $order->service->price * $order->person;
+					}
 				}
 			}
+			else if($request->session()->get('account_level') == 2){
+				$day_orders = $day_orders->with('service')->where('status', '!=', 3)->where('status', '!=', 4)->where('status', '!=', 6)->where('shop_id', $shop->id)->where('start_time', '<=', $day_end_time)->where('start_time', '>=', $day_start_time)->get();
+				$info['order_day'] = $day_orders->count();		
+				$day_cancel_orders = Order::where('status', 6)->where('shop_id', $shop->id)->where('start_time', '<=', $day_end_time)->where('start_time', '>=', $day_start_time)->get();
+				$info['cancel_day'] = $day_cancel_orders->count();
 
-			$month_orders = $month_orders->with('service')->where('status', '!=', 3)->where('status', '!=', 4)->where('status', '!=', 6)->where('shop_id', $shop->id)->where('start_time', '<=', $month_end_time)->where('start_time', '>=', $month_start_time)->get();
-			$info['order_month'] = $month_orders->count();
-			$info['revenue_month'] = 0;
-			foreach ($month_orders as $key => $order) {
-				if($order->status == 5){
-					$info['revenue_month'] += $order->service->price * $order->person;
-				}
+				$month_orders = $month_orders->with('service')->where('status', '!=', 3)->where('status', '!=', 4)->where('status', '!=', 6)->where('shop_id', $shop->id)->where('start_time', '<=', $month_end_time)->where('start_time', '>=', $month_start_time)->get();
+				$info['order_month'] = $month_orders->count();
+				$month_cancel_orders = Order::where('status', 6)->where('shop_id', $shop->id)->where('start_time', '<=', $month_end_time)->where('start_time', '>=', $month_start_time)->get();
+				$info['cancel_month'] = $month_cancel_orders->count();
+				
+			}
+			else if($request->session()->get('account_level') == 3){
+				$day_orders = $day_orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
+				    $query->where('id', $service_provider_id);
+				})->with('service')->where('status', '!=', 3)->where('status', '!=', 4)->where('status', '!=', 6)->where('shop_id', $shop->id)->where('start_time', '<=', $day_end_time)->where('start_time', '>=', $day_start_time)->get();
+				$info['order_day'] = $day_orders->count();		
+				$month_orders = $month_orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
+				    $query->where('id', $service_provider_id);
+				})->with('service')->where('status', '!=', 3)->where('status', '!=', 4)->where('status', '!=', 6)->where('shop_id', $shop->id)->where('start_time', '<=', $month_end_time)->where('start_time', '>=', $month_start_time)->get();
+				$info['order_month'] = $month_orders->count();
 			}
 			$info['id'] = $shop->id;
 			$view_data['shop_list'][] = $info;
 		}
 		return view('admin.dashboard.index', $view_data);
 	}
-
-
-
 }
