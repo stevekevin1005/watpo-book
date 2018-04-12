@@ -39,6 +39,8 @@ class StaffController extends Controller
 			$service_provider_id_list = $order_info['service_provider_list'];
 			$room_id = $order_info['room_id'];
 
+			$room = Room::where('id', $room_id)->first();
+
 			$order = new Order;
 			$order->name = $name;
 			$order->phone = $phone;
@@ -48,17 +50,18 @@ class StaffController extends Controller
 			$order->room_id = $room_id;
 			$order->shop_id = $shop_id;
 			$order->start_time = $start_time;
-			$order->end_time = $end_time;
+			$order->end_time = $end_time->format('Y-m-d H:i:s');
 			$order->account_id = $request->session()->get('account_id');
 			$order->save();
 
 			$service_provider_list = ServiceProvider::whereIn('id', $service_provider_id_list)->get();
-
+			$service_provider_name = "";
 			foreach ($service_provider_list as $key => $service_provider) {
 				$service_provider->orders()->save($order);
+				$service_provider_name = $service_provider_name.$service_provider->name." ";
 			}
 		}
-
+		Log::create(['description' => '新增 訂單#'.$order->id." 店家:".$order->shop()->first()->name." 姓名:".$order->name." 電話:".$order->phone." 服務:".$order->service()->first()->title." 人數:".$order->person."房號:".$room->name."師傅:".$service_provider_name." 開始時間:".$order->start_time." 結束時間".$order->end_time."(櫃台訂位)"]);
 		$request->session()->flush();
 		return redirect('/staff/login');
 	}
