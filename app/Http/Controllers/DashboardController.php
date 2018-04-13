@@ -17,8 +17,13 @@ class DashboardController extends Controller
 		$view_data = [];
 		$shop_list = Shop::all();
 		foreach ($shop_list as $key => $shop) {
-			
-			$date = date("Y-m-d");
+	
+			if(strtotime(date('H:i:s')) >= strtotime(date($shop->start_time)) ){
+				$date = date("Y-m-d");
+			}
+			else{
+				$date = date("Y-m-d", strtotime(date("Y-m-d")."-1 day"));
+			}
 
 			$first = 1;
 			$w = date('w',strtotime($date));
