@@ -220,11 +220,15 @@
                     data-provider='@{{:provider}}'
                     style="font-size:20px;">更改訂單</button>
             </div>
+            @if(session('account_level') != 1)
             @{{if status != 6}}
+            @endif
             <div class="col-md-4">
                 <button type="button" class="btn btn-success order_confirm" data-id="@{{:id}}" style="font-size:20px;">確認訂單</button>
             </div>
+            @if(session('account_level') != 1)
             @{{/if}}
+            @endif
         </div>
     </div>
 </script>
