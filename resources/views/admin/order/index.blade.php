@@ -77,6 +77,20 @@
 									</div>
 								<!-- /form-group-->
 								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label class="col-md-4 control-label">包廂</label>
+										<div class="col-md-8">
+											<select name="room" class="form-control">
+												<option selected="true" value="">選擇包廂</option>
+												@foreach($room_list as $room)
+												<option value="{{ $room->id }}" <?php if($request->room == $room->id){?> selected <?php }?>>{{ $room->name."(".$room->shop->name.")" }}</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
+								<!-- /form-group-->
+								</div>
 			                  <!-- /col-md-4-->
 			                  <!-- /col-md-4-->
 			                </div>
@@ -118,7 +132,7 @@
 				                </div>
 			                  <!-- /col-md-4-->
 			                  <!-- /col-md-8-->
-			                	<div class="col-md-12 text-right"><a href="/admin/order/export?name={{$request->name}}&service={{$request->service}}&phone={{$request->phone}}&shop={{$request->shop}}&service_provider={{$request->service_provider}}&start_time={{$request->start_time}}&end_time={{$request->end_time}}" class="btn btn-danger" target="_blank">匯出</a><input class="btn btn-primary" type="submit" value="查詢"></div>
+			                	<div class="col-md-12 text-right"><a href="/admin/order/export?name={{$request->name}}&service={{$request->service}}&phone={{$request->phone}}&shop={{$request->shop}}&service_provider={{$request->service_provider}}&start_time={{$request->start_time}}&end_time={{$request->end_time}}&room={{$request->room}}" class="btn btn-danger" target="_blank">匯出</a><input class="btn btn-primary" type="submit" value="查詢"></div>
 			                  <!-- /col-md-12-->
 			                </div>
 			                <!-- /row-->
@@ -140,6 +154,7 @@
 						<th>師傅</th>
 						<th>房間</th>
 						<th>方案</th>
+						<th>預約人</th>
 						<th>開始</th>
 						<th>結束</th>
 						<th>狀態</th>
@@ -191,6 +206,11 @@
 							<td>{{ $service_provider_list }}</td>
 							<td>{{ $order->room->name }}</td>
 							<td>{{ $order->service->title }}</td>
+							@if($order->account != null)
+							<td>{{ $order->account->account }}</td>
+							@else
+							<td></td>
+							@endif
 							<td>{{ $order->start_time }}</td>
 							<td>{{ $order->end_time }}</td>
 							<td>{!! $status !!}</td>
