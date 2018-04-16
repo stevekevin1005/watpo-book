@@ -140,7 +140,11 @@
                 </select>
             </div>
             <div class="col-md-1" style="text-align:left;">
-                師傅:
+                @if($shop_id == 1)
+                民生:
+                @else if($shop_id == 2)
+                光復:
+                @endif
             </div>
             <div class="col-md-6">
                 <select name="service_provider_list[]" class="selectpicker1" multiple data-max-options="4" data-width="100%">
@@ -160,7 +164,14 @@
             <div class="col-md-3">
                 <input type="checkbox" name="limit_room" value="true" checked>
             </div>
-            <div class="col-md-6 col-md-offset-1">
+            <div class="col-md-1" style="text-align:left;">
+                @if($shop_id == 1)
+                光復:
+                @else if($shop_id == 2)
+                民生:
+                @endif
+            </div>
+            <div class="col-md-6">
                 <select name="service_provider_list[]" class="selectpicker2" multiple data-max-options="4" data-width="100%">
                     @foreach($service_providers_2 as $service_provider)
                     <option value="{{ $service_provider['id'] }}">{{ $service_provider['name'] }}</option>
