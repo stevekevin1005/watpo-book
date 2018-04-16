@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Leave;
 use App\Models\Shop;
+use App\Models\Order;
 use App\Models\ServiceProvider;
 use Hash, Exception, DateTime, DateInterval;
 use App\Models\Log;
@@ -76,6 +77,14 @@ class LeaveController extends Controller
 
 			if($service_provider->leaves->count() > 0){
 				throw new Exception("此時間區間已有休假");
+			}
+
+			$order_count = Order::whereHas('serviceProviders', function ($query) use ($service_provider_id){
+			    $query->where('id', $service_provider_id);
+			})->where('start_time', '<=', $end_time)->where('end_time', '>=', $start_time)->count();
+
+			if($order_count > 0){
+				throw new Exception("此時間區間已訂單");
 			}
 
 			$shop_daily_start_time = new DateTime($start_time->format('Y-m-d').$service_provider->shop->start_time);
