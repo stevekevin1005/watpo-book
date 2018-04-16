@@ -138,7 +138,15 @@ class BookController extends Controller
 					$time_list[$i]['select'] = false;
 				}
 				else{
-					$time_list[$i]['select'] = $this->time_option($date, $start_time->format('Y-m-d H:i:s'), $service->time, $shower, $shop_id, $person, $service_provider_id);
+					$msg = $this->time_option($date, $start_time->format('Y-m-d H:i:s'), $service->time, $shower, $shop_id, $person, $service_provider_id);
+					if($msg === true){
+						$time_list[$i]['select'] = true;
+					}
+					else{
+						$time_list[$i]['select'] = false;
+						$time_list[$i]['time'] .= $msg === false ? "": $msg;
+					}
+					
 				}
 				$start_time->add(new DateInterval("PT30M"));
 
@@ -227,12 +235,13 @@ class BookController extends Controller
 									where('shop_id', $shop_id)->get()->sum('person');
 
 		if(!empty(array_diff($service_provider_id_list, $service_provider_list))){
-			return false;
+			$service_providers = ServiceProvider::whereIn('id', array_diff($service_provider_id_list, $service_provider_list))->pluck('name')->toArray();
+			return "\n".implode(" ",$service_providers)." 忙";
 		}
 
 	
 		if(count($service_provider_list) - $order_person_count + $service_providers_count< $person){
-			return false;
+			return "\n師傅數不足";
 		}
 
 		//房間預約30分鐘
