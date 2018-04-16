@@ -236,7 +236,7 @@ class BookController extends Controller
 
 		if(!empty(array_diff($service_provider_id_list, $service_provider_list))){
 			$service_providers = ServiceProvider::whereIn('id', array_diff($service_provider_id_list, $service_provider_list))->pluck('name')->toArray();
-			return "\n".implode(" ",$service_providers)." 忙";
+			return "\n師傅 ".implode(" ",$service_providers)." 忙";
 		}
 
 	
