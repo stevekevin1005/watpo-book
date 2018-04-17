@@ -158,6 +158,9 @@
 						<th>開始</th>
 						<th>結束</th>
 						<th>狀態</th>
+						@if(session('account_level') == 1)
+						<th></th>
+						@endif
 					</thead>
 					<tbody>
 						@foreach($order_list as $order)
@@ -214,6 +217,9 @@
 							<td>{{ $order->start_time }}</td>
 							<td>{{ $order->end_time }}</td>
 							<td>{!! $status !!}</td>
+							@if(session('account_level') == 1)
+							<th><button data-id="{{$order->id}}" class="btn btn-primary operate">操作</button></th>
+							@endif
 						</tr>
 						@endforeach
 					</tbody>
@@ -231,4 +237,78 @@
 </div>
 @stop
 @section('script')
+@if(session('account_level') == 1)
+<script id="check_form_template" type="x-jsrender">
+    <div class="container" style="height:200x;">
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-md-4">
+                <button type="button" class="btn btn-warning order_cancel" data-id="@{{:id}}" style="font-size:20px;">取消訂單</button>
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-success order_confirm" data-id="@{{:id}}" style="font-size:20px;">確認訂單</button>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+$(function(){
+	$('.operate').on('click', function(){
+        var id = $(this).data('id');
+        var myTemplate = $.templates("#check_form_template"); 
+        var html = myTemplate.render({
+            id: id
+        });
+        swal({
+            title: '#'+id+' 預約單操作',
+            html: html,
+            width: "50%",
+            allowOutsideClick: false,
+            showCancelButton: false,
+            focusConfirm: false,
+            cancelButtonText:'取消',
+            showConfirmButton: false,
+            showCloseButton: true,
+        });
+    });
+
+    $('body').on('click', '.order_cancel', function(){
+        var order_id = $(this).data('id');
+        $.ajax({
+            url: '/api/order/cancel',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                order_id: order_id
+            },
+            success: function(data){
+                swal.close();
+                window.location.reload();
+            },
+            error: function(e){
+                alert('訂單取消失敗 請洽系統商!');
+            }
+        });  
+    });
+
+    $('body').on('click', '.order_confirm', function(){
+        var order_id = $(this).data('id');
+        $.ajax({
+            url: '/api/order/confirm',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                order_id: order_id
+            },
+            success: function(data){
+                swal.close();
+                window.location.reload();
+            },
+            error: function(e){
+                alert('訂單確認失敗 請洽系統商!');
+            }
+        });  
+    });
+});
+</script>
+@endif
 @stop
