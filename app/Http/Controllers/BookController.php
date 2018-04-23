@@ -418,4 +418,6 @@ class BookController extends Controller
 			return response()->json('資料庫錯誤, 請洽系統商!', 400, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 	}
+
+
 }
