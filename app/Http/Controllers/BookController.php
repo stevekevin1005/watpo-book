@@ -181,6 +181,15 @@ class BookController extends Controller
 		//師傅預約15分鐘
 		$start_time->sub(new DateInterval('PT15M'));
 		$end_time->add(new DateInterval('PT15M'));
+		
+		$service_providers = ServiceProvider::whereHas('leaves' ,function ($query) use ($start_time, $end_time) {
+		    $query->where('start_time', '<', $end_time);
+		    $query->where('end_time', '>', $start_time);
+		})->where('shop_id', $shop_id)->whereIn('id', $service_provider_id_list)->pluck('name')->toArray();
+
+		if(count($service_providers) != 0){
+			return "\n師傅 ".implode(" ",$service_providers)." 休";
+		}
 
 		$service_providers = ServiceProvider::whereHas('shifts' ,function ($query) use ($month) {
 		    $query->where('month', $month);
@@ -236,12 +245,12 @@ class BookController extends Controller
 
 		if(!empty(array_diff($service_provider_id_list, $service_provider_list))){
 			$service_providers = ServiceProvider::whereIn('id', array_diff($service_provider_id_list, $service_provider_list))->pluck('name')->toArray();
-			return "\n師傅 ".implode(" ",$service_providers)." 忙";
+			return "\n師傅 ".implode(" ",$service_providers)." 休";
 		}
 
 	
 		if(count($service_provider_list) - $order_person_count + $service_providers_count< $person){
-			return "\n師傅數不足";
+			return false;
 		}
 
 		//房間預約30分鐘
