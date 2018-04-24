@@ -14,6 +14,7 @@ class SmsController extends Controller
     private $SMS_USERNAME = '0978296597';
     private $SMS_PASSWORD = 'gtn2';
     private $TIMEOUT = 10;
+    private $URL = "http://api.every8d.com/API21/HTTP/sendSMS.ashx";
 
 
     public function send_SMS(Request $request)
@@ -74,17 +75,17 @@ class SmsController extends Controller
 
     private function initiateSmsActivation($name,$phone_number, $message,$CODE){
 
-        $GET_Data = '?UID='. $this->SMS_USERNAME.
-        '&PWD='. $this->SMS_PASSWORD.
-        '&MSG='.$message.
-        '&sender='.$this->SMS_SENDER.
-        '&DEST='.$phone_number.
-        '&RESP='.$this->RESPONSE_TYPE;
+        $GET_Data = ['UID'=> $this->SMS_USERNAME,
+        'PWD'=> $this->SMS_PASSWORD,
+        'MSG'=>$message,
+        'sender'=>$this->SMS_SENDER,
+        'DEST'=>$phone_number,
+        'RESP'=>$this->RESPONSE_TYPE];
     
-        $url = "http://api.every8d.com/API21/HTTP/sendSMS.ashx";
+        
 
         $client = new Client();
-        $res = $client->request('GET', $url.$GET_Data);
+        $res = $client->get($this->URL,["query"=>$GET_Data]);
 
         $isError = 0;
         $errorMessage = true;
