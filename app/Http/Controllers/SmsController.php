@@ -13,7 +13,7 @@ class SmsController extends Controller
     private $RESPONSE_TYPE = 'json';
     private $SMS_USERNAME = '0978296597';
     private $SMS_PASSWORD = 'gtn2';
-    private $TIMEOUT = 10;
+    private $TIMEOUT = 20;
     private $URL = "http://api.every8d.com/API21/HTTP/sendSMS.ashx";
 
 
