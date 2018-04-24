@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Watpo-book reservation</title>
+    <title>泰和殿 - 預約系統</title>
     <meta name="theme-color" content="#443324"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="KeyWords" content="watpo">
