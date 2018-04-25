@@ -257,4 +257,128 @@ class StaffController extends Controller
 
 		return response()->json($result, 200,  self::headers, JSON_UNESCAPED_UNICODE);
 	}
+
+	public function api_service_provider_list(Request $request){
+		try {
+			$shop_id = $request->shop_id;
+			$result = ServiceProvider::where('shop_id', $shop_id)->get();
+
+			return response()->json($result, 200,  self::headers, JSON_UNESCAPED_UNICODE);
+		} catch (Exception $e) {
+			return response()->json($e->getMessage(), 400,  self::headers, JSON_UNESCAPED_UNICODE);
+		}
+	}
+
+	public function api_service_provider_time(Request $request){
+		try {
+
+			$date = $request->date;
+			$shop_id = $request->shop_id;
+			$worker_list_1hr = $request->worker_list_1hr ? $request->worker_list_1hr : [];
+			$worker_list_2hr = $request->worker_list_2hr ? $request->worker_list_2hr : [];
+			$no_limit_1hr = $request->no_limit_1hr;
+			$no_limit_2hr = $request->no_limit_2hr;
+			$limit_time = $request->limit_time;
+
+			$shop = Shop::where('id', $shop_id)->first();
+
+			$start_time = new DateTime($date.' '.$shop->start_time);
+
+			$end_time = new DateTime($date.' '.$shop->end_time);
+			if($end_time <= $start_time){
+				$end_time->add(new DateInterval("P1D"))->modify("-2 hour");
+			}
+
+			$result = [];
+
+			while($start_time <= $end_time){
+				if($this->time_option($date, $limit_time, 60, $start_time->format('Y-m-d H:i:s'), $shop_id, $worker_list_1hr, $no_limit_1hr) && $this->time_option($date, $limit_time, 120, $start_time->format('Y-m-d H:i:s'), $shop_id, $worker_list_2hr, $no_limit_2hr)){
+					$result[] = $start_time->format('H:i:s');
+				}
+				$start_time->add(new DateInterval("PT30M"));
+			}
+
+			return response()->json($result, 200,  self::headers, JSON_UNESCAPED_UNICODE);
+
+		} catch (Exception $e) {
+			return response()->json($e->getMessage(), 400,  self::headers, JSON_UNESCAPED_UNICODE);
+		}
+	}
+
+	private function time_option($date, $limit_time, $service_time,$start, $shop_id, $worker_list, $no_limit){
+		$month = date("Y-m", strtotime($date));
+
+		$start_time = new Datetime($start);
+		$end_time = clone $start_time;
+		$end_time->add(new DateInterval("PT".$service_time."M"));
+
+		if($limit_time == "true"){
+			//師傅預約15分鐘
+			$start_time->sub(new DateInterval('PT15M'));
+			$end_time->add(new DateInterval('PT15M'));
+		}
+
+		$service_providers = ServiceProvider::whereHas('shifts' ,function ($query) use ($month) {
+		    $query->where('month', $month);
+		})->with(['shifts' => function ($query) use ($month) {
+		    $query->where('month', $month);
+		}])->whereDoesntHave('leaves' ,function ($query) use ($start_time, $end_time) {
+		    $query->where('start_time', '<', $end_time);
+		    $query->where('end_time', '>', $start_time);
+		})->whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
+			$query->where('status', '!=', 3);
+			$query->where('status', '!=', 4);
+			$query->where('status', '!=', 6);
+		    $query->where('start_time', '<', $end_time);
+		    $query->where('end_time', '>', $start_time);
+		})->where('shop_id', $shop_id)->get();
+		//扣回 避免出勤錯誤
+		$start_time->add(new DateInterval('PT15M'));
+		$end_time->sub(new DateInterval('PT15M'));
+
+		$service_provider_list = [];
+		foreach($service_providers as $service_provider){
+			$shift = $service_provider->shifts->first();
+			$on_duty = new DateTime($date." ".$shift->start_time);
+			$off_duty =  new DateTime($date." ".$shift->end_time);
+			if($off_duty < $on_duty){
+				$off_duty->add(new DateInterval("P1D"));
+			}
+			if($on_duty <= $start_time && $off_duty >= $end_time){
+				$service_provider_list[] = $service_provider->id;
+			}
+		}
+
+		$service_providers = ServiceProvider::with(['orders' => function ($query) use ($start_time, $end_time) {
+			$query->where('status', '!=', 3);
+			$query->where('status', '!=', 4);
+			$query->where('status', '!=', 6);
+		    $query->where('start_time', '<', $end_time);
+		    $query->where('end_time', '>', $start_time);
+		}])->where('shop_id', $shop_id)->get();
+
+		$service_providers_count = 0;
+		foreach($service_providers as $service_provider){
+			$service_providers_count += $service_provider->orders->count();
+		}
+
+		$order_person_count = Order::
+									where('start_time', '<', $end_time)->
+									where('end_time', '>', $start_time)->
+									where('status', '!=', 3)->
+									where('status', '!=', 4)->
+									where('status', '!=', 6)->
+									where('shop_id', $shop_id)->get()->sum('person');
+
+		if(!empty(array_diff($worker_list, $service_provider_list))){
+			$service_providers = ServiceProvider::whereIn('id', array_diff($worker_list, $service_provider_list))->pluck('name')->toArray();
+			return false;
+		}
+	
+		if(count($service_provider_list) - $order_person_count + $service_providers_count< count($worker_list) + $no_limit){
+			return false;
+		}
+
+		return true;
+	}
 }

@@ -8,7 +8,13 @@ class AuthPolicy
     public function handle($request, Closure $next)
     {
         if (!Session::has('account')) {
-          return redirect('/admin/login');
+        	if($request->is('staff/*')){
+        		return redirect('/staff/login');
+        	}
+        	else{
+        		return redirect('/admin/login');
+        	}
+          
         }
 
         return $next($request);

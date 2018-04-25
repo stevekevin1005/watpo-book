@@ -27,8 +27,12 @@ Route::group(['middleware' => ['web']], function () {
 	
 	Route::get('/staff/login', ['uses' => 'LoginController@staff_index', 'as' => 'login']);
 	Route::post('/staff/auth/logincheck', ['uses' => 'LoginController@staffLoginCheck', 'as' => 'staffLoginCheck']);
-	Route::get('/staff/index', ['uses' => 'StaffController@index', 'as' => 'staffIndex']);
-	Route::post('/staff/order', ['uses' => 'StaffController@order', 'as' => 'staffOrder']);
+
+	Route::group(['middleware' => 'auth.login'], function () {
+		Route::get('/staff/index', ['uses' => 'StaffController@index', 'as' => 'staffIndex']);
+		Route::post('/staff/order', ['uses' => 'StaffController@order', 'as' => 'staffOrder']);
+	});
+	
 
 	Route::group(['prefix' => '/admin', 'middleware' => 'auth.login'], function () {
 		
@@ -87,6 +91,8 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/shift/list', ['uses' => 'ShiftController@api_list', 'as' => 'apiShiftList']);
 
 		Route::get('/staff/check_status', ['uses' => 'StaffController@api_check_status', 'as' => 'apiCheckStatus']);
+		Route::get('/staff/service_provider_list', ['uses' => 'StaffController@api_service_provider_list', 'as' => 'apiServiceProvideList']);
+		Route::get('/staff/service_provider_time', ['uses' => 'StaffController@api_service_provider_time', 'as' => 'apiServiceProvideTime']);
 	});
 
 	Route::group(['prefix' => '/api'], function () {
