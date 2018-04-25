@@ -36,31 +36,37 @@ const reducers = {
       name: '',
       phone: '',
       reEnter: false,
-      isopen: false
+      isopen: false,
+      verifiy: localStorage.getItem('phone') ? true : false
     }, action) => {
       let result = JSON.parse(JSON.stringify(state));
-      let { name, phone, reEnter, isopen } = state;
+      let { name, phone, reEnter, isopen, verifiy } = state;
       switch (action.type) {
+        case "CODE_FAIL":
+          return { name, phone, reEnter: true, isopen, verifiy }
         case "CODE_OK":
-          return { name, phone, reEnter, isopen: false }
+          return { name, phone, reEnter, isopen: false, verifiy: true }
         case "HANDLE_MODAL":
-          return { name, phone, reEnter, isopen: action.payload.isopen }
+          return { name, phone, reEnter, isopen: action.payload.isopen, verifiy }
         case "SMS_IS_SENT":
+          console.log("SMS_IS_SENT: ", action);
           localStorage.setItem('phone', action.payload.phone);
           localStorage.setItem('name', action.payload.name);
           return {
             name: action.payload.name,
             phone: action.payload.phone,
             reEnter: false,
-            isopen: true
+            isopen: true,
+            verifiy
           };
         case "RE_ENTER_CODE":
-          return { name: state.name, phone: state.phone, reEnter: true, isopen: true }
+          return { name: state.name, phone: state.phone, reEnter: true, isopen: true, verifiy }
 
         case "SMS_ERROR":
           result.name = undefined;
           result.reEnter = false;
           result.isopen = false;
+          result.verifiy = verifiy;
           return result;
         default:
           return state;

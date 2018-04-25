@@ -9,18 +9,20 @@ export const sendSMS = (name, number) => {
     }
     return dispatch => {
         sendSMSApi(requestData)
-            .then((data) => phonedispatcher(data.type, data))
+            .then((data) => { dispatch(phonedispatcher(data.type, data)) })
     };
 }
+
 export const checkSMS = (name, number, code) => {
     let requestData = {
         name,
         number,
         code
     }
+    console.log("checkSMS: ", requestData);
     return dispatch => {
         checkSMSApi(requestData)
-            .then((data) => phonedispatcher(data.type, data))
+            .then((data) => { dispatch(phonedispatcher(data.type, data)) })
     };
 }
 

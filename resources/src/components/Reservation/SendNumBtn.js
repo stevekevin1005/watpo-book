@@ -30,9 +30,10 @@ class SendNumBtn extends Component {
     }
 
     setCode(e) {
-        const code = e.target.value;
+        let code = e.target.value;
 
         this.setState({ code });
+        console.log("code: ", code);
     }
 
     render() {

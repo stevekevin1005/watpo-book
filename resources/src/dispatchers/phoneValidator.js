@@ -20,6 +20,15 @@ module.exports = (dataKey, data) => {
                 type: "SMS_ERROR",
                 payload: data
             });
-
+        case "CODE_OK":
+            return ({
+                type: "CODE_OK",
+                payload: data
+            });
+        case "CODE_FAIL":
+            return ({
+                type: "CODE_FAIL",
+                payload: data
+            });
     }
 }
