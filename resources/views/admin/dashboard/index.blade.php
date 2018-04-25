@@ -25,13 +25,13 @@
                 @endif
                 <div class="col-sm-6 col-lg-3">
                     <div class="widget-simple text-center card-box bg-success">
-                        <h3 class="text-white counter">{{ $shop['order_day'] }}</h3>
+                        <h3 class="text-white"><span class="counter">{{ $shop['order_day'] }}</span></h3>
                         <p class="text-white">今日預約</p>
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-3">
                     <div class="widget-simple text-center card-box bg-warning">
-                        <h3 class="text-white counter">{{ $shop['order_month'] }}</h3>
+                        <h3 class="text-white"><span class="counter">{{ $shop['order_month'] }}</span></h3>
                         <p class="text-white">月預約</p>
                     </div>
                 </div>
