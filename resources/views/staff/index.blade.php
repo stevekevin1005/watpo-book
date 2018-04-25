@@ -269,10 +269,10 @@
                     </div>
                 </div>
                 <hr>
-                <div class="row" id="time_list" style="margin-top: 15px;">
+                <div class="row" id="time_list" style="margin-top: 15px;min-height:100px;">
                 </div>
                 <hr>
-                <div class="row" id="room_list" style="margin-top: 15px;">
+                <div class="row" id="room_list" style="margin-top: 15px;min-height:100px;">
                 </div>
             </div>
         </script>
@@ -485,6 +485,7 @@
                                 title: '師傅時間確認',
                                 html: html,
                                 width: "95%",
+                                height: 500,
                                 allowOutsideClick: false,
                                 showCancelButton: false,
                                 focusConfirm: false,
@@ -562,7 +563,7 @@
                 var shop_id = $("#choose_shop").val();
                 var limit = document.getElementById("limit_time").checked;
                 $("#room_list").html('房間判斷中.....');
-                console.log();
+                document.getElementById("choose_time").value  = date+"T"+time;
                 $.ajax({
                     url: '/api/staff/check_status',
                     type: 'get',

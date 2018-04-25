@@ -293,7 +293,7 @@ class StaffController extends Controller
 
 			while($start_time <= $end_time){
 				if($this->time_option($date, $limit_time, 60, $start_time->format('Y-m-d H:i:s'), $shop_id, $worker_list_1hr, $no_limit_1hr) && $this->time_option($date, $limit_time, 120, $start_time->format('Y-m-d H:i:s'), $shop_id, $worker_list_2hr, $no_limit_2hr)){
-					$result[] = $start_time->format('H:i:s');
+					$result[] = $start_time->format('H:i');
 				}
 				$start_time->add(new DateInterval("PT30M"));
 			}
