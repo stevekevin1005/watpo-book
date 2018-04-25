@@ -5,3 +5,6 @@ Homestead.json
 /public/assets/frontend/*
 /public/bower_components/*
 .env
+.npm-debug.log
+.DS_STORE
+./.vscode

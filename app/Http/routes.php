@@ -103,6 +103,9 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/order/list', ['uses' => 'BookController@api_order_list', 'as' => 'apiOrderList']);
 		Route::post('/order/customer/cancel', ['uses' => 'BookController@api_order_customer_cancel', 'as' => 'apiOrderCustomerCancel']);
 		Route::post('/order', ['uses' => 'BookController@api_order', 'as' => 'apiOrder']);
+		Route::get('/sendSMS', ['uses' => 'SmsController@send_SMS', 'as' => 'sendSMS']);
+		Route::get('/checkCode', ['uses' => 'SmsController@check_Code', 'as' => 'checkCode']);
+		
 	});
 	//admin redirect
 	Route::get('/admin/{path?}', ['where' => ['path' => '.*'], function(){
