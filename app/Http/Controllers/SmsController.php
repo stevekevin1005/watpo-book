@@ -14,8 +14,8 @@ class SmsController extends Controller
 {
     private $SMS_SENDER = "Watpo";
     private $RESPONSE_TYPE = 'json';
-    private $SMS_USERNAME = "0978296597";
-    private $SMS_PASSWORD = "sh9f";
+    private $SMS_USERNAME = "";
+    private $SMS_PASSWORD = "";
     private $TIMEOUT = 1800;
     private $URL = "http://api.every8d.com/API21/HTTP/sendSMS.ashx";
 
