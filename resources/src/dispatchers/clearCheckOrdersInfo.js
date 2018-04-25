@@ -1,5 +1,5 @@
-module.exports = (dataKey)=>{
-    switch(dataKey){
+module.exports = (dataKey, value = null) => {
+    switch (dataKey) {
         case "name":
             return ({
                 type: "CLEAR_CHECKORDERSINFO_NAME",
@@ -10,5 +10,7 @@ module.exports = (dataKey)=>{
                 type: "CLEAR_CHECKORDERSINFO_CONTACT_NUMBER",
                 payload: null
             });
+        case "UserVerifiy":
+            return ({ type: "VERIFIED_USER", isverified: value })
     }
 }

@@ -130,6 +130,10 @@ class CheckDetail extends React.Component {
         // set value to global state
         const name = this.nameInput.value;
         this.setState({ name })
+        if (name == localStorage.getItem('name') && this.state.contactNumber == localStorage.getItem('phone'))
+            this.props.clearCheckOrdersInfo("UserVerifiy", true);
+        else
+            this.props.clearCheckOrdersInfo("UserVerifiy", false);
 
         // set hint
         this.props.setReservation({ name });
@@ -144,6 +148,12 @@ class CheckDetail extends React.Component {
         const contactNumber = this.numberInput.value;
         this.props.setReservation({ contactNumber });
         this.setState({ contactNumber });
+        console.log("local storage:", localStorage.getItem('name'))
+        console.log("local storage:", localStorage.getItem('phone'))
+        if (this.state.name == localStorage.getItem('name') && contactNumber == localStorage.getItem('phone'))
+            this.props.clearCheckOrdersInfo("UserVerifiy", true);
+        else
+            this.props.clearCheckOrdersInfo("UserVerifiy", false);
 
         // set hint
         if (contactNumber === "") this.setState({ contactNumberHint: "contactNumberHint_blank" });
@@ -348,7 +358,7 @@ class CheckDetail extends React.Component {
                         <SendNumBtn {...this.props} name={this.state.name} phone={this.state.contactNumber} />
                     </Col>
                 </FormGroup>
-                <Button currentStep={1} clickHandle={this.nextStep} disabled={this.props.loading} />
+                <Button currentStep={1} clickHandle={this.nextStep} disabled={!this.props.verifiy || this.props.loading} />
             </div>
         );
     }

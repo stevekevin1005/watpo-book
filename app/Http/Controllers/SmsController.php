@@ -15,7 +15,7 @@ class SmsController extends Controller
     private $SMS_SENDER = "Watpo";
     private $RESPONSE_TYPE = 'json';
     private $SMS_USERNAME = "0978296597";
-    private $SMS_PASSWORD = "gtn2";
+    private $SMS_PASSWORD = "sh9f";
     private $TIMEOUT = 1800;
     private $URL = "http://api.every8d.com/API21/HTTP/sendSMS.ashx";
 
@@ -71,8 +71,10 @@ class SmsController extends Controller
             $code = $request->code;
             
             // if($code == $request->session()->get($name.$phone))
-            if($code ==  Cache::get($name.$phone))
+            if($code ==  Cache::get($name.$phone)){
+                Cache::forget($name.$phone);
                 return response()->json(["status"=>0,"msg"=>"Success"]);
+            }
             else
                 return response()->json(["status"=>1,"msg"=>"Error"]);
 			
