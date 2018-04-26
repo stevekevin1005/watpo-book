@@ -47,13 +47,15 @@ class SendNumBtn extends Component {
         return (
             <Col md={12}>
                 <span>{this.state.errorMsg}</span>
-                <Button bsStyle="primary" bsSize="large" onClick={(e) => {
-                    console.log("name: " + this.props.name)
-                    this.props.sendSMS(this.props.name, this.props.phone);
-                    // this.props.showCodeEnter(true)
+                <Button bsStyle="primary" bsSize="large"
+                    disabled={this.props.verifiy}
+                    onClick={(e) => {
+                        console.log("name: " + this.props.name)
+                        this.props.sendSMS(this.props.name, this.props.phone);
+                        // this.props.showCodeEnter(true)
 
-                }}>
-                    {this.props.reEnter ? "請輸入先前驗證碼" : "寄送驗證碼"}
+                    }}>
+                    {this.props.verifiy ? t("Verified") : t("SendSMS")}
                 </Button>
                 {<Modal show={this.props.show} onHide={() => { this.props.showCodeEnter(false) }}>
                     <Modal.Header closeButton>
@@ -66,6 +68,7 @@ class SendNumBtn extends Component {
                             placeholder="請輸入驗證碼..."
                             onChange={this.setCode}
                         />
+                        <p className="hint">{t(this.props.SMSMsg)}</p>
                     </Modal.Body>
 
                     <Modal.Footer>
@@ -92,7 +95,9 @@ const mapStateToProps = (state) => {
     console.log("state input: ", state);
     return {
         EnterCode: state.phoneValidator.reEnter,
-        show: state.phoneValidator.isopen
+        show: state.phoneValidator.isopen,
+        SMSMsg: state.phoneValidator.SMSMsg,
+        verifiy: state.phoneValidator.verifiy
     }
 }
 

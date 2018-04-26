@@ -38,7 +38,8 @@ export function checkSMSApi(data) {
                 returnData.type = "CODE_OK"
             else
                 returnData.type = "CODE_FAIL"
-
+            returnData.name = data.name;
+            returnData.phone = data.number;
             return returnData
         });
 }

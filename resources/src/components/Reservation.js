@@ -15,6 +15,8 @@ import LoadingAnimation from "./LoadingAnimation";
 import clearCheckOrdersInfo from "../dispatchers/clearCheckOrdersInfo";
 import { renderToStaticMarkup } from 'react-dom/server';
 
+import { UserVerifiy } from '../actions'
+
 
 const Grid = ReactBootstrap.Grid,
     Row = ReactBootstrap.Row,
@@ -300,7 +302,8 @@ class Reservation extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        checkOrdersInfo: state.checkOrdersInfo
+        checkOrdersInfo: state.checkOrdersInfo,
+        verifiy: state.phoneValidator.verifiy
     }
 }
 

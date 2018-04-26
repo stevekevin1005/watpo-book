@@ -100,5 +100,8 @@
 	"EnterCode": "請輸入驗證碼",
 	"SMSCode": "簡訊驗證碼",
 	"Close": "關閉",
-	"ErrorCode": "驗證碼輸入錯誤"
+	"ErrorCode": "驗證碼輸入錯誤",
+	"SMSRETRY": "驗證碼有誤，請重新輸入",
+	"SendSMS": "寄出驗證碼",
+	"Verified": "用戶已驗證"
 }
