@@ -485,7 +485,6 @@
                                 title: '師傅時間確認',
                                 html: html,
                                 width: "95%",
-                                height: 500,
                                 allowOutsideClick: false,
                                 showCancelButton: false,
                                 focusConfirm: false,
@@ -560,10 +559,15 @@
             $('body').on('click', '.time_option', function(){
                 var date = $('#check_time_date').val();
                 var time = $(this).text();
+                var datetime = new Date(date+"T"+time);
                 var shop_id = $("#choose_shop").val();
+                if(datetime < new Date(date+"T10:00")){
+                   datetime.setDate(datetime.getDate()+1);
+                }
+
                 var limit = document.getElementById("limit_time").checked;
                 $("#room_list").html('房間判斷中.....');
-                document.getElementById("choose_time").value  = date+"T"+time;
+                document.getElementById("choose_time").value  = datetime.toISOString().substr(0, 16);
                 $.ajax({
                     url: '/api/staff/check_status',
                     type: 'get',
@@ -575,7 +579,6 @@
                     },
                     success: function(res){
                         var html = "";
-                        console.log(res);
                         res.room_status.forEach(function(room) {
                             html += '<div class="col-md-2" style="margin-top:5px">'+room.info+'</div>';
                         });
