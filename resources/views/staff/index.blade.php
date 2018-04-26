@@ -521,7 +521,7 @@
                 var no_limit_1hr = $('#check_time_no_limit_1hr').val();
                 var no_limit_2hr = $('#check_time_no_limit_2hr').val();
                 var limit = document.getElementById("limit_time").checked;
-
+                $("#limit_time").trigger('change');
                 if(date != '' && shop_id !== undefined && shop_id !== null && shop_id !== ''){
                     $("#time_list").html('時間判斷中.....');
                     $("#room_list").html('');
