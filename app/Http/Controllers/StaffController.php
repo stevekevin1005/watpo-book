@@ -33,8 +33,9 @@ class StaffController extends Controller
 		$shop_id = $request->shop_id;
 		$order_list = $request->order;
 
-		$msg = "姓名: $name 電話: $phone <br/> 開始時間: $start_time<br/>";
+		$msg = "姓名: $name 電話: $phone <br/> 開始時間: ".str_replace("T"," ",$start_time)."<br/>";
 		
+		$order_count = 1;
 		foreach ($order_list as $key => $order_info) {
 			$service = Service::where('id', $order_info['service_id'])->first();
 			$end_time = new Datetime($start_time);
@@ -57,7 +58,7 @@ class StaffController extends Controller
 			$order->account_id = $request->session()->get('account_id');
 			$order->save();
 
-			$msg .= "<br/>第 ".intval($key+1)." 筆訂單   人數: $order->person <br/> 服務: $service->title<br/> 指定師傅: ";
+			$msg .= "<br/>第 ".intval($order_count)." 筆訂單   人數: $order->person <br/> 服務: $service->title<br/> 指定師傅: ";
 			
 			$service_provider_list = ServiceProvider::whereIn('id', $service_provider_id_list)->get();
 			$service_provider_name = "";
@@ -66,6 +67,7 @@ class StaffController extends Controller
 				$service_provider->orders()->save($order);
 				$service_provider_name = $service_provider_name.$service_provider->name." ";
 			}
+			$order_count++;
 		}
 
 		Log::create(['description' => '新增 訂單#'.$order->id." 店家:".$order->shop()->first()->name." 姓名:".$order->name." 電話:".$order->phone." 服務:".$order->service()->first()->title." 人數:".$order->person."房號:".$room->name."師傅:".$service_provider_name." 開始時間:".$order->start_time." 結束時間".$order->end_time."(櫃台訂位)"]);
