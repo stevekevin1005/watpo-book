@@ -521,7 +521,6 @@
                 var no_limit_1hr = $('#check_time_no_limit_1hr').val();
                 var no_limit_2hr = $('#check_time_no_limit_2hr').val();
                 var limit = document.getElementById("limit_time").checked;
-                $("#limit_time").trigger('change');
                 if(date != '' && shop_id !== undefined && shop_id !== null && shop_id !== ''){
                     $("#time_list").html('時間判斷中.....');
                     $("#room_list").html('');
@@ -583,6 +582,9 @@
                             html += '<div class="col-md-2" style="margin-top:5px">'+room.info+'</div>';
                         });
                         $("#room_list").html(html);
+                        status_data = res;
+                        $('.detail').html('');
+                        
                     },
                     error: function(error){
                         alert('錯誤！請洽系統商');
