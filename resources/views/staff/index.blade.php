@@ -572,7 +572,7 @@
                     type: 'get',
                     dataType: 'json',
                     data: {
-                        time: date+" "+time,
+                        time: datetime,
                         shop_id: shop_id,
                         limit: limit
                     },
