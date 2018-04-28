@@ -116,6 +116,7 @@ class StaffController extends Controller
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
 		})->where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
+		
 		//限制時間
 		if($limit_time == "true"){
 			//扣回 避免出勤錯誤
@@ -148,7 +149,7 @@ class StaffController extends Controller
 			$query->where('status', '!=', 6);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
-		})->where('shop_id', $shop_id)->get();
+		})->where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
 		
 		$rooms_2h = [];
 		foreach ($rooms as $room){
@@ -218,7 +219,7 @@ class StaffController extends Controller
 			$query->where('status', '!=', 6);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
-		})->where('shop_id', $shop_id)->get();
+		})->where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
 		//限制時間
 		if($limit_time == "true"){
 			//扣回
