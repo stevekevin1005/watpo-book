@@ -299,7 +299,7 @@
 
                     $('.detail').append(html);
                     $('.selectpicker').selectpicker({
-                        size: 7
+                        size: 6
                     });
                     i++;
                 }
@@ -492,7 +492,7 @@
                                 showCloseButton: true,
                             });
                             $('.selectpicker').selectpicker({
-                                size: 7
+                                size: 6
                             });
                         },
                         error: function(){
