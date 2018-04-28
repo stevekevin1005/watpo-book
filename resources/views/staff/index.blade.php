@@ -299,7 +299,8 @@
 
                     $('.detail').append(html);
                     $('.selectpicker').selectpicker({
-                        size: 6
+                        size: 6,
+                        dropupAuto: false
                     });
                     i++;
                 }
@@ -492,7 +493,8 @@
                                 showCloseButton: true,
                             });
                             $('.selectpicker').selectpicker({
-                                size: 6
+                                size: 6,
+                                dropupAuto: false
                             });
                         },
                         error: function(){
