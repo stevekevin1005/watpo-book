@@ -142,7 +142,7 @@
             <div class="col-md-1" style="text-align:left;">
                 @if($shop_id == 1)
                 民生:
-                @else if($shop_id == 2)
+                @elseif($shop_id == 2)
                 光復:
                 @endif
             </div>
@@ -167,7 +167,7 @@
             <div class="col-md-1" style="text-align:left;">
                 @if($shop_id == 1)
                 光復:
-                @else if($shop_id == 2)
+                @elseif($shop_id == 2)
                 民生:
                 @endif
             </div>
