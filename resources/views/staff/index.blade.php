@@ -574,7 +574,7 @@
                     type: 'get',
                     dataType: 'json',
                     data: {
-                        time: datetime,
+                        time: datetime.toISOString().substr(0, 16),
                         shop_id: shop_id,
                         limit: limit
                     },
