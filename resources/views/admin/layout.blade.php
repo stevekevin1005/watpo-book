@@ -28,6 +28,9 @@
             .content-page{
                 min-height: 1000px;
             }
+            body {
+              position: static !important;
+            }
         </style>
         @yield('head')
         <script src="/assets/js/modernizr.min.js"></script>

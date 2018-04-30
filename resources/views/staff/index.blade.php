@@ -24,6 +24,9 @@
             .content-page{
                 min-height: 1000px;
             }
+            body {
+                position: static !important;
+            }
         </style>
 
 
