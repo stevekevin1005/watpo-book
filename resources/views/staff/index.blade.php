@@ -389,6 +389,7 @@
                 document.getElementById("choose_time").value  = today.toISOString().substr(0, 16);
                 var shop = $("#choose_shop").val();
                 if(shop !== undefined && shop !== null && shop !== ''){
+                    alert(datetime.toISOString().substr(0, 16));
                     $.ajax({
                         url: '/api/staff/check_status',
                         type: 'get',
@@ -411,6 +412,7 @@
                 var limit = document.getElementById("limit_time").checked;
 
                 if(time !== "" && shop !== undefined && shop !== null){
+                    alert(datetime.toISOString().substr(0, 16));
                     $.ajax({
                         url: '/api/staff/check_status',
                         type: 'get',
@@ -565,10 +567,11 @@
                 if(datetime < new Date(date+"T10:00")){
                    datetime.setDate(datetime.getDate()+1);
                 }
-
+                alert(datetime.toISOString().substr(0, 16));
                 var limit = document.getElementById("limit_time").checked;
                 $("#room_list").html('房間判斷中.....');
                 document.getElementById("choose_time").value  = datetime.toISOString().substr(0, 16);
+                alert(datetime.toISOString().substr(0, 16));
                 $.ajax({
                     url: '/api/staff/check_status',
                     type: 'get',
