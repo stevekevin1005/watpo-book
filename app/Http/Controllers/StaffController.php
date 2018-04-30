@@ -264,7 +264,7 @@ class StaffController extends Controller
 	public function api_service_provider_list(Request $request){
 		try {
 			$shop_id = $request->shop_id;
-			$result = ServiceProvider::where('shop_id', $shop_id)->get();
+			$result = ServiceProvider::where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
 
 			return response()->json($result, 200,  self::headers, JSON_UNESCAPED_UNICODE);
 		} catch (Exception $e) {
