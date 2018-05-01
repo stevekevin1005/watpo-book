@@ -10,7 +10,7 @@
         font-size: 22px;
     }
     .animation {
-        animation: blink 3s;
+        /*animation: blink 3s;*/
         animation-iteration-count: infinite;
     }
 
