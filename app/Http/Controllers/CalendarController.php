@@ -195,14 +195,14 @@ class CalendarController extends Controller
 			}
 
 			//10分後開始訂單開始閃爍
-			$now->add(new DateInterval('PT10M'));
-			if($now >= new Datetime($order->start_time) && $now <= new Datetime($order->end_time) && $order->status != 3 && $order->status != 4 && $order->status != 5){
+			$now->add(new DateInterval('PT3M'));
+			if($now >= new Datetime($order->start_time) && $now <= new Datetime($order->end_time) && $order->status != 3 && $order->status != 4 && $order->status != 5 && $order->status != 6){
 				$data->class = "animation";	
 			}
 			else{
 				$data->class = "";	
 			}
-			$now->sub(new DateInterval('PT10M'));
+			$now->sub(new DateInterval('PT3M'));
 			$order_list[] = $data;
 		}
 
