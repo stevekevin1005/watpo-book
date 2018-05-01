@@ -231,17 +231,17 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th colspan="2" style="text-align:center;">可選擇的人數</th>
+                        <th colspan="2" style="text-align:center;">可選擇最大人數</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>一小時: </td>
-                        <td>@{{:no_limit_1hr}}</td>
+                        <td>@{{:max_1hr}}</td>
                     </tr>
                     <tr>
                         <td>二小時: </td>
-                        <td>@{{:no_limit_2hr}}</td>
+                        <td>@{{:max_2hr}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -305,7 +305,9 @@
                 service_provider_status: [],
                 room_status: [],
                 no_limit_1hr: 0,
-                no_limit_2hr: 0
+                no_limit_2hr: 0,
+                max_1hr: 0,
+                max_2hr: 0
             };
             $('#add_order').on('click', function(){
                 var myTemplate = $.templates("#order_form_template");
@@ -468,7 +470,7 @@
                     alert("沒有選擇師傅");
                     return false;
                 }
-                else if(count > status_data.service_provider_status.length){
+                else if(count > Math.max(status_data.max_1hr, status_data.max_2hr)){
                     alert("可選擇師傅超過上限");
                     return false;
                 }

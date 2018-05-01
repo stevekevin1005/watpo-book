@@ -9,6 +9,15 @@
     td{
         font-size: 22px;
     }
+    .animation {
+        animation: blink 3s;
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes blink
+    {
+        50%  {background: white;}
+    }
 
 </style>
 @stop
@@ -58,7 +67,9 @@
                         </thead>
                         <tbody>
                             @foreach($order_list as $order)
-                            <tr id="order_list" style="background-color: {{ $order->color }};cursor: pointer;color: white; {{$order->same_phone}}"
+                            <tr id="order_list" 
+                                class="{{ $order->class }}"
+                                style="background-color: {{ $order->color }};cursor: pointer;color: white; {{$order->same_phone}}"
                                 data-id="{{$order->id}}"
                                 data-name="{{$order->name}}"
                                 data-phone="{{$order->phone}}"
@@ -258,7 +269,9 @@
     </thead>
     <tbody>
         @{{for order_list}}
-        <tr id="order_list" style="background-color: @{{:color}};cursor: pointer;color: white; @{{:same_phone}}"
+        <tr id="order_list" 
+            style="background-color: @{{:color}};cursor: pointer;color: white; @{{:same_phone}}"
+            class="@{{:class}}"
             data-id="@{{:id}}"
             data-name="@{{:name}}"
             data-phone="@{{:phone}}"

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Hash, Exception, Datetime;
+use Hash, Exception, Datetime, DateInterval;
 use App\Models\ServiceProvider;
 use App\Models\Shop;
 use App\Models\Room;
@@ -77,6 +77,8 @@ class CalendarController extends Controller
 	private function order_list($date, $shop_id)
 	{
 
+		$now = new Datetime();
+
 		$shop = Shop::where('id', $shop_id)->first();
 		$shop_start_time = strtotime($date.' '.$shop->start_time);
 		$shop_end_time = strtotime($date.' '.$shop->end_time);
@@ -101,7 +103,10 @@ class CalendarController extends Controller
 							->where('end_time', '<=', date("Y-m-d H:i:s", $shop_end_time));
 
 		if(Session::get('account_level') != 1){
-			$orders =	$orders->where('end_time', '>=', date("Y-m-d H:i:s"));
+			//30分後才隱藏訂單
+			$now->add(new DateInterval('PT30M'));
+			$orders = $orders->where('end_time', '>=', $now);
+			$now->sub(new DateInterval('PT30M'));
 		}
 		$orders = $orders->orderBy('start_time', 'asc')
 						 ->get();
@@ -187,8 +192,17 @@ class CalendarController extends Controller
 			}
 			else{
 				$data->same_phone = '';
-			}	
-			
+			}
+
+			//10分後開始訂單開始閃爍
+			$now->add(new DateInterval('PT10M'));
+			if($now >= new Datetime($order->start_time) && $now <= new Datetime($order->end_time) && ($order->status != 3 || $order->status != 4 || $order->status != 5)){
+				$data->class = "animation";	
+			}
+			else{
+				$data->class = "";	
+			}
+			$now->sub(new DateInterval('PT10M'));
 			$order_list[] = $data;
 		}
 

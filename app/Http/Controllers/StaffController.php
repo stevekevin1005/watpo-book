@@ -117,6 +117,31 @@ class StaffController extends Controller
 		    $query->where('end_time', '>', $start_time);
 		})->where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
 		
+		$service_provider_have_orders = ServiceProvider::with(['orders' => function ($query) use ($start_time, $end_time) {
+			$query->where('status', '!=', 3);
+			$query->where('status', '!=', 4);
+			$query->where('status', '!=', 6);
+		    $query->where('start_time', '<', $end_time);
+		    $query->where('end_time', '>', $start_time);
+		}])->where('shop_id', $shop_id)->get();
+
+		$service_providers_count = 0;
+		foreach($service_provider_have_orders as $service_provider){
+			$service_providers_count += $service_provider->orders->count();
+		}
+
+		$order_person_count = Order::
+									where('start_time', '<', $end_time)->
+									where('end_time', '>', $start_time)->
+									where('status', '!=', 3)->
+									where('status', '!=', 4)->
+									where('status', '!=', 6)->
+									where('shop_id', $shop_id)->get()->sum('person');
+		//2hr不指定人數
+
+		//所有訂單人數 - 師傅已有訂單數
+		$result['no_limit_2hr'] = $order_person_count - $service_providers_count;
+
 		//限制時間
 		if($limit_time == "true"){
 			//扣回 避免出勤錯誤
@@ -131,11 +156,11 @@ class StaffController extends Controller
 			if($off_duty < $on_duty){
 				$off_duty->add(new DateInterval("P1D"));
 			}
-			// echo $on_duty->format('Y-m-d H:i:s')."	".$off_duty->format('Y-m-d H:i:s').$start_time->format('Y-m-d H:i:s')."	".$end_time->format('Y-m-d H:i:s')."<br>";
 			if($on_duty <= $start_time && $off_duty >= $end_time){
 				$service_providers_2h[] = $service_provider;
 			}
 		}
+
 		//限制時間
 		if($limit_time == "true"){
 			//房間預約30分鐘
@@ -201,6 +226,28 @@ class StaffController extends Controller
 				}
 			}
 		}
+
+		$service_provider_have_orders = ServiceProvider::with(['orders' => function ($query) use ($start_time, $end_time) {
+			$query->where('status', '!=', 3);
+			$query->where('status', '!=', 4);
+			$query->where('status', '!=', 6);
+		    $query->where('start_time', '<', $end_time);
+		    $query->where('end_time', '>', $start_time);
+		}])->where('shop_id', $shop_id)->get();
+
+		$service_providers_count = 0;
+		foreach($service_provider_have_orders as $service_provider){
+			$service_providers_count += $service_provider->orders->count();
+		}
+
+		$order_person_count = Order::
+									where('start_time', '<', $end_time)->
+									where('end_time', '>', $start_time)->
+									where('status', '!=', 3)->
+									where('status', '!=', 4)->
+									where('status', '!=', 6)->
+									where('shop_id', $shop_id)->get()->sum('person');
+		$result['no_limit_1hr'] = $order_person_count - $service_providers_count;
 		//限制時間
 		if($limit_time == "true"){
 			//扣回 避免出勤錯誤
@@ -254,9 +301,15 @@ class StaffController extends Controller
 			$i++;
 		}
 		
+
 		$result['service_provider_status'] = $service_provider_status;
 		$result['room_status'] = $room_status;
 
+		$result['max_1hr'] = count($service_providers_1h)+count($service_providers_2h)-$result['no_limit_1hr'];
+		$result['max_2hr'] = count($service_providers_2h)-$result['no_limit_2hr'];
+
+		$result['max_1hr'] = $result['max_1hr'] < 0 ? 0 : $result['max_1hr'];
+		$result['max_2hr'] = $result['max_2hr'] < 0 ? 0 : $result['max_2hr'];
 
 		return response()->json($result, 200,  self::headers, JSON_UNESCAPED_UNICODE);
 	}
@@ -376,7 +429,7 @@ class StaffController extends Controller
 			$service_providers = ServiceProvider::whereIn('id', array_diff($worker_list, $service_provider_list))->pluck('name')->toArray();
 			return false;
 		}
-	
+		//可用的人 - 訂單人數 + 訂單指定人數
 		if(count($service_provider_list) - $order_person_count + $service_providers_count< count($worker_list) + $no_limit){
 			return false;
 		}
