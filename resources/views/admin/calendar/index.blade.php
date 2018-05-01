@@ -9,14 +9,14 @@
     td{
         font-size: 22px;
     }
-    .animation {
+    .animation > td{
         animation: blink 3s;
         animation-iteration-count: infinite;
     }
 
     @keyframes blink
     {
-        50%  {background: black;}
+        50%  {color: black;}
     }
 
 </style>
@@ -87,7 +87,7 @@
                                 <td>{{ $order->name }}</td>
                                 <td>{{ $order->phone }}</td>
                                 {{-- <td>{{ $order->person }}</td> --}}
-                                <td>{{ $order->provider }}</td>
+                                <td style="color: black;">{{ $order->provider }}</td>
                                 <td>{{ $order->room }}</td>
                                 <td>{{ $order->account }}</td>
                                 @endif
@@ -288,7 +288,7 @@
              @if(session('account_level') != 3)
             <td>@{{:name}}</td>
             <td>@{{:phone}}</td>
-            <td>@{{:provider}}</td>
+            <td style="color: black;">@{{:provider}}</td>
             <td>@{{:room}}</td>
             <td>@{{:account}}</td>
              @endif
