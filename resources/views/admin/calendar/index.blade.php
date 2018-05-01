@@ -10,7 +10,7 @@
         font-size: 22px;
     }
     .animation > td{
-        color: #696969;
+        color: #708090;
         animation: blink 3s;
         animation-iteration-count: infinite;
     }
