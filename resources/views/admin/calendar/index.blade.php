@@ -10,13 +10,13 @@
         font-size: 22px;
     }
     .animation {
-        /*animation: blink 3s;*/
+        animation: blink 3s;
         animation-iteration-count: infinite;
     }
 
     @keyframes blink
     {
-        50%  {background: white;}
+        50%  {background: black;}
     }
 
 </style>
