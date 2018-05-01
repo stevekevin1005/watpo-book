@@ -25,9 +25,8 @@ Route::group(['middleware' => ['web']], function () {
 	Route::get('/admin/logout', ['uses' => 'LoginController@logout', 'as' => 'logout']);
 	Route::post('/auth/logincheck', ['uses' => 'LoginController@loginCheck', 'as' => 'loginCheck']);
 	
-	Route::get('/staff/login', ['uses' => 'LoginController@staff_index', 'as' => 'staff_login']);
+	Route::get('/staff/login', ['uses' => 'LoginController@staff_index', 'as' => 'login']);
 	Route::post('/staff/auth/logincheck', ['uses' => 'LoginController@staffLoginCheck', 'as' => 'staffLoginCheck']);
-	Route::get('/staff/logout', ['uses' => 'LoginController@staff_logout', 'as' => 'staff_logout']);
 
 	Route::group(['middleware' => 'auth.login'], function () {
 		Route::get('/staff/index', ['uses' => 'StaffController@index', 'as' => 'staffIndex']);

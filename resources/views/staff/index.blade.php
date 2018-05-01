@@ -57,7 +57,6 @@
             <form action="/staff/order" method="post" id="orderForm">
                 <div class="card-box" style="position:fixed; z-index:1000; height:80px; width:100%;">
                     <div class="row">
-                        <div class="col-xs-1"><a href="/staff/logout" class="btn btn-danger">登出</a></div>
                         <div class="col-xs-2">
                             <select id="choose_shop" class="form-control" name="shop_id" required>
                                 <option disabled selected value>選擇店家</option>
@@ -228,23 +227,6 @@
                     @{{/for}}
                 </tbody>
             </table>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th colspan="2" style="text-align:center;">可選擇的人數</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>一小時: </td>
-                        <td>@{{:no_limit_1hr}}</td>
-                    </tr>
-                    <tr>
-                        <td>二小時: </td>
-                        <td>@{{:no_limit_2hr}}</td>
-                    </tr>
-                </tbody>
-            </table>
         </script>
         <script id="check_time_template" type="x-jsrender">
             <div class="container" style="height:200x;">
@@ -303,9 +285,7 @@
 
             var status_data = {
                 service_provider_status: [],
-                room_status: [],
-                no_limit_1hr: 0,
-                no_limit_2hr: 0
+                room_status: []
             };
             $('#add_order').on('click', function(){
                 var myTemplate = $.templates("#order_form_template");
