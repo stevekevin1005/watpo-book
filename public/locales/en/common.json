@@ -96,5 +96,12 @@
 	"time": "Time",
 	"reserveNotice1": "please screenshot this view to check reservation",
 	"reserveNotice2": "Reserve reservation 10 minutes",
-	"reserveNotice3": "The company reserves the right to change the rights of the master"
+	"reserveNotice3": "The company reserves the right to change the rights of the master",
+	"EnterCode": "Please enter a verification code",
+	"SMSCode": "SMS verification code",
+	"Close": "Close",
+	"ErrorCode": "Incorrect verification code input",
+	"SMSRETRY": "The verification code is incorrect, please re-enter",
+	"SendSMS": "Send verification code",
+	"Verified": "User Verified"
 }
