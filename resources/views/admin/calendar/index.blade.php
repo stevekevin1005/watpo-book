@@ -9,16 +9,38 @@
     td{
         font-size: 22px;
     }
-    .animation > td{
+    .animation > td:first-child{
+        animation: blink1 2s;
+        animation-iteration-count: infinite;
+        color: red;
+    }
+
+    .animation > td:nth-child(2){
+        animation: blink2 2s;
+        animation-iteration-count: infinite;
+        color: gray;
+    }
+
+    .animation > td:last-child{
         animation: blink 2s;
         animation-iteration-count: infinite;
+        color: black;
     }
 
     @keyframes blink
     {
-        50%  {color: #AAAAAA;}
+        50%  {color: gray;}
     }
 
+    @keyframes blink1
+    {
+        50%  {color:    #880000;}
+    }
+
+    @keyframes blink2
+    {
+        50%  {color: #444444;}
+    }
 </style>
 @stop
 @section('content')
@@ -87,7 +109,7 @@
                                 <td>{{ $order->name }}</td>
                                 <td>{{ $order->phone }}</td>
                                 {{-- <td>{{ $order->person }}</td> --}}
-                                <td style="color: black;animation: unset;">{{ $order->provider }}</td>
+                                <td style="color: black;">{{ $order->provider }}</td>
                                 <td>{{ $order->room }}</td>
                                 <td>{{ $order->account }}</td>
                                 @endif
@@ -288,7 +310,7 @@
              @if(session('account_level') != 3)
             <td>@{{:name}}</td>
             <td>@{{:phone}}</td>
-            <td style="color: black; animation: unset;">@{{:provider}}</td>
+            <td style="color: black;">@{{:provider}}</td>
             <td>@{{:room}}</td>
             <td>@{{:account}}</td>
              @endif
