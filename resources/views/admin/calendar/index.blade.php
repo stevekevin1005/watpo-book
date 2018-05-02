@@ -10,36 +10,12 @@
         font-size: 22px;
     }
     .animation > td:first-child{
-        animation: blink1 2s;
-        animation-iteration-count: infinite;
-        color:  #FF0000;
-    }
-
-    .animation > td:nth-child(2){
-        animation: blink2 2s;
-        animation-iteration-count: infinite;
-        color: gray;
-    }
-
-    .animation > td:last-child{
         animation: blink 2s;
         animation-iteration-count: infinite;
-        color: black;
     }
-
     @keyframes blink
     {
-        50%  {color: gray;}
-    }
-
-    @keyframes blink1
-    {
-        50%  {color:    #FF8888;}
-    }
-
-    @keyframes blink2
-    {
-        50%  {color: #444444;}
+        50%  {color: #AAAAAA;}
     }
 </style>
 @stop
