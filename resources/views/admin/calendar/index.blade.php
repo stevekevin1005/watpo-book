@@ -10,13 +10,13 @@
         font-size: 22px;
     }
     .animation > td{
-        /*animation: blink 3s;*/
+        animation: blink 2s;
         animation-iteration-count: infinite;
     }
 
     @keyframes blink
     {
-        50%  {color: black;}
+        50%  {color: #F8F8FF;}
     }
 
 </style>
