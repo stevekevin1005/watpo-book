@@ -16,7 +16,7 @@
 
     @keyframes blink
     {
-        50%  {color: #F8F8FF;}
+        50%  {color: #AAAAAA;}
     }
 
 </style>
@@ -87,7 +87,7 @@
                                 <td>{{ $order->name }}</td>
                                 <td>{{ $order->phone }}</td>
                                 {{-- <td>{{ $order->person }}</td> --}}
-                                <td style="color: black;">{{ $order->provider }}</td>
+                                <td style="color: black;animation: unset;">{{ $order->provider }}</td>
                                 <td>{{ $order->room }}</td>
                                 <td>{{ $order->account }}</td>
                                 @endif
@@ -288,7 +288,7 @@
              @if(session('account_level') != 3)
             <td>@{{:name}}</td>
             <td>@{{:phone}}</td>
-            <td style="color: black;">@{{:provider}}</td>
+            <td style="color: black; animation: unset;">@{{:provider}}</td>
             <td>@{{:room}}</td>
             <td>@{{:account}}</td>
              @endif
