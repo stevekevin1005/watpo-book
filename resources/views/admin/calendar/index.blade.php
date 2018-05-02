@@ -12,7 +12,7 @@
     .animation > td:first-child{
         animation: blink1 2s;
         animation-iteration-count: infinite;
-        color: red;
+        color:  #FF0000;
     }
 
     .animation > td:nth-child(2){
@@ -34,7 +34,7 @@
 
     @keyframes blink1
     {
-        50%  {color:    #880000;}
+        50%  {color:    #FF8888;}
     }
 
     @keyframes blink2
