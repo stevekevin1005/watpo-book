@@ -148,16 +148,15 @@ class CheckDetail extends React.Component {
         const contactNumber = this.numberInput.value;
         this.props.setReservation({ contactNumber });
         this.setState({ contactNumber });
-        console.log("local storage:", localStorage.getItem('name'))
-        console.log("local storage:", localStorage.getItem('phone'))
-        if (this.state.name == localStorage.getItem('name') && contactNumber == localStorage.getItem('phone'))
+        
+        if (contactNumber == localStorage.getItem('phone'))
             this.props.clearCheckOrdersInfo("UserVerifiy", true);
         else
             this.props.clearCheckOrdersInfo("UserVerifiy", false);
-
+        
         // set hint
         if (contactNumber === "") this.setState({ contactNumberHint: "contactNumberHint_blank" });
-        else if (contactNumber.length < 8 || isNaN(+contactNumber)) this.setState({ contactNumberHint: "contactNumberHint_length" });
+        else if (!/^[09]{2}[0-9]{8}$/.test(contactNumber) || contactNumber.length < 8 || isNaN(+contactNumber)) this.setState({ contactNumberHint: "contactNumberHint_length" });
     }
     //
     setMaxGuestNum(fn) {
@@ -262,7 +261,7 @@ class CheckDetail extends React.Component {
             this.setState({ contactNumberHint: "contactNumberHint_blank" });
             this.numberInput.focus();
             pass = false;
-        } else if (this.props.reservation.contactNumber.length < 8 || isNaN(+this.props.reservation.contactNumber)) {
+        } else if (!/^[09]{2}[0-9]{8}$/.test(this.props.reservation.contactNumber) || this.props.reservation.contactNumber.length < 8 || isNaN(+this.props.reservation.contactNumber)) {
             this.setState({ contactNumberHint: "contactNumberHint_length" });
             this.numberInput.focus();
             pass = false;
