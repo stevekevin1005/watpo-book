@@ -38,7 +38,7 @@
                             <button class="btn btn-warning" id="leave_status">師傅出勤</button>
                             @endif
                         </h4>
-                        <a href="#" style="color:#0066FF;">●</a> - 客戶預訂
+                        <a href="#" style="color:#BA55D3;">●</a> - 客戶預訂
                         <a href="#" style="color:#1d7dca;">●</a> - 櫃檯修改
                         <a href="#" style="color:gray;">●</a> - 客戶取消
                         <a href="#" style="color:#ffaa00;">●</a> - 櫃檯取消
