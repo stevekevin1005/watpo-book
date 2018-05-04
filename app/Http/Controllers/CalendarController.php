@@ -252,7 +252,7 @@ class CalendarController extends Controller
 				}
 				switch ($order->status) {
 					case 1:
-						$color = "#3ddcf7";
+						$color = "#0066FF";
 						break;
 					case 2:
 						$color = "#1d7dca";
