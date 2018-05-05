@@ -159,10 +159,10 @@ class CalendarController extends Controller
 
 			switch ($order->status) {
 				case 1:
-					$data->color = "#BA55D3";
+					$data->color = "#1d7dca";
 					break;
 				case 2:
-					$data->color = "#1d7dca";
+					$data->color = "#BA55D3";
 					break;
 				case 3:
 					$data->color = "gray";
@@ -252,10 +252,10 @@ class CalendarController extends Controller
 				}
 				switch ($order->status) {
 					case 1:
-						$color = "#BA55D3";
+						$color = "#1d7dca";
 						break;
 					case 2:
-						$color = "#1d7dca";
+						$color = "#BA55D3";
 						break;
 					case 4:
 						$color = "#ffaa00";
