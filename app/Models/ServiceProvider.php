@@ -28,6 +28,26 @@ class ServiceProvider extends Model {
     {
         return $this->hasOne('App\Models\Account', 'service_provider_id');
     }
+
+    public function scopeWithAndWhereHas($query, $relation, $constraint){
+        return $query->whereHas($relation, $constraint)
+                    ->with([$relation => $constraint]);
+    }
+
+    public function scopeFreeTime($query, $month, $start_time, $end_time){
+        return $query->whereHas('shifts' ,function ($query) use ($month) {
+                    $query->where('month', $month);
+                })->with(['shifts' => function ($query) use ($month) {
+                    $query->where('month', $month);
+                }])->whereDoesntHave('leaves' ,function ($query) use ($start_time, $end_time) {
+                    $query->where('start_time', '<', $end_time);
+                    $query->where('end_time', '>', $start_time);
+                })->whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
+                    $query->whereNotIn('status', [3,4,6]);
+                    $query->where('start_time', '<', $end_time);
+                    $query->where('end_time', '>', $start_time);
+                });
+    }
 }
 
 /*
