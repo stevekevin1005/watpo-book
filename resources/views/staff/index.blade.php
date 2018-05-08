@@ -91,13 +91,15 @@
                                                 姓名:
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="text" class="form-control" name="name" placeholder="現場客">
+                                                <input type="text" class="form-control" name="name" placeholder="現場客" id="name">
                                             </div>
                                             <div class="col-md-1" style="text-align:left;">
                                                 電話:
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="text" class="form-control" name="phone" placeholder="現場客">
+                                                <input type="text" class="form-control" name="phone" placeholder="現場客" id="phone">
+                                            </div>
+                                            <div class="col-md-4" id="blacklist_description" style="color:red;font-size:23px;">
                                             </div>
                                         </div>
                                         <hr/>
@@ -603,7 +605,7 @@
                     data: {
                         time: $("#choose_time").val(),
                         shop_id: shop_id,
-                        limit: limit
+                        limit_time: limit
                     },
                     success: function(res){
                         var html = "";
@@ -619,6 +621,45 @@
                         alert('錯誤！請洽系統商');
                     }
                 });
+            });
+            
+            $("#name, #phone").on('change', function(){
+                var name = $("#name").val();
+                var phone = $("#phone").val();
+                if(name != '' && phone != ''){
+                    $.ajax({
+                        url: '/api/blacklist/search',
+                        type: 'get',
+                        dataType: 'json',
+                        data: {
+                            name: name,
+                            phone: phone,
+                        },
+                        success: function(res){
+                            if(res.status == true){
+                                swal({
+                                    title: '此顧客在黑名單內',
+                                    text: "確定要繼續訂位？",
+                                    type: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#d33',
+                                    cancelButtonColor: '#3085d6',
+                                    confirmButtonText: '取消訂位',
+                                    cancelButtonText: '繼續訂位'
+                                }).then((result) => {
+                                    if (result.value) {
+                                       $("#name").val('');
+                                       $("#phone").val('');
+                                    }
+                                })
+                            }
+                            $("#blacklist_description").text("逾時: "+res.overtime+" 描述: "+res.description);
+                        },
+                        error: function(error){
+                            alert('黑名單判斷錯誤！請洽系統商');
+                        }
+                    });
+                }
             });
         });
         </script>

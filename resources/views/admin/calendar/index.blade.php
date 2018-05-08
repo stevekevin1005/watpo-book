@@ -250,6 +250,32 @@
             @{{/if}}
             @endif
         </div>
+        @if(session('account_level') == 1)
+        <hr>
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-md-8">
+                <input type="form-control" id="description">
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-danger" style="font-size:20px;" data-name="@{{:name}}" data-phone="@{{:phone}}" id="add_blacklist">加入黑名單</button>
+            </div>
+        </div>
+        <hr>
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-md-3">
+                <div class="btn btn-primary description">酒客</div>
+            </div>
+            <div class="col-md-3">
+                <div class="btn btn-primary description">性騷擾</div>
+            </div>
+            <div class="col-md-3">
+                <div class="btn btn-primary description">不付錢</div>
+            </div>
+            <div class="col-md-3">
+                <div class="btn btn-primary description">咆哮</div>
+            </div>
+        </div>
+        @endif
     </div>
 </script>
 <script id="order_list_template" type="x-jsrender">
@@ -647,6 +673,45 @@
             render_order_list();
         });
 
+        $("body").on('click', '.description',function(){
+            var description = $(this).text();
+            $('#description').val(description);
+        });
+
+        $("body").on('click', '#add_blacklist',function(){
+            var name = $(this).data('name');
+            var phone = $(this).data('phone');
+            var description = $("#description").val();
+            if(description != ""){
+                $.ajax({
+                    url: '/api/blacklist/add',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        name: name,
+                        phone: phone,
+                        description: description
+                    },
+                    success: function(res){
+                        location.reload();
+                    },
+                    error: function(e){
+                        swal(
+                            '黑名單',
+                            '新增失敗，請洽系統管理商！',
+                            'error'
+                        );
+                    }
+                });
+            }
+            else{
+                swal(
+                    '黑名單',
+                    '描述不得為空！',
+                    'error'
+                );
+            } 
+        });
         function render_order_list(){
             var date =  $("#date").val();
             $.ajax({

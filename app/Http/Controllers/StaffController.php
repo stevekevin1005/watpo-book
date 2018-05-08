@@ -212,7 +212,7 @@ class StaffController extends Controller
 
 		$no_specific_amount_1hr = $this->no_specific($order_list, $service_providers);
 		/* 不指定人數 */
-		//2hr不指定人數
+		//1hr不指定人數
 		
 		$result['no_limit_1hr'] = $no_specific_amount_1hr;
 		//限制時間
