@@ -135,7 +135,7 @@ class CalendarController extends Controller
 			$data->end_time = date("Y-m-d\TH:i" ,strtotime($order->end_time));
 			$data->time = date("H:i" ,strtotime($order->start_time))." - ".date("H:i" ,strtotime($order->end_time));
 
-			if(strtotime(date('Y-m-d H:i:s')) - strtotime($order->start_time) >= 600 && ($order->status == 1 || $order->status == 2)){
+			if($data->phone != '現場客' && strtotime(date('Y-m-d H:i:s')) - strtotime($order->start_time) >= 600 && ($order->status == 1 || $order->status == 2)){
 				$order->status = 6;
 				$order->save();
 				$blackList = new BlackList;
