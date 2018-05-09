@@ -10,6 +10,7 @@ use App\Models\Room;
 use App\Models\Order;
 use App\Models\Service;
 use App\Models\Log;
+use App\Models\BlackList;
 use Session;
 
 class CalendarController extends Controller
@@ -137,6 +138,18 @@ class CalendarController extends Controller
 			if(strtotime(date('Y-m-d H:i:s')) - strtotime($order->start_time) >= 600 && ($order->status == 1 || $order->status == 2)){
 				$order->status = 6;
 				$order->save();
+				$blackList = new BlackList;
+				$blackList = $blackList->firstOrNew(['name' => $order->name, 'phone' => $order->phone]);
+				if ($blackList->exists) {
+				    $blackList->overtime += 1;
+				    if($blackList->overtime >= 5) $blackList->status = 1;
+				    Log::create(['description' => '增加黑名單 名字:'.$order->name." 電話:".$order->phone." 逾時".$blackList->overtime."次 預約排程"]);
+				} else {
+					$blackList->status = 0;
+				    $blackList->overtime = 1;
+				    Log::create(['description' => '增加黑名單 名字:'.$order->name." 電話:".$order->phone." 逾時".$blackList->overtime."次 預約排程"]);
+				}
+				$blackList->save();
 			}
 
 			$data->status = $order->status;
