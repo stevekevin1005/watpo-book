@@ -129,8 +129,8 @@ class CheckDetail extends React.Component {
 
         // set value to global state
         const name = this.nameInput.value;
-        this.setState({ name })
-        if (name == localStorage.getItem('name') && this.state.contactNumber == localStorage.getItem('phone'))
+        this.setState({ name });
+        if (this.state.contactNumber == localStorage.getItem('phone'))
             this.props.clearCheckOrdersInfo("UserVerifiy", true);
         else
             this.props.clearCheckOrdersInfo("UserVerifiy", false);

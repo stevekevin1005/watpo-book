@@ -33,7 +33,7 @@ class SmsController extends Controller
             $CODE = substr(md5(rand()),0,4);
             $message = "歡迎蒞臨泰和殿，您的驗證碼為 ". $CODE . " 請於30分鐘內驗證完畢！";
             
-            if(!Cache::has($name.$phone))
+            if(!Cache::has($phone))
                 $resp = $this->initiateSmsActivation($name,$phone, $message,$CODE);
             else
                 return response()->json(["status"=>1,"msg"=>"reEnter"]);    
@@ -58,8 +58,8 @@ class SmsController extends Controller
             $phone = $request->phone;
             $code = $request->code;
             
-            // if($code == $request->session()->get($name.$phone))
-            if($code ==  Cache::get($name.$phone))
+            // if($code == $request->session()->get($phone))
+            if($code ==  Cache::get($phone))
                 return response()->json(["status"=>0,"msg"=>"Success"]);
             else
                 return response()->json(["status"=>1,"msg"=>"Error"]);
@@ -91,12 +91,12 @@ class SmsController extends Controller
         $errorMessage = true;
 
         $expiresAt = Carbon::now()->addMinutes(30);
-        Cache::put($name.$phone_number, $CODE, $expiresAt);
-        // Cache::put($name.$phone_number."Time", time(), $expiresAt)
+        Cache::put($phone_number, $CODE, $expiresAt);
+        // Cache::put($phone_number."Time", time(), $expiresAt)
 
         
-        // session([$name.$phone_number=>$CODE]);
-        // session([$name.$phone_number."Time"=>time()]);
+        // session([$phone_number=>$CODE]);
+        // session([$phone_number."Time"=>time()]);
         //Preparing post parameters
        
         // $url = str_replace(" ", '%20', $url);
