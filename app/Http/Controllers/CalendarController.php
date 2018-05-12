@@ -135,21 +135,23 @@ class CalendarController extends Controller
 			$data->end_time = date("Y-m-d\TH:i" ,strtotime($order->end_time));
 			$data->time = date("H:i" ,strtotime($order->start_time))." - ".date("H:i" ,strtotime($order->end_time));
 
-			if($data->phone != '現場客' && strtotime(date('Y-m-d H:i:s')) - strtotime($order->start_time) >= 600 && ($order->status == 1 || $order->status == 2)){
+			if(strtotime(date('Y-m-d H:i:s')) - strtotime($order->start_time) >= 600 && ($order->status == 1 || $order->status == 2)){
 				$order->status = 6;
 				$order->save();
-				$blackList = new BlackList;
-				$blackList = $blackList->firstOrNew(['name' => $order->name, 'phone' => $order->phone]);
-				if ($blackList->exists) {
-				    $blackList->overtime += 1;
-				    if($blackList->overtime >= 5) $blackList->status = 1;
-				    Log::create(['description' => '增加黑名單 名字:'.$order->name." 電話:".$order->phone." 逾時".$blackList->overtime."次 預約排程"]);
-				} else {
-					$blackList->status = 0;
-				    $blackList->overtime = 1;
-				    Log::create(['description' => '增加黑名單 名字:'.$order->name." 電話:".$order->phone." 逾時".$blackList->overtime."次 預約排程"]);
-				}
-				$blackList->save();
+				if($data->phone != '現場客'){
+					$blackList = new BlackList;
+					$blackList = $blackList->firstOrNew(['name' => $order->name, 'phone' => $order->phone]);
+					if ($blackList->exists) {
+					    $blackList->overtime += 1;
+					    if($blackList->overtime >= 5) $blackList->status = 1;
+					    Log::create(['description' => '增加黑名單 名字:'.$order->name." 電話:".$order->phone." 逾時".$blackList->overtime."次 預約排程"]);
+					} else {
+						$blackList->status = 0;
+					    $blackList->overtime = 1;
+					    Log::create(['description' => '增加黑名單 名字:'.$order->name." 電話:".$order->phone." 逾時".$blackList->overtime."次 預約排程"]);
+					}
+					$blackList->save();
+				}	
 			}
 
 			$data->status = $order->status;
