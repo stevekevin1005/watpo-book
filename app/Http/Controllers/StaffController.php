@@ -341,9 +341,11 @@ class StaffController extends Controller
 		//有空的時間
 		$service_providers = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $shop_id)->get();
 
-		//扣回 避免出勤錯誤
-		$start_time->add(new DateInterval('PT15M'));
-		$end_time->sub(new DateInterval('PT15M'));
+		if($limit_time == "true"){
+			//扣回 避免出勤錯誤
+			$start_time->add(new DateInterval('PT15M'));
+			$end_time->sub(new DateInterval('PT15M'));
+		}
 
 		$service_provider_list = [];
 		foreach($service_providers as $service_provider){
@@ -356,6 +358,12 @@ class StaffController extends Controller
 			if($on_duty <= $start_time && $off_duty >= $end_time){
 				$service_provider_list[] = $service_provider->id;
 			}
+		}
+
+		if($limit_time == "true"){
+			//師傅預約15分鐘
+			$start_time->sub(new DateInterval('PT15M'));
+			$end_time->add(new DateInterval('PT15M'));
 		}
 		/* 不指定人數 */
 		$service_providers = ServiceProvider::whereHas('orders' ,function ($query) use ($start_time, $end_time) {
@@ -370,7 +378,12 @@ class StaffController extends Controller
 							whereNotIn('status', [3,4,6])->
 							where('shop_id', $shop_id)->
 							withCount('serviceProviders')->get();
-
+		if($limit_time == "true"){
+			//扣回 避免出勤錯誤
+			$start_time->add(new DateInterval('PT15M'));
+			$end_time->sub(new DateInterval('PT15M'));
+		}
+		
 		$no_specific_amount = $this->no_specific($order_list, $service_providers);
 		/* 不指定人數 */
 
