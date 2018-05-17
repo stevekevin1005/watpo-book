@@ -735,12 +735,12 @@
         var t;
         function Timeout(){
             render_order_list();
-            t = setTimeout(Timeout, 1*1000*10);
+            t = setTimeout(Timeout, 1*1000*3);
         }
         function ReCalculate(){
             clearTimeout(oTimerId);
             clearTimeout(t);
-            oTimerId = setTimeout(Timeout, 1*1000*10);
+            oTimerId = setTimeout(Timeout, 1*1000*3);
         }
         document.onmousedown = ReCalculate;
         document.onmousemove = ReCalculate;
