@@ -372,8 +372,15 @@ class BookController extends Controller
 		try{
 			$name = $request->name;
 			$phone = $request->phone;
-			$order_list = Order::with('service')->where('start_time', '>', date('Y-m-d H:i:s'))->where('name', $name)->where('phone', $phone)->whereIn('status', [1,2])->get();
-			
+			$orders = Order::with('service')->with('shop')->with('serviceProviders')->where('start_time', '>', date('Y-m-d H:i:s'))->where('name', $name)->where('phone', $phone)->whereIn('status', [1,2])->get();
+			$order_list = [];
+			foreach($orders as $order){
+				$service_provider = "";
+				foreach ($order->serviceProviders as $serviceProvider) {
+					$service_provider .= " $serviceProvider->name";
+				}
+				$order_list[] = ['shop' => $order->shop->name, 'service' => $order->service->title, 'person' => $order->person, 'start_time' => $order->start_time, 'service_provider' => $service_provider];
+			}
 			return response()->json($order_list);
 		}
 		catch(Exception $e){
