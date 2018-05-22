@@ -191,20 +191,8 @@ class BookController extends Controller
 			return "\n師傅 ".implode(" ",$service_providers)." 休";
 		}
 
-		$service_providers = ServiceProvider::whereHas('shifts' ,function ($query) use ($month) {
-		    $query->where('month', $month);
-		})->with(['shifts' => function ($query) use ($month) {
-		    $query->where('month', $month);
-		}])->whereDoesntHave('leaves' ,function ($query) use ($start_time, $end_time) {
-		    $query->where('start_time', '<', $end_time);
-		    $query->where('end_time', '>', $start_time);
-		})->whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
-			$query->where('status', '!=', 3);
-			$query->where('status', '!=', 4);
-			$query->where('status', '!=', 6);
-		    $query->where('start_time', '<', $end_time);
-		    $query->where('end_time', '>', $start_time);
-		})->where('shop_id', $shop_id)->get();
+		$service_providers = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $shop_id)->get();
+		
 		//扣回 避免出勤錯誤
 		$start_time->add(new DateInterval('PT15M'));
 		$end_time->sub(new DateInterval('PT15M'));
@@ -222,34 +210,27 @@ class BookController extends Controller
 			}
 		}
 
-		$service_providers = ServiceProvider::with(['orders' => function ($query) use ($start_time, $end_time) {
-			$query->where('status', '!=', 3);
-			$query->where('status', '!=', 4);
-			$query->where('status', '!=', 6);
+		if(!empty(array_diff($service_provider_id_list, $service_provider_list))){
+			return false;
+		}
+
+		/* 不指定人數 */
+		$service_providers = ServiceProvider::whereHas('orders' ,function ($query) use ($start_time, $end_time) {
+			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
-		}])->where('shop_id', $shop_id)->get();
+		})->where('shop_id', $shop_id)->get();
 
-		$service_providers_count = 0;
-		foreach($service_providers as $service_provider){
-			$service_providers_count += $service_provider->orders->count();
-		}
+		$order_list = Order::
+							where('start_time', '<', $end_time)->
+							where('end_time', '>', $start_time)->
+							whereNotIn('status', [3,4,6])->
+							where('shop_id', $shop_id)->
+							withCount('serviceProviders')->get();
 
-		$order_person_count = Order::
-									where('start_time', '<', $end_time)->
-									where('end_time', '>', $start_time)->
-									where('status', '!=', 3)->
-									where('status', '!=', 4)->
-									where('status', '!=', 6)->
-									where('shop_id', $shop_id)->get()->sum('person');
-
-		if(!empty(array_diff($service_provider_id_list, $service_provider_list))){
-			$service_providers = ServiceProvider::whereIn('id', array_diff($service_provider_id_list, $service_provider_list))->pluck('name')->toArray();
-			return "\n師傅 ".implode(" ",$service_providers)." 休";
-		}
-
+		$no_specific_amount = $this->no_specific($order_list, $service_providers);
 	
-		if(count($service_provider_list) - $order_person_count + $service_providers_count< $person){
+		if(count($service_provider_list) - $no_specific_amount < $person){
 			return false;
 		}
 
@@ -259,9 +240,7 @@ class BookController extends Controller
 
 
 		$room = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
-			$query->where('status', '!=', 3);
-			$query->where('status', '!=', 4);
-			$query->where('status', '!=', 6);
+			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<=', $end_time);
 		    $query->where('end_time', '>=', $start_time);
 		})->where('shop_id', $shop_id)->where('person', '>=', $person);
@@ -313,7 +292,7 @@ class BookController extends Controller
 			if(!$phone){
 				throw new Exception("缺少預約客電話", 1);
 			}
-			if(!is_null(BlackList::where('name', $name)->where('phone', $phone)->first())){
+			if(!is_null(BlackList::where('name', $name)->where('phone', $phone)->where('status', 1)->first())){
 				throw new Exception("系統錯誤", 1);
 			}
 
@@ -326,9 +305,7 @@ class BookController extends Controller
 			    $query->where('start_time', '<', $end_time);
 			    $query->where('end_time', '>', $start_time);
 			}])->with(['orders' => function ($query) use ($start_time, $end_time) {
-					$query->where('status', '!=', 3);
-					$query->where('status', '!=', 4);
-					$query->where('status', '!=', 6);
+				$query->whereNotIn('status', [3,4,6]);
 			    $query->where('start_time', '<', $end_time);
 			    $query->where('end_time', '>',$start_time);
 			}])->whereIn('id', $service_provider_id_list)->get();
@@ -343,9 +320,7 @@ class BookController extends Controller
 			}
 
 			$room = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
-				$query->where('status', '!=', 3);
-				$query->where('status', '!=', 4);
-				$query->where('status', '!=', 6);
+				$query->whereNotIn('status', [3,4,6]);
 			    $query->where('start_time', '<=', $end_time);
 			    $query->where('end_time', '>=', $start_time);
 			})->where('shop_id', $shop_id)->where('person', '>=', $person);
@@ -397,8 +372,15 @@ class BookController extends Controller
 		try{
 			$name = $request->name;
 			$phone = $request->phone;
-			$order_list = Order::with('service')->where('start_time', '>', date('Y-m-d H:i:s'))->where('name', $name)->where('phone', $phone)->whereIn('status', [1,2])->get();
-			
+			$orders = Order::with('service')->with('shop')->with('serviceProviders')->where('start_time', '>', date('Y-m-d H:i:s'))->where('name', $name)->where('phone', $phone)->whereIn('status', [1,2])->get();
+			$order_list = [];
+			foreach($orders as $order){
+				$service_provider = "";
+				foreach ($order->serviceProviders as $serviceProvider) {
+					$service_provider .= " $serviceProvider->name";
+				}
+				$order_list[] = ['shop' => $order->shop->name, 'service' => $order->service->title, 'person' => $order->person, 'start_time' => $order->start_time, 'service_provider' => $service_provider];
+			}
 			return response()->json($order_list);
 		}
 		catch(Exception $e){
@@ -428,5 +410,28 @@ class BookController extends Controller
 		}
 	}
 
-
+	private function no_specific($order_list, $service_providers){
+		$person = 0;
+		foreach ($order_list as $order) {
+			$no_limit = $order->person - $order->service_providers_count;
+			if($no_limit > 0){
+				foreach ($service_providers as $service_provider) {
+					if($service_provider->select != true){
+						$flag = ServiceProvider::whereHas('orders' ,function ($query) use ($order) {
+								    $query->whereNotIn('status', [3,4,6]);
+								    $query->where('start_time', '<', $order->end_time);
+								    $query->where('end_time', '>', $order->start_time);
+								})->where('id', $service_provider->id)->first();
+						if($flag == null){
+							$service_provider->select = true;
+							$no_limit--;
+						}
+					}
+					if($no_limit == 0) break;
+				}
+			}
+			$person += $no_limit;
+		}
+		return $person;
+	}
 }

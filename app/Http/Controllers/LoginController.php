@@ -65,4 +65,11 @@ class LoginController extends Controller
 		$request->session()->flush();
 		return redirect('/admin/login');
 	}
+
+	public function staff_logout(Request $request)
+	{
+		Log::create(['description' => '登出櫃檯系統']);
+		$request->session()->flush();
+		return redirect('/staff/login');
+	}
 }

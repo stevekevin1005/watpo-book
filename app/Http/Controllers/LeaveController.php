@@ -81,7 +81,7 @@ class LeaveController extends Controller
 
 			$order_count = Order::whereHas('serviceProviders', function ($query) use ($service_provider_id){
 			    $query->where('id', $service_provider_id);
-			})->where('start_time', '<=', $end_time)->where('end_time', '>=', $start_time)->count();
+			})->where('status', '!=', 6)->where('status', '!=', 3)->where('status', '!=', 4)->where('start_time', '<=', $end_time)->where('end_time', '>=', $start_time)->count();
 
 			if($order_count > 0){
 				throw new Exception("此時間區間已訂單");

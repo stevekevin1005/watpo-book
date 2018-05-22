@@ -25,17 +25,22 @@ Route::group(['middleware' => ['web']], function () {
 	Route::get('/admin/logout', ['uses' => 'LoginController@logout', 'as' => 'logout']);
 	Route::post('/auth/logincheck', ['uses' => 'LoginController@loginCheck', 'as' => 'loginCheck']);
 	
-	Route::get('/staff/login', ['uses' => 'LoginController@staff_index', 'as' => 'login']);
+	Route::get('/staff/login', ['uses' => 'LoginController@staff_index', 'as' => 'staff_login']);
 	Route::post('/staff/auth/logincheck', ['uses' => 'LoginController@staffLoginCheck', 'as' => 'staffLoginCheck']);
-	Route::get('/staff/index', ['uses' => 'StaffController@index', 'as' => 'staffIndex']);
-	Route::post('/staff/order', ['uses' => 'StaffController@order', 'as' => 'staffOrder']);
+	Route::get('/staff/logout', ['uses' => 'LoginController@staff_logout', 'as' => 'staff_logout']);
+
+	Route::group(['middleware' => 'auth.login'], function () {
+		Route::get('/staff/index', ['uses' => 'StaffController@index', 'as' => 'staffIndex']);
+		Route::post('/staff/order', ['uses' => 'StaffController@order', 'as' => 'staffOrder']);
+	});
+	
 
 	Route::group(['prefix' => '/admin', 'middleware' => 'auth.login'], function () {
 		
 		Route::get('/serviceprovider/list', ['uses' => 'ServiceProviderController@index', 'as' => 'serviceProviderIndex']);
 		
 		Route::get('/blacklist/list', ['uses' => 'BlackListController@index', 'as' => 'blackListIndex']);
-		Route::post('/blacklist/add', ['uses' => 'BlackListController@add', 'as' => 'blackListAdd']);
+		
 		Route::post('/blacklist/delete', ['uses' => 'BlackListController@delete', 'as' => 'blackListDelete']);
 		
 		Route::get('/order', ['uses' => 'OrderController@index', 'as' => 'orderIndex']);
@@ -87,6 +92,11 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/shift/list', ['uses' => 'ShiftController@api_list', 'as' => 'apiShiftList']);
 
 		Route::get('/staff/check_status', ['uses' => 'StaffController@api_check_status', 'as' => 'apiCheckStatus']);
+		Route::get('/staff/service_provider_list', ['uses' => 'StaffController@api_service_provider_list', 'as' => 'apiServiceProvideList']);
+		Route::get('/staff/service_provider_time', ['uses' => 'StaffController@api_service_provider_time', 'as' => 'apiServiceProvideTime']);
+
+		Route::post('/blacklist/add', ['uses' => 'BlackListController@api_add', 'as' => 'apiBlackListAdd']);
+		Route::get('/blacklist/search', ['uses' => 'BlackListController@api_search', 'as' => 'apiBlackListSearch']);
 	});
 
 	Route::group(['prefix' => '/api'], function () {

@@ -95,5 +95,12 @@
 	"time": "予約時間",
 	"reserveNotice1": "この画面のスクリーンショットを取って予約を記録してください",
 	"reserveNotice2": "予約10分",
-	"reserveNotice3": "会社はマスターの権利を変更する権利を留保します"
+	"reserveNotice3": "会社はマスターの権利を変更する権利を留保します",
+	"EnterCode": "確認コードを入力してください",
+	"SMSCode": "SMS認証コード",
+	"Close": "閉じる",
+	"ErrorCode": "不正確な認証コード入力",
+	"SMSRETRY": "確認コードが間違っています。再入力してください",
+	"SendSMS": "送信確認コード",
+	"Verified": "ユーザー確認済み"
 }

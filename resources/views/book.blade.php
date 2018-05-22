@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>泰和殿 - 預約系統</title>
+    <title>泰和殿 - 預約</title>
     <meta name="theme-color" content="#443324"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="KeyWords" content="watpo">
@@ -17,4 +17,13 @@
     <div id="container"></div>
   </body>
   <script src="/assets/frontend/bundle.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118933925-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-118933925-1');
+  </script>
+
 </html>

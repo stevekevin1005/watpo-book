@@ -65,7 +65,7 @@ class SendNumBtn extends Component {
                     <Modal.Body>
                         <FormControl
                             type="text"
-                            placeholder="請輸入驗證碼..."
+                            placeholder={t("EnterCode")}
                             onChange={this.setCode}
                         />
                         <p className="hint">{t(this.props.SMSMsg)}</p>
@@ -83,7 +83,7 @@ class SendNumBtn extends Component {
                                 this.setState({ codeMsg: t("ErrorCode") });
 
                             }
-                        }}>{t("EnterCode")}</Button>
+                        }}>{t("send")}</Button>
                     </Modal.Footer>
                 </Modal>}
             </Col>

@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Hash, Exception, Datetime;
+use Hash, Exception, Datetime, DateInterval;
 use App\Models\ServiceProvider;
 use App\Models\Shop;
 use App\Models\Room;
 use App\Models\Order;
 use App\Models\Service;
 use App\Models\Log;
+use App\Models\BlackList;
 use Session;
 
 class CalendarController extends Controller
@@ -77,6 +78,8 @@ class CalendarController extends Controller
 	private function order_list($date, $shop_id)
 	{
 
+		$now = new Datetime();
+
 		$shop = Shop::where('id', $shop_id)->first();
 		$shop_start_time = strtotime($date.' '.$shop->start_time);
 		$shop_end_time = strtotime($date.' '.$shop->end_time);
@@ -101,7 +104,10 @@ class CalendarController extends Controller
 							->where('end_time', '<=', date("Y-m-d H:i:s", $shop_end_time));
 
 		if(Session::get('account_level') != 1){
-			$orders =	$orders->where('end_time', '>=', date("Y-m-d H:i:s"));
+			//30分後才隱藏訂單
+			$now->add(new DateInterval('PT30M'));
+			$orders = $orders->where('end_time', '>=', $now);
+			$now->sub(new DateInterval('PT30M'));
 		}
 		$orders = $orders->orderBy('start_time', 'asc')
 						 ->get();
@@ -132,6 +138,20 @@ class CalendarController extends Controller
 			if(strtotime(date('Y-m-d H:i:s')) - strtotime($order->start_time) >= 600 && ($order->status == 1 || $order->status == 2)){
 				$order->status = 6;
 				$order->save();
+				if($data->phone != '現場客'){
+					$blackList = new BlackList;
+					$blackList = $blackList->firstOrNew(['name' => $order->name, 'phone' => $order->phone]);
+					if ($blackList->exists) {
+					    $blackList->overtime += 1;
+					    if($blackList->overtime >= 5) $blackList->status = 1;
+					    Log::create(['description' => '增加黑名單 名字:'.$order->name." 電話:".$order->phone." 逾時".$blackList->overtime."次 預約排程"]);
+					} else {
+						$blackList->status = 0;
+					    $blackList->overtime = 1;
+					    Log::create(['description' => '增加黑名單 名字:'.$order->name." 電話:".$order->phone." 逾時".$blackList->overtime."次 預約排程"]);
+					}
+					$blackList->save();
+				}	
 			}
 
 			$data->status = $order->status;
@@ -154,10 +174,10 @@ class CalendarController extends Controller
 
 			switch ($order->status) {
 				case 1:
-					$data->color = "#3ddcf7";
+					$data->color = "#1d7dca";
 					break;
 				case 2:
-					$data->color = "#1d7dca";
+					$data->color = "#BA55D3";
 					break;
 				case 3:
 					$data->color = "gray";
@@ -187,8 +207,17 @@ class CalendarController extends Controller
 			}
 			else{
 				$data->same_phone = '';
-			}	
-			
+			}
+
+			//10分後開始訂單開始閃爍
+			$now->add(new DateInterval('PT3M'));
+			if($now >= new Datetime($order->start_time) && $now <= new Datetime($order->end_time) && $order->status != 3 && $order->status != 4 && $order->status != 5 && $order->status != 6){
+				$data->class = "animation";	
+			}
+			else{
+				$data->class = "";	
+			}
+			$now->sub(new DateInterval('PT3M'));
 			$order_list[] = $data;
 		}
 
@@ -238,10 +267,10 @@ class CalendarController extends Controller
 				}
 				switch ($order->status) {
 					case 1:
-						$color = "#3ddcf7";
+						$color = "#1d7dca";
 						break;
 					case 2:
-						$color = "#1d7dca";
+						$color = "#BA55D3";
 						break;
 					case 4:
 						$color = "#ffaa00";
@@ -250,7 +279,7 @@ class CalendarController extends Controller
 						$color = "#5cb85c";
 						break;	
 					default:
-						$color = "#3ddcf7";
+						$color = "#0066FF";
 						break;
 				}
 				$result[] = [
@@ -485,19 +514,10 @@ class CalendarController extends Controller
 				}
 				else{
 					foreach ($order->serviceProviders as $key => $service_provider) {
-						$orders = Order::whereHas('ServiceProviders', function($query) use ($service_provider){
-							$query->where('id', $service_provider->id);
-						})
-						->where('status', '!=', 3)
-						->where('status', '!=', 4)
-						->where('status', '!=', 6)
-						->where('start_time', '<', $end_time)
-						->where('end_time', '>',$start_time)->get();
-						foreach ($orders as $service_provider_order) {
-							if($service_provider_order->id != $order->id){
-								throw new Exception($service_provider->name."號 師傅該時段已有約 請重新選擇", 1);
-							}
-						}
+						$leaves = $service_provider->leaves()->where('start_time', '<', $end_time)->where('end_time', '>',$start_time)->get();
+						if(count($leaves) > 0) throw new Exception($service_provider->name."號 師傅該時段請假 請重新選擇", 1);
+						$orders = $service_provider->orders()->where('id', '!=', $order->id)->whereNotIn('status', [3,4,6])->where('start_time', '<', $end_time)->where('end_time', '>',$start_time)->get();
+						if(count($orders) > 0) throw new Exception($service_provider->name."號 師傅該時段已有約 請重新選擇", 1);
 					}
 				}
 			}

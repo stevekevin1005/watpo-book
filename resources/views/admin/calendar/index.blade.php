@@ -9,7 +9,14 @@
     td{
         font-size: 22px;
     }
-
+    .animation > td:first-child{
+        animation: blink 2s;
+        animation-iteration-count: infinite;
+    }
+    @keyframes blink
+    {
+        50%  {color: #AAAAAA;}
+    }
 </style>
 @stop
 @section('content')
@@ -31,8 +38,8 @@
                             <button class="btn btn-warning" id="leave_status">師傅出勤</button>
                             @endif
                         </h4>
-                        <a href="#" style="color:#3ddcf7;">●</a> - 客戶預訂
-                        <a href="#" style="color:#1d7dca;">●</a> - 櫃檯修改
+                        <a href="#" style="color:#1d7dca;">●</a> - 客戶預訂
+                        <a href="#" style="color:#BA55D3;">●</a> - 櫃檯修改
                         <a href="#" style="color:gray;">●</a> - 客戶取消
                         <a href="#" style="color:#ffaa00;">●</a> - 櫃檯取消
                         <a href="#" style="color:#5cb85c;">●</a> - 訂單成立
@@ -58,7 +65,9 @@
                         </thead>
                         <tbody>
                             @foreach($order_list as $order)
-                            <tr id="order_list" style="background-color: {{ $order->color }};cursor: pointer;color: white; {{$order->same_phone}}"
+                            <tr id="order_list" 
+                                class="{{ $order->class }}"
+                                style="background-color: {{ $order->color }};cursor: pointer;color: white; {{$order->same_phone}}"
                                 data-id="{{$order->id}}"
                                 data-name="{{$order->name}}"
                                 data-phone="{{$order->phone}}"
@@ -76,7 +85,7 @@
                                 <td>{{ $order->name }}</td>
                                 <td>{{ $order->phone }}</td>
                                 {{-- <td>{{ $order->person }}</td> --}}
-                                <td>{{ $order->provider }}</td>
+                                <td style="color: black;">{{ $order->provider }}</td>
                                 <td>{{ $order->room }}</td>
                                 <td>{{ $order->account }}</td>
                                 @endif
@@ -142,7 +151,7 @@
             <div class="col-md-1" style="text-align:left;">
                 @if($shop_id == 1)
                 民生:
-                @else if($shop_id == 2)
+                @elseif($shop_id == 2)
                 光復:
                 @endif
             </div>
@@ -167,7 +176,7 @@
             <div class="col-md-1" style="text-align:left;">
                 @if($shop_id == 1)
                 光復:
-                @else if($shop_id == 2)
+                @elseif($shop_id == 2)
                 民生:
                 @endif
             </div>
@@ -241,6 +250,32 @@
             @{{/if}}
             @endif
         </div>
+        @if(session('account_level') == 1)
+        <hr>
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-md-8">
+                <input type="form-control" id="description">
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-danger" style="font-size:20px;" data-name="@{{:name}}" data-phone="@{{:phone}}" id="add_blacklist">加入黑名單</button>
+            </div>
+        </div>
+        <hr>
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-md-3">
+                <div class="btn btn-primary description">酒客</div>
+            </div>
+            <div class="col-md-3">
+                <div class="btn btn-primary description">性騷擾</div>
+            </div>
+            <div class="col-md-3">
+                <div class="btn btn-primary description">不付錢</div>
+            </div>
+            <div class="col-md-3">
+                <div class="btn btn-primary description">咆哮</div>
+            </div>
+        </div>
+        @endif
     </div>
 </script>
 <script id="order_list_template" type="x-jsrender">
@@ -258,7 +293,9 @@
     </thead>
     <tbody>
         @{{for order_list}}
-        <tr id="order_list" style="background-color: @{{:color}};cursor: pointer;color: white; @{{:same_phone}}"
+        <tr id="order_list" 
+            style="background-color: @{{:color}};cursor: pointer;color: white; @{{:same_phone}}"
+            class="@{{:class}}"
             data-id="@{{:id}}"
             data-name="@{{:name}}"
             data-phone="@{{:phone}}"
@@ -275,7 +312,7 @@
              @if(session('account_level') != 3)
             <td>@{{:name}}</td>
             <td>@{{:phone}}</td>
-            <td>@{{:provider}}</td>
+            <td style="color: black;">@{{:provider}}</td>
             <td>@{{:room}}</td>
             <td>@{{:account}}</td>
              @endif
@@ -636,6 +673,45 @@
             render_order_list();
         });
 
+        $("body").on('click', '.description',function(){
+            var description = $(this).text();
+            $('#description').val(description);
+        });
+
+        $("body").on('click', '#add_blacklist',function(){
+            var name = $(this).data('name');
+            var phone = $(this).data('phone');
+            var description = $("#description").val();
+            if(description != ""){
+                $.ajax({
+                    url: '/api/blacklist/add',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        name: name,
+                        phone: phone,
+                        description: description
+                    },
+                    success: function(res){
+                        location.reload();
+                    },
+                    error: function(e){
+                        swal(
+                            '黑名單',
+                            '新增失敗，請洽系統管理商！',
+                            'error'
+                        );
+                    }
+                });
+            }
+            else{
+                swal(
+                    '黑名單',
+                    '描述不得為空！',
+                    'error'
+                );
+            } 
+        });
         function render_order_list(){
             var date =  $("#date").val();
             $.ajax({
@@ -659,12 +735,12 @@
         var t;
         function Timeout(){
             render_order_list();
-            t = setTimeout(Timeout, 1*1000*10);
+            t = setTimeout(Timeout, 1*1000*3);
         }
         function ReCalculate(){
             clearTimeout(oTimerId);
             clearTimeout(t);
-            oTimerId = setTimeout(Timeout, 1*1000*10);
+            oTimerId = setTimeout(Timeout, 1*1000*3);
         }
         document.onmousedown = ReCalculate;
         document.onmousemove = ReCalculate;

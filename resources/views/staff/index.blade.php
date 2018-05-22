@@ -24,6 +24,9 @@
             .content-page{
                 min-height: 1000px;
             }
+            body {
+                position: static !important;
+            }
         </style>
 
 
@@ -54,6 +57,7 @@
             <form action="/staff/order" method="post" id="orderForm">
                 <div class="card-box" style="position:fixed; z-index:1000; height:80px; width:100%;">
                     <div class="row">
+                        <div class="col-xs-1"><a href="/staff/logout" class="btn btn-danger">登出</a></div>
                         <div class="col-xs-2">
                             <select id="choose_shop" class="form-control" name="shop_id" required>
                                 <option disabled selected value>選擇店家</option>
@@ -68,7 +72,10 @@
                         <div class="col-xs-1"><input class="form-control" type="checkbox" id="limit_time" value="true" checked></div>
                         <div class="col-xs-1">限制房間：</div>
                         <div class="col-xs-1"><input class="form-control" type="checkbox" id="limit_room" value="true" checked></div>
-                        <div class="col-xs-3"><div class="btn btn-primary" id="show_status">確認狀態</div></div>
+                        <div class="col-xs-2">
+                            <div class="btn btn-primary" id="show_status">確認狀態</div>
+                            <div class="btn btn-success" id="check_time">確認時間</div>
+                        </div>
                     </div>
                 </div>
                 <div class="content-page">
@@ -84,13 +91,15 @@
                                                 姓名:
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="text" class="form-control" name="name" placeholder="現場客">
+                                                <input type="text" class="form-control" name="name" placeholder="現場客" id="name">
                                             </div>
                                             <div class="col-md-1" style="text-align:left;">
                                                 電話:
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="text" class="form-control" name="phone" placeholder="現場客">
+                                                <input type="text" class="form-control" name="phone" placeholder="現場客" id="phone">
+                                            </div>
+                                            <div class="col-md-4" id="blacklist_description" style="color:red;font-size:23px;">
                                             </div>
                                         </div>
                                         <hr/>
@@ -221,6 +230,74 @@
                     @{{/for}}
                 </tbody>
             </table>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th colspan="2" style="text-align:center;">可選擇最大人數</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>一小時: </td>
+                        <td>@{{:max_1hr}}</td>
+                    </tr>
+                    <tr>
+                        <td>二小時: </td>
+                        <td>@{{:max_2hr}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </script>
+        <script id="check_time_template" type="x-jsrender">
+            <div class="container" style="height:200x;">
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-md-1">
+                        日期:
+                    </div>
+                    <div class="col-md-2">
+                        <input type="date" class="form-control" value=<?php echo date("Y-m-d")?> id="check_time_date">
+                    </div>
+                    <div class="col-md-2">
+                        (1hr)不指定:
+                    </div>
+                    <div class="col-md-1">
+                        <input type="number" class="form-control" value=0 id="check_time_no_limit_1hr">
+                    </div>
+                    
+                    <div class="col-md-5">
+                        <select name="" class="selectpicker selectWorker" multiple="" data-width="100%" tabindex="-98" title="選擇師傅" data-hide-disabled="true" id="check_time_worker_1hr">
+                            @{{for service_provider_list}}
+                            <option value="@{{>id}}">@{{>name}}</option>
+                            @{{/for}}
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-md-offset-3 col-md-2">
+                        (2hr)不指定:
+                    </div>
+                    <div class="col-md-1">
+                        <input type="number" class="form-control" value=0 id="check_time_no_limit_2hr">
+                    </div>
+                    
+                    <div class="col-md-5">
+                        <select name="" class="selectpicker selectWorker" multiple="" data-width="100%" tabindex="-98" title="選擇師傅" data-hide-disabled="true" id="check_time_worker_2hr">
+                            @{{for service_provider_list}}
+                            <option value="@{{>id}}">@{{>name}}</option>
+                            @{{/for}}
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-primary" id="check_time_submit">確認</button>
+                    </div>
+                </div>
+                <hr>
+                <div class="row" id="time_list" style="margin-top: 15px;min-height:100px;">
+                </div>
+                <hr>
+                <div class="row" id="room_list" style="margin-top: 15px;min-height:100px;">
+                </div>
+            </div>
         </script>
         <script type="text/javascript">
         $(function() {
@@ -228,7 +305,11 @@
 
             var status_data = {
                 service_provider_status: [],
-                room_status: []
+                room_status: [],
+                no_limit_1hr: 0,
+                no_limit_2hr: 0,
+                max_1hr: 0,
+                max_2hr: 0
             };
             $('#add_order').on('click', function(){
                 var myTemplate = $.templates("#order_form_template");
@@ -245,7 +326,8 @@
 
                     $('.detail').append(html);
                     $('.selectpicker').selectpicker({
-                        size: 7
+                        size: 6,
+                        dropupAuto: false
                     });
                     i++;
                 }
@@ -339,7 +421,7 @@
                         type: 'get',
                         dataType: 'json',
                         data: {
-                            time: today.toISOString().substr(0, 16),
+                            time: $("#choose_time").val(),
                             shop_id: shop
                         },
                         success: function(data){
@@ -356,6 +438,7 @@
                 var limit = document.getElementById("limit_time").checked;
 
                 if(time !== "" && shop !== undefined && shop !== null){
+   
                     $.ajax({
                         url: '/api/staff/check_status',
                         type: 'get',
@@ -389,7 +472,7 @@
                     alert("沒有選擇師傅");
                     return false;
                 }
-                else if(count > status_data.service_provider_status.length){
+                else if(count > Math.max(status_data.max_1hr, status_data.max_2hr)){
                     alert("可選擇師傅超過上限");
                     return false;
                 }
@@ -411,8 +494,174 @@
                     showCloseButton: true,
                 });
             }
-        });
+
+            $('#check_time').on('click', function(){
+                var shop = $("#choose_shop").val();
+                if(shop !== undefined && shop !== null && shop !== ''){
+                    $.ajax({
+                        url: '/api/staff/service_provider_list',
+                        type: 'get',
+                        dataType: 'json',
+                        data: {
+                            shop_id: shop
+                        },
+                        success: function(res){
+                            var myTemplate = $.templates("#check_time_template"); 
+                            var html = myTemplate.render({
+                                service_provider_list: res
+                            });
+                            swal({
+                                title: '師傅時間確認',
+                                html: html,
+                                width: "95%",
+                                allowOutsideClick: false,
+                                showCancelButton: false,
+                                focusConfirm: false,
+                                showConfirmButton: false,
+                                showCloseButton: true,
+                            });
+                            $('.selectpicker').selectpicker({
+                                size: 6,
+                                dropupAuto: false
+                            });
+                        },
+                        error: function(){
+
+                        }
+                    });
+                    
+                            
+                }
+                else{
+                    alert('尚未選擇店家');
+                } 
+            });
+
+            $('body').on('click', '#check_time_submit', function(){
+                check_service_provider_time();
+            });
+            $('body').on('change', '#check_time_date', function(){
+                check_service_provider_time();
+            });
+            function check_service_provider_time(){
+                var date = $('#check_time_date').val();
+                var shop_id = $("#choose_shop").val();
+                var worker_list_1hr = $('#check_time_worker_1hr').val();
+                var worker_list_2hr = $('#check_time_worker_2hr').val();
+                var no_limit_1hr = $('#check_time_no_limit_1hr').val();
+                var no_limit_2hr = $('#check_time_no_limit_2hr').val();
+                var limit = document.getElementById("limit_time").checked;
+                if(date != '' && shop_id !== undefined && shop_id !== null && shop_id !== ''){
+                    $("#time_list").html('時間判斷中.....');
+                    $("#room_list").html('');
+                    $.ajax({
+                        url: '/api/staff/service_provider_time',
+                        type: 'get',
+                        dataType: 'json',
+                        data: {
+                            date: date,
+                            shop_id: shop_id,
+                            worker_list_1hr: worker_list_1hr,
+                            worker_list_2hr: worker_list_2hr,
+                            no_limit_1hr: no_limit_1hr,
+                            no_limit_2hr: no_limit_2hr,
+                            limit_time: limit
+                        },
+                        success: function(res){
+                            var html = "";
+                            res.forEach(function(time) {
+                                html += '<div class="col-md-1" style="margin-top:5px"><button class="btn btn-success time_option">'+time+'</button></div>';
+                            });
+                            $("#time_list").html(html);
+                            $("#room_list").html('');
+                        },
+                        error: function(error){
+                            alert('錯誤！請洽系統商');
+                        }
+                    });
+                }
+                else{
+                    alert('請選擇日期');
+                }
+            }
+
+            $('body').on('click', '.time_option', function(){
+                var date = $('#check_time_date').val();
+                var time = $(this).text();
+                var datetime = new Date(date+"T"+time);
+                var shop_id = $("#choose_shop").val();
+                if(datetime < new Date(date+"T10:00")){
+                   datetime.setDate(datetime.getDate()+1);
+                }
+
+                var limit = document.getElementById("limit_time").checked;
+                $("#room_list").html('房間判斷中.....');
+                document.getElementById("choose_time").value  = datetime.toISOString().substr(0, 16);
+              
+                $.ajax({
+                    url: '/api/staff/check_status',
+                    type: 'get',
+                    dataType: 'json',
+                    data: {
+                        time: $("#choose_time").val(),
+                        shop_id: shop_id,
+                        limit_time: limit
+                    },
+                    success: function(res){
+                        var html = "";
+                        res.room_status.forEach(function(room) {
+                            html += '<div class="col-md-2" style="margin-top:5px">'+room.info+'</div>';
+                        });
+                        $("#room_list").html(html);
+                        status_data = res;
+                        $('.detail').html('');
+                        
+                    },
+                    error: function(error){
+                        alert('錯誤！請洽系統商');
+                    }
+                });
+            });
             
+            $("#name, #phone").on('change', function(){
+                var name = $("#name").val();
+                var phone = $("#phone").val();
+                if(name != '' && phone != ''){
+                    $.ajax({
+                        url: '/api/blacklist/search',
+                        type: 'get',
+                        dataType: 'json',
+                        data: {
+                            name: name,
+                            phone: phone,
+                        },
+                        success: function(res){
+                            if(res.status == true){
+                                swal({
+                                    title: '此顧客在黑名單內',
+                                    text: "確定要繼續訂位？",
+                                    type: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#d33',
+                                    cancelButtonColor: '#3085d6',
+                                    confirmButtonText: '取消訂位',
+                                    cancelButtonText: '繼續訂位'
+                                }).then((result) => {
+                                    if (result.value) {
+                                       $("#name").val('');
+                                       $("#phone").val('');
+                                    }
+                                })
+                            }
+                            $("#blacklist_description").text("逾時: "+res.overtime+" 描述: "+res.description);
+                        },
+                        error: function(error){
+                            alert('黑名單判斷錯誤！請洽系統商');
+                        }
+                    });
+                }
+            });
+        });
         </script>
     </body>
 </html>
