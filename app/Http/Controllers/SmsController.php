@@ -39,7 +39,7 @@ class SmsController extends Controller
                 $message = "親愛的".$person_data[0]->name."，感謝您本次於泰和殿的消費，希望您能撥冗為我們填寫意見函，您的寶貴意見，是我們最大的動力。 ".$report_url;
                                                                 // $person_data[0]->phone
                 $this->initiateSmsActivation($person_data[0]->name,"0978296597", $message,null);
-                Report::where('order_id',$mdata->order_id)->update(['status'=>1]);
+                Report::where('order_id',$mdata->order_id)->update(['status'=>2]);
       
                 $log_file_path = storage_path('SMS_report.log');
                 $log_info = [
@@ -52,7 +52,7 @@ class SmsController extends Controller
                 File::append($log_file_path, $log_info_json);
             }
             else{
-                Report::where('order_id',$mdata->order_id)->update(['status'=>2]);
+                Report::where('order_id',$mdata->order_id)->update(['status'=>1]);
             }
 
         }

@@ -14,7 +14,7 @@ class Report extends Model
 
     public function serviceProviders(){
 
-        return $this->belongsToMany('App\Models\ServiceProvider', 'service_provider_order', 'order_id','service_provider_id');
+        return $this->hasMany('App\Models\ServiceProvider', 'service_provider_order', 'order_id','service_provider_id');
     }
 
     public function belongsToOrder(){

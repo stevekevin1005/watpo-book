@@ -178,14 +178,14 @@
                 <li class="form-group animated hide " data-color="#00AF66"  data-percentage="100%">
                   <h3>確認您的回覆:</h3>
                   <div class=" editable scrollable">
-                    <div class="break answer0" contenteditable="true"></div>
-                    <div class="break answer1" contenteditable="true"></div>
-                    <div class="break answer2" contenteditable="true"></div>
-                    <div class="break answer3" contenteditable="true"></div>
-                    <div class="break answer4" contenteditable="true"></div>
-                    <div class="break answer5" contenteditable="true"></div>
-                    <div class="break answer6" contenteditable="true"></div>
-                    <div class="break answer7" contenteditable="true"></div>
+                    <div class="break answer0" contenteditable="false"></div>
+                    <div class="break answer1" contenteditable="false"></div>
+                    <div class="break answer2" contenteditable="false"></div>
+                    <div class="break answer3" contenteditable="false"></div>
+                    <div class="break answer4" contenteditable="false"></div>
+                    <div class="break answer5" contenteditable="false"></div>
+                    <div class="break answer6" contenteditable="false"></div>
+                    <div class="break answer7" contenteditable="false"></div>
                     
                   </div>
                 </li>
@@ -198,16 +198,16 @@
         <div class="clearfix"></div>
       </div>
     </div>
-    <form >
-      <input hidden="" class="answer0" style="color:#444"/>   
-      <input hidden="" class="answer1" style="color:#444"/>
-      <input hidden="" class="answer2" style="color:#444"/>
-      <input hidden="" class="answer3" style="color:#444"/>
-      <input hidden="" class="answer4" style="color:#444"/>
-      <input hidden="" class="answer5" style="color:#444"/>
-      <input hidden="" class="answer6" style="color:#444"/>
-      <input hidden="" class="answer7" style="color:#444"/>
-         
+    <form id="hiddenForm" method="post" action='/api/report'>
+      <input hidden="" class="answer0" name="q0" style="color:#444"/>   
+      <input hidden="" class="answer1" name="q1" style="color:#444"/>
+      <input hidden="" class="answer2" name="q2" style="color:#444"/>
+      <input hidden="" class="answer3" name="q3" style="color:#444"/>
+      <input hidden="" class="answer4" name="q4" style="color:#444"/>
+      <input hidden="" class="answer5" name="q5" style="color:#444"/>
+      <input hidden="" class="answer6" name="q6" style="color:#444"/>
+      <input hidden="" class="answer7" name="q7" style="color:#444"/>
+      <input hidden="" class="jwt" name="jwt"/>
       <input type="submit" class="btn btn-default btn-lg hide submit" value="送出"/>
     </form>
   </div>
@@ -227,6 +227,11 @@
         multi_Ans[i]=[];
     }
     
+
+    $.urlParam = function(name){
+	    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        return results[1] || 0;
+    }
     function score2text(score){
         var text=score
         switch(score.split("_")[1]){
@@ -254,19 +259,41 @@
             // console.log("#q"+question_number+"-reason hide")
             $("input[name=reason]").hide();
             $('.answer'+question_number).html(question_val.split("-")[1]?question_val.split("-")[1]:question_val)
+            $('.answer'+question_number).val(question_val.split("-")[1]?question_val.split("-")[1]:question_val.toString())
         }
     }); 
 	$(function () {
+        $('.jwt').html($.urlParam('jwt'));
+        $('.jwt').val($.urlParam('jwt'));
 	    $('input.getName').keyup('keyup', function () {
 	        $('.cName').html($('.getName').val());
 	    });
 	    $('.help').popover();
-	    $('.submit').click(function () {
-	        event.preventDefault();
-	        var darken = '<div class="darken" style="display:none;"></div>';
-	        $('body').prepend(darken);
-	        $('.darken').delay().show(0).animate({ opacity: 0.8 }, 'fast');
-	        $('.thanks').removeClass('hide').addClass('fadeInDownBig');
+	    $('.submit').click(function (event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: '/api/report',
+                type: 'post',
+                dataType: 'json',
+                data: $('form#hiddenForm').serialize(),
+                success: function(data) {
+                    console.log(data);
+                    if(data.res==1){
+                        var darken = '<div class="darken" style="display:none;"></div>';
+                        $('body').prepend(darken);
+                        $('.darken').delay().show(0).animate({ opacity: 0.8 }, 'fast');
+                        $('.thanks').removeClass('hide').addClass('fadeInDownBig');
+                    }
+                    else{
+
+                    }
+                    
+                }
+            });
+
+	        
+            
 	    });
 	    var img_cnt = $('li.activate').index() + 1;
 	    var img_amt = $('li.form-group').length;
@@ -317,7 +344,8 @@
             var Value = $(this).val();
             var q_number = $(this).attr("id")
             
-	        $('.answer'+q_number).html(Value);
+            $('.answer'+q_number).html(Value);
+            $('.answer'+q_number).val(Value.toString());
         });
 
         
@@ -332,6 +360,7 @@
             multi_Ans[q_number].push($('.service_providers_forbidden').val())
             console.log(q_number+":"+$('.service_providers_forbidden').val());
             $('.answer'+q_number).html(multi_Ans[q_number].join(","));
+            $('.answer'+q_number).val(multi_Ans[q_number].join(","));
         });
         $('.service_providers_forbidden').keyup(function(){
             
@@ -343,12 +372,14 @@
             multi_Ans[q_number].push($(this).val())
             console.log(q_number+"::"+$(this).val());
             $('.answer'+q_number).html(multi_Ans[q_number].join(","));
+            $('.answer'+q_number).val(multi_Ans[q_number].join(","));
         });
         
 	    
         $('input[name=suggestion]').keyup(function () {
 	        var Value = $(this).val();
-	        $('.answer7').html(Value);
+            $('.answer7').html(Value);
+            $('.answer7').val(Value.toString());
 	    });
 	});
 	</script>

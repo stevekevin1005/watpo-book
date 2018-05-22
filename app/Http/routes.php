@@ -99,7 +99,7 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('/order', ['uses' => 'BookController@api_order', 'as' => 'apiOrder']);
 		Route::get('/sendSMS', ['uses' => 'SmsController@send_SMS', 'as' => 'sendSMS']);
 		Route::get('/checkCode', ['uses' => 'SmsController@check_Code', 'as' => 'checkCode']);
-		Route::get('/report', ['uses' => 'ReportController@sendReport', 'as' => 'sendReport']);
+		Route::post('/report', ['uses' => 'ReportController@sendReport', 'as' => 'sendReport']);
 		
 	});
 	//admin redirect
