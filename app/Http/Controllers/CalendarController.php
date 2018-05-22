@@ -514,19 +514,10 @@ class CalendarController extends Controller
 				}
 				else{
 					foreach ($order->serviceProviders as $key => $service_provider) {
-						$orders = Order::whereHas('ServiceProviders', function($query) use ($service_provider){
-							$query->where('id', $service_provider->id);
-						})
-						->where('status', '!=', 3)
-						->where('status', '!=', 4)
-						->where('status', '!=', 6)
-						->where('start_time', '<', $end_time)
-						->where('end_time', '>',$start_time)->get();
-						foreach ($orders as $service_provider_order) {
-							if($service_provider_order->id != $order->id){
-								throw new Exception($service_provider->name."號 師傅該時段已有約 請重新選擇", 1);
-							}
-						}
+						$leaves = $service_provider->leaves()->where('start_time', '<', $end_time)->where('end_time', '>',$start_time)->get();
+						if(count($leaves) > 0) throw new Exception($service_provider->name."號 師傅該時段請假 請重新選擇", 1);
+						$orders = $service_provider->orders()->where('id', '!=', $order->id)->whereNotIn('status', [3,4,6])->where('start_time', '<', $end_time)->where('end_time', '>',$start_time)->get();
+						if(count($orders) > 0) throw new Exception($service_provider->name."號 師傅該時段已有約 請重新選擇", 1);
 					}
 				}
 			}
