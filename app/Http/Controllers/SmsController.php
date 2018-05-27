@@ -10,6 +10,12 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
 use \Carbon\Carbon;
 
+use App\Models\Report;
+use App\Models\Order;
+
+
+use File;
+// session_start();
 class SmsController extends Controller
 {
     private $SMS_SENDER = "Watpo";
@@ -24,6 +30,36 @@ class SmsController extends Controller
         $this->SMS_USERNAME = config('sms.user');
         $this->SMS_PASSWORD = config('sms.password');
     }
+
+    public function schedulingSendReportSMS(){
+        $sendQuiz = Report::where('status',0)->get();
+        foreach($sendQuiz as $mdata){
+            $person_data = Order::where('id',$mdata->order_id)->get();
+           
+            if($person_data[0]->phone !== "現場客"){
+                $report_url = "http://localhost:8000/report?jwt=".base64_encode($person_data[0]->id);
+                $message = "親愛的".$person_data[0]->name."，感謝您本次於泰和殿的消費，希望您能撥冗為我們填寫意見函，您的寶貴意見，是我們最大的動力。 ".$report_url;
+                                                                // $person_data[0]->phone
+                $this->initiateSmsActivation($person_data[0]->name,"0978296597", $message,null);
+                Report::where('order_id',$mdata->order_id)->update(['status'=>2]);
+      
+                $log_file_path = storage_path('SMS_report.log');
+                $log_info = [
+                    'date'=>date('Y-m-d H:i:s'),
+                    'phone'=>$person_data[0]->phone
+                ];
+                $log_info_json = json_encode($log_info) . "\r\n";
+
+                // 記錄 Log
+                File::append($log_file_path, $log_info_json);
+            }
+            else{
+                Report::where('order_id',$mdata->order_id)->update(['status'=>1]);
+            }
+
+        }
+    }
+
 
     public function send_SMS(Request $request)
     { 
@@ -91,7 +127,8 @@ class SmsController extends Controller
         $errorMessage = true;
 
         $expiresAt = Carbon::now()->addMinutes(30);
-        Cache::put($phone_number, $CODE, $expiresAt);
+        if($CODE)
+            Cache::put($phone_number, $CODE, $expiresAt);
         // Cache::put($phone_number."Time", time(), $expiresAt)
 
         

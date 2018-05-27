@@ -28,6 +28,11 @@ class Order extends Model {
     return $this->belongsTo('App\Models\Account', 'account_id');
   }
 
+  public function report()
+  {
+    return $this->belongsTo('App\Models\Report', 'order_id');
+  }
+
   public function serviceProviders()
   {
     return $this->belongsToMany('App\Models\ServiceProvider', 'service_provider_order', 'order_id','service_provider_id');
