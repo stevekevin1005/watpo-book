@@ -30,7 +30,7 @@
 
 </div>
 <div class="animated thanks fadeInDownBig">
-  <h1 style="font-weight:100; font-size:48px; width: 80%; margin: 0 auto;">感謝您耐心填寫！</h1>
+  <h1 style="font-weight:100; font-size:48px; width: 80%; margin: 0 auto;">感謝您耐心填寫</h1>
   <form action="/">
     <button class="btn btn-lg btn-success" style="margin:20px;" >回首頁</button>
   </form>

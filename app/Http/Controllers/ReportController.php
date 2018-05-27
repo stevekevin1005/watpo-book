@@ -42,7 +42,7 @@ class ReportController extends Controller
             'q4' => 'required|max:255',
             'q5' => 'required|max:255',
             'q6' => 'required|max:255',
-            'q7' => 'required|max:255',
+            // 'q7' => 'required|max:255',
         ]);
     
         if ($v->fails())
