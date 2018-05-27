@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\Inspire::class,
         Commands\ReportStatus::class,
+        Commands\SendReportSMS::class,
         Commands\unlockBlackList::class,
     ];
 
