@@ -64,19 +64,7 @@ class ReportController extends Controller
             $report->status = 0;
             $report->save();
         }
-        $log_file_path = storage_path('FinishedService.log');
 
-        // 記錄當時的時間
-        $log_info = [
-            'date'=>date('Y-m-d H:i:s'),
-            'report_data'=>$readyForQuiz
-        ];
-
-        // 記錄 JSON 字串
-        $log_info_json = json_encode($log_info) . "\r\n";
-
-        // 記錄 Log
-        File::append($log_file_path, $log_info_json);
     }
 
     public function sendReport(Request $request){
