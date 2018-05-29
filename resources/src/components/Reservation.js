@@ -173,31 +173,31 @@ class Reservation extends React.Component {
         endTime = (endTime[0] >= 10 ? endTime[0] : "0" + endTime[0]) + ":" + endTime[1] + ":" + endTime[2];
         let date = reservation.date;
 
-        // 確認是否需要將日期改為隔日
-        if (reservation.time[0] === "0") {
-            // 是過凌晨00:00:00的時間，故調整日期
-            let newDate = date.split("/").map((val) => {
-                return parseInt(val);
-            }),
-                daynum = new Date(newDate[0], newDate[1], 0).getDate(); //該月最後一天日期
-            //跨月
-            if (newDate[2] == daynum) {
-                newDate[1] = newDate[1] + 1;
-                newDate[2] = 1;
-            }
-            //跨年
-            else if (newDate[1] == 12 && newDate[2] == 31) {
-                newDate[0] = newDate[0] + 1;
-                newDate[1] = 1;
-                newDate[2] = 1;
-            } else {
-                newDate[2] = newDate[2] + 1;
-            }
-            if (newDate[1] < 10) newDate[1] = "0" + newDate[1];
-            if (newDate[2] < 10) newDate[2] = "0" + newDate[2];
-            newDate = newDate.join("/");
-            date = newDate;
-        }
+        // // 確認是否需要將日期改為隔日
+        // if (reservation.time[0] === "0") {
+        //     // 是過凌晨00:00:00的時間，故調整日期
+        //     let newDate = date.split("/").map((val) => {
+        //         return parseInt(val);
+        //     }),
+        //         daynum = new Date(newDate[0], newDate[1], 0).getDate(); //該月最後一天日期
+        //     //跨月
+        //     if (newDate[2] == daynum) {
+        //         newDate[1] = newDate[1] + 1;
+        //         newDate[2] = 1;
+        //     }
+        //     //跨年
+        //     else if (newDate[1] == 12 && newDate[2] == 31) {
+        //         newDate[0] = newDate[0] + 1;
+        //         newDate[1] = 1;
+        //         newDate[2] = 1;
+        //     } else {
+        //         newDate[2] = newDate[2] + 1;
+        //     }
+        //     if (newDate[1] < 10) newDate[1] = "0" + newDate[1];
+        //     if (newDate[2] < 10) newDate[2] = "0" + newDate[2];
+        //     newDate = newDate.join("/");
+        //     date = newDate;
+        // }
 
         // call API
         this.toggleLoading();

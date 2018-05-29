@@ -98,7 +98,7 @@ class BookController extends Controller
 	{
 		try{
 
-			$date = $request->date;
+			$date = new Datetime($request->date);
 			$shop_id = $request->shop_id;
 			$service_id = $request->service_id;
 			$person = $request->person;
@@ -123,34 +123,42 @@ class BookController extends Controller
 			$shop = Shop::where('id', $shop_id)->first();
 			
 
-			$start_time = new DateTime($date.' '.$shop->start_time);
+			$start_time = clone $date;
 
-			$end_time = new DateTime($date.' '.$shop->end_time);
-			if($end_time <= $start_time){
-				$end_time->add(new DateInterval("P1D"))->modify("-2 hour");
-			}
+			$end_time = clone $date;
+			$end_time->add(new DateInterval("P1D"));
 			
-			$i = 0;
-			while($start_time <= $end_time){
-				$time_list[$i]['time'] = $start_time->format('H:i:s');
+			$shop_start_time = new Datetime($date->format('Y-m-d')." ".$shop->start_time);
 
-				if(new DateTime(date("Y-m-d H:i:s")) > $start_time){
-					$time_list[$i]['select'] = false;
-				}
-				else{
-					$msg = $this->time_option($date, $start_time->format('Y-m-d H:i:s'), $service->time, $shower, $shop_id, $person, $service_provider_id);
-					if($msg === true){
-						$time_list[$i]['select'] = true;
+			$shop_end_time =new Datetime($date->format('Y-m-d')." ".$shop->end_time);
+			$shop_end_time->modify("-2 hour");
+
+			$i = 0;
+			while($start_time < $end_time){
+				$today = clone $date;
+				if($start_time <= $shop_end_time) $today->modify("-1 day");
+				if($start_time >= $shop_start_time || $start_time <= $shop_end_time){
+					$time_list[$i]['time'] = $start_time->format('H:i:s');
+
+					if(new DateTime(date("Y-m-d H:i:s")) > $start_time){
+						$time_list[$i]['select'] = false;
 					}
 					else{
-						$time_list[$i]['select'] = false;
-						$time_list[$i]['time'] .= $msg === false ? "": $msg;
+						$msg = $this->time_option($today->format('Y-m-d'), $start_time->format('Y-m-d H:i:s'), $service->time, $shower, $shop_id, $person, $service_provider_id);
+						if($msg === true){
+							$time_list[$i]['select'] = true;
+						}
+						else{
+							$time_list[$i]['select'] = false;
+							$time_list[$i]['time'] .= $msg === false ? "": $msg;
+						}
+						
 					}
-					
+					$i++;
 				}
 				$start_time->add(new DateInterval("PT30M"));
 
-				$i++;
+				
 			}
 
 			return response()->json($time_list, 200, self::headers, JSON_UNESCAPED_UNICODE);
