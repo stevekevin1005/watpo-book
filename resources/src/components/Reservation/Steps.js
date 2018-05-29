@@ -21,7 +21,7 @@ const Steps = props=>{
                         </Link>
                     {divider}</span>);
                 return (
-                    <span>
+                    <span key={index}>
                         <span 
                             style = {currentStep === index?currentStepStyle: null}
                         >{step}</span>
@@ -29,7 +29,7 @@ const Steps = props=>{
         });
 
         return (
-            <Col md="12">
+            <Col md={12}>
                 <div className="steps">
                     {steps}
                 </div>

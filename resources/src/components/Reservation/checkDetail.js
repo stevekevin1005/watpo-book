@@ -290,7 +290,7 @@ class CheckDetail extends React.Component {
         if (reservation.guestNum > 0 && sourceData.service_provider_list) {
             for (let i = 0; i < reservation.guestNum; i++) {
                 // options of operators
-                operators.push(<FormControl bsClass="form-control operatorOption" componentClass="select" id={"operator" + i} data-index={i} onChange={this.setOperator} defaultValue={reservation.operator[i] ? reservation.operator[i] : null} value={reservation.operator[i] ? reservation.operator[i] : null}>
+                operators.push(<FormControl bsClass="form-control operatorOption" componentClass="select" id={"operator" + i} data-index={i} onChange={this.setOperator} defaultValue={reservation.operator[i] ? reservation.operator[i] : null} key={i} >
                     <option key={-1} value={0}>不指定</option>
                     {sourceData.service_provider_list.map((operator, index) => {
                         for (let j = 0; j < selectedOperators.length; j++) {
@@ -320,7 +320,7 @@ class CheckDetail extends React.Component {
                             </div>
                         }
                         {reservation.roomId && <div style={{ marginBottom: "5px" }}><ControlLabel>{t("guestNum")}</ControlLabel>
-                            <FormControl componentClass="select" placeholder="select" defaultValue={reservation.guestNum} onChange={this.setGuestNum} value={reservation.guestNum}>
+                            <FormControl componentClass="select" placeholder="select" defaultValue={reservation.guestNum} onChange={this.setGuestNum}>
                                 {guestNumEl}
                             </FormControl></div>}
                         {reservation.roomId ? <div>

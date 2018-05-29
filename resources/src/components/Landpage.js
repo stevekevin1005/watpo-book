@@ -54,7 +54,7 @@ class Landpage extends React.Component {
         }],
             branches = branchData.map((branch, index) => {
                 return (
-                    <div>
+                    <div key={index}>
                         <h4><i className="fa fa-caret-right" aria-hidden="true"></i>{" " + branch.name}</h4>
                         <Row>
                             <Col md={6}>

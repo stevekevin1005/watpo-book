@@ -74,7 +74,7 @@ class Step extends React.Component{
         return (<div>
             <Steps step={currentStep}/>
             {currentStep > 0 && 
-            <Col md="12"><p className="prevStap"><Link to={"/reservation/"+ (currentStep - 1)}><span><i className="fa fa-angle-left" aria-hidden="true"></i>{" "+t("prevStep")}</span></Link></p></Col>
+            <Col md={12}><p className="prevStap"><Link to={"/reservation/"+ (currentStep - 1)}><span><i className="fa fa-angle-left" aria-hidden="true"></i>{" "+t("prevStep")}</span></Link></p></Col>
             }
             {el}
         </div>);

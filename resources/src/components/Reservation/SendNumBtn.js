@@ -92,7 +92,7 @@ class SendNumBtn extends Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log("state input: ", state);
+    // console.log("state input: ", state);
     return {
         EnterCode: state.phoneValidator.reEnter,
         show: state.phoneValidator.isopen,
