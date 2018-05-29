@@ -119,7 +119,7 @@ background-size: cover;
 .inner {
   padding: 30px;
 }
-.break {border-bottom:1px solid #4DB8FF; margin-bottom:15px; padding-bottom:15px}
+.break {border-bottom:1px solid #4DB8FF; margin-bottom:15px; padding-bottom:5px}
 .progress {border-radius:0; height:7px; background-color:#1E6697;  -webkit-box-shadow: none; box-shadow:none;}
 .progress-bar {background-color:#2ecc71; -webkit-box-shadow: none;box-shadow:none; }
 .progress-form {margin:0; padding:0; position:relative; min-height:500px}
@@ -182,7 +182,7 @@ border-top-color: #ffb500;
 .form-group textarea {font-size:18px; padding:10px; min-height:300px;}
 
 .form-group input:focus, .form-group textarea:focus {outline:0; border:none;  box-shadow:none;}
-
+.form-group span{opacity: 0.8;}
 input:active  {outline:0 !important}
 .navbar {}
 .navbar-brand { font-weight:normal; margin-top:30px;} .h1-header {font-weight:100; margin-top:0; font-size:36px; background:#e74c3c; padding:25px; margin-left:-10px;  }
