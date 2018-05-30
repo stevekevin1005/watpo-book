@@ -33,10 +33,10 @@
                     <div class="recep_satis">
                         <div class="each_line">
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="0_1" name="receptionist" value="morning"/><label for='0_1' >早班櫃檯</label> 
+                                <input class="selector satisfy" type="radio" id="0_1" name="receptionist" value="早班櫃檯"/><label for='0_1' >早班櫃檯</label> 
                             </div> 
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="0_2" name="receptionist" value="night"/><label for='0_2'>晚班櫃檯</label>
+                                <input class="selector satisfy" type="radio" id="0_2" name="receptionist" value="晚班櫃檯"/><label for='0_2'>晚班櫃檯</label>
                             </div> 
                         </div>               
                 </li>
@@ -133,21 +133,21 @@
                     <div class="service_providers_forbidden">                  
                         <div class="each_line">
                             <div class="element">
-                                <input class="selector satisfy" type="checkbox" id="5_1" name="service_providers_forbidden" value="nap"/><label for="5_1">打瞌睡</label> 
+                                <input class="selector satisfy" type="checkbox" id="5_1" name="service_providers_forbidden" value="打瞌睡"/><label for="5_1">打瞌睡</label> 
                             </div>
                             <div class="element next">
-                                <input class="selector satisfy" type="checkbox" id="5_2" name="service_providers_forbidden" value="chatting"/><label for="5_2">師傅相互聊天影響休息</label> 
+                                <input class="selector satisfy" type="checkbox" id="5_2" name="service_providers_forbidden" value="師傅相互聊天影響休息"/><label for="5_2">師傅相互聊天影響休息</label> 
                             </div>
                         </div>
                         <div class="each_line">
                             <div class="element">
-                                <input class="selector satisfy" type="checkbox" id="5_3" name="service_providers_forbidden" value="tv"/><label for="5_3">看電視</label> 
+                                <input class="selector satisfy" type="checkbox" id="5_3" name="service_providers_forbidden" value="看電視"/><label for="5_3">看電視</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="checkbox" id="5_4" name="service_providers_forbidden" value="phone"/><label for="5_4">用手機</label> 
+                                <input class="selector satisfy" type="checkbox" id="5_4" name="service_providers_forbidden" value="用手機"/><label for="5_4">用手機</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="checkbox" id="5_5" name="service_providers_forbidden" value="no"/><label for="5_5">無</label> 
+                                <input class="selector satisfy" type="checkbox" id="5_5" name="service_providers_forbidden" value="無"/><label for="5_5">無</label> 
                             </div>
                         </div>
                     <input type="text" name="service_providers_forbidden" class="form-control getName service_providers_forbidden"  id="5_6" placeholder="其他"  required="required"/>  
@@ -178,13 +178,21 @@
                 <li class="form-group animated hide " data-color="#00AF66"  data-percentage="100%">
                   <h3>確認您的回覆:</h3>
                   <div class=" editable scrollable">
+                    <span>您對這次消費時的櫃檯人員:</span>
                     <div class="break answer0" contenteditable="false"></div>
+                    <span>您對這次櫃檯人員的服務態度:</span>
                     <div class="break answer1" contenteditable="false"></div>
+                    <span>您對這次按摩師傅服務態度:</span>
                     <div class="break answer2" contenteditable="false"></div>
+                    <span>您對這次按摩師傅的技術:</span>
                     <div class="break answer3" contenteditable="false"></div>
+                    <span>您對這次按摩師傅的工作表現:</span>
                     <div class="break answer4" contenteditable="false"></div>
+                    <span>本次按摩師工作是否有以下情況:</span>
                     <div class="break answer5" contenteditable="false"></div>
+                    <span>下次還會不會來本店消費:</span>
                     <div class="break answer6" contenteditable="false"></div>
+                    <span>您對本公司的建議:</span>
                     <div class="break answer7" contenteditable="false"></div>
                     
                   </div>
