@@ -656,7 +656,7 @@
                             $("#blacklist_description").text("逾時: "+res.overtime+" 描述: "+res.description);
                         },
                         error: function(error){
-                            alert('黑名單判斷錯誤！請洽系統商');
+                            // alert('黑名單判斷錯誤！請洽系統商');
                         }
                     });
                 }
