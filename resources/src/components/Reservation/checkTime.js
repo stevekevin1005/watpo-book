@@ -99,6 +99,7 @@ class CheckTime extends React.Component{
                             return (<span className={time.select?"timePeriod available":"timePeriod"} key={index} data-index={index} onClick={time.select?this.setTime:null}>{time.time}</span>);
                         }):<p>{t(this.state.hint)}</p>}
                     </div>
+                    <p className="hint">{t("timeHint")}</p>
                 </Col>
                 <Button currentStep={2} clickHandle={this.props.send} disabled={disabled}/>
             </div>
