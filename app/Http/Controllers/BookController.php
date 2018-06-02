@@ -138,7 +138,7 @@ class BookController extends Controller
 				$today = clone $date;
 				if($start_time <= $shop_end_time) $today->modify("-1 day");
 				if($start_time >= $shop_start_time || $start_time <= $shop_end_time){
-					$time_list[$i]['time'] = $start_time->format('H:i:s');
+					$time_list[$i]['time'] = $start_time->format('H:i');
 
 					if(new DateTime(date("Y-m-d H:i:s")) > $start_time){
 						$time_list[$i]['select'] = false;
