@@ -109,7 +109,7 @@ class CalendarController extends Controller
 			$orders = $orders->where('end_time', '>=', $now);
 			$now->sub(new DateInterval('PT30M'));
 		}
-		$orders = $orders->orderBy('start_time', 'asc')
+		$orders = $orders->orderBy('start_time', 'asc')->orderBy('phone', 'asc')
 						 ->get();
 		$order_list = [];
 
