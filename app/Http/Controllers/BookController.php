@@ -387,7 +387,7 @@ class BookController extends Controller
 				foreach ($order->serviceProviders as $serviceProvider) {
 					$service_provider .= " $serviceProvider->name";
 				}
-				$order_list[] = ['shop' => $order->shop->name, 'service' => $order->service->title, 'person' => $order->person, 'start_time' => $order->start_time, 'service_provider' => $service_provider];
+				$order_list[] = ['id' => $order->id,'shop' => $order->shop->name, 'service' => $order->service->title, 'person' => $order->person, 'start_time' => $order->start_time, 'service_provider' => $service_provider];
 			}
 			return response()->json($order_list);
 		}
@@ -405,7 +405,7 @@ class BookController extends Controller
 			$order_id = $request->order_id;
 			$name = $request->name;
 			$phone = $request->phone;
-			$order = Order::where('id', $order_id)->where('phone', $phone)->where('name', $name)->first();
+			$order = Order::where('id', $order_id)->first();
 			$order->status = 3;
 			$order->save();
 			return response()->json('預約取消成功!', 200, self::headers, JSON_UNESCAPED_UNICODE);
