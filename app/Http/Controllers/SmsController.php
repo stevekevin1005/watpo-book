@@ -41,7 +41,7 @@ class SmsController extends Controller
            
             if($person_data[0]->phone !== "現場客"){
                 $report_url = $this->DOMAIN_NAME."report?jwt=".base64_encode($person_data[0]->id);
-                $message = "親愛的".$person_data[0]->name."，感謝您本次於泰和殿的消費，希望您能撥冗為我們填寫意見函，您的寶貴意見，是我們最大的動力。 ".$report_url;
+                $message = "親愛的".$person_data[0]->name."，感謝您本次於泰和殿的消費，希望您能撥冗為我們填寫意見函，您的寶貴意見，是我們最大的動力。 ".$report_url." 線上預約app ios:https://ez2o.co/8N8Lt android:https://ez2o.co/0N87b";
                                                                 // $person_data[0]->phone
                 $resp = $this->initiateSmsActivation($person_data[0]->name,$person_data[0]->phone, $message,null);
                 if($resp['error']==0)
