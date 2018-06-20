@@ -23,10 +23,9 @@ class ReportStatus extends Command
     // Console 執行的程式
     public function handle()
     {
-        $readyForQuiz = Order::where('status',5)->whereDate('end_time','<',Carbon::now())->where('name','test')->get();
+        $readyForQuiz = Order::where('status',5)->doesntHave("report")->whereDate('end_time','>=', "2018-05-01 00:00:00")->whereDate('end_time','<',Carbon::now())->get();
         foreach($readyForQuiz as $mdata){
             $had_report = Report::where('order_id',$mdata->id);
-            // if($had_report->get)
             $report = new Report;
             $report->order_id = $mdata->id;
             $report->status = 0;

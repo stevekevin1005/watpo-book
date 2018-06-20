@@ -30,7 +30,7 @@ class Order extends Model {
 
   public function report()
   {
-    return $this->belongsTo('App\Models\Report', 'order_id');
+    return $this->hasOne('App\Models\Report', 'order_id');
   }
 
   public function serviceProviders()

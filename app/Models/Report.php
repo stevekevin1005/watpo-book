@@ -11,6 +11,7 @@ class Report extends Model
 {
     //
     protected $table = 'Report';
+    protected $primaryKey = 'order_id';
 
     public function serviceProviders(){
 
@@ -22,3 +23,12 @@ class Report extends Model
         return $this->belongsTo('App\Models\Order', 'order_id');
     }
 }
+
+/*
+	order_id: int(255) pk (associate order)
+	q0~q7: question
+	status: 0: init report 1: phone number miss 2: send report 3: report done 4: report done and response it
+    response: text default:null
+	created_at: datetime
+	updated_at: datetime
+*/

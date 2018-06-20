@@ -114,6 +114,10 @@
                             @if(session('account_level') == 1)
                             <li class="text-muted menu-title">管理功能選單</li>
                             <li>
+                                <a href="/admin/report" class="waves-effect waves-primary"><i class="md md-receipt"></i><span> 顧客調查表 </span></a>
+                            </li>
+
+                            <li>
                                 <a href="/admin/blacklist/list" class="waves-effect waves-primary"><i class="md md-error"></i><span> 黑名單 </span></a>
                             </li>
                             <li>

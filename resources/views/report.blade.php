@@ -49,16 +49,16 @@
                     
                         <div class="each_line">
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="1_1" name="receptionist_satisfaction" value="1-3"/><label for="1_1">非常滿意</label> 
+                                <input class="selector satisfy" type="radio" id="1_1" name="receptionist_satisfaction" value="非常滿意"/><label for="1_1">非常滿意</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="1_2" name="receptionist_satisfaction" value="1-2"/><label for="1_2">滿意</label> 
+                                <input class="selector satisfy" type="radio" id="1_2" name="receptionist_satisfaction" value="滿意"/><label for="1_2">滿意</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="1_3" name="receptionist_satisfaction" value="1-1"/><label for="1_3">普通</label> 
+                                <input class="selector satisfy" type="radio" id="1_3" name="receptionist_satisfaction" value="普通"/><label for="1_3">普通</label> 
                             </div>
                             <div class="element">
-                                <input class="selector" type="radio" id="1_4" name="receptionist_satisfaction" value="1-0"/><label for="1_4">不滿意</label> 
+                                <input class="selector" type="radio" id="1_4" name="receptionist_satisfaction" value="不滿意"/><label for="1_4">不滿意</label> 
                             </div>
                         </div>
                     <input type="text" name="reason" class="form-control getName q1-reason" style="display:none" id="1_5" placeholder="不滿原因"  required="required"/>
@@ -70,16 +70,16 @@
                     <div class="service_providers_attitude">                  
                         <div class="each_line">
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="2_1" name="service_providers_attitude" value="2-3"/><label for="2_1">非常滿意</label> 
+                                <input class="selector satisfy" type="radio" id="2_1" name="service_providers_attitude" value="非常滿意"/><label for="2_1">非常滿意</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="2_2" name="service_providers_attitude" value="2-2"/><label for="2_2">滿意</label> 
+                                <input class="selector satisfy" type="radio" id="2_2" name="service_providers_attitude" value="滿意"/><label for="2_2">滿意</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="2_3" name="service_providers_attitude" value="2-1"/><label for="2_3">普通</label> 
+                                <input class="selector satisfy" type="radio" id="2_3" name="service_providers_attitude" value="普通"/><label for="2_3">普通</label> 
                             </div>
                             <div class="element">
-                                <input class="selector" type="radio" id="2_4" name="service_providers_attitude" value="2-0"/><label for="2_4">不滿意</label> 
+                                <input class="selector" type="radio" id="2_4" name="service_providers_attitude" value="不滿意"/><label for="2_4">不滿意</label> 
                             </div>
                         </div>
                     <input type="text" name="reason" class="form-control getName q2-reason" style="display:none" id="2_5" placeholder="不滿原因"  required="required"/>
@@ -91,16 +91,16 @@
                     <div class="service_providers_skill">                  
                         <div class="each_line">
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="3_1" name="service_providers_skill" value="3-3"/><label for="3_1">非常滿意</label> 
+                                <input class="selector satisfy" type="radio" id="3_1" name="service_providers_skill" value="非常滿意"/><label for="3_1">非常滿意</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="3_2" name="service_providers_skill" value="3-2"/><label for="3_2">滿意</label> 
+                                <input class="selector satisfy" type="radio" id="3_2" name="service_providers_skill" value="滿意"/><label for="3_2">滿意</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="3_3" name="service_providers_skill" value="3-1"/><label for="3_3">普通</label> 
+                                <input class="selector satisfy" type="radio" id="3_3" name="service_providers_skill" value="普通"/><label for="3_3">普通</label> 
                             </div>
                             <div class="element">
-                                <input class="selector" type="radio" id="3_4" name="service_providers_skill" value="3-0"/><label for="3_4">不滿意</label> 
+                                <input class="selector" type="radio" id="3_4" name="service_providers_skill" value="不滿意"/><label for="3_4">不滿意</label> 
                             </div>
                         </div>
                     <input type="text" name="reason" class="form-control getName q3-reason" style="display:none" id="3_5" placeholder="不滿原因"  required="required"/>  
@@ -112,16 +112,16 @@
                     <div class="service_providers_work">                  
                         <div class="each_line">
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="4_1" name="service_providers_work" value="4-3"/><label for="4_1">非常滿意</label> 
+                                <input class="selector satisfy" type="radio" id="4_1" name="service_providers_work" value="非常滿意"/><label for="4_1">非常滿意</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="4_2" name="service_providers_work" value="4-2"/><label for="4_2">滿意</label> 
+                                <input class="selector satisfy" type="radio" id="4_2" name="service_providers_work" value="滿意"/><label for="4_2">滿意</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="4_3" name="service_providers_work" value="4-1"/><label for="4_3">普通</label> 
+                                <input class="selector satisfy" type="radio" id="4_3" name="service_providers_work" value="普通"/><label for="4_3">普通</label> 
                             </div>
                             <div class="element">
-                                <input class="selector " type="radio" id="4_4" name="service_providers_work" value="4-0"/><label for="4_4">不滿意</label> 
+                                <input class="selector " type="radio" id="4_4" name="service_providers_work" value="不滿意"/><label for="4_4">不滿意</label> 
                             </div>
                         </div>
                     <input type="text" name="reason" class="form-control getName q4-reason" style="display:none" id="4_5" placeholder="不滿原因"  required="required"/>  
@@ -159,10 +159,10 @@
                     <div class="come_again">                  
                         <div class="each_line">
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="6_1" name="come_again" value="6-y"/><label for="6_1">會</label> 
+                                <input class="selector satisfy" type="radio" id="6_1" name="come_again" value="會"/><label for="6_1">會</label> 
                             </div>
                             <div class="element">
-                                <input class=" selector" type="radio" id="6_2" name="come_again" value="6-n"/><label for="6_2">不會</label> 
+                                <input class=" selector" type="radio" id="6_2" name="come_again" value="不會"/><label for="6_2">不會</label> 
                             </div>
                         </div>
                     </div>
@@ -247,8 +247,6 @@
         return results[1] || 0;
     }
     function en2ch(text){
-        console.log("text select:",text)
-        console.log("text.split length:",text.search(','))
         if(text.search(',')>0){
             var ans=[];
             for(var i = 0; i < text.split(',').length ;i++){
@@ -454,8 +452,8 @@
             });
             multi_Ans[q_number].push($('.service_providers_forbidden').val())
             console.log(q_number+":"+$('.service_providers_forbidden').val());
-            $('.answer'+q_number).html(en2ch(multi_Ans[q_number].join(",")));
-            $('.ans'+q_number).val(multi_Ans[q_number].join(","));
+            $('.answer'+q_number).html(en2ch(multi_Ans[q_number].join(" ")));
+            $('.ans'+q_number).val(multi_Ans[q_number].join(" "));
         });
         $('input.service_providers_forbidden').keyup(function(){
             

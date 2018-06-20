@@ -20,17 +20,56 @@ use File;
 
 class ReportController extends Controller
 {
-    // private function encodeToken($id){
-    //     $len = $id.length();
-    //     return base64_encode( $id.md5(rand()).$len) ;
+    public function index(Request $request){
         
-    // }
-    // private function decodeToken($token){
-    //     $decode = base64_decode($token);
-    //     $len = substr($decode,-1);
-    //     $id = substr($decode,0,$len);
-    //     return $id;
-    // }
+        $order_list = Order::whereHas('report', function ($query) {
+            $query->whereIn('status', [3,4]);
+        })->with('report')->with('shop');
+
+        if($request->service_provider){
+            $service_provider_id = $request->service_provider;
+            $order_list = $order_list->whereHas('serviceProviders', function($query) use ($service_provider_id ){
+                $query->where('id', $service_provider_id);
+            });
+        }
+        if($request->id){
+            $order_list = $order_list->where('id', $request->id);
+        }
+        if($request->name){
+            $order_list = $order_list->where('name', $request->name);
+        }
+        if($request->phone){
+            $order_list = $order_list->where('phone', $request->phone);
+        }
+        if($request->start_time){
+            $order_list = $order_list->where('start_time', ">=", $request->start_time);
+        }
+        if($request->end_time){
+            $order_list = $order_list->where('end_time', "<=", $request->end_time);
+        }
+        if($request->service){
+            $order_list = $order_list->where('service_id', $request->service);
+        }
+        if($request->shop){
+            $order_list = $order_list->where('shop_id', $request->shop);
+        }
+        $order_list = $order_list->paginate(10);
+        // dd($order_list);
+        foreach ($order_list as $key => $order) {
+        }
+
+        $view_data['order_list'] = $order_list;
+
+        $service_provider_list = ServiceProvider::with('shop')->get();
+        foreach ($service_provider_list as $key => $service_provider) {
+            $service_provider_name = $service_provider->name."(".$service_provider->shop->name.")";
+            $view_data['service_provider_list'][] = ["id" => $service_provider->id, "name" => $service_provider_name];
+        }
+        $view_data['request'] = $request;
+        $view_data['service_list'] = Service::all();
+        $view_data['shop_list'] = Shop::all();
+        return view('admin.report.index', $view_data);
+    }
 
     private function insertValidation(Request $request){
         $v = Validator::make($request->all(), [
@@ -55,16 +94,13 @@ class ReportController extends Controller
 
     
     public function FinishedService(){
-        $readyForQuiz = Order::where('status',5)->whereDate('end_time','<',Carbon::now())->get();
+       $readyForQuiz = Order::where('status',5)->doesntHave("report")->whereDate('end_time','>=', "2018-06-22 00:00:00")->whereDate('end_time','<',Carbon::now())->get();
         foreach($readyForQuiz as $mdata){
-            $had_report = Report::where('order_id',$mdata->id);
-            // if($had_report->get)
             $report = new Report;
             $report->order_id = $mdata->id;
             $report->status = 0;
             $report->save();
         }
-
     }
 
     public function sendReport(Request $request){
@@ -72,7 +108,6 @@ class ReportController extends Controller
         $id = base64_decode($request->jwt);
         $query = Report::where('order_id', $id)->where('status','2')->first();
 
-        // $is_order = Report::where('order_id', $request->id)->belongsToOrder;
         $is_order = Order::where('id',$id)->first();
         if( !$query || $this->insertValidation($request) == -1 || !$is_order){
             return response()->json([
@@ -84,7 +119,6 @@ class ReportController extends Controller
                 ]);
         }
         else{
-            // $report = new Report;
             $report = Report::where('order_id', $id)->update(
                 ["q0" => $request->q0,
                 "q1" => $request->q1,
@@ -96,19 +130,6 @@ class ReportController extends Controller
                 "q7" => $request->q7,
                 "status" => '3']
             );
-            // $report->order_id = $id;
-            // $report->q0 = $request->q0;
-            // $report->q1 = $request->q1;
-            // $report->q2 = $request->q2;
-            // $report->q3 = $request->q3;
-            // $report->q4 = $request->q4;
-            // $report->q5 = $request->q5;
-            // $report->q6 = $request->q6;
-            // $report->q7 = $request->q7;
-            // $report->status = '3';
-            // $report->save();
-
-            
 
             return response()->json(["res"=>1]);
         }
@@ -126,7 +147,6 @@ class ReportController extends Controller
                     return view('report');
                 else
                     return view('report_finished');
-                // return response()->json(["jwt"=>$segment]);
             }
             else{
                 return view('report_finished');
