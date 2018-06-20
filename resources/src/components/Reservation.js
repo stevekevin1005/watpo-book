@@ -14,6 +14,7 @@ import { bindActionCreators } from "redux";
 import LoadingAnimation from "./LoadingAnimation";
 import clearCheckOrdersInfo from "../dispatchers/clearCheckOrdersInfo";
 import { renderToStaticMarkup } from 'react-dom/server';
+import { browserHistory } from 'react-router'
 
 import { UserVerifiy } from '../actions'
 
@@ -292,7 +293,7 @@ class Reservation extends React.Component {
                     onConfirm={() => {
                         this.setState({ showAlert: false });
                         if (this.state.loading) this.setState({ loading: false });
-                        if (this.state.success) location.reload();
+                        if (this.state.success) this.props.history.push('/')
                     }}
                 />
             </Grid>
