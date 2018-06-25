@@ -94,7 +94,7 @@ class ReportController extends Controller
 
     
     public function FinishedService(){
-       $readyForQuiz = Order::where('status',5)->doesntHave("report")->where('phone', '!=', '現場客')->whereDate('end_time','>=', "2018-06-22 00:00:00")->whereDate('end_time','<',Carbon::now())->get();
+       $readyForQuiz = Order::where('status',5)->doesntHave("report")->where('phone', '!=', '現場客')->whereDate('end_time','>=', "2018-06-22 00:00:00")->where('end_time','<',Carbon::now())->get();
         foreach($readyForQuiz as $mdata){
             $report = new Report;
             $report->order_id = $mdata->id;
