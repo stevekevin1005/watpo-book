@@ -151,8 +151,18 @@ class ReportController extends Controller
             if($request->jwt){
                 $id = base64_decode( $request->jwt);
                 $status = Report::where('order_id',$id)->get();
-                if($status[0]->status == 2 )
-                    return view('report');
+                if($status[0]->status == 2 ){
+                    $service_providers = ServiceProvider::whereHas('orders', function($query) use ($id) {
+                        $query->where('id', $id);
+                    })->with('shop')->get();
+                    $service_provider_information = "";
+                    foreach ($service_providers as $key => $service_provider) {
+                        $service_provider_information .= $service_provider->name."(".$service_provider->shop->name.")";
+                    }
+                    $service_provider_information .= "";
+                    $view_data["service_provider_information"] = $service_provider_information;
+                    return view('report', $view_data);
+                }
                 else
                     return view('report_finished');
             }

@@ -10,6 +10,12 @@
 	<link rel="stylesheet" type="text/css" href="/assets/css/report.css">
 	<link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,100,400,300,600,700,800'>
 	<link rel="stylesheet" type="text/css" href="/assets/css/report-styles.css">
+    <style type="text/css">
+    .form-group label{
+        font-size: 17px;
+        font-weight: bold;
+    }
+    </style>
 </head>
 <body>
 	<div class="covering">
@@ -49,86 +55,86 @@
                     
                         <div class="each_line">
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="1_1" name="receptionist_satisfaction" value="非常滿意"/><label for="1_1">非常滿意</label> 
+                                <input class="selector satisfy" type="radio" id="1_1" name="receptionist_satisfaction" value="1-非常滿意"/><label for="1_1">非常滿意</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="1_2" name="receptionist_satisfaction" value="滿意"/><label for="1_2">滿意</label> 
+                                <input class="selector satisfy" type="radio" id="1_2" name="receptionist_satisfaction" value="1-滿意"/><label for="1_2">滿意</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="1_3" name="receptionist_satisfaction" value="普通"/><label for="1_3">普通</label> 
+                                <input class="selector satisfy" type="radio" id="1_3" name="receptionist_satisfaction" value="1-普通"/><label for="1_3">普通</label> 
                             </div>
                             <div class="element">
-                                <input class="selector" type="radio" id="1_4" name="receptionist_satisfaction" value="不滿意"/><label for="1_4">不滿意</label> 
+                                <input class="selector" type="radio" id="1_4" name="receptionist_satisfaction" value="1-不滿意"/><label for="1_4">不滿意</label> 
                             </div>
                         </div>
                     <input type="text" name="reason" class="form-control getName q1-reason" style="display:none" id="1_5" placeholder="不滿原因"  required="required"/>
                 </li>
                 <li class="form-group animated q2 hide " data-color="#7C6992"  data-percentage="40%">
                     <label for="service_providers_attitude">
-                        <h3>您對這次按摩師傅服務態度</h3>
+                        <h3>您對這次按摩師傅 {{$service_provider_information}} 服務態度</h3>
                     </label>
                     <div class="service_providers_attitude">                  
                         <div class="each_line">
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="2_1" name="service_providers_attitude" value="非常滿意"/><label for="2_1">非常滿意</label> 
+                                <input class="selector satisfy" type="radio" id="2_1" name="service_providers_attitude" value="2-非常滿意"/><label for="2_1">非常滿意</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="2_2" name="service_providers_attitude" value="滿意"/><label for="2_2">滿意</label> 
+                                <input class="selector satisfy" type="radio" id="2_2" name="service_providers_attitude" value="2-滿意"/><label for="2_2">滿意</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="2_3" name="service_providers_attitude" value="普通"/><label for="2_3">普通</label> 
+                                <input class="selector satisfy" type="radio" id="2_3" name="service_providers_attitude" value="2-普通"/><label for="2_3">普通</label> 
                             </div>
                             <div class="element">
-                                <input class="selector" type="radio" id="2_4" name="service_providers_attitude" value="不滿意"/><label for="2_4">不滿意</label> 
+                                <input class="selector" type="radio" id="2_4" name="service_providers_attitude" value="2-不滿意"/><label for="2_4">不滿意</label> 
                             </div>
                         </div>
                     <input type="text" name="reason" class="form-control getName q2-reason" style="display:none" id="2_5" placeholder="不滿原因"  required="required"/>
                 </li>
                 <li class="form-group animated q3 hide" data-color="#00AF66"  data-percentage="60%">
                     <label for="service_providers_skill">
-                        <h3>您對這次按摩師傅的技術</h3>
+                        <h3>您對這次按摩師傅 {{$service_provider_information}} 的技術</h3>
                     </label>
                     <div class="service_providers_skill">                  
                         <div class="each_line">
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="3_1" name="service_providers_skill" value="非常滿意"/><label for="3_1">非常滿意</label> 
+                                <input class="selector satisfy" type="radio" id="3_1" name="service_providers_skill" value="3-非常滿意"/><label for="3_1">非常滿意</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="3_2" name="service_providers_skill" value="滿意"/><label for="3_2">滿意</label> 
+                                <input class="selector satisfy" type="radio" id="3_2" name="service_providers_skill" value="3-滿意"/><label for="3_2">滿意</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="3_3" name="service_providers_skill" value="普通"/><label for="3_3">普通</label> 
+                                <input class="selector satisfy" type="radio" id="3_3" name="service_providers_skill" value="3-普通"/><label for="3_3">普通</label> 
                             </div>
                             <div class="element">
-                                <input class="selector" type="radio" id="3_4" name="service_providers_skill" value="不滿意"/><label for="3_4">不滿意</label> 
+                                <input class="selector" type="radio" id="3_4" name="service_providers_skill" value="3-不滿意"/><label for="3_4">不滿意</label> 
                             </div>
                         </div>
                     <input type="text" name="reason" class="form-control getName q3-reason" style="display:none" id="3_5" placeholder="不滿原因"  required="required"/>  
                 </li>
                 <li class="form-group animated q4 hide" data-color="#00AF66"  data-percentage="80%">
                     <label for="service_providers_work">
-                        <h3>您對這次按摩師傅的工作表現</h3>
+                        <h3>您對這次按摩師傅 {{$service_provider_information}} 的工作表現</h3>
                     </label>
                     <div class="service_providers_work">                  
                         <div class="each_line">
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="4_1" name="service_providers_work" value="非常滿意"/><label for="4_1">非常滿意</label> 
+                                <input class="selector satisfy" type="radio" id="4_1" name="service_providers_work" value="4-非常滿意"/><label for="4_1">非常滿意</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="4_2" name="service_providers_work" value="滿意"/><label for="4_2">滿意</label> 
+                                <input class="selector satisfy" type="radio" id="4_2" name="service_providers_work" value="4-滿意"/><label for="4_2">滿意</label> 
                             </div>
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="4_3" name="service_providers_work" value="普通"/><label for="4_3">普通</label> 
+                                <input class="selector satisfy" type="radio" id="4_3" name="service_providers_work" value="4-普通"/><label for="4_3">普通</label> 
                             </div>
                             <div class="element">
-                                <input class="selector " type="radio" id="4_4" name="service_providers_work" value="不滿意"/><label for="4_4">不滿意</label> 
+                                <input class="selector " type="radio" id="4_4" name="service_providers_work" value="4-不滿意"/><label for="4_4">不滿意</label> 
                             </div>
                         </div>
                     <input type="text" name="reason" class="form-control getName q4-reason" style="display:none" id="4_5" placeholder="不滿原因"  required="required"/>  
                 </li>
                 <li class="form-group animated q5 hide" data-color="#00AF66"  data-percentage="100%">
                     <label for="service_providers_forbidden">
-                        <h3>本次按摩師工作是否有以下情況，請勾選</h3>
+                        <h3>本次按摩師{{$service_provider_information}}工作是否有以下情況，請勾選</h3>
                     </label>
                     <div class="service_providers_forbidden">                  
                         <div class="each_line">
@@ -159,10 +165,10 @@
                     <div class="come_again">                  
                         <div class="each_line">
                             <div class="element">
-                                <input class="selector satisfy" type="radio" id="6_1" name="come_again" value="會"/><label for="6_1">會</label> 
+                                <input class="selector satisfy" type="radio" id="6_1" name="come_again" value="6-會"/><label for="6_1">會</label> 
                             </div>
                             <div class="element">
-                                <input class=" selector" type="radio" id="6_2" name="come_again" value="不會"/><label for="6_2">不會</label> 
+                                <input class=" selector" type="radio" id="6_2" name="come_again" value="6-不會"/><label for="6_2">不會</label> 
                             </div>
                         </div>
                     </div>
@@ -182,13 +188,13 @@
                     <div class="break answer0" contenteditable="false"></div>
                     <span>您對這次櫃檯人員的服務態度:</span>
                     <div class="break answer1" contenteditable="false"></div>
-                    <span>您對這次按摩師傅服務態度:</span>
+                    <span>您對這次按摩師傅 {{$service_provider_information}} 服務態度:</span>
                     <div class="break answer2" contenteditable="false"></div>
-                    <span>您對這次按摩師傅的技術:</span>
+                    <span>您對這次按摩師傅 {{$service_provider_information}} 的技術:</span>
                     <div class="break answer3" contenteditable="false"></div>
-                    <span>您對這次按摩師傅的工作表現:</span>
+                    <span>您對這次按摩師傅 {{$service_provider_information}} 的工作表現:</span>
                     <div class="break answer4" contenteditable="false"></div>
-                    <span>本次按摩師工作是否有以下情況:</span>
+                    <span>本次按摩師 {{$service_provider_information}} 工作是否有以下情況:</span>
                     <div class="break answer5" contenteditable="false"></div>
                     <span>下次還會不會來本店消費:</span>
                     <div class="break answer6" contenteditable="false"></div>
@@ -314,8 +320,8 @@
     $('.selector').click(function() {
         var question_number=$(this).attr('id').split('_')[0];
         var question_val = $(this).val();
-        // console.log(question_val)
-        if(question_val.split("-")[1] == 0 || question_val.split("-")[1]=="n"){
+        console.log(question_val);
+        if(question_val.split("-")[1] == "不滿意" || question_val.split("-")[1]== "不會"){
             if($(".q"+question_number+"-reason").val()=="")
                 $('.nxt').removeClass('fadeInUp').addClass('fadeOutDown');
             $(".q"+question_number+"-reason").show();
