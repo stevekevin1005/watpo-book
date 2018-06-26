@@ -132,7 +132,47 @@ table{
 					</div>
 				</div>
 			</div>
-
+			@if(isset($request->service_provider))
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="card-box">
+						<table class="table">
+							<thead class="thead-dark">
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">非常滿意</th>
+									<th scope="col">滿意</th>
+									<th scope="col">普通</th>
+									<th scope="col">不滿意</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th scope="row">服務態度</th>
+									<td>{{ $q2['非常滿意'] }}</td>
+									<td>{{ $q2['滿意'] }}</td>
+									<td>{{ $q2['普通'] }}</td>
+									<td>{{ $q2['不滿意'] }}</td>
+								</tr>
+								<tr>
+								<th scope="row">技術</th>
+									<td>{{ $q3['非常滿意'] }}</td>
+									<td>{{ $q3['滿意'] }}</td>
+									<td>{{ $q3['普通'] }}</td>
+									<td>{{ $q3['不滿意'] }}</td>
+								<tr>
+								<th scope="row">表現</th>
+									<td>{{ $q4['非常滿意'] }}</td>
+									<td>{{ $q4['滿意'] }}</td>
+									<td>{{ $q4['普通'] }}</td>
+									<td>{{ $q4['不滿意'] }}</td>
+								<tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			@endif
 		</div>
         <!-- end container -->
         <div class="container">

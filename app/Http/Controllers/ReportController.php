@@ -54,8 +54,16 @@ class ReportController extends Controller
             $order_list = $order_list->where('shop_id', $request->shop);
         }
         $order_list = $order_list->paginate(10);
-        // dd($order_list);
-        foreach ($order_list as $key => $order) {
+
+        if($request->service_provider){
+            $view_data['q2'] = ['非常滿意' => 0, '滿意' => 0, '普通' => 0, '不滿意' => 0];
+            $view_data['q3'] = ['非常滿意' => 0, '滿意' => 0, '普通' => 0, '不滿意' => 0];
+            $view_data['q4'] = ['非常滿意' => 0, '滿意' => 0, '普通' => 0, '不滿意' => 0];
+            foreach ($order_list as $key => $order) {
+                $view_data['q2'][$order->report->q2]++;
+                $view_data['q3'][$order->report->q3]++;
+                $view_data['q4'][$order->report->q4]++;
+            }
         }
 
         $view_data['order_list'] = $order_list;
