@@ -136,6 +136,11 @@ class ReportController extends Controller
                 "q5" => $request->q5,
                 "q6" => $request->q6,
                 "q7" => $request->q7,
+                "q1-reason" => $request->q1_reason,
+                "q2-reason" => $request->q2_reason,
+                "q3-reason" => $request->q3_reason,
+                "q4-reason" => $request->q4_reason,
+                "q6-reason" => $request->q6_reason,
                 "status" => '3']
             );
 

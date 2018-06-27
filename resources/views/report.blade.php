@@ -67,7 +67,7 @@
                                 <input class="selector" type="radio" id="1_4" name="receptionist_satisfaction" value="1-不滿意"/><label for="1_4">不滿意</label> 
                             </div>
                         </div>
-                    <input type="text" name="reason" class="form-control getName q1-reason" style="display:none" id="1_5" placeholder="不滿原因"  required="required"/>
+                    <input type="text" name="reason" class="form-control getName q1-reason" style="display:none" id="1_5" placeholder="原因"  required="required"/>
                 </li>
                 <li class="form-group animated q2 hide " data-color="#7C6992"  data-percentage="40%">
                     <label for="service_providers_attitude">
@@ -88,7 +88,7 @@
                                 <input class="selector" type="radio" id="2_4" name="service_providers_attitude" value="2-不滿意"/><label for="2_4">不滿意</label> 
                             </div>
                         </div>
-                    <input type="text" name="reason" class="form-control getName q2-reason" style="display:none" id="2_5" placeholder="不滿原因"  required="required"/>
+                    <input type="text" name="reason" class="form-control getName q2-reason" style="display:none" id="2_5" placeholder="原因"  required="required"/>
                 </li>
                 <li class="form-group animated q3 hide" data-color="#00AF66"  data-percentage="60%">
                     <label for="service_providers_skill">
@@ -109,7 +109,7 @@
                                 <input class="selector" type="radio" id="3_4" name="service_providers_skill" value="3-不滿意"/><label for="3_4">不滿意</label> 
                             </div>
                         </div>
-                    <input type="text" name="reason" class="form-control getName q3-reason" style="display:none" id="3_5" placeholder="不滿原因"  required="required"/>  
+                    <input type="text" name="reason" class="form-control getName q3-reason" style="display:none" id="3_5" placeholder="原因"  required="required"/>  
                 </li>
                 <li class="form-group animated q4 hide" data-color="#00AF66"  data-percentage="80%">
                     <label for="service_providers_work">
@@ -130,7 +130,7 @@
                                 <input class="selector " type="radio" id="4_4" name="service_providers_work" value="4-不滿意"/><label for="4_4">不滿意</label> 
                             </div>
                         </div>
-                    <input type="text" name="reason" class="form-control getName q4-reason" style="display:none" id="4_5" placeholder="不滿原因"  required="required"/>  
+                    <input type="text" name="reason" class="form-control getName q4-reason" style="display:none" id="4_5" placeholder="原因"  required="required"/>  
                 </li>
                 <li class="form-group animated q5 hide" data-color="#00AF66"  data-percentage="100%">
                     <label for="service_providers_forbidden">
@@ -172,7 +172,7 @@
                             </div>
                         </div>
                     </div>
-                    <input type="text" name="reason" class="form-control getName q6-reason" style="display:none" id="6_3" placeholder="不會原因"  required="required"/>  
+                    <input type="text" name="reason" class="form-control getName q6-reason" style="display:none" id="6_3" placeholder="原因"  required="required"/>  
                 </li>
                 <li class="form-group animated q7 hide" data-color="#00AF66"  data-percentage="80%">
                     <label for="suggestion">
@@ -218,11 +218,16 @@
     <form id="hiddenForm" method="post" action='/api/report'>
       <input hidden="" class="ans0" name="q0" style="color:#444"/>   
       <input hidden="" class="ans1" name="q1" style="color:#444"/>
+      <input hidden="" class="ans-reason1" name="q1_reason" style="color:#444"/>
       <input hidden="" class="ans2" name="q2" style="color:#444"/>
+      <input hidden="" class="ans-reason2" name="q2_reason" style="color:#444"/>
       <input hidden="" class="ans3" name="q3" style="color:#444"/>
+      <input hidden="" class="ans-reason3" name="q3_reason" style="color:#444"/>
       <input hidden="" class="ans4" name="q4" style="color:#444"/>
+      <input hidden="" class="ans-reason4" name="q4_reason" style="color:#444"/>
       <input hidden="" class="ans5" name="q5" style="color:#444"/>
       <input hidden="" class="ans6" name="q6" style="color:#444"/>
+      <input hidden="" class="ans-reason6" name="q6_reason" style="color:#444"/>
       <input hidden="" class="ans7" name="q7" style="color:#444"/>
       <input hidden="" class="jwt" name="jwt"/>
       <div class="btn-union hiddenForm">
@@ -321,16 +326,20 @@
         var question_number=$(this).attr('id').split('_')[0];
         var question_val = $(this).val();
         console.log(question_val);
+
+        $(".q"+question_number+"-reason").show();
+        $('.answer'+question_number).html(question_val.split("-")[1]?question_val.split("-")[1]:en2ch(question_val))
+        $('.ans'+question_number).val(question_val.split("-")[1]?question_val.split("-")[1]:question_val.toString())
         if(question_val.split("-")[1] == "不滿意" || question_val.split("-")[1]== "不會"){
             if($(".q"+question_number+"-reason").val()=="")
                 $('.nxt').removeClass('fadeInUp').addClass('fadeOutDown');
-            $(".q"+question_number+"-reason").show();
+            
         }
         else{
             // console.log("#q"+question_number+"-reason hide")
-            $(".q"+question_number+"-reason").hide();
-            $('.answer'+question_number).html(question_val.split("-")[1]?score2text(question_val.split("-")[1]):en2ch(question_val))
-            $('.ans'+question_number).val(question_val.split("-")[1]?question_val.split("-")[1]:question_val.toString())
+            // $(".q"+question_number+"-reason").hide();
+            // $('.answer'+question_number).html(question_val.split("-")[1]?question_val.split("-")[1]:en2ch(question_val))
+            // $('.ans'+question_number).val(question_val.split("-")[1]?question_val.split("-")[1]:question_val.toString())
         }
     }); 
 	$(function () {
@@ -378,8 +387,11 @@
         $('input[name=reason]').keyup(function () {
             if($(this).val()!== "")
                 $('.nxt').removeClass('hide fadeOutDown').addClass('fadeInUp');
-            else
-                $('.nxt').removeClass('fadeInUp').addClass('hide fadeOutDown');
+            else{
+                var question_no = $(this).attr('id').split('_')[0];             
+                if($('.answer'+question_no).html().indexOf("不滿意") >=0 || $('.answer'+question_no).html().indexOf("不會") >= 0)
+                    $('.nxt').removeClass('fadeInUp').addClass('fadeOutDown');
+            }
         });
 
         
@@ -443,8 +455,8 @@
             var Value = $(this).val();
             var q_number = $(this).attr("id").split("_")[0];
             
-            $('.answer'+q_number).html(Value);
-            $('.ans'+q_number).val(Value.toString());
+            $('.answer'+q_number).html($('.ans'+q_number).val()+",原因："+Value);
+            $('.ans-reason'+q_number).val(Value.toString());
         });
 
         
