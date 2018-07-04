@@ -68,7 +68,7 @@
                                 
                             </div>
                         </div>
-                    <input type="text" name="reason" class="form-control getName q1-reason" style="display:none" id="1_5" placeholder="原因"  required="required"/>
+                    <textarea onkeyup="adjustHeight(this)" name="reason" class="form-control getName q1-reason" style="display:none" id="1_5" placeholder="原因"  required="required"></textarea>
                     <span class="alert_reason hidden">請輸入原因，進行下一題</span>
                 </li>
                 <li class="form-group animated q2 hide " data-color="#7C6992"  data-percentage="40%">
@@ -91,7 +91,7 @@
                                 
                             </div>
                         </div>
-                    <input type="text" name="reason" class="form-control getName q2-reason" style="display:none" id="2_5" placeholder="原因"  required="required"/>
+                    <textarea name="reason" class="form-control getName q2-reason" style="display:none" id="2_5" placeholder="原因"  required="required"></textarea>
                     <span class="alert_reason hidden">請輸入原因，進行下一題</span>
                 </li>
                 <li class="form-group animated q3 hide" data-color="#00AF66"  data-percentage="60%">
@@ -114,7 +114,7 @@
                                 
                             </div>
                         </div>
-                    <input type="text" name="reason" class="form-control getName q3-reason" style="display:none" id="3_5" placeholder="原因"  required="required"/>  
+                    <textarea name="reason" class="form-control getName q3-reason" style="display:none" id="3_5" placeholder="原因"  required="required"></textarea>  
                     <span class="alert_reason hidden">請輸入原因，進行下一題</span>
                 </li>
                 <li class="form-group animated q4 hide" data-color="#00AF66"  data-percentage="80%">
@@ -136,7 +136,7 @@
                                 <input class="selector " type="radio" id="4_4" name="service_providers_work" value="4-不滿意"/><label for="4_4">不滿意</label> 
                             </div>
                         </div>
-                    <input type="text" name="reason" class="form-control getName q4-reason" style="display:none" id="4_5" placeholder="原因"  required="required"/>  
+                    <textarea name="reason" class="form-control getName q4-reason" style="display:none" id="4_5" placeholder="原因"  required="required"></textarea>  
                     <span class="alert_reason hidden">請輸入原因，進行下一題</span>
                 </li>
                 <li class="form-group animated q5 hide" data-color="#00AF66"  data-percentage="100%">
@@ -163,7 +163,7 @@
                                 <input class="selector satisfy" type="checkbox" id="5_5" name="service_providers_forbidden" value="無"/><label for="5_5">無</label> 
                             </div>
                         </div>
-                    <input type="text" name="service_providers_forbidden" class="form-control getName service_providers_forbidden"  id="5_6" placeholder="其他"  required="required"/>  
+                    <textarea name="service_providers_forbidden" class="form-control getName service_providers_forbidden"  id="5_6" placeholder="其他"  required="required"></textarea>  
                 </li>
                 <li class="form-group animated q6 hide" data-color="#00AF66"  data-percentage="80%">
                     <label for="come_again">
@@ -179,7 +179,7 @@
                             </div>
                         </div>
                     </div>
-                    <input type="text" name="reason" class="form-control getName q6-reason" style="display:none" id="6_3" placeholder="原因"  required="required"/>  
+                    <textarea name="reason" class="form-control getName q6-reason" style="display:none" id="6_3" placeholder="原因"  required="required"></textarea>  
                     <span class="alert_reason hidden">請輸入原因，進行下一題</span>
                 </li>
                 <li class="form-group animated q7 hide" data-color="#00AF66"  data-percentage="80%">
@@ -255,6 +255,10 @@
 	<script src="/assets/js/jquery-2.1.1.min.js"></script>
 	<script src='https://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
 	<script>
+    function adjustHeight(o){
+        o.style.height = "1px";
+        o.style.height = (20+o.scrollHeight)+"px";
+    }
     var multi_Ans=Array(8)
     for(var i =0; i <8 ;i++){
         multi_Ans[i]=[];
@@ -356,7 +360,7 @@
 	$(function () {
         $('.jwt').html($.urlParam('jwt'));
         $('.jwt').val($.urlParam('jwt'));
-	    $('input.getName').keyup('keyup', function () {
+	    $('textarea.getName').keyup('keyup', function () {
 	        $('.cName').html($('.getName').val());
 	    });
 	    $('.help').popover();
@@ -395,7 +399,7 @@
 	    $('.satisfy').click(function () {
             $('.nxt').removeClass('hide fadeOutDown').addClass('fadeInUp');
         });
-        $('input[name=reason]').keyup(function () {
+        $('textarea[name=reason]').keyup(function () {
             if($(this).val()!== ""){
                 $('.alert_reason').addClass('hidden').removeClass('fadeInUp');
                 $('.nxt').removeClass('hide fadeOutDown').addClass('fadeInUp');
@@ -468,7 +472,7 @@
     });
 
 	$(function () {
-	    $('input[name=reason]').keyup(function () {
+	    $('textarea[name=reason]').keyup(function () {
             var Value = $(this).val();
             var q_number = $(this).attr("id").split("_")[0];
             
@@ -478,7 +482,7 @@
 
         
         
-        $('input[name=service_providers_forbidden]').click(function(){
+        $('textarea[name=service_providers_forbidden]').click(function(){
             
             var q_number = $(this).attr("id").split("_")[0];
             multi_Ans[q_number]=[]
@@ -490,7 +494,7 @@
             $('.answer'+q_number).html(en2ch(multi_Ans[q_number].join(" ")));
             $('.ans'+q_number).val(multi_Ans[q_number].join(" "));
         });
-        $('input.service_providers_forbidden').keyup(function(){
+        $('textarea.service_providers_forbidden').keyup(function(){
             
             var q_number = $(this).attr("id").split("_")[0];
             multi_Ans[q_number]=[]
@@ -504,7 +508,7 @@
         });
         
 	    
-        $('input[name=suggestion]').keyup(function () {
+        $('textarea[name=suggestion]').keyup(function () {
 	        var Value = $(this).val();
             $('.answer7').html(Value);
             $('.ans7').val(Value.toString());

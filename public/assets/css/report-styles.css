@@ -19,6 +19,23 @@ a:hover {
   border: 1px solid #fff;
 }
 
+.form-group textarea::-webkit-input-placeholder {
+  color:    rgb(255, 255, 255) !important;
+  opacity: 1 !important;
+}
+.form-group textarea:-moz-placeholder {
+  color:    rgb(255, 255, 255) !important;
+  opacity: 1 !important;
+}
+.form-group textarea::-moz-placeholder {
+  color:    rgb(255, 255, 255) !important;
+  opacity: 1 !important;
+}
+.form-group textarea:-ms-input-placeholder {
+  color:    rgb(255, 255, 255) !important;
+  opacity: 1 !important;
+}
+
 
 /*
  * Base structure
@@ -179,8 +196,8 @@ border-top-color: #ffb500;
 .form-group label h1 {font-size:48px; font-weight:100;}
 .form-group input, .form-group textarea  { border:none;  background:rgba(255,255,255, .2);height:auto; padding:15px 15px; box-shadow:none; border-radius:0;  color:#fff; outline: 0; }
 
-.form-group textarea {font-size:18px; padding:10px; min-height:300px;}
-
+.form-group textarea {font-size:18px; font-size: 20px; height:auto; line-height: 20px; overflow-y:auto}
+.form-group textarea::-webkit-input-placeholder{}
 .form-group input:focus, .form-group textarea:focus {outline:0; border:none;  box-shadow:none;}
 .form-group span{opacity: 0.8;}
 input:active  {outline:0 !important}
@@ -343,7 +360,48 @@ border-bottom:1px solid white;
 .form-group textarea {
 font-size: 18px;
 padding: 10px;
-min-height: 150px;
+/* min-height: 150px; */
+}
+.form-group textarea::-webkit-input-placeholder {
+  color:    rgb(255, 255, 255) !important;
+  opacity: 1 !important;
+}
+.form-group textarea:-moz-placeholder {
+  color:    rgb(255, 255, 255) !important;
+  opacity: 1 !important;
+}
+.form-group textarea::-moz-placeholder {
+  color:    rgb(255, 255, 255) !important;
+  opacity: 1 !important;
+}
+.form-group textarea:-ms-input-placeholder {
+  color:    rgb(255, 255, 255) !important;
+  opacity: 1 !important;
+}
+
+
+#name_2::-webkit-input-placeholder,
+.getName::-webkit-input-placeholder
+{
+  color:    #FF0000;
+}
+
+#name_2:-moz-placeholder,
+.getName:-moz-placeholder 
+{
+  color:    #FF0000;
+}
+
+#name_2::-moz-placeholder,
+.getName::-moz-placeholder 
+{
+  color:    #FF0000;
+}
+
+#name_2:-ms-input-placeholder,
+#textarea_2:-ms-input-placeholder 
+{
+  color:    #FF0000;
 }
 
 .form-group input, .form-group textarea {
@@ -381,6 +439,8 @@ border-bottom:1px solid white;
 
 
  .form-group label h1 {font-size:24px;} .form-group label {font-size:14px; margin-left: 5px;margin-bottom: 0px;} .form-group input, .form-group textarea {padding: 15px 15px;} .questionaire {padding:20px 0;} .count {font-size:20px;} .cover .btn-lg {padding:10px 20px; font-size:20px;}
-	.form-group textarea {min-height:150px;}
+	.form-group textarea {
+    /* min-height:150px; */
+  }
 	
 }
