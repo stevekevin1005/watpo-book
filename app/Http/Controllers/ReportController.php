@@ -22,9 +22,14 @@ class ReportController extends Controller
 {
     public function index(Request $request){
         
-        $order_list = Order::whereHas('report', function ($query) {
+        $order_list = Order::whereHas('report', function ($query) use ($request) {
             $query->whereIn('status', [3,4]);
-        })->with('report')->with('shop');
+            if($request->q1)  $query->where('q1', $request->q1);
+            if($request->q2)  $query->where('q2', $request->q2);
+            if($request->q3)  $query->where('q3', $request->q3);
+            if($request->q4)  $query->where('q4', $request->q4);
+            if($request->q6)  $query->where('q6', $request->q6);
+        })->with('report')->with('shop')->with('serviceProviders');
 
         if($request->service_provider){
             $service_provider_id = $request->service_provider;
@@ -53,7 +58,16 @@ class ReportController extends Controller
         if($request->shop){
             $order_list = $order_list->where('shop_id', $request->shop);
         }
-        $order_list = $order_list->paginate(10);
+        $order_list = $order_list->orderBy('end_time', 'desc')->paginate(10);
+
+        foreach ($order_list as $key => $order) {
+            $service_provider_information = "";
+
+            foreach ($order->serviceProviders as $key => $service_provider) {
+                $service_provider_information .= $service_provider->name."(".$service_provider->shop->name.")";
+            }
+            $order->service_provider_information = $service_provider_information;
+        }
 
         if($request->service_provider){
             $view_data['q2'] = ['非常滿意' => 0, '滿意' => 0, '普通' => 0, '不滿意' => 0];
@@ -76,6 +90,7 @@ class ReportController extends Controller
         $view_data['request'] = $request;
         $view_data['service_list'] = Service::all();
         $view_data['shop_list'] = Shop::all();
+
         return view('admin.report.index', $view_data);
     }
 
@@ -89,7 +104,6 @@ class ReportController extends Controller
             'q4' => 'required|max:255',
             'q5' => 'required|max:255',
             'q6' => 'required|max:255',
-            // 'q7' => 'required|max:255',
         ]);
     
         if ($v->fails())
@@ -102,7 +116,7 @@ class ReportController extends Controller
 
     
     public function FinishedService(){
-       $readyForQuiz = Order::where('status',5)->doesntHave("report")->where('phone', '!=', '現場客')->whereDate('end_time','>=', "2018-06-22 00:00:00")->where('end_time','<',Carbon::now())->get();
+        $readyForQuiz = Order::where('status',5)->doesntHave("report")->where('phone', '!=', '現場客')->whereDate('end_time','>=', "2018-06-22 00:00:00")->where('end_time','<',Carbon::now())->get();
         foreach($readyForQuiz as $mdata){
             $report = new Report;
             $report->order_id = $mdata->id;
@@ -136,11 +150,11 @@ class ReportController extends Controller
                 "q5" => $request->q5,
                 "q6" => $request->q6,
                 "q7" => $request->q7,
-                "q1-reason" => $request->q1_reason,
-                "q2-reason" => $request->q2_reason,
-                "q3-reason" => $request->q3_reason,
-                "q4-reason" => $request->q4_reason,
-                "q6-reason" => $request->q6_reason,
+                "q1_reason" => $request->q1_reason,
+                "q2_reason" => $request->q2_reason,
+                "q3_reason" => $request->q3_reason,
+                "q4_reason" => $request->q4_reason,
+                "q6_reason" => $request->q6_reason,
                 "status" => '3']
             );
 
@@ -181,9 +195,5 @@ class ReportController extends Controller
         catch(\Illuminate\Database\QueryException $e){
             return view('report_finished');
         }
-    }
-
-    private function QuizIsFinished(){
-
     }
 }

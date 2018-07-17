@@ -24,13 +24,6 @@ class ReportStatus extends Command
     public function handle()
     {
         echo Carbon::now();
-        // $readyForQuiz = Order::where('status',5)->doesntHave("report")->whereDate('end_time','>=', "2018-05-01 00:00:00")->whereDate('end_time','<',Carbon::now())->get();
-        // foreach($readyForQuiz as $mdata){
-        //     $had_report = Report::where('order_id',$mdata->id);
-        //     $report = new Report;
-        //     $report->order_id = $mdata->id;
-        //     $report->status = 0;
-        //     $report->save();
-        // }
+        app('App\Http\Controllers\SmsController')->schedulingSendReportSMS();
     }
 }

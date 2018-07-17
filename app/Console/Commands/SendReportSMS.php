@@ -13,7 +13,7 @@ class SendReportSMS extends Command
     // 命令名稱
     protected $signature = 'report:send';
 
-    protected $description = '[Send] Report SMS';
+    protected $description = '[Send] Report initail';
 
 
     public function __construct()
@@ -25,8 +25,6 @@ class SendReportSMS extends Command
     // Console 執行的程式
     public function handle()
     {
-        app('App\Http\Controllers\SmsController')->schedulingSendReportSMS();
-        
-        
+        app('App\Http\Controllers\ReportController')->FinishedService();
     }
 }

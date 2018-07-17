@@ -124,15 +124,94 @@ table{
 				                </div>
 			                  <!-- /col-md-4-->
 			                  <!-- /col-md-8-->
-			                  <div class="col-md-12 text-right"><input class="btn btn-primary" type="submit" value="查詢"></div>
+			                  
 			                  <!-- /col-md-12-->
+			                </div>
+			                <div class="row row-m">
+								<!-- /col-md-4-->
+								<div class="col-md-4">
+									<div class="form-group">
+										<label class="col-md-4 control-label">櫃台服務態度</label>
+										<div class="col-md-8">
+											<select name="q1" class="form-control">
+												<option value="">選擇選項</option>
+												<option value="非常滿意" <?php if($request->q1 == "非常滿意"){?> selected <?php }?>>非常滿意</option>
+												<option value="滿意" <?php if($request->q1 == "滿意"){?> selected <?php }?>>滿意</option>
+												<option value="普通" <?php if($request->q1 == "普通"){?> selected <?php }?>>普通</option>
+												<option value="不滿意" <?php if($request->q1 == "不滿意"){?> selected <?php }?>>不滿意</option>
+											
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label class="col-md-4 control-label">師傅服務態度</label>
+										<div class="col-md-8">
+											<select name="q2" class="form-control">
+												<option value="">選擇選項</option>
+												<option value="非常滿意" <?php if($request->q2 == "非常滿意"){?> selected <?php }?>>非常滿意</option>
+												<option value="滿意" <?php if($request->q2 == "滿意"){?> selected <?php }?>>滿意</option>
+												<option value="普通" <?php if($request->q2 == "普通"){?> selected <?php }?>>普通</option>
+												<option value="不滿意" <?php if($request->q2 == "不滿意"){?> selected <?php }?>>不滿意</option>
+											
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label class="col-md-4 control-label">技術</label>
+										<div class="col-md-8">
+											<select name="q3" class="form-control">
+												<option value="">選擇選項</option>
+												<option value="非常滿意" <?php if($request->q3 == "非常滿意"){?> selected <?php }?>>非常滿意</option>
+												<option value="滿意" <?php if($request->q3 == "滿意"){?> selected <?php }?>>滿意</option>
+												<option value="普通" <?php if($request->q3 == "普通"){?> selected <?php }?>>普通</option>
+												<option value="不滿意" <?php if($request->q3 == "不滿意"){?> selected <?php }?>>不滿意</option>
+											
+											</select>
+										</div>
+									</div>
+								</div>
+			                </div>
+			                <div class="row row-m">
+								<!-- /col-md-4-->
+								<div class="col-md-4">
+									<div class="form-group">
+										<label class="col-md-4 control-label">表現</label>
+										<div class="col-md-8">
+											<select name="q4" class="form-control">
+												<option value="">選擇選項</option>
+												<option value="非常滿意" <?php if($request->q4 == "非常滿意"){?> selected <?php }?>>非常滿意</option>
+												<option value="滿意" <?php if($request->q4 == "滿意"){?> selected <?php }?>>滿意</option>
+												<option value="普通" <?php if($request->q4 == "普通"){?> selected <?php }?>>普通</option>
+												<option value="不滿意" <?php if($request->q4 == "不滿意"){?> selected <?php }?>>不滿意</option>
+											
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label class="col-md-4 control-label">下次來訪</label>
+										<div class="col-md-8">
+											<select name="q6" class="form-control">
+												<option value="">選擇選項</option>
+												<option value="會" <?php if($request->q6 == "會"){?> selected <?php }?>>會</option>
+												<option value="不會" <?php if($request->q6 == "不會"){?> selected <?php }?>>不會</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12 text-right"><input class="btn btn-primary" type="submit" value="查詢"></div>
 			                </div>
 			                <!-- /row-->
 			            </form>
 					</div>
 				</div>
 			</div>
-			@if(isset($request->service_provider))
+			@if(isset($request->service_provider) && $request->service_provider != '')
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="card-box">
@@ -180,6 +259,7 @@ table{
 		        <table class="table table-striped">
 					<thead>
 						<th>編號</th>
+						<th>店家</th>
 						<th>櫃檯</th>
 						<th>櫃台服務態度</th>
 						<th>師傅服務態度</th>
@@ -195,6 +275,7 @@ table{
 					@foreach($order_list as $order)
 					<tr>
 						<td>{{ $order->id }}</td>
+						<td>{{ $order->shop->name }}</td>
 						<td>{{ $order->report->q0 }}</td>
 						<td>{{ $order->report->q1 }}</td>
 						<td>{{ $order->report->q2 }}</td>
@@ -226,6 +307,20 @@ table{
     <div class="container" style="height:200x;">
         <div class="row">
         	<div class="col-md-2">
+        		<h4 style="color:chocolate;">店家:</h4>
+        	</div>
+        	<div class="col-md-4">
+        		<h4>@{{:shop.name}}</h4>
+        	</div>
+        	<div class="col-md-2">
+        		<h4 style="color:chocolate;">消費時間:</h4>
+        	</div>
+        	<div class="col-md-4">
+        		<h4>@{{:start_time}}</h4>
+        	</div>
+        </div>
+        <div class="row">
+        	<div class="col-md-2">
         		<h4 style="color:chocolate;">櫃檯:</h4>
         	</div>
         	<div class="col-md-4">
@@ -234,30 +329,37 @@ table{
         	<div class="col-md-2">
         		<h4 style="color:chocolate;">櫃檯服務態度:</h4>
         	</div>
-        	<div class="col-md-2">
-        		<h4>@{{:report.q1}}</h4>
+        	<div class="col-md-4">
+        		<h4>@{{:report.q1}} @{{if report.q1_reason != ""}}(@{{:report.q1_reason}})@{{/if}}</h4>
         	</div>
         </div>
         <div class="row">
+        	<div class="col-md-2">
+        		<h4 style="color:chocolate;">師傅:</h4>
+        	</div>
+        	<div class="col-md-4">
+        		<h4>@{{:service_provider_information}}</h4>
+        	</div>
         	<div class="col-md-2">
         		<h4 style="color:chocolate;">師傅服務態度:</h4>
         	</div>
         	<div class="col-md-4">
-        		<h4>@{{:report.q2}}</h4>
+        		<h4>@{{:report.q2}} @{{if report.q2_reason != ""}}(@{{:report.q2_reason}})@{{/if}}</h4>
         	</div>
+        	
+        </div>
+        <div class="row">
         	<div class="col-md-2">
         		<h4 style="color:chocolate;">師傅服務技術:</h4>
         	</div>
-        	<div class="col-md-2">
-        		<h4>@{{:report.q3}}</h4>
+        	<div class="col-md-4">
+        		<h4>@{{:report.q3}} @{{if report.q3_reason != ""}}(@{{:report.q3_reason}})@{{/if}}</h4>
         	</div>
-        </div>
-        <div class="row">
         	<div class="col-md-2">
         		<h4 style="color:chocolate;">師傅服務表現:</h4>
         	</div>
         	<div class="col-md-4">
-        		<h4>@{{:report.q4}}</h4>
+        		<h4>@{{:report.q4}} @{{if report.q4_reason != ""}}(@{{:report.q4_reason}})@{{/if}}</h4>
         	</div>
         </div>
         <div class="row">
@@ -273,7 +375,7 @@ table{
         		<h4 style="color:chocolate;">下次來訪意願:</h4>
         	</div>
         	<div class="col-md-10">
-        		<h4>@{{:report.q6}}</h4>
+        		<h4>@{{:report.q6}} @{{if report.q6_reason != ""}}(@{{:report.q6_reason}})@{{/if}}</h4>
         	</div>        	
         </div>
         <div class="row">
@@ -313,6 +415,7 @@ table{
 $(".detail").on('click', function(){
 	var order = $(this).data('order');
 	var myTemplate = $.templates("#report_detail");
+	console.log(order);
 	var html = myTemplate.render(order);
 	swal({
         title: '#'+order.id+' 意見調查表',
@@ -323,11 +426,6 @@ $(".detail").on('click', function(){
         focusConfirm: false,
         showConfirmButton: false,
         showCloseButton: true,
-    }).then((result) => {
-    	var response = $("#response").val();
-    	if(result && response != ""){
-    		console.log("1");
-    	}
     });
 });
 </script>
