@@ -63,7 +63,7 @@ class OrderController extends Controller
 		}
 
 		$view_data['request'] = $request;
-		$view_data['order_list'] = $order_list->orderBy('start_time', 'asc')->paginate(15);
+		$view_data['order_list'] = $order_list->orderBy('end_time', 'desc')->paginate(15);
 		$view_data['service_list'] = Service::all();
 		$view_data['shop_list'] = Shop::all();
 		$view_data['room_list'] = Room::with('shop')->get();

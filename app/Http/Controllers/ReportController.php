@@ -7,7 +7,7 @@ use Validator;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Log;
-
+use Exception, Excel;
 use App\Models\Report;
 use App\Models\Order;
 use App\Models\Service;
@@ -29,7 +29,7 @@ class ReportController extends Controller
             if($request->q3)  $query->where('q3', $request->q3);
             if($request->q4)  $query->where('q4', $request->q4);
             if($request->q6)  $query->where('q6', $request->q6);
-        })->with('report')->with('shop')->with('serviceProviders');
+        })->with('report')->with('shop')->with('service')->with('serviceProviders');
 
         if($request->service_provider){
             $service_provider_id = $request->service_provider;
@@ -58,6 +58,7 @@ class ReportController extends Controller
         if($request->shop){
             $order_list = $order_list->where('shop_id', $request->shop);
         }
+        $total_order = $order_list->get();
         $order_list = $order_list->orderBy('end_time', 'desc')->paginate(10);
 
         foreach ($order_list as $key => $order) {
@@ -73,7 +74,7 @@ class ReportController extends Controller
             $view_data['q2'] = ['非常滿意' => 0, '滿意' => 0, '普通' => 0, '不滿意' => 0];
             $view_data['q3'] = ['非常滿意' => 0, '滿意' => 0, '普通' => 0, '不滿意' => 0];
             $view_data['q4'] = ['非常滿意' => 0, '滿意' => 0, '普通' => 0, '不滿意' => 0];
-            foreach ($order_list as $key => $order) {
+            foreach ($total_order as $key => $order) {
                 $view_data['q2'][$order->report->q2]++;
                 $view_data['q3'][$order->report->q3]++;
                 $view_data['q4'][$order->report->q4]++;
@@ -128,7 +129,7 @@ class ReportController extends Controller
     public function sendReport(Request $request){
             
         $id = base64_decode($request->jwt);
-        $query = Report::where('order_id', $id)->where('status','2')->first();
+        $query = Report::where('order_id', $id)->where('status',2)->first();
 
         $is_order = Order::where('id',$id)->first();
         if( !$query || $this->insertValidation($request) == -1 || !$is_order){
@@ -155,7 +156,7 @@ class ReportController extends Controller
                 "q3_reason" => $request->q3_reason,
                 "q4_reason" => $request->q4_reason,
                 "q6_reason" => $request->q6_reason,
-                "status" => '3']
+                "status" => 3]
             );
 
             return response()->json(["res"=>1]);
@@ -195,5 +196,48 @@ class ReportController extends Controller
         catch(\Illuminate\Database\QueryException $e){
             return view('report_finished');
         }
+    }
+
+    public function export(Request $request)
+    {
+        
+        return Excel::create('泰和單顧客調查表列表', function($excel) use ($order_list){
+            $excel->sheet('訂單', function($sheet) use ($order_list){
+                $fromArrayData[] = [ "訂單編號", "姓名", "電話", "人數", "服務項目", "房間", "預約人","開始時間", "結束時間", "訂單時間", "訂單狀態"];
+                foreach ($order_list as $key => $order) {
+                    if($order->room->shower){
+                            $shower = "可沖洗";
+                        }
+                        else{
+                            $shower = "";
+                        }
+                        $status = "";
+                        switch ($order->status) {
+                            case '1':
+                                $status = "客戶預定";
+                                break;
+                            case '2':
+                                $status = "櫃檯預定";
+                                break;
+                            case '3':
+                                $status = "客戶取消";
+                                break;
+                            case '4':
+                                $status = "櫃檯取消";
+                                break;
+                            case '5':
+                                $status = "訂單成立";
+                                break;
+                            default:
+                                # code...
+                                break;
+                        }
+                        $room_name = $order->room->name."(".$order->room->person."人房 ".$shower.")";
+                        $order_account = $order->account != null ? $order->account->account: "";
+                    $fromArrayData[] = [ $order->id, $order->name, $order->phone, $order->person, $order->service->title, $room_name, $order_account,$order->start_time, $order->end_time, $order->created_at, $status];
+                }
+                $sheet->fromArray($fromArrayData);
+            });
+        })->export('xlsx');
     }
 }

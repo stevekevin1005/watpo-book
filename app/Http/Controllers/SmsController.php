@@ -32,7 +32,7 @@ class SmsController extends Controller
     }
 
     public function schedulingSendReportSMS(){
-        $sendQuiz = Report::where('status',0)->orWhere('status','-1')->get();
+        $sendQuiz = Report::where('status',0)->orWhere('status',-1)->get();
         foreach($sendQuiz as $mdata){
             $person_data = Order::where('id',$mdata->order_id)->get();
            

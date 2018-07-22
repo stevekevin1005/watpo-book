@@ -307,6 +307,28 @@ table{
     <div class="container" style="height:200x;">
         <div class="row">
         	<div class="col-md-2">
+        		<h4 style="color:chocolate;">消費者:</h4>
+        	</div>
+        	<div class="col-md-4">
+        		<h4>@{{:name}}</h4>
+        	</div>
+        	<div class="col-md-2">
+        		<h4 style="color:chocolate;">電話:</h4>
+        	</div>
+        	<div class="col-md-4">
+        		<h4>@{{:phone}}</h4>
+        	</div>
+        </div>
+        <div class="row">
+        	<div class="col-md-2">
+        		<h4 style="color:chocolate;">服務項目:</h4>
+        	</div>
+        	<div class="col-md-4">
+        		<h4>@{{:service.title}}</h4>
+        	</div>
+        </div>
+        <div class="row">
+        	<div class="col-md-2">
         		<h4 style="color:chocolate;">店家:</h4>
         	</div>
         	<div class="col-md-4">
@@ -401,7 +423,7 @@ table{
         	<input type="hidden" name="order_id" value="@{{:id}}">
         	<input type="hidden" name="phone" value="@{{:phone}}">
         	<div class="row">
-	        	<textarea class="form-control" id="response" name="message" required></textarea>
+	        	<textarea class="form-control" id="response" name="message" required>親愛的貴賓您好，您的寶貴建議我們已經收到，我們會將您的建議做為改善重點，提升更好的服務品質，泰和殿養生館敬上。</textarea>
 	        </div>
 	        <div class="row">
 	        	<input type="submit" class="btn btn-primary" value="回覆">
