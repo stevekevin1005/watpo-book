@@ -301,6 +301,7 @@
         </script>
         <script type="text/javascript">
         $(function() {
+            var check_flag = false;
             var i = 0;
 
             var status_data = {
@@ -415,6 +416,7 @@
                 today.setTime(today.getTime()+1000*60*60*8);
                 document.getElementById("choose_time").value  = today.toISOString().substr(0, 16);
                 var shop = $("#choose_shop").val();
+                check_flag = false;
                 if(shop !== undefined && shop !== null && shop !== ''){
                     $.ajax({
                         url: '/api/staff/check_status',
@@ -426,6 +428,7 @@
                         },
                         success: function(data){
                             status_data = data;
+                            check_flag = true;
                             $('.detail').html('');
                         }
                     });
@@ -436,7 +439,7 @@
                 var time = $("#choose_time").val();
                 var shop = $("#choose_shop").val();
                 var limit = document.getElementById("limit_time").checked;
-
+                check_flag = false;
                 if(time !== "" && shop !== undefined && shop !== null){
    
                     $.ajax({
@@ -450,6 +453,7 @@
                         },
                         success: function(data){
                             status_data = data;
+                            check_flag = true;
                             $('.detail').html('');
                         }
                     });
@@ -480,19 +484,24 @@
             });
 
             function show_status(){
-                var myTemplate = $.templates("#status"); 
-                var html = myTemplate.render(status_data);
-                swal({
-                    title: '師傅&房間 狀態',
-                    html: html,
-                    width: "70%",
-                    allowOutsideClick: false,
-                    showCancelButton: false,
-                    focusConfirm: false,
-                    cancelButtonText:'取消',
-                    showConfirmButton: false,
-                    showCloseButton: true,
-                });
+                if(check_flag){
+                    var myTemplate = $.templates("#status"); 
+                    var html = myTemplate.render(status_data);
+                    swal({
+                        title: '師傅&房間 狀態',
+                        html: html,
+                        width: "70%",
+                        allowOutsideClick: false,
+                        showCancelButton: false,
+                        focusConfirm: false,
+                        cancelButtonText:'取消',
+                        showConfirmButton: false,
+                        showCloseButton: true,
+                    });
+                }
+                else{
+                    alert('系統判斷中請稍後');
+                }  
             }
 
             $('#check_time').on('click', function(){
@@ -544,6 +553,7 @@
                 check_service_provider_time();
             });
             function check_service_provider_time(){
+                check_flag = false;
                 var date = $('#check_time_date').val();
                 var shop_id = $("#choose_shop").val();
                 var worker_list_1hr = $('#check_time_worker_1hr').val();
@@ -574,6 +584,7 @@
                             });
                             $("#time_list").html(html);
                             $("#room_list").html('');
+                            check_flag = true;
                         },
                         error: function(error){
                             alert('錯誤！請洽系統商');

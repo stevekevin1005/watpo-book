@@ -326,6 +326,12 @@ table{
         	<div class="col-md-4">
         		<h4>@{{:service.title}}</h4>
         	</div>
+        	<div class="col-md-2">
+        		<h4 style="color:chocolate;">包廂:</h4>
+        	</div>
+        	<div class="col-md-4">
+        		<h4>@{{:room.name}}</h4>
+        	</div>
         </div>
         <div class="row">
         	<div class="col-md-2">

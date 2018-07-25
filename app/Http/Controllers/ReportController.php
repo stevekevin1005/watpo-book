@@ -29,7 +29,7 @@ class ReportController extends Controller
             if($request->q3)  $query->where('q3', $request->q3);
             if($request->q4)  $query->where('q4', $request->q4);
             if($request->q6)  $query->where('q6', $request->q6);
-        })->with('report')->with('shop')->with('service')->with('serviceProviders');
+        })->with('report')->with('shop')->with('room')->with('service')->with('serviceProviders');
 
         if($request->service_provider){
             $service_provider_id = $request->service_provider;
