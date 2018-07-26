@@ -87,7 +87,7 @@ class SmsController extends Controller
             $phone = $request->phone;
             $message = $request->message;
             $report = Report::where('order_id', $order_id)->first();
-            $message = "感謝您對於泰和殿的回饋意見，以下是對於您的疑問所作出之說明。 ".$request->message;
+            $message = $request->message;
             $resp = $this->initiateSmsActivation($phone, $message, null);
             if($resp['error']==0){
                 $report->status = 4;
