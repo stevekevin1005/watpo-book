@@ -83,10 +83,15 @@ class ReportController extends Controller
 
         $view_data['order_list'] = $order_list;
 
-        $service_provider_list = ServiceProvider::with('shop')->get();
-        foreach ($service_provider_list as $key => $service_provider) {
-            $service_provider_name = $service_provider->name."(".$service_provider->shop->name.")";
-            $view_data['service_provider_list'][] = ["id" => $service_provider->id, "name" => $service_provider_name];
+        $service_providers = ServiceProvider::with('shop')->orderBy('name', 'asc')->get();
+        $service_provider_list = [];
+        foreach ($service_providers as $key => $service_provider) {
+            $service_provider_list[$service_provider->shop->name][] = ["id" => $service_provider->id, "name" => $service_provider->name."(".$service_provider->shop->name.")"];
+        }
+        
+        $view_data['service_provider_list'] = [];
+        foreach ($service_provider_list as $key => $service_provider_arr) {
+           $view_data['service_provider_list'] = array_merge($view_data['service_provider_list'], $service_provider_arr);
         }
         $view_data['request'] = $request;
         $view_data['service_list'] = Service::all();
