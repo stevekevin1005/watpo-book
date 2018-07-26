@@ -273,7 +273,7 @@ table{
 					</thead>
 					<tbody>
 					@foreach($order_list as $order)
-					<tr>
+					<tr <?php if($order->report->response != null){ ?> style="color:red;"<?php }?>>
 						<td>{{ $order->id }}</td>
 						<td>{{ $order->shop->name }}</td>
 						<td>{{ $order->report->q0 }}</td>
