@@ -24,7 +24,7 @@
 			                    	<div class="form-group">
 										<label class="col-md-4 control-label">帳號</label>
 										<div class="col-md-8">
-			                       			<select name="account_id" value="0" class="form-control" required>
+			                       			<select name="account_id" value="0" class="form-control">
 												<option selected="true" value="">選擇帳號</option>
 												@foreach($account_list as $account)
 												<option value="{{$account->id}}" <?php if($request->account_id == $account->id){?> selected <?php }?>
@@ -56,10 +56,23 @@
 				                    <!-- /form-group-->
 				                </div>
 			                  <!-- /col-md-4-->
-			                  <!-- /col-md-8-->
-			                	<div class="col-md-12 text-right"><button class="btn btn-danger" onclick="export_xls();">匯出</button><button class="btn btn-primary" onclick="list();">查詢</button></div>
-			                  <!-- /col-md-12-->
-			                </div>
+			               	</div>
+			               	<div class="row row-m">
+								<div class="col-md-8">
+			                    	<div class="form-group">
+										<label class="col-md-2 control-label">描述</label>
+										<div class="col-md-10">
+			                       			<input class="form-control" type="text" name="description"placeholder="請輸入描述" value="{{ $request->description }}">
+			                    		</div>
+			                    	</div>
+			                  	</div>
+			                  	
+			               	</div>
+			                <div class="row row-m">
+			                	<div class="col-md-12 text-right">
+			                		<button class="btn btn-danger" onclick="export_xls();">匯出</button><button class="btn btn-primary" onclick="list();">查詢</button>
+			                	</div>
+			            	</div>
 			                <!-- /row-->
 			            </form>
 					</div>
@@ -72,12 +85,14 @@
         	<div class="card-box">
 		        <table class="table table-striped">
 					<thead>
+						<th>帳號</th>
 						<th>描述</th>
 						<th>時間</th>
 					</thead>
 					<tbody>
 						@foreach($log_list as $log)
 						<tr>
+							<td>{{$log->account['account']}}</td>
 							<td>{{$log->description}}</td>
 							<td>{{$log->created_at}}</td>
 						</tr>
