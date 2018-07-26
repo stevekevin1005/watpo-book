@@ -300,7 +300,7 @@ class BookController extends Controller
 			if(!$phone){
 				throw new Exception("缺少預約客電話", 1);
 			}
-			if(!is_null(BlackList::where('name', $name)->where('phone', $phone)->where('status', 1)->first())){
+			if(!is_null(BlackList::where('phone', $phone)->where('status', 1)->first())){
 				throw new Exception("系統錯誤", 1);
 			}
 
