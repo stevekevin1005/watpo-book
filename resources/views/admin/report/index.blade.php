@@ -194,6 +194,23 @@ table{
 								</div>
 								<div class="col-md-4">
 									<div class="form-group">
+										<label class="col-md-4 control-label">特殊情況</label>
+										<div class="col-md-8">
+											<select name="q5" class="form-control">
+												<option value="">選擇選項</option>
+												<option value="無" <?php if($request->q5 == "無"){?> selected <?php }?>>無</option>
+												<option value="打瞌睡" <?php if($request->q5 == "打瞌睡"){?> selected <?php }?>>打瞌睡</option>
+												<option value="師傅相互聊天影響休息" <?php if($request->q5 == "師傅相互聊天影響休息"){?> selected <?php }?>>師傅相互聊天影響休息</option>
+												<option value="看電視" <?php if($request->q5 == "看電視"){?> selected <?php }?>>看電視</option>
+												<option value="用手機" <?php if($request->q5 == "用手機"){?> selected <?php }?>>用手機</option>
+												<option value="other" <?php if($request->q5 == "other"){?> selected <?php }?>>其他</option>
+
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
 										<label class="col-md-4 control-label">下次來訪</label>
 										<div class="col-md-8">
 											<select name="q6" class="form-control">
@@ -290,7 +307,21 @@ table{
 					@endforeach
 					</tbody>
 				</table>
-				{!! $order_list->appends(['name' => $request->name, 'service' => $request->service, 'phone' => $request->phone, 'shop' => $request->shop, 'service_provider' => $request->service_provider, 'start_time' => $request->start_time, 'end_time' => $request->end_time, ])->links() !!}
+				{!! $order_list->appends([
+					'name' => $request->name, 
+					'service' => $request->service, 
+					'phone' => $request->phone, 
+					'shop' => $request->shop, 
+					'service_provider' => $request->service_provider, 
+					'start_time' => $request->start_time, 
+					'end_time' => $request->end_time, 
+					'q1' => $request->q1, 
+					'q2' => $request->q2, 
+					'q3' => $request->q3, 
+					'q4' => $request->q4, 
+					'q5' => $request->q5, 
+					'q6' => $request->q6, 
+				])->links() !!}
 			</div>
 		</div>
     </div>

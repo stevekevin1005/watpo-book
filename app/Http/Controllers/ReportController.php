@@ -28,6 +28,10 @@ class ReportController extends Controller
             if($request->q2)  $query->where('q2', $request->q2);
             if($request->q3)  $query->where('q3', $request->q3);
             if($request->q4)  $query->where('q4', $request->q4);
+            if($request->q5)  {
+                if($request->q5 != 'other') $query->where('q5', 'LIKE', '%'.$request->q5.'%');
+                else $query->where('q5', 'NOT LIKE', '%無%');
+            }
             if($request->q6)  $query->where('q6', $request->q6);
         })->with('report')->with('shop')->with('room')->with('service')->with('serviceProviders');
 
