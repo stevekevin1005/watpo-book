@@ -214,7 +214,7 @@
               </ul>
             </form>
           </div>
-          <div class="count"><span class="img_cnt"></span> / <span class="img_amt"></span>    本意見函回覆不會產生任何費用</div>
+          <div class="count"><span class="img_cnt"></span> / <span class="img_amt"></span></div>
           <div class="btn-union form">
             <button class="btn btn-default btn-lg pre animated fadeOutDown" >上一步 <span class="icon-next"></span></button>
             <button class="btn btn-default btn-lg nxt animated fadeOutDown" >下一步 <span class="icon-next"></span></button>
