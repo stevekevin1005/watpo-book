@@ -23,7 +23,7 @@
     <div class="progress-bar" style="width: 0;"> <span class="sr-only">0% Complete</span> </div>
   </div>
     <div class="htmleaf-header">
-    	<h1 class="h1-header animated bounceInLeft">客戶意見表</h1>
+    	<h1 class="h1-header animated bounceInLeft">客戶意見表<br>(回覆不會產生任何費用)</h1>
     </div>
   <div class="container-fluid table-class">
     <div class="black " >
@@ -68,7 +68,7 @@
                                 
                             </div>
                         </div>
-                    <textarea onkeyup="adjustHeight(this)" name="reason" class="form-control getName q1-reason" style="display:none" id="1_5" placeholder="原因"  required="required"></textarea>
+                    <textarea name="reason" class="form-control getName q1-reason" style="display:none" id="1_5" placeholder="原因"  required="required"></textarea>
                     <span class="alert_reason hidden">請輸入原因，進行下一題</span>
                 </li>
                 <li class="form-group animated q2 hide " data-color="#7C6992"  data-percentage="40%">
@@ -255,10 +255,10 @@
 	<script src="/assets/js/jquery-2.1.1.min.js"></script>
 	<script src='https://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
 	<script>
-    function adjustHeight(o){
-        o.style.height = "1px";
-        o.style.height = (20+o.scrollHeight)+"px";
-    }
+    // function adjustHeight(o){
+    //     o.style.height = "1px";
+    //     o.style.height = (20+o.scrollHeight)+"px";
+    // }
     var multi_Ans=Array(8)
     for(var i =0; i <8 ;i++){
         multi_Ans[i]=[];
