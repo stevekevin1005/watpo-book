@@ -456,10 +456,7 @@ class CalendarController extends Controller
 			if(!isset($room_id)){
 				throw new Exception("缺少房間ID", 1);
 			}
-			// if($person < 1){
-			// 	throw new Exception("沒有選擇師傅", 1);
-			// }
-
+			
 			$order = Order::with('serviceProviders')->with('service')->with('shop')->with('room')->where('id', $order_id)->first();
 			$order->name = $name;
 			$order->phone = $phone;

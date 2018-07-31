@@ -16,6 +16,8 @@ class BlackListController extends Controller
 		$name = $request->name;
 		$phone = $request->phone;
 		$description = $request->description;
+		$blackList = $blackList->where('status', 1);
+
 		if($name){
 			$blackList = $blackList->where('name', 'Like', '%'.$name.'%');
 		}
