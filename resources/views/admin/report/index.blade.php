@@ -221,7 +221,25 @@ table{
 										</div>
 									</div>
 								</div>
-								<div class="col-md-12 text-right"><input class="btn btn-primary" type="submit" value="查詢"></div>
+
+								<div class="col-md-12 text-right">
+									<a href="/admin/report/export?
+									name={{$request->name}}&
+									service={{$request->service}}&
+									phone={{$request->phone}}&
+									shop={{$request->shop}}&
+									service_provider={{$request->service_provider}}&
+									start_time={{$request->start_time}}&
+									end_time={{$request->end_time}}&
+									q1={{$request->q1}}&
+									q2={{$request->q2}}&
+									q3={{$request->q3}}&
+									q4={{$request->q4}}&
+									q5={{$request->q5}}&
+									q6={{$request->q6}}&
+									" class="btn btn-danger" target="_blank">匯出</a>
+									<input class="btn btn-primary" type="submit" value="查詢">
+								</div>
 			                </div>
 			                <!-- /row-->
 			            </form>
@@ -290,7 +308,7 @@ table{
 					</thead>
 					<tbody>
 					@foreach($order_list as $order)
-					<tr <?php if($order->report->response != null){ ?> style="color:red;"<?php }?>>
+					<tr <?php if($order->report->response != null){ ?> style="color:green;"<?php }?>>
 						<td>{{ $order->id }}</td>
 						<td>{{ $order->shop->name }}</td>
 						<td>{{ $order->report->q0 }}</td>

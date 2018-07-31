@@ -66,6 +66,7 @@ Route::group(['middleware' => ['web']], function () {
 			Route::post('/shift/update', ['uses' => 'ShiftController@update', 'as' => 'ShiftUpdate']);
 
 			Route::get('/report', ['uses' => 'ReportController@index', 'as' => 'ReportIndex']);
+			Route::get('/report/export', ['uses' => 'ReportController@export', 'as' => 'ReportExport']);
 			Route::post('/report/reply', ['uses' => 'SmsController@sendReportResponseSMS', 'as' => 'ReportSMSReply']);
 		});
 	});
