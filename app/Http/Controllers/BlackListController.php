@@ -25,7 +25,12 @@ class BlackListController extends Controller
 			$blackList = $blackList->where('phone', $phone);
 		}
 		if($description){
-			$blackList = $blackList->where('description', $description);
+			if($description == "逾時"){
+				$blackList = $blackList->whereNull('description');
+			}
+			else{
+				$blackList = $blackList->where('description', $description);
+			}
 		}
 
 		$blackList = $blackList->paginate(10);
