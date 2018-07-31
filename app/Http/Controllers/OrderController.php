@@ -39,11 +39,11 @@ class OrderController extends Controller
 		}
 
 		if($request->start_time){
-			$order_list = $order_list->where('start_time', ">=", $request->start_time);
+			$order_list = $order_list->whereDate('start_time', ">=", $request->start_time);
 		}
 
 		if($request->end_time){
-			$order_list = $order_list->where('end_time', "<=", $request->end_time);
+			$order_list = $order_list->whereDate('end_time', "<=", $request->end_time);
 		}
 
 		if($request->service){
