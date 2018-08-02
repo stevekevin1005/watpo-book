@@ -388,7 +388,44 @@ class CalendarController extends Controller
 					throw new Exception("該時段房間已有預訂 請重新選擇", 1);
 				}
 			}
+			/* 								預測start						*/
+			/* 不指定人數 */
+			$service_providers = ServiceProvider::whereHas('orders' ,function ($query) use ($start_time, $end_time) {
+				$query->whereNotIn('status', [3,4,6]);
+			    $query->where('start_time', '<', $end_time);
+			    $query->where('end_time', '>', $start_time);
+			})->where('shop_id', $shop_id)->get();
+
+			$order_list = Order::
+								where('start_time', '<', $end_time)->
+								where('end_time', '>', $start_time)->
+								whereNotIn('status', [3,4,6])->
+								where('shop_id', $shop_id)->
+								withCount('serviceProviders')->get();
+
+			$no_specific_amount = $this->no_specific($order_list, $service_providers);
+			
+			//有空的時間
+			$date = date("Y-m-d", strtotime($start_time));
+			$month = date("Y-m", strtotime($date));
+	
+			$service_providers = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $shop_id)->get();
+			$service_provider_list = [];
+			foreach($service_providers as $service_provider){
+				$shift = $service_provider->shifts->first();
+				$on_duty = new DateTime($date." ".$shift->start_time);
+				$off_duty =  new DateTime($date." ".$shift->end_time);
 				
+				if($off_duty < $on_duty){
+					$off_duty->add(new DateInterval("P1D"));
+				}
+				if($on_duty <= new Datetime($start_time) && $off_duty >= new Datetime($end_time)){
+					$service_provider_list[] = $service_provider->id;
+				}
+			}
+			/* 								預測end 						*/
+			if(count($service_provider_list) - $no_specific_amount < count($service_provider_id_list)) throw new Exception("該時段師傅數不足 請重新選擇", 1);
+
 			$order = new Order;
 			$order->name = $name;
 			$order->phone = $phone;
@@ -456,7 +493,7 @@ class CalendarController extends Controller
 			if(!isset($room_id)){
 				throw new Exception("缺少房間ID", 1);
 			}
-			
+
 			$order = Order::with('serviceProviders')->with('service')->with('shop')->with('room')->where('id', $order_id)->first();
 			$order->name = $name;
 			$order->phone = $phone;
@@ -464,6 +501,42 @@ class CalendarController extends Controller
 			$order->service_id = $service_id;
 			$room_name = $order->room->name;
 			$service_provider_name = " ";
+			/* 								預測start						*/
+			/* 不指定人數 */
+			$service_providers = ServiceProvider::whereHas('orders' ,function ($query) use ($start_time, $end_time) {
+				$query->whereNotIn('status', [3,4,6]);
+			    $query->where('start_time', '<', $end_time);
+			    $query->where('end_time', '>', $start_time);
+			})->where('shop_id', $order->shop->id)->get();
+
+			$order_list = Order::
+								where('start_time', '<', $end_time)->
+								where('end_time', '>', $start_time)->
+								whereNotIn('status', [3,4,6])->
+								where('shop_id', $order->shop->id)->
+								withCount('serviceProviders')->get();
+
+			$no_specific_amount = $this->no_specific($order_list, $service_providers);
+
+			//有空的時間
+			$date = date("Y-m-d", strtotime($start_time));
+			$month = date("Y-m", strtotime($date));
+	
+			$service_providers = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $order->shop->id)->get();
+			$service_provider_list = [];
+			foreach($service_providers as $service_provider){
+				$shift = $service_provider->shifts->first();
+				$on_duty = new DateTime($date." ".$shift->start_time);
+				$off_duty =  new DateTime($date." ".$shift->end_time);
+				
+				if($off_duty < $on_duty){
+					$off_duty->add(new DateInterval("P1D"));
+				}
+				if($on_duty <= new Datetime($start_time) && $off_duty >= new Datetime($end_time)){
+					$service_provider_list[] = $service_provider->id;
+				}
+			}
+			/* 								預測end 						*/
 			if($order->start_time != $start_time || $order->end_time != $end_time){
 				$room = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
 					$query->where('status', '!=', 3);
@@ -482,6 +555,7 @@ class CalendarController extends Controller
 				$room_name = $room->name;
 				$order->room_id = $room_id;
 				if($person > 0){
+					if(count($service_provider_list) - $no_specific_amount < $person) throw new Exception("該時段師傅數不足 請重新選擇", 1);
 					$order->serviceProviders()->detach();
 					$order->person = $person;
 					$service_provider_list = ServiceProvider::with(['leaves' => function ($query) use ($start_time, $end_time) {
@@ -535,6 +609,7 @@ class CalendarController extends Controller
 					$order->room_id = $room_id;
 				}
 				if($person > 0){
+					if(count($service_provider_list) - $no_specific_amount < $person) throw new Exception("該時段師傅數不足 請重新選擇", 1);
 					$order->serviceProviders()->detach();
 					$order->person = $person;
 					$service_provider_list = ServiceProvider::with(['leaves' => function ($query) use ($start_time, $end_time) {
@@ -561,6 +636,9 @@ class CalendarController extends Controller
 						$service_provider_name = $service_provider_name.$service_provider->name." ";
 					}
 
+				}
+				else{
+					if(count($service_provider_list) - $no_specific_amount < $order->serviceProviders()->count()) throw new Exception("該時段師傅數不足 請重新選擇", 1);
 				}
 			}
 			$order->start_time = $start_time;
@@ -612,5 +690,30 @@ class CalendarController extends Controller
 		catch(\Illuminate\Database\QueryException $e){
 			return response()->json('資料庫錯誤, 請洽系統商!', 400);
 		}
+	}
+
+	private function no_specific($order_list, $service_providers){
+		$person = 0;
+		foreach ($order_list as $order) {
+			$no_limit = $order->person - $order->service_providers_count;
+			if($no_limit > 0){
+				foreach ($service_providers as $service_provider) {
+					if($service_provider->select != true){
+						$flag = ServiceProvider::whereHas('orders' ,function ($query) use ($order) {
+								    $query->whereNotIn('status', [3,4,6]);
+								    $query->where('start_time', '<', $order->end_time);
+								    $query->where('end_time', '>', $order->start_time);
+								})->where('id', $service_provider->id)->first();
+						if($flag == null){
+							$service_provider->select = true;
+							$no_limit--;
+						}
+					}
+					if($no_limit == 0) break;
+				}
+			}
+			$person += $no_limit;
+		}
+		return $person;
 	}
 }
