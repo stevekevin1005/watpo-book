@@ -120,13 +120,13 @@
                 姓名:
             </div>
             <div class="col-md-3">
-                <input type="text" class="form-control" name="name" placeholder="現場客" @{{if name}} value="@{{:name}}" @{{/if}}>
+                <input type="text" class="form-control" name="name" placeholder="現場客" maxlength="10" @{{if name}} value="@{{:name}}" @{{/if}}>
             </div>
             <div class="col-md-1" style="text-align:left;">
                 電話:
             </div>
             <div class="col-md-3">
-                <input type="text" class="form-control" name="phone" placeholder="現場客" @{{if phone}} value="@{{:phone}}" @{{/if}}>
+                <input type="text" class="form-control" name="phone" placeholder="現場客" maxlength="10" @{{if phone}} value="@{{:phone}}" @{{/if}}>
             </div>
             @{{if provider}}
             <div class="col-md-2" style="text-align:left;">

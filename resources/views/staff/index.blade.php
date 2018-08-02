@@ -91,13 +91,13 @@
                                                 姓名:
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="text" class="form-control" name="name" placeholder="現場客" id="name">
+                                                <input type="text" class="form-control" name="name" placeholder="現場客" id="name" maxlength="10">
                                             </div>
                                             <div class="col-md-1" style="text-align:left;">
                                                 電話:
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="text" class="form-control" name="phone" placeholder="現場客" id="phone">
+                                                <input type="text" class="form-control" name="phone" placeholder="現場客" id="phone" maxlength="10">
                                             </div>
                                             <div class="col-md-4" id="blacklist_description" style="color:red;font-size:23px;">
                                             </div>
