@@ -57,12 +57,12 @@ class LeaveController extends Controller
 			$start_time->setTime($start_time->format("H"), $start_time->format("i"), 0);
 			$end_time->setTime($end_time->format("H"), $end_time->format("i"), 0);
 
-			if($start_time < $now){
-				$start_time->add(new DateInterval("P1D"));
-			}
-			if($end_time < $now){
-				$end_time->add(new DateInterval("P1D"));
-			}
+			// if($start_time < $now){
+			// 	$start_time->add(new DateInterval("P1D"));
+			// }
+			// if($end_time < $now){
+			// 	$end_time->add(new DateInterval("P1D"));
+			// }
 
 			$service_provider_id = $request->service_provider_id;
 
