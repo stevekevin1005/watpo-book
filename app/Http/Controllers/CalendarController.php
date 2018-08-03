@@ -424,7 +424,7 @@ class CalendarController extends Controller
 				}
 			}
 			/* 								預測end 						*/
-			if(count($service_provider_list) - $no_specific_amount < count($service_provider_id_list)) throw new Exception("該時段師傅數不足 請重新選擇", 1);
+			// if(count($service_provider_list) - $no_specific_amount < count($service_provider_id_list)) throw new Exception("該時段師傅數不足 請重新選擇", 1);
 
 			$order = new Order;
 			$order->name = $name;
@@ -556,7 +556,7 @@ class CalendarController extends Controller
 				$room_name = $room->name;
 				$order->room_id = $room_id;
 				if($person > 0){
-					if(count($service_provider_list) - $no_specific_amount < $person) throw new Exception("該時段師傅數不足 請重新選擇", 1);
+					// if(count($service_provider_list) - $no_specific_amount < $person) throw new Exception("該時段師傅數不足 請重新選擇", 1);
 					$order->serviceProviders()->detach();
 					$order->person = $person;
 					$service_provider_list = ServiceProvider::with(['leaves' => function ($query) use ($start_time, $end_time) {
@@ -610,7 +610,7 @@ class CalendarController extends Controller
 					$order->room_id = $room_id;
 				}
 				if($person > 0){
-					if(count($service_provider_list) - $no_specific_amount < $person) throw new Exception("該時段師傅數不足 請重新選擇", 1);
+					// if(count($service_provider_list) - $no_specific_amount < $person) throw new Exception("該時段師傅數不足 請重新選擇", 1);
 					$order->serviceProviders()->detach();
 					$order->person = $person;
 					$service_provider_list = ServiceProvider::with(['leaves' => function ($query) use ($start_time, $end_time) {
@@ -639,7 +639,7 @@ class CalendarController extends Controller
 
 				}
 				else{
-					if(count($service_provider_list) - $no_specific_amount < $order->serviceProviders()->count()) throw new Exception("該時段師傅數不足 請重新選擇", 1);
+					// if(count($service_provider_list) - $no_specific_amount < $order->serviceProviders()->count()) throw new Exception("該時段師傅數不足 請重新選擇", 1);
 				}
 			}
 			$order->start_time = $start_time;
