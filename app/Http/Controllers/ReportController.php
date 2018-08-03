@@ -51,10 +51,10 @@ class ReportController extends Controller
             $order_list = $order_list->where('phone', $request->phone);
         }
         if($request->start_time){
-            $order_list = $order_list->where('start_time', ">=", $request->start_time);
+            $order_list = $order_list->whereDate('start_time', ">=", $request->start_time);
         }
         if($request->end_time){
-            $order_list = $order_list->where('end_time', "<=", $request->end_time);
+            $order_list = $order_list->whereDate('start_time', "<=", $request->end_time);
         }
         if($request->service){
             $order_list = $order_list->where('service_id', $request->service);
@@ -112,7 +112,7 @@ class ReportController extends Controller
             'q2' => 'required|max:255',
             'q3' => 'required|max:255',
             'q4' => 'required|max:255',
-            'q5' => 'required|max:255',
+            // 'q5' => 'required|max:255',
             'q6' => 'required|max:255',
         ]);
     
@@ -238,10 +238,10 @@ class ReportController extends Controller
             $order_list = $order_list->where('phone', $request->phone);
         }
         if($request->start_time){
-            $order_list = $order_list->where('start_time', ">=", $request->start_time);
+            $order_list = $order_list->whereDate('start_time', ">=", $request->start_time);
         }
         if($request->end_time){
-            $order_list = $order_list->where('end_time', "<=", $request->end_time);
+            $order_list = $order_list->whereDate('start_time', "<=", $request->end_time);
         }
         if($request->service){
             $order_list = $order_list->where('service_id', $request->service);

@@ -89,11 +89,11 @@ class OrderController extends Controller
 		}
 
 		if($request->start_time){
-			$order_list = $order_list->where('created_at', ">=", $request->start_time);
+			$order_list = $order_list->whereDate('created_at', ">=", $request->start_time);
 		}
 
 		if($request->end_time){
-			$order_list = $order_list->where('created_at', "<=", $request->end_time);
+			$order_list = $order_list->whereDate('created_at', "<=", $request->end_time);
 		}
 
 		if($request->service){

@@ -415,10 +415,12 @@
 
         
 	    $('.nxt').click(function () {
-            $('.alert_reason').addClass('hidden').removeClass('fadeInUp');
             var next_q_number = $('li.activate').index()+1;
+
+            $('.alert_reason').addClass('hidden').removeClass('fadeInUp');
+            
             console.log("val:"+$('.ans'+next_q_number).val())
-            if( $('.ans'+next_q_number).val()=="" && next_q_number!==7)
+            if( $('.ans'+next_q_number).val()=="" && next_q_number!==7 && next_q_number!==5)
 	            $('.nxt').removeClass('fadeInUp').addClass('fadeOutDown');
             if( next_q_number == 1){
                 $('button.pre').removeClass('fadeOutDown').addClass('fadeInUp');
