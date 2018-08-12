@@ -360,7 +360,7 @@
 	$(function () {
         $('.jwt').html($.urlParam('jwt'));
         $('.jwt').val($.urlParam('jwt'));
-	    $('textarea.getName').keyup('keyup', function () {
+	    $('textarea.getName').on('keyup input', function () {
 	        $('.cName').html($('.getName').val());
 	    });
 	    $('.help').popover();
@@ -399,7 +399,7 @@
 	    $('.satisfy').click(function () {
             $('.nxt').removeClass('hide fadeOutDown').addClass('fadeInUp');
         });
-        $('textarea[name=reason]').keyup(function () {
+        $('textarea[name=reason]').on('keyup input', function () {
             if($(this).val()!== ""){
                 $('.alert_reason').addClass('hidden').removeClass('fadeInUp');
                 $('.nxt').removeClass('hide fadeOutDown').addClass('fadeInUp');
@@ -474,7 +474,7 @@
     });
 
 	$(function () {
-	    $('textarea[name=reason]').keyup(function () {
+	    $('textarea[name=reason]').on('keyup input', function () {
             var Value = $(this).val();
             var q_number = $(this).attr("id").split("_")[0];
             
@@ -496,7 +496,7 @@
             $('.answer'+q_number).html(en2ch(multi_Ans[q_number].join(" ")));
             $('.ans'+q_number).val(multi_Ans[q_number].join(" "));
         });
-        $('textarea.service_providers_forbidden').keyup(function(){
+        $('textarea.service_providers_forbidden').on('keyup input', function(){
             
             var q_number = $(this).attr("id").split("_")[0];
             multi_Ans[q_number]=[]
@@ -510,7 +510,7 @@
         });
         
 	    
-        $('textarea[name=suggestion]').keyup(function () {
+        $('textarea[name=suggestion]').on('keyup input', function () {
 	        var Value = $(this).val();
             $('.answer7').html(Value);
             $('.ans7').val(Value.toString());
