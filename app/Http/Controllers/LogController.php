@@ -20,10 +20,10 @@ class LogController extends Controller
 			$log_list = $log_list->where('description', 'LIKE', '%'.$request->description.'%');
 		}
 		if($request->start_time){
-			$log_list = $log_list->where('created_at', ">=", $request->start_time);
+			$log_list = $log_list->whereDate('created_at', ">=", $request->start_time);
 		}
 		if($request->end_time){
-			$log_list = $log_list->where('created_at', "<=", $request->end_time);
+			$log_list = $log_list->whereDate('created_at', "<=", $request->end_time);
 		}
 
 		$view_data = [];
