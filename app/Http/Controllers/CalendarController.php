@@ -540,7 +540,7 @@ class CalendarController extends Controller
 			}
 			/* 								預測end 						*/
 			
-			if($order->start_time != $start_time || $order->end_time != $end_time){
+			if(new Datetime($order->start_time) != new Datetime($start_time) || new Datetime($order->end_time) != new Datetime($end_time)){
 				$room = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
 					$query->where('status', '!=', 3);
 					$query->where('status', '!=', 4);
