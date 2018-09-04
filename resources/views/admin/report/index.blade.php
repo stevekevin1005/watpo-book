@@ -83,6 +83,19 @@ table{
 									</div>
 								<!-- /form-group-->
 								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label class="col-md-4 control-label">櫃檯</label>
+										<div class="col-md-8">
+											<select name="q0" class="form-control">
+												<option selected="true" value="">選擇櫃台</option>
+												<option value="早班櫃檯">早班櫃檯</option>
+												<option value="晚班櫃檯">晚班櫃檯</option>
+											</select>
+										</div>
+									</div>
+								<!-- /form-group-->
+								</div>
 			                  <!-- /col-md-4-->
 			                  <!-- /col-md-4-->
 			                </div>

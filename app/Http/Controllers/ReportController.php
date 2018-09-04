@@ -24,6 +24,7 @@ class ReportController extends Controller
         
         $order_list = Order::whereHas('report', function ($query) use ($request) {
             $query->whereIn('status', [3,4]);
+            if($request->q0)  $query->where('q0', $request->q0);
             if($request->q1)  $query->where('q1', $request->q1);
             if($request->q2)  $query->where('q2', $request->q2);
             if($request->q3)  $query->where('q3', $request->q3);

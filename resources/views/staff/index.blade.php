@@ -634,16 +634,14 @@
                 });
             });
             
-            $("#name, #phone").on('change', function(){
-                var name = $("#name").val();
+            $("#phone").on('change', function(){
                 var phone = $("#phone").val();
-                if(name != '' && phone != ''){
+                if(phone != ''){
                     $.ajax({
                         url: '/api/blacklist/search',
                         type: 'get',
                         dataType: 'json',
                         data: {
-                            name: name,
                             phone: phone,
                         },
                         success: function(res){
@@ -659,7 +657,6 @@
                                     cancelButtonText: '繼續訂位'
                                 }).then((result) => {
                                     if (result.value) {
-                                       $("#name").val('');
                                        $("#phone").val('');
                                     }
                                 })

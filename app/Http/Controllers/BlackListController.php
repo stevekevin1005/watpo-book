@@ -71,7 +71,7 @@ class BlackListController extends Controller
 
 	public function api_search(Request $request){
 		try{
-			$blackList = BlackList::where('name', $request->name)->where('phone', $request->phone)->first();
+			$blackList = BlackList::where('phone', $request->phone)->first();
 			
 			$result['overtime'] = 0;
 			$result['description'] = "";
