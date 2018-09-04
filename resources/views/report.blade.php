@@ -187,7 +187,7 @@
                         <h3>您對本公司的建議</h3>
                     </label>
                     
-                    <input type="text" name="suggestion" class="form-control getName" id="7_1" placeholder=""  required="required"/>  
+                    <input style="font-size:18px;" type="text" name="suggestion" class="form-control getName" id="7_1" placeholder=""  required="required"/>  
                 </li>
                 <li class="form-group animated hide " data-color="#00AF66"  data-percentage="100%">
                   <h3>確認您的回覆:</h3>
