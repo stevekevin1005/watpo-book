@@ -510,7 +510,7 @@
         });
         
 	    
-        $('textarea[name=suggestion]').on('keyup input', function () {
+        $('input[name=suggestion]').on('keyup input', function () {
 	        var Value = $(this).val();
             $('.answer7').html(Value);
             $('.ans7').val(Value.toString());
