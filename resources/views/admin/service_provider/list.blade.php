@@ -192,7 +192,7 @@
                     </div>
                 </td>
                 <td class="actions">
-                    <a href="#" class="on-default remove-row" data-id=@{{:id}} data-shop_id=@{{:shop_id}}><i class="fa fa-trash-o"></i></a>
+                    <a href="#" class="on-default remove-row" data-id=@{{:id}} data-shop_id=@{{:shop_id}} data-name=@{{:name}}><i class="fa fa-trash-o"></i></a>
                 </td>
             </tr>
             @{{/for}}
@@ -273,8 +273,9 @@
     $("#serviceProviderContainer").on('click', ".remove-row",function(e){
         var id = $(this).data("id");
         var shop_id = $(this).data("shop_id");
+        var name = $(this).data("name");
         swal({
-            title: '確定刪除該名員工?',
+            title: '確定刪除號'+name+'號?',
             text: "此舉無法恢復紀錄！",
             type: 'warning',
             showCancelButton: true,
