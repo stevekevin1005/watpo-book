@@ -15,7 +15,23 @@ use Session;
 
 class CalendarController extends Controller
 {
-	
+	public function api_phone_check(Request $request)
+	{
+		try{
+			$order_id = $request->order_id;
+			$order = Order::where('id', $order_id)->first();
+			$order->phone_call_status = 1;
+			$order->save();
+			Log::create(['description' => '電話通知訂單#'.$order->id]);
+			return response()->json('電話通知成功!', 200);
+		}
+		catch(Exception $e){
+			return response()->json($e->getMessage(), 400);
+		}
+		catch(\Illuminate\Database\QueryException $e){
+			return response()->json('資料庫錯誤, 請洽系統商!', 400);
+		}
+	}
 	public function index(Request $request, $shop_id)
 	{
 	
@@ -218,6 +234,8 @@ class CalendarController extends Controller
 				$data->class = "";	
 			}
 			$now->sub(new DateInterval('PT3M'));
+
+			$data->phone_call_status = $order->phone_call_status;
 			$order_list[] = $data;
 		}
 

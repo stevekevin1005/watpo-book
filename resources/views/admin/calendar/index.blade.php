@@ -17,6 +17,167 @@
     {
         50%  {color: #AAAAAA;}
     }
+    .fa-bell{
+        animation-name: shake;
+        animation-duration: 100ms;
+        animation-timing-function: ease-in-out;
+        animation-iteration-count: infinite;
+        display: inherit;
+        transform-origin: center center;
+    }
+    @keyframes shake
+    {
+        2% {
+            transform: translate(.5px, 2.5px) rotate(1.5deg);
+        }
+        4% {
+            transform: translate(2.5px, 1.5px) rotate(1.5deg);
+        }
+        6% {
+            transform: translate(1.5px, .5px) rotate(.5deg);
+        }
+        8% {
+            transform: translate(-1.5px, -1.5px) rotate(-.5deg);
+        }
+        10% {
+            transform: translate(-1.5px, 2.5px) rotate(1.5deg);
+        }
+        12% {
+            transform: translate(-1.5px, .5px) rotate(.5deg);
+        }
+        14% {
+            transform: translate(-1.5px, -1.5px) rotate(-.5deg);
+        }
+        16% {
+            transform: translate(1.5px, 2.5px) rotate(1.5deg);
+        }
+        18% {
+            transform: translate(1.5px, -.5px) rotate(1.5deg);
+        }
+        20% {
+            transform: translate(1.5px, -.5px) rotate(1.5deg);
+        }
+        22% {
+            transform: translate(-1.5px, .5px) rotate(-.5deg);
+        }
+        24% {
+            transform: translate(.5px, -1.5px) rotate(-.5deg);
+        }
+        26% {
+            transform: translate(-1.5px, 2.5px) rotate(1.5deg);
+        }
+        28% {
+            transform: translate(-.5px, .5px) rotate(-.5deg);
+        }
+        30% {
+            transform: translate(-1.5px, 2.5px) rotate(.5deg);
+        }
+        32% {
+            transform: translate(.5px, -1.5px) rotate(1.5deg);
+        }
+        34% {
+            transform: translate(.5px, -1.5px) rotate(1.5deg);
+        }
+        36% {
+            transform: translate(2.5px, .5px) rotate(.5deg);
+        }
+        38% {
+            transform: translate(-.5px, .5px) rotate(-.5deg);
+        }
+        40% {
+            transform: translate(.5px, .5px) rotate(1.5deg);
+        }
+        42% {
+            transform: translate(.5px, 1.5px) rotate(1.5deg);
+        }
+        44% {
+            transform: translate(.5px, 2.5px) rotate(.5deg);
+        }
+        46% {
+            transform: translate(1.5px, 1.5px) rotate(-.5deg);
+        }
+        48% {
+            transform: translate(2.5px, .5px) rotate(-.5deg);
+        }
+        50% {
+            transform: translate(1.5px, 1.5px) rotate(1.5deg);
+        }
+        52% {
+            transform: translate(1.5px, 2.5px) rotate(1.5deg);
+        }
+        54% {
+            transform: translate(1.5px, 1.5px) rotate(.5deg);
+        }
+        56% {
+            transform: translate(.5px, -.5px) rotate(.5deg);
+        }
+        58% {
+            transform: translate(-1.5px, .5px) rotate(.5deg);
+        }
+        60% {
+            transform: translate(2.5px, 1.5px) rotate(1.5deg);
+        }
+        62% {
+            transform: translate(1.5px, 2.5px) rotate(-.5deg);
+        }
+        64% {
+            transform: translate(.5px, -1.5px) rotate(1.5deg);
+        }
+        66% {
+            transform: translate(-1.5px, 2.5px) rotate(-.5deg);
+        }
+        68% {
+            transform: translate(-1.5px, 1.5px) rotate(-.5deg);
+        }
+        70% {
+            transform: translate(1.5px, -1.5px) rotate(.5deg);
+        }
+        72% {
+            transform: translate(-.5px, 1.5px) rotate(.5deg);
+        }
+        74% {
+            transform: translate(-.5px, .5px) rotate(-.5deg);
+        }
+        76% {
+            transform: translate(2.5px, 1.5px) rotate(-.5deg);
+        }
+        78% {
+            transform: translate(1.5px, .5px) rotate(1.5deg);
+        }
+        80% {
+            transform: translate(-1.5px, .5px) rotate(1.5deg);
+        }
+        82% {
+            transform: translate(2.5px, 1.5px) rotate(1.5deg);
+        }
+        84% {
+            transform: translate(-.5px, .5px) rotate(-.5deg);
+        }
+        86% {
+            transform: translate(-1.5px, 2.5px) rotate(-.5deg);
+        }
+        88% {
+            transform: translate(1.5px, -.5px) rotate(-.5deg);
+        }
+        90% {
+            transform: translate(-1.5px, 2.5px) rotate(-.5deg);
+        }
+        92% {
+            transform: translate(-1.5px, 2.5px) rotate(.5deg);
+        }
+        94% {
+            transform: translate(-.5px, .5px) rotate(-.5deg);
+        }
+        96% {
+            transform: translate(.5px, -1.5px) rotate(.5deg);
+        }
+        98% {
+            transform: translate(.5px, .5px) rotate(1.5deg);
+        }
+        0%, 100% {
+            transform: translate(0, 0) rotate(0);
+        }
+    }
 </style>
 @stop
 @section('content')
@@ -56,12 +217,12 @@
                             @if(session('account_level') != 3)
                             <th>顧客姓名</th>
                             <th>手機號碼</th>
-                            {{-- <th>人數</th> --}}
                             <th>師傅</th>
                             <th>房間</th>
                             <th>預約人</th>
                             @endif
-                            <th>方案</th>             
+                            <th>方案</th>   
+                            <th></th>             
                         </thead>
                         <tbody>
                             @foreach($order_list as $order)
@@ -89,7 +250,10 @@
                                 <td>{{ $order->room }}</td>
                                 <td>{{ $order->account }}</td>
                                 @endif
-                                <td>{{ $order->service }}</td>    
+                                <td>{{ $order->service }}</td> 
+                                
+                                <td>@if($order->status != 5 && $order->phone != "現場客" && $order->phone_call_status == 0)<i class="fa fa-bell"></i>@endif</td>   
+                                
                             </tr>
                             @endforeach
                         </tbody>
@@ -224,10 +388,10 @@
 <script id="check_form_template" type="x-jsrender">
     <div class="container" style="height:200x;">
         <div class="row" style="margin-top: 15px;">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <button type="button" class="btn btn-warning order_cancel" data-id="@{{:id}}" style="font-size:20px;">取消訂單</button>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <button type="button" class="btn btn-primary order_update" 
                     data-id="@{{:id}}" 
                     data-name="@{{:name}}" 
@@ -243,8 +407,11 @@
             @if(session('account_level') != 1)
             @{{if status != 6}}
             @endif
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <button type="button" class="btn btn-success order_confirm" data-id="@{{:id}}" style="font-size:20px;">確認訂單</button>
+            </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-success phone_check" data-id="@{{:id}}" style="font-size:20px;">電話確認</button>
             </div>
             @if(session('account_level') != 1)
             @{{/if}}
@@ -289,7 +456,8 @@
         <th>房間</th>
         <th>預約人</th>
          @endif
-        <th>方案</th>             
+        <th>方案</th>
+        <th></th>             
     </thead>
     <tbody>
         @{{for order_list}}
@@ -316,7 +484,8 @@
             <td>@{{:room}}</td>
             <td>@{{:account}}</td>
              @endif
-            <td>@{{:service}}</td>    
+            <td>@{{:service}}</td>   
+            <td>@{{if phone_call_status == 0 && phone != "現場客" && status != 5}}<i class="fa fa-bell"></i>@{{/if}}</td>  
         </tr>
         @{{/for}}
     </tbody>
@@ -607,6 +776,25 @@
                 },
                 error: function(e){
                     alert('訂單確認失敗 請洽系統商!');
+                }
+            });  
+        });
+
+        $('body').on('click', '.phone_check', function(){
+            var order_id = $(this).data('id');
+            $.ajax({
+                url: '/api/phone/check',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    order_id: order_id
+                },
+                success: function(data){
+                    swal.close();
+                    render_order_list();
+                },
+                error: function(e){
+                    alert('電話確認失敗 請洽系統商!');
                 }
             });  
         });
