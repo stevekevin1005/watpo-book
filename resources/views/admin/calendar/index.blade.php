@@ -17,167 +17,7 @@
     {
         50%  {color: #AAAAAA;}
     }
-    .fa-bell{
-        animation-name: shake;
-        animation-duration: 100ms;
-        animation-timing-function: ease-in-out;
-        animation-iteration-count: infinite;
-        display: inherit;
-        transform-origin: center center;
-    }
-    @keyframes shake
-    {
-        2% {
-            transform: translate(.5px, 2.5px) rotate(1.5deg);
-        }
-        4% {
-            transform: translate(2.5px, 1.5px) rotate(1.5deg);
-        }
-        6% {
-            transform: translate(1.5px, .5px) rotate(.5deg);
-        }
-        8% {
-            transform: translate(-1.5px, -1.5px) rotate(-.5deg);
-        }
-        10% {
-            transform: translate(-1.5px, 2.5px) rotate(1.5deg);
-        }
-        12% {
-            transform: translate(-1.5px, .5px) rotate(.5deg);
-        }
-        14% {
-            transform: translate(-1.5px, -1.5px) rotate(-.5deg);
-        }
-        16% {
-            transform: translate(1.5px, 2.5px) rotate(1.5deg);
-        }
-        18% {
-            transform: translate(1.5px, -.5px) rotate(1.5deg);
-        }
-        20% {
-            transform: translate(1.5px, -.5px) rotate(1.5deg);
-        }
-        22% {
-            transform: translate(-1.5px, .5px) rotate(-.5deg);
-        }
-        24% {
-            transform: translate(.5px, -1.5px) rotate(-.5deg);
-        }
-        26% {
-            transform: translate(-1.5px, 2.5px) rotate(1.5deg);
-        }
-        28% {
-            transform: translate(-.5px, .5px) rotate(-.5deg);
-        }
-        30% {
-            transform: translate(-1.5px, 2.5px) rotate(.5deg);
-        }
-        32% {
-            transform: translate(.5px, -1.5px) rotate(1.5deg);
-        }
-        34% {
-            transform: translate(.5px, -1.5px) rotate(1.5deg);
-        }
-        36% {
-            transform: translate(2.5px, .5px) rotate(.5deg);
-        }
-        38% {
-            transform: translate(-.5px, .5px) rotate(-.5deg);
-        }
-        40% {
-            transform: translate(.5px, .5px) rotate(1.5deg);
-        }
-        42% {
-            transform: translate(.5px, 1.5px) rotate(1.5deg);
-        }
-        44% {
-            transform: translate(.5px, 2.5px) rotate(.5deg);
-        }
-        46% {
-            transform: translate(1.5px, 1.5px) rotate(-.5deg);
-        }
-        48% {
-            transform: translate(2.5px, .5px) rotate(-.5deg);
-        }
-        50% {
-            transform: translate(1.5px, 1.5px) rotate(1.5deg);
-        }
-        52% {
-            transform: translate(1.5px, 2.5px) rotate(1.5deg);
-        }
-        54% {
-            transform: translate(1.5px, 1.5px) rotate(.5deg);
-        }
-        56% {
-            transform: translate(.5px, -.5px) rotate(.5deg);
-        }
-        58% {
-            transform: translate(-1.5px, .5px) rotate(.5deg);
-        }
-        60% {
-            transform: translate(2.5px, 1.5px) rotate(1.5deg);
-        }
-        62% {
-            transform: translate(1.5px, 2.5px) rotate(-.5deg);
-        }
-        64% {
-            transform: translate(.5px, -1.5px) rotate(1.5deg);
-        }
-        66% {
-            transform: translate(-1.5px, 2.5px) rotate(-.5deg);
-        }
-        68% {
-            transform: translate(-1.5px, 1.5px) rotate(-.5deg);
-        }
-        70% {
-            transform: translate(1.5px, -1.5px) rotate(.5deg);
-        }
-        72% {
-            transform: translate(-.5px, 1.5px) rotate(.5deg);
-        }
-        74% {
-            transform: translate(-.5px, .5px) rotate(-.5deg);
-        }
-        76% {
-            transform: translate(2.5px, 1.5px) rotate(-.5deg);
-        }
-        78% {
-            transform: translate(1.5px, .5px) rotate(1.5deg);
-        }
-        80% {
-            transform: translate(-1.5px, .5px) rotate(1.5deg);
-        }
-        82% {
-            transform: translate(2.5px, 1.5px) rotate(1.5deg);
-        }
-        84% {
-            transform: translate(-.5px, .5px) rotate(-.5deg);
-        }
-        86% {
-            transform: translate(-1.5px, 2.5px) rotate(-.5deg);
-        }
-        88% {
-            transform: translate(1.5px, -.5px) rotate(-.5deg);
-        }
-        90% {
-            transform: translate(-1.5px, 2.5px) rotate(-.5deg);
-        }
-        92% {
-            transform: translate(-1.5px, 2.5px) rotate(.5deg);
-        }
-        94% {
-            transform: translate(-.5px, .5px) rotate(-.5deg);
-        }
-        96% {
-            transform: translate(.5px, -1.5px) rotate(.5deg);
-        }
-        98% {
-            transform: translate(.5px, .5px) rotate(1.5deg);
-        }
-        0%, 100% {
-            transform: translate(0, 0) rotate(0);
-        }
-    }
+
 </style>
 @stop
 @section('content')
@@ -252,7 +92,7 @@
                                 @endif
                                 <td>{{ $order->service }}</td> 
                                 
-                                <td>@if($order->status != 5 && $order->phone != "現場客" && $order->phone_call_status == 0)<i class="fa fa-bell"></i>@endif</td>   
+                                <td>@if($order->status != 5 && $order->phone != "現場客" && $order->phone_call_status == 0)<i class="fa fa-phone"></i>@endif</td>   
                                 
                             </tr>
                             @endforeach
@@ -411,7 +251,7 @@
                 <button type="button" class="btn btn-success order_confirm" data-id="@{{:id}}" style="font-size:20px;">確認訂單</button>
             </div>
             <div class="col-md-3">
-                <button type="button" class="btn btn-success phone_check" data-id="@{{:id}}" style="font-size:20px;">電話確認</button>
+                <button type="button" class="btn phone_check" data-id="@{{:id}}" style="font-size:20px;background-color: coral;border: 1px solid coral;color:white;">電話確認</button>
             </div>
             @if(session('account_level') != 1)
             @{{/if}}
@@ -485,7 +325,7 @@
             <td>@{{:account}}</td>
              @endif
             <td>@{{:service}}</td>   
-            <td>@{{if phone_call_status == 0 && phone != "現場客" && status != 5}}<i class="fa fa-bell"></i>@{{/if}}</td>  
+            <td>@{{if phone_call_status == 0 && phone != "現場客" && status != 5}}<i class="fa fa-phone"></i>@{{/if}}</td>  
         </tr>
         @{{/for}}
     </tbody>
