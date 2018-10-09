@@ -89,8 +89,8 @@ table{
 										<div class="col-md-8">
 											<select name="q0" class="form-control">
 												<option selected="true" value="">選擇櫃台</option>
-												<option value="早班櫃檯">早班櫃檯</option>
-												<option value="晚班櫃檯">晚班櫃檯</option>
+												<option value="早班櫃檯" <?php if($request->q0 == "早班櫃檯"){?> selected <?php }?>>早班櫃檯</option>
+												<option value="晚班櫃檯" <?php if($request->q0 == "晚班櫃檯"){?> selected <?php }?>>晚班櫃檯</option>
 											</select>
 										</div>
 									</div>
@@ -282,18 +282,45 @@ table{
 									<td>{{ $q2['不滿意'] }}</td>
 								</tr>
 								<tr>
-								<th scope="row">技術</th>
+									<th scope="row">技術</th>
 									<td>{{ $q3['非常滿意'] }}</td>
 									<td>{{ $q3['滿意'] }}</td>
 									<td>{{ $q3['普通'] }}</td>
 									<td>{{ $q3['不滿意'] }}</td>
 								<tr>
-								<th scope="row">表現</th>
+									<th scope="row">表現</th>
 									<td>{{ $q4['非常滿意'] }}</td>
 									<td>{{ $q4['滿意'] }}</td>
 									<td>{{ $q4['普通'] }}</td>
 									<td>{{ $q4['不滿意'] }}</td>
 								<tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			@elseif(isset($request->q0) && $request->q0 != '')
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="card-box">
+						<table class="table">
+							<thead class="thead-dark">
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">非常滿意</th>
+									<th scope="col">滿意</th>
+									<th scope="col">普通</th>
+									<th scope="col">不滿意</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th scope="row">服務態度</th>
+									<td>{{ $q1['非常滿意'] }}</td>
+									<td>{{ $q1['滿意'] }}</td>
+									<td>{{ $q1['普通'] }}</td>
+									<td>{{ $q1['不滿意'] }}</td>
+								</tr>
 							</tbody>
 						</table>
 					</div>
@@ -345,7 +372,8 @@ table{
 					'shop' => $request->shop, 
 					'service_provider' => $request->service_provider, 
 					'start_time' => $request->start_time, 
-					'end_time' => $request->end_time, 
+					'end_time' => $request->end_time,
+					'q0' => $request->q0, 
 					'q1' => $request->q1, 
 					'q2' => $request->q2, 
 					'q3' => $request->q3, 

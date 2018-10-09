@@ -85,6 +85,12 @@ class ReportController extends Controller
                 $view_data['q4'][$order->report->q4]++;
             }
         }
+        else if($request->q0){
+            $view_data['q1'] = ['非常滿意' => 0, '滿意' => 0, '普通' => 0, '不滿意' => 0];
+            foreach ($total_order as $key => $order) {
+                $view_data['q1'][$order->report->q1]++;
+            }
+        }
 
         $view_data['order_list'] = $order_list;
 
