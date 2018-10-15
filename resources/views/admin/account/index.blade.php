@@ -46,12 +46,14 @@
 								<thead>
 									<th>帳號</th>
 									<th>密碼</th>
+									<th>名稱</th>
 									<th></th>
 								</thead>
 								<tbody>
 									<tr>
 										<td><input type="text" class="form-control" id="new_account"></td>
 										<td><input type="password" class="form-control" id="new_password"></td>
+										<td><input type="text" class="form-control" id="new_information"></td>
 										<td><button class="btn btn-primary" id="add_account">新增帳號</button></td>
 									</tr>
 
@@ -59,7 +61,12 @@
 									<tr>
 										<td><input type="text" class="form-control" value="{{$account->account}}" readonly></td>
 										<td><input type="text" class="form-control" id="new_password_{{$account->id}}" maxlength="20" minlength="4"></td>
-										<td><button class="btn btn-info reset_password" data-id="{{ $account->id }}">重置密碼</button><button class="btn btn-danger delete_account" data-id="{{ $account->id }}">刪除帳號</button></td>
+										<td><input type="text" class="form-control" id="account_information_{{$account->id}}" value="{{$account->information}}"></td>
+										<td>
+											<button class="btn btn-success reset_information" data-id="{{ $account->id }}">重置名稱</button>
+											<button class="btn btn-info reset_password" data-id="{{ $account->id }}">重置密碼</button>
+											<button class="btn btn-danger delete_account" data-id="{{ $account->id }}">刪除帳號</button>
+										</td>
 									</tr>
 									@endforeach
 								</tbody>
@@ -119,7 +126,10 @@
 										@if($account->service_provider)
 										<td>{{ $account->service_provider->name }}({{ $account->service_provider->shop->name}})</td>
 										@endif
-										<td><button class="btn btn-info reset_password" data-id="{{ $account->id }}">重置密碼</button><button class="btn btn-danger delete_account" data-id="{{ $account->id }}">刪除帳號</button></td>
+										<td>
+											<button class="btn btn-info reset_password" data-id="{{ $account->id }}">重置密碼</button>
+											<button class="btn btn-danger delete_account" data-id="{{ $account->id }}">刪除帳號</button>
+										</td>
 									</tr>
 									@endforeach
 								</tbody>
@@ -162,6 +172,7 @@
 	$("#add_account").on('click', function(){
 		var account = $("#new_account").val();
 		var password = $("#new_password").val();
+		var information = $("#new_information").val();
 		if(account.length < 2 || account.length > 20){
 			swal(
 			  '資料格式錯誤',
@@ -184,7 +195,8 @@
 			dataType: 'json',
 			data: {
 				account: account,
-				password: password
+				password: password,
+				information: information
 			},
 			success: function(){
 				swal(
@@ -331,6 +343,35 @@
 		        )
 		    }
 		});
-});
+	});
+	$(".reset_information").on('click', function(){
+		var id = $(this).data('id');
+		var information = $("#account_information_"+ id).val();
+	
+		$.ajax({
+		    url: '/api/account/reset_information',
+		    type: 'post',
+		    data: {
+		        id: id,
+		        information: information
+		    },
+		    success: function(data){
+		        swal(
+					'更改結果',
+					'成功!',
+					'success'
+				).then((result) => {
+					location.reload();
+				});
+		    },
+		    error: function(e){
+		        swal(
+		          '系統發生錯誤',
+		          e.responseJSON,
+		          'error'
+		        )
+		    }
+		});
+	});
 </script>
 @stop

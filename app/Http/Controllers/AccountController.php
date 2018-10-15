@@ -52,6 +52,7 @@ class AccountController extends Controller
 				$account = new Account;
 				$account->account = $request->account;
 				$account->password	 = Hash::make($request->password);
+				$account->information = $request->information;
 				$account->level = 2;
 				$account->save();
 				return response()->json('新增成功');
@@ -118,6 +119,27 @@ class AccountController extends Controller
 			$account = Account::where('id', $request->id)->whereIn('level', [2,3])->first();
 			if(!is_null($account)){
 				$account->password = Hash::make($request->password);
+				$account->save();
+				return response()->json('更改成功');
+			}
+			else{
+				throw new Exception("此帳號不存在");
+			}
+		}
+		catch(Exception $e){
+			return response()->json($e->getMessage(), 400);
+		}
+		catch(\Illuminate\Database\QueryException $e){
+			return response()->json('資料庫錯誤, 請洽系統商!', 400);
+		}
+	}
+
+	public function api_reset_information(Request $request)
+	{
+		try{
+			$account = Account::where('id', $request->id)->whereIn('level', [2,3])->first();
+			if(!is_null($account)){
+				$account->information = $request->information;
 				$account->save();
 				return response()->json('更改成功');
 			}

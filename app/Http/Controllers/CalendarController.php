@@ -141,7 +141,7 @@ class CalendarController extends Controller
 			$data->service = $order->service->title;
 			$data->service_id = $order->service_id;
 			if($order->account != null){
-				$data->account = $order->account->account;
+				$data->account = $order->account->information;
 			}
 			else
 			{
