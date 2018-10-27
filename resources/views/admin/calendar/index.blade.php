@@ -117,7 +117,7 @@
 <script src="/assets/plugins/bootstrap-select.min.js"></script>
 {{-- <script src="/bower_components/jquery-timepicker-wvega/jquery.timepicker.js"></script> --}}
 <script id="order_form_template" type="x-jsrender">
-    <form class="container" style="height:500px;" method="post" action="@{{:url}}">
+    <form class="container" style="height:500px;" method="post" action="@{{:url}}" id="calendar_form">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="row" style="margin-top:10px">
             <div class="col-md-1" style="text-align:left;">
@@ -650,7 +650,6 @@
             var service_id = $(this).data('service_id');
             var person = $(this).data('person');
             var provider = $(this).data('provider');
-
             var myTemplate = $.templates("#order_form_template");
             var html = myTemplate.render({
                 url: '/admin/calendar/order/'+order_id+'/update',
@@ -773,6 +772,16 @@
         document.onmousedown = ReCalculate;
         document.onmousemove = ReCalculate;
         ReCalculate();
+
+        $("body").on("submit", "#calendar_form",function(){
+            var start_time = new Date($("#start_time").val());
+            var end_time = new Date($("#end_time").val());
+            var diff_time = parseInt(end_time - start_time);
+            if (diff_time > 14400000) {
+                alert("請確認開始結束時間");
+                return false;
+            }
+        })
     });
 </script>
 @stop
