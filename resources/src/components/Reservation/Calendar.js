@@ -59,7 +59,7 @@ class Calendar extends React.Component{
                   :unit * 6 +"%"};
 
         for(let i = 1;i <= this.state.dayNum; i++){
-                let isPastDay = isCurrentMonth && i < yesterday && i < today;
+                let isPastDay = isCurrentMonth && i < today;
                 if(i===1) days.push(<span key={i} className={i===selectedDay?"day selectedDay":(isPastDay?"day pastDay":"day")} style={firstDayStyle} onClick={isPastDay?null:this.selectDay}>{i}</span>);
                 else days.push(<span key={i} className={i===selectedDay?"day selectedDay":(isPastDay?"day pastDay":"day")} style={spanStyle} onClick={isPastDay?null:this.selectDay}>{i}</span>);
         }
