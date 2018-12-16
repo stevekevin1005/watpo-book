@@ -10,11 +10,13 @@ const main = async () =>{
   let old = new Date();  // measure time
 
   init(config);
-  //let result =  await api_service_provider_time("2018-11-27",1,null,null,2,0,true);
-  //console.log(result);
-
-
-  let result =  await api_service_provider_time("2018-11-25",1,null,null,2,0,true);
+  let result =  await api_service_provider_time("2018-11-26",1,null,null,2,0,true);
+  console.log(result);
+  result =  await api_service_provider_time("2018-11-26",2,null,null,2,0,true);
+  console.log(result);
+  result =  await api_service_provider_time("2018-11-25",1,null,null,2,0,true);
+  console.log(result);
+  result =  await api_service_provider_time("2018-11-25",2,null,null,2,0,true);
   console.log(result);
   end();
 
