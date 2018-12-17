@@ -1,0 +1,16 @@
+{
+  "name": "query",
+  "version": "1.0.0",
+  "description": "Could to something sql query",
+  "main": "source.hs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "locutus": "^2.0.10",
+    "moment": "^2.22.2",
+    "mysql": "^2.16.0"
+  }
+}
