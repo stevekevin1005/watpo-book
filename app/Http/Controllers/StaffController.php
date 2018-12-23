@@ -292,6 +292,7 @@ class StaffController extends Controller
 
 	public function api_service_provider_time(Request $request){
 		try {
+			// $start = microtime(true);
 
 			$date = $request->date;
 			$shop_id = $request->shop_id;
@@ -303,21 +304,26 @@ class StaffController extends Controller
 
 			$shop = Shop::where('id', $shop_id)->first();
 
-			$start_time = new DateTime($date.' '.$shop->start_time);
+			$start_time = new DateTime($request->start_time);
+			$end_time = new DateTime($request->end_time);
+			// $start_time = new DateTime($date.' '.$shop->start_time);
 
-			$end_time = new DateTime($date.' '.$shop->end_time);
-			if($end_time <= $start_time){
-				$end_time->add(new DateInterval("P1D"))->modify("-2 hour");
-			}
+			// $end_time = new DateTime($date.' '.$shop->end_time);
+			// if($end_time <= $start_time){
+			// 	$end_time->add(new DateInterval("P1D"))->modify("-2 hour");
+			// }
 
 			$result = [];
 			while($start_time <= $end_time){
-				if($start_time >= new DateTime() && $this->time_option($date, $limit_time, 60, $start_time->format('Y-m-d H:i:s'), $shop_id, $worker_list_1hr, $no_limit_1hr) && $this->time_option($date, $limit_time, 120, $start_time->format('Y-m-d H:i:s'), $shop_id, $worker_list_2hr, $no_limit_2hr)){
+				if($start_time >= new Datetime() && $this->time_option($date, $limit_time, 60, $start_time->format('Y-m-d H:i:s'), $shop_id, $worker_list_1hr, $no_limit_1hr) && $this->time_option($date, $limit_time, 120, $start_time->format('Y-m-d H:i:s'), $shop_id, $worker_list_2hr, $no_limit_2hr)){
 					$result[] = $start_time->format('H:i');
 				}
 				$start_time->add(new DateInterval("PT30M"));
 			}
 
+			// $end = microtime(true);
+			// $time = $end - $start;
+			// $result[] = $time;
 			return response()->json($result, 200,  self::headers, JSON_UNESCAPED_UNICODE);
 
 		} catch (Exception $e) {

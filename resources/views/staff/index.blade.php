@@ -261,7 +261,7 @@
                         (1hr)不指定:
                     </div>
                     <div class="col-md-1">
-                        <input type="number" class="form-control" value=0 id="check_time_no_limit_1hr">
+                        <input type="number" class="form-control" value="0" min="0" id="check_time_no_limit_1hr">
                     </div>
                     
                     <div class="col-md-5">
@@ -277,7 +277,7 @@
                         (2hr)不指定:
                     </div>
                     <div class="col-md-1">
-                        <input type="number" class="form-control" value=0 id="check_time_no_limit_2hr">
+                        <input type="number" class="form-control" value="0" min="0" id="check_time_no_limit_2hr">
                     </div>
                     
                     <div class="col-md-5">
@@ -549,11 +549,12 @@
             $('body').on('click', '#check_time_submit', function(){
                 check_service_provider_time();
             });
-            $('body').on('change', '#check_time_date', function(){
-                check_service_provider_time();
-            });
+            // $('body').on('change', '#check_time_date', function(){
+            //     check_service_provider_time();
+            // });
+
             function check_service_provider_time(){
-                check_flag = false;
+                
                 var date = $('#check_time_date').val();
                 var shop_id = $("#choose_shop").val();
                 var worker_list_1hr = $('#check_time_worker_1hr').val();
@@ -561,38 +562,90 @@
                 var no_limit_1hr = $('#check_time_no_limit_1hr').val();
                 var no_limit_2hr = $('#check_time_no_limit_2hr').val();
                 var limit = document.getElementById("limit_time").checked;
-                if(date != '' && shop_id !== undefined && shop_id !== null && shop_id !== ''){
+                if(check_flag && date != '' && shop_id !== undefined && shop_id !== null && shop_id !== ''){
+                    check_flag = false;
                     $("#time_list").html('時間判斷中.....');
                     $("#room_list").html('');
-                    $.ajax({
-                        url: '/api/staff/service_provider_time',
-                        type: 'get',
-                        dataType: 'json',
-                        data: {
-                            date: date,
-                            shop_id: shop_id,
-                            worker_list_1hr: worker_list_1hr,
-                            worker_list_2hr: worker_list_2hr,
-                            no_limit_1hr: no_limit_1hr,
-                            no_limit_2hr: no_limit_2hr,
-                            limit_time: limit
-                        },
-                        success: function(res){
-                            var html = "";
-                            res.forEach(function(time) {
-                                html += '<div class="col-md-1" style="margin-top:5px"><button class="btn btn-success time_option">'+time+'</button></div>';
-                            });
-                            $("#time_list").html(html);
-                            $("#room_list").html('');
-                            check_flag = true;
-                        },
-                        error: function(error){
-                            alert('錯誤！請洽系統商');
-                        }
+                    
+                    var start_time =  moment(date+' '+'12:00:00').toDate();
+                    var end_time = moment(date+' '+'04:00:00').toDate();
+                    if (end_time <= start_time) {
+                      end_time = moment(end_time).add(24, 'hours').toDate();
+                    }
+                    var time_range = [];
+                    while(start_time < end_time ) {
+                        time_range.push(moment(start_time).format("YYYY-MM-DD HH:mm:ss"));
+                        start_time = moment(start_time).add(120,'minutes').toDate();    //->add(new DateInterval("PT30M")); milisecond
+                    }
+                    let time_option_list = [];
+                    let excute = time_range.map((ti, index)=>new Promise((resolve,reject)=>{
+                        var temp_end_time = moment(ti).add(120,'minutes').isSame(end_time) ? moment(ti).add(120,'minutes') : moment(ti).add(90,'minutes');
+                        $.ajax({
+                            url: '/api/staff/service_provider_time',
+                            type: 'get',
+                            dataType: 'json',
+                            data: {
+                                date: date,
+                                shop_id: shop_id,
+                                worker_list_1hr: worker_list_1hr,
+                                worker_list_2hr: worker_list_2hr,
+                                no_limit_1hr: no_limit_1hr,
+                                no_limit_2hr: no_limit_2hr,
+                                limit_time: limit,
+                                start_time: ti,
+                                end_time: temp_end_time.format("YYYY-MM-DD HH:mm:ss")
+                            },
+                            success: function(res){
+                                time_option_list[index] = res;
+                                resolve(res);
+                            },
+                            error: function(error){
+                                
+                            }
+                        });
+                    }));
+                    Promise.all(excute).then(()=>{
+                        let time_option = [];
+                        time_option_list.forEach(function(arr){
+                            time_option = time_option.concat(arr);
+                        });
+                        var html = "";
+                        time_option.forEach(function(time) {
+                            html += '<div class="col-md-1" style="margin-top:5px"><button class="btn btn-success time_option">'+time+'</button></div>';
+                        });
+                        $("#time_list").html(html);
+                        $("#room_list").html('');
+                        check_flag = true;
+                    }).catch(error=> {
+                        console.warn(error)
+                        alert('錯誤！請洽系統商');
                     });
-                }
-                else{
-                    alert('請選擇日期');
+                    // $.ajax({
+                    //     url: '/api/staff/service_provider_time',
+                    //     type: 'get',
+                    //     dataType: 'json',
+                    //     data: {
+                    //         date: date,
+                    //         shop_id: shop_id,
+                    //         worker_list_1hr: worker_list_1hr,
+                    //         worker_list_2hr: worker_list_2hr,
+                    //         no_limit_1hr: no_limit_1hr,
+                    //         no_limit_2hr: no_limit_2hr,
+                    //         limit_time: limit
+                    //     },
+                    //     success: function(res){
+                            // var html = "";
+                            // res.forEach(function(time) {
+                            //     html += '<div class="col-md-1" style="margin-top:5px"><button class="btn btn-success time_option">'+time+'</button></div>';
+                            // });
+                            // $("#time_list").html(html);
+                            // $("#room_list").html('');
+                            // check_flag = true;
+                    //     },
+                    //     error: function(error){
+                    //         alert('錯誤！請洽系統商');
+                    //     }
+                    // });
                 }
             }
 
