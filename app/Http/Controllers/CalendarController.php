@@ -575,7 +575,7 @@ class CalendarController extends Controller
 				}
 				$room_name = $room->name;
 				$order->room_id = $room_id;
-				if($person > 0 && $person != $order->person){
+				if($person > 0){
 					// if($order->person != $person && count($service_provider_list) - $no_specific_amount < $person) throw new Exception("該時段師傅數不足 請重新選擇 (error 1)", 1);
 					$order->serviceProviders()->detach();
 					$order->person = $person;
