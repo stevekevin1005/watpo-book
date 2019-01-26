@@ -144,13 +144,11 @@ class BookController extends Controller
 				// if($start_time >= $shop_start_time || $start_time <= $shop_end_time){
 					$time_list[$i]['time'] = $start_time->format('H:i');
 
-					// if(new DateTime(date("Y-m-d H:i:s")) > $start_time){
-					// 	$time_list[$i]['select'] = false;
-					// }
-					// else{
+					if(new DateTime(date("Y-m-d H:i:s")) > $start_time){
+						$time_list[$i]['select'] = false;
+					}
+					else{
 						$msg = $this->time_option($today->format('Y-m-d'), $start_time->format('Y-m-d H:i:s'), $service->time, $shower, $shop_id, $person, $service_provider_id);
-						// dd($service_provider_id);
-						// dd($msg);
 						if($msg === true){
 							$time_list[$i]['select'] = true;
 						}
@@ -159,7 +157,7 @@ class BookController extends Controller
 							$time_list[$i]['time'] .= $msg === false ? "": $msg;
 						}
 						
-					// }
+					}
 					$i++;
 				// }
 				$start_time->add(new DateInterval("PT30M"));
