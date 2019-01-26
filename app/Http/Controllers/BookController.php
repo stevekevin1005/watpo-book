@@ -123,10 +123,14 @@ class BookController extends Controller
 			$shop = Shop::where('id', $shop_id)->first();
 			
 
-			$start_time = clone $date;
+			// $start_time = clone $date;
 
-			$end_time = clone $date;
-			$end_time->add(new DateInterval("P1D"));
+			// $end_time = clone $date;
+			// dd($date->format('Y-m-d'));
+			$start_time = new Datetime($date->format('Y-m-d')." ".$request->start_time);
+			$end_time = new Datetime($date->format('Y-m-d')." ".$request->end_time);
+			if($end_time <= $start_time) $end_time->modify("+1 day");
+			// $end_time->add(new DateInterval("P1D"));
 			
 			$shop_start_time = new Datetime($date->format('Y-m-d')." ".$shop->start_time);
 
@@ -134,17 +138,19 @@ class BookController extends Controller
 			$shop_end_time->modify("-2 hour");
 
 			$i = 0;
-			while($start_time < $end_time){
+			while($start_time <= $end_time){
 				$today = clone $date;
 				if($start_time <= $shop_end_time) $today->modify("-1 day");
-				if($start_time >= $shop_start_time || $start_time <= $shop_end_time){
+				// if($start_time >= $shop_start_time || $start_time <= $shop_end_time){
 					$time_list[$i]['time'] = $start_time->format('H:i');
 
-					if(new DateTime(date("Y-m-d H:i:s")) > $start_time){
-						$time_list[$i]['select'] = false;
-					}
-					else{
+					// if(new DateTime(date("Y-m-d H:i:s")) > $start_time){
+					// 	$time_list[$i]['select'] = false;
+					// }
+					// else{
 						$msg = $this->time_option($today->format('Y-m-d'), $start_time->format('Y-m-d H:i:s'), $service->time, $shower, $shop_id, $person, $service_provider_id);
+						// dd($service_provider_id);
+						// dd($msg);
 						if($msg === true){
 							$time_list[$i]['select'] = true;
 						}
@@ -153,12 +159,10 @@ class BookController extends Controller
 							$time_list[$i]['time'] .= $msg === false ? "": $msg;
 						}
 						
-					}
+					// }
 					$i++;
-				}
+				// }
 				$start_time->add(new DateInterval("PT30M"));
-
-				
 			}
 
 			return response()->json($time_list, 200, self::headers, JSON_UNESCAPED_UNICODE);
