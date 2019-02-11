@@ -232,7 +232,16 @@ class Reservation extends React.Component {
                     success: true,
                     showAlert: true,
                     alertTitle: t("reserveSuccess"),
-                    alertText: <Alert notice={t("reserveNotice2")} text={t("reservatorName") + ": " + reservation.name + "\n" + t("contactNumber") + ": " + reservation.contactNumber + "\n" + t("reservatorDate") + ": " + reservation.date + " " + reservation.time + "\n服務: " + serviceName + "\n人數: " + reservation.guestNum + " " + (reservation.guestNum > 1 ? t("people") : t("person")) + " " + t("operator") + ": " + operator_text + "\n" + t("reserveNotice1") + "\n" + t("reserveNotice3")} />
+                    alertText: <Alert notice={t("reserveNotice2")} text={
+                            t("locations") + ": " + (reservation.shop == 1 ? t("location1") : t("location2")) + "\n"
+                            + t("registrationNumber") + ": " + (reservation.shop == 1 ? "02 2581-3338" : "02 2570-9393") + "\n"
+                            + t("reservatorName") + ": " + reservation.name + "\n" 
+                            + t("contactNumber") + ": " + reservation.contactNumber + "\n" 
+                            + t("reservatorDate") + ": " + reservation.date + " " + reservation.time + "\n" 
+                            + "服務: " + serviceName + "\n" 
+                            + "人數: " + reservation.guestNum + " " + (reservation.guestNum > 1 ? t("people") : t("person")) + " " + t("operator") + ": " + operator_text + "\n" 
+                            + t("reserveNotice1") + "\n" 
+                            + t("reserveNotice3")} />
                 });
             } else {
                 // show failure alert

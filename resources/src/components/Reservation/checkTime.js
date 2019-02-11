@@ -24,15 +24,15 @@ class CheckTime extends React.Component{
         this.setLongTimePeriod = this.setLongTimePeriod.bind(this);
         if(this.props.reservation.shop == 1) {
             this.earlyMorning = "00:00 - 04:00";
-            this.noon = "12:00 - 16:00";
-            this.afternoon = "16:00 - 20:00";
-            this.night = "20:00 - 00:00";
+            this.noon = "12:00 - 15:30";
+            this.afternoon = "16:00 - 19:30";
+            this.night = "20:00 - 23:30";
         }
         else {
-            this.earlyMorning = "11:00 - 03:00";
-            this.noon = "11:00 - 15:00";
-            this.afternoon = "15:00 - 19:00";
-            this.night = "19:00 - 23:00";
+            this.earlyMorning = "23:00 - 03:00";
+            this.noon = "11:00 - 14:30";
+            this.afternoon = "15:00 - 18:30";
+            this.night = "19:00 - 22:30";
         }
 
         let today = new Date();
