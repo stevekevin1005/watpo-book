@@ -35,7 +35,7 @@ class LoginController extends Controller
 			Log::create(['description' => '登入櫃檯系統']);
 			return redirect('/staff/index');
 		}
-		return redirect('/admin/login')->withErrors(['fail'=>'帳號或密碼錯誤']);
+		return redirect('/staff/login')->withErrors(['fail'=>'帳號或密碼錯誤']);
 	}
 
 	public function loginCheck(Request $request)
