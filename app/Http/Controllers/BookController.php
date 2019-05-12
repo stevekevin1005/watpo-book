@@ -148,13 +148,15 @@ class BookController extends Controller
 						$time_list[$i]['select'] = false;
 					}
 					else{
-						$msg = $this->time_option($today->format('Y-m-d'), $start_time->format('Y-m-d H:i:s'), $service->time, $shower, $shop_id, $person, $service_provider_id);
-						if($msg === true){
+						$result = $this->time_option($today->format('Y-m-d'), $start_time->format('Y-m-d H:i:s'), $service->time, $shower, $shop_id, $person, $service_provider_id);
+						// dd($msg);
+						if($result["select"] === true){
 							$time_list[$i]['select'] = true;
+							$time_list[$i]["room"] = $result["room"];
 						}
 						else{
 							$time_list[$i]['select'] = false;
-							$time_list[$i]['time'] .= $msg === false ? "": $msg;
+							$time_list[$i]['time'] .= $result["reason"] === false ? "": $result["reason"];
 						}
 						
 					}
@@ -188,21 +190,22 @@ class BookController extends Controller
 			}
 		}
 		
-		//師傅預約15分鐘
+		//師傅預約前後冷卻15分鐘
 		$start_time->sub(new DateInterval('PT15M'));
 		$end_time->add(new DateInterval('PT15M'));
 		
+		//確認師傅休假
 		$service_providers = ServiceProvider::whereHas('leaves' ,function ($query) use ($start_time, $end_time) {
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
 		})->where('shop_id', $shop_id)->whereIn('id', $service_provider_id_list)->pluck('name')->toArray();
 
 		if(count($service_providers) != 0){
-			return "\n師傅 ".implode(" ",$service_providers)." 休";
+			return array ("select" => false, "reason" => "\n師傅 ".implode(" ",$service_providers)." 休");
 		}
 
 		$service_providers = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $shop_id)->get();
-		
+
 		//扣回 避免出勤錯誤
 		$start_time->add(new DateInterval('PT15M'));
 		$end_time->sub(new DateInterval('PT15M'));
@@ -221,7 +224,7 @@ class BookController extends Controller
 		}
 
 		if(!empty(array_diff($service_provider_id_list, $service_provider_list))){
-			return false;
+			return array ("select" => false, "reason" => "");
 		}
 
 		/* 不指定人數 */
@@ -241,7 +244,7 @@ class BookController extends Controller
 		$no_specific_amount = $this->no_specific($order_list, $service_providers);
 	
 		if(count($service_provider_list) - $no_specific_amount < $person){
-			return false;
+			return array ("select" => false, "reason" => "");
 		}
 
 		//房間預約30分鐘
@@ -259,17 +262,19 @@ class BookController extends Controller
 		$start_time->add(new DateInterval('PT30M'));
 		$end_time->sub(new DateInterval('PT30M'));
 
-		if($shower == "true"){
-			$room = $room->where('shower', 1);
-		}
+		// if($shower == "true"){
+		// 	$room = $room->where('shower', 1);
+		// }
 
-		$room = $room->first();
+		// $room = $room->first();
 
-		if(!$room){
-			return false;
-		}
+		// if(!$room){
+		// 	return false;
+		// }
 
-		return true;
+		$result = array ("select" => true, "room" => $room->get());
+	
+		return $result;
 	}
 
 	public function api_order(Request $request){
