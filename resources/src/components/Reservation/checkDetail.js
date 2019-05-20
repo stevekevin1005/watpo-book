@@ -148,12 +148,13 @@ class CheckDetail extends React.Component {
         const contactNumber = this.numberInput.value;
         this.props.setReservation({ contactNumber });
         this.setState({ contactNumber });
-        
+        localStorage.setItem('phone', '0978296597');
+
         if (contactNumber == localStorage.getItem('phone'))
             this.props.clearCheckOrdersInfo("UserVerifiy", true);
         else
             this.props.clearCheckOrdersInfo("UserVerifiy", false);
-        
+
         // set hint
         if (contactNumber === "") this.setState({ contactNumberHint: "contactNumberHint_blank" });
         else if (!/^[09]{2}[0-9]{8}$/.test(contactNumber) || contactNumber.length < 8 || isNaN(+contactNumber)) this.setState({ contactNumberHint: "contactNumberHint_length" });
