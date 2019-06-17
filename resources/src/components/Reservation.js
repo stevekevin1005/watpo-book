@@ -24,6 +24,15 @@ const Grid = ReactBootstrap.Grid,
     Col = ReactBootstrap.Col;
 import SweetAlert from 'sweetalert-react';
 
+let Null_Package = {
+    service: 1,
+    guestNum: 1,
+    operator: [0],
+    operator_text: ['不指定'],
+    roomId: null,
+    shower: false
+}
+
 class Reservation extends React.Component {
     constructor(props) {
         super(props);
@@ -36,32 +45,40 @@ class Reservation extends React.Component {
 
             reservation: {
                 shop: null,
-                service: null,
-
-                guestNum: 0,
-                operator: [],
-                operator_text: [],
-                roomId: null,
                 name: null,
                 contactNumber: null,
-
+                total_guest_num: null,
                 date: null,
                 time: null,
+                unarranged_people: 1
 
-                shower: false
+
             },
+            package_reservation: [
+                // {
+                //     service: 1,
+                //     guestNum: 1,
+                //     operator: [0],
+                //     operator_text: ['不指定'],
+                //     roomId: null,
+                //     shower: false,
+                //     service_provider_list: null,
+                //     room_list: null
+                // }
+            ],
 
             sourceData: {
                 shops: null,
                 services: null,
                 timeList: null,
-                service_provider_list: null,
-                room: null
+
             },
 
             loading: false
         };
 
+        this.setPackageReservation = this.setPackageReservation.bind(this)
+        this.appendNewPackage = this.appendNewPackage.bind(this)
         this.setReservation = this.setReservation.bind(this);
         this.clearData = this.clearData.bind(this);
         this.setSourceData = this.setSourceData.bind(this);
@@ -69,6 +86,8 @@ class Reservation extends React.Component {
         this.send = this.send.bind(this);
         this.showErrorPopUp = this.showErrorPopUp.bind(this);
         this.toggleLoading = this.toggleLoading.bind(this);
+        this.removePackage = this.removePackage.bind(this);
+        this.claerPackage = this.claerPackage.bind(this);
     }
     componentDidMount() {
         if (this.props.checkOrdersInfo != {}) {
@@ -91,6 +110,82 @@ class Reservation extends React.Component {
         }, () => {
             if (callback) callback();
         });
+    }
+
+    appendNewPackage(cb) {
+        let temp_list = this.state.package_reservation
+        // let null_pkg = {
+        //     service: 1,
+        //     guestNum: 1,
+        //     operator: [0],
+        //     operator_text: ['不指定'],
+        //     roomId: null,
+        //     shower: false
+        // }
+        temp_list = [...temp_list, {
+            service: 1,
+            guestNum: 1,
+            operator: [0],
+            operator_text: ['不指定'],
+            roomId: null,
+            shower: false
+        }]
+        this.setState({
+            package_reservation: temp_list
+        })
+    }
+
+    removePackage(no) {
+        let temp_list = this.state.package_reservation
+        // let null_pkg = Null_Package
+        // temp_list = [...temp_list, Null_Package]
+        if (no < temp_list.length) {
+            delete temp_list[no]
+            temp_list = temp_list.filter((el) => { return el })
+            console.log("temp_list: ", temp_list)
+            this.setState({
+                package_reservation: temp_list
+            })
+        }
+
+    }
+    claerPackage() {
+        this.setState({
+            package_reservation: [],
+            unarranged_people: this.state.total_guest_num
+        })
+    }
+    setPackageReservation(no, data, callback) {
+        let temp_list = this.state.package_reservation
+        console.log("Package list:", temp_list)
+        if (temp_list.length - 1 >= no) {
+            Object.keys(data).forEach((key, i) => {
+                temp_list[no][key] = data[key];
+            });
+            this.setState({
+                package_reservation: temp_list
+            })
+        }
+        if (callback)
+            callback()
+        // if (no - temp_list.length - 1 == 1) {
+        //     let null_pkg = Null_Package
+        //     Object.keys(data).forEach((key, i) => {
+        //         null_pkg[key] = data[key];
+        //     });
+        //     temp_list.push(null_pkg)
+        //     this.setState({
+        //         package_reservation: temp_list
+        //     })
+        // }
+
+        // if (data.service && data.guestNum && data.operator && data.operator_text && data.roomId && data.shower !== undefined) {
+        //     let temp_list = this.state.package_reservation
+        //     temp_list.push(data)
+        //     this.setState({
+        //         package_reservation: temp_list
+        //     })
+        // }
     }
     setReservation(data, callback) {
         let reservation = JSON.parse(JSON.stringify(this.state.reservation));
@@ -159,19 +254,32 @@ class Reservation extends React.Component {
     }
     send() {
         const { t } = this.props;
-
         // get info: service, shop
         const reservation = this.state.reservation,
-            serviceIndex = this.state.sourceData.services.reduce((result, service, index) => { return result + (service.id == reservation.service ? index : 0) }, 0),
-            serviceName = this.state.sourceData.services[serviceIndex].title;
-
+            // serviceIndex = this.state.sourceData.services.reduce((result, service, index) => { return result + (service.id == reservation.service ? index : 0) }, 0),
+            // serviceName = this.state.sourceData.services[serviceIndex].title,
+            package_reservation = this.state.package_reservation;
         // get end time
-        const duration = this.state.sourceData.services[serviceIndex].time / 60,
-            token = document.querySelector('input[name="_token"]').value,
+        let serviceName = ""
+        package_reservation.forEach((current_package) => {
+
+            serviceName += this.state.sourceData.services[current_package.service].title + ","
+        })
+        // package_reservation[res_status].operator_text.forEach(function (operator) {
+        //     operator_text += (" " + operator);
+        // });
+        // for (let i = 0; i < package_reservation.length; i++) {
+        //     if (i == package_reservation.length - 1)
+        //         serviceName += this.state.sourceData.services[package_reservation[i].service].title
+        //     else
+        //         serviceName += this.state.sourceData.services[package_reservation[i].service].title + ","
+        //     // if (duration < (this.state.sourceData.services[package_reservation[i]].time / 60))
+        //     //     duration = (this.state.sourceData.services[package_reservation[i]].time / 60)
+        // }
+        // // const duration = this.state.sourceData.services[serviceIndex].time / 60,
+        const token = document.querySelector('input[name="_token"]').value,
             that = this;
-        let endTime = reservation.time.split(":");
-        endTime[0] = parseInt(endTime[0]) + duration;
-        endTime = (endTime[0] >= 10 ? endTime[0] : "0" + endTime[0]) + ":" + endTime[1] + ":" + endTime[2];
+
         let date = reservation.date;
 
         // // 確認是否需要將日期改為隔日
@@ -202,55 +310,67 @@ class Reservation extends React.Component {
 
         // call API
         this.toggleLoading();
-        axios({
-            method: "post",
-            url: "/api/order",
-            params: {
-                phone: reservation.contactNumber,
-                shop_id: reservation.shop,
-                service_id: reservation.service,
-                start_time: date + " " + reservation.time,
-                end_time: date + " " + endTime,
-                room_id: reservation.roomId,
-                person: reservation.guestNum,
-                service_provider_id: reservation.operator.join(),
-                name: reservation.name,
-                shower: reservation.shower
-            },
-            headers: { 'X-CSRF-TOKEN': token },
-            responseType: 'json'
-        }).then(function (response) {
-            if (response.statusText == "OK") {
-                // show success alert
-                let operator_text = "";
-                reservation.operator_text.forEach(function (operator) {
-                    operator_text += (" " + operator);
-                });
+        let pacakge_time_room_promise = []
+        for (let package_no = 0; package_no < package_reservation.length; package_no++) {
+            let current_package = package_reservation[package_no]
+            let endTime = reservation.time.split(":");
+            endTime[0] = parseInt(endTime[0]) + (this.state.sourceData.services[current_package.service].time / 60);
+            endTime = (endTime[0] >= 10 ? endTime[0] : "0" + endTime[0]) + ":" + endTime[1] + ":" + endTime[2];
+            pacakge_time_room_promise.push(axios({
+                method: "post",
+                url: "/api/order",
+                params: {
+                    phone: reservation.contactNumber,
+                    shop_id: reservation.shop,
+                    service_id: current_package.service,
+                    start_time: date + " " + reservation.time,
+                    end_time: date + " " + endTime,
+                    room_id: current_package.roomId,
+                    person: current_package.guestNum,
+                    service_provider_id: current_package.operator.join(),
+                    name: reservation.name,
+                    shower: current_package.shower
+                },
+                headers: { 'X-CSRF-TOKEN': token },
+                responseType: 'json'
+            }))
+        }
+        axios.all(pacakge_time_room_promise).then(response => {
+            let operator_text = "";
+            for (let res_status = 0; res_status < response.length; res_status++) {
+                if (response[res_status].statusText == "OK") {
+                    // show success alert
 
-                that.toggleLoading();
-                that.setState({
-                    success: true,
-                    showAlert: true,
-                    alertTitle: t("reserveSuccess"),
-                    alertText: <Alert notice={t("reserveNotice2")} text={
+                    package_reservation[res_status].operator_text.forEach(function (operator) {
+                        operator_text += (" " + operator);
+                    });
+
+                    that.toggleLoading();
+                    that.setState({
+                        success: true,
+                        showAlert: true,
+                        alertTitle: t("reserveSuccess"),
+                        alertText: <Alert notice={t("reserveNotice2")} text={
                             t("locations") + ": " + (reservation.shop == 1 ? t("location1") : t("location2")) + "\n"
                             + t("registrationNumber") + ": " + (reservation.shop == 1 ? "02 2581-3338" : "02 2570-9393") + "\n"
-                            + t("reservatorName") + ": " + reservation.name + "\n" 
-                            + t("contactNumber") + ": " + reservation.contactNumber + "\n" 
-                            + t("reservatorDate") + ": " + reservation.date + " " + reservation.time + "\n" 
-                            + "服務: " + serviceName + "\n" 
-                            + "人數: " + reservation.guestNum + " " + (reservation.guestNum > 1 ? t("people") : t("person")) + " " + t("operator") + ": " + operator_text + "\n" 
-                            + t("reserveNotice1") + "\n" 
+                            + t("reservatorName") + ": " + reservation.name + "\n"
+                            + t("contactNumber") + ": " + reservation.contactNumber + "\n"
+                            + t("reservatorDate") + ": " + reservation.date + " " + reservation.time + "\n"
+                            + "服務: " + serviceName + "\n"
+                            + "包廂數量:" + package_reservation.length + "\n"
+                            + "人數: " + reservation.total_guest_num + " " + (reservation.total_guest_num > 1 ? t("people") : t("person")) + " " + t("operator") + ": " + operator_text + "\n"
+                            + t("reserveNotice1") + "\n"
                             + t("reserveNotice3")} />
-                });
-            } else {
-                // show failure alert
-                that.toggleLoading();
-                that.setState({
-                    showAlert: true,
-                    alertTitle: t("error"),
-                    alertText: t("errorHint_system")
-                });
+                    });
+                } else {
+                    // show failure alert
+                    that.toggleLoading();
+                    that.setState({
+                        showAlert: true,
+                        alertTitle: t("error"),
+                        alertText: t("errorHint_system")
+                    });
+                }
             }
         }).catch(function (error) {
             console.log(error);
@@ -258,6 +378,63 @@ class Reservation extends React.Component {
             that.toggleLoading();
             that.showErrorPopUp();
         });
+
+        // axios({
+        //     method: "post",
+        //     url: "/api/order",
+        //     params: {
+        //         phone: reservation.contactNumber,
+        //         shop_id: reservation.shop,
+        //         service_id: reservation.service,
+        //         start_time: date + " " + reservation.time,
+        //         end_time: date + " " + endTime,
+        //         room_id: reservation.roomId,
+        //         person: reservation.guestNum,
+        //         service_provider_id: reservation.operator.join(),
+        //         name: reservation.name,
+        //         shower: reservation.shower
+        //     },
+        //     headers: { 'X-CSRF-TOKEN': token },
+        //     responseType: 'json'
+        // }).then(function (response) {
+        //     if (response.statusText == "OK") {
+        //         // show success alert
+        //         let operator_text = "";
+        //         reservation.operator_text.forEach(function (operator) {
+        //             operator_text += (" " + operator);
+        //         });
+
+        //         that.toggleLoading();
+        //         that.setState({
+        //             success: true,
+        //             showAlert: true,
+        //             alertTitle: t("reserveSuccess"),
+        //             alertText: <Alert notice={t("reserveNotice2")} text={
+        //                 t("locations") + ": " + (reservation.shop == 1 ? t("location1") : t("location2")) + "\n"
+        //                 + t("registrationNumber") + ": " + (reservation.shop == 1 ? "02 2581-3338" : "02 2570-9393") + "\n"
+        //                 + t("reservatorName") + ": " + reservation.name + "\n"
+        //                 + t("contactNumber") + ": " + reservation.contactNumber + "\n"
+        //                 + t("reservatorDate") + ": " + reservation.date + " " + reservation.time + "\n"
+        //                 + "服務: " + serviceName + "\n"
+        //                 + "人數: " + reservation.guestNum + " " + (reservation.guestNum > 1 ? t("people") : t("person")) + " " + t("operator") + ": " + operator_text + "\n"
+        //                 + t("reserveNotice1") + "\n"
+        //                 + t("reserveNotice3")} />
+        //         });
+        //     } else {
+        //         // show failure alert
+        //         that.toggleLoading();
+        //         that.setState({
+        //             showAlert: true,
+        //             alertTitle: t("error"),
+        //             alertText: t("errorHint_system")
+        //         });
+        //     }
+        // }).catch(function (error) {
+        //     console.log(error);
+        //     // error handle
+        //     that.toggleLoading();
+        //     that.showErrorPopUp();
+        // });
     }
     showErrorPopUp() {
         const { t } = this.props;
@@ -277,13 +454,20 @@ class Reservation extends React.Component {
                                 {...this.props}
                                 saveReservationAndSourceData={this.saveReservationAndSourceData}
                                 setReservation={this.setReservation}
+                                setPackageReservation={this.setPackageReservation}
+                                // setTotalGuestNum={this.setTotalGuestNum}
                                 setSourceData={this.setSourceData}
                                 clearSourceData={this.clearSourceData}
                                 send={this.send}
                                 clearData={this.clearData}
                                 showErrorPopUp={this.showErrorPopUp}
                                 toggleLoading={this.toggleLoading}
+                                appendNewPackage={this.appendNewPackage}
+                                removePackage={this.removePackage}
+                                claerPackage={this.claerPackage}
+                                // total_guest_num={this.state.total_guest_num}
 
+                                package_reservation={this.state.package_reservation}
                                 reservation={this.state.reservation}
                                 sourceData={this.state.sourceData}
                                 loading={this.state.loading}

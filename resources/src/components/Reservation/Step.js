@@ -15,12 +15,13 @@ class Step extends React.Component {
         this.getTodaysDate = this.getTodaysDate.bind(this);
     }
     nextStep() {
+        // console.log("push to next step:", +this.props.match.params.step + 1)
         this.props.history.push('/reservation/' + (+this.props.match.params.step + 1));
     }
     componentDidUpdate(prevProps, prevState) {
         // 1. 轉頁
         // 2. 若返回上一步/回到先前的步驟，清除已填寫的資料
-        if (isNaN(+this.props.match.params.step) || +this.props.match.params.step > 2 || +this.props.match.params.step < 0) location.href = '../reservation/0';
+        if (isNaN(+this.props.match.params.step) || +this.props.match.params.step > 3 || +this.props.match.params.step < 0) location.href = '../reservation/0';
         switch (+this.props.match.params.step) {
             case 0:
                 if (this.props.reservation.roomId && this.props.reservation.name && this.props.reservation.contactNumber && this.props.reservation.operator && this.props.reservation.guestNum) this.props.clearData(+this.props.match.params.step);
@@ -28,17 +29,18 @@ class Step extends React.Component {
                 if (this.props.sourceData.service_provider_list) this.props.clearSourceData("service_provider_list");
                 break;
             case 1:
-                if (!this.props.reservation.shop || !this.props.reservation.service) location.href = '../reservation/0';
+                if (!this.props.reservation.shop) location.href = '../reservation/0';
                 if (this.props.reservation.date) this.props.clearData(+this.props.match.params.step);
                 if (this.props.sourceData.timeList) this.props.clearSourceData("timeList");
                 break;
             case 2:
-                // if (!this.props.reservation.shop || !this.props.reservation.service) location.href = '../reservation/0';
+                if (!this.props.reservation.shop || !this.props.reservation.total_guest_num) location.href = '../reservation/1';
                 // if (this.props.reservation.date) this.props.clearData(+this.props.match.params.step);
                 // if (this.props.sourceData.timeList) this.props.clearSourceData("timeList");
                 break;
             case 3:
-                if (!this.props.reservation.shop || !this.props.reservation.service || !this.props.reservation.guestNum || !this.props.reservation.roomId || !this.props.reservation.operator || !this.props.reservation.name || !this.props.reservation.contactNumber) location.href = '../reservation/0';
+                // console.log("data:", this.props.reservation.shop, " : ", this.props.reservation.total_guest_num, " : ", this.props.reservation.unarranged_people, " : ", this.props.package_reservation.length, " : ", this.props.reservation.name, " : ", this.props.reservation.contactNumber)
+                if (!this.props.reservation.shop || !this.props.reservation.total_guest_num || this.props.reservation.unarranged_people > 0 || this.props.package_reservation.length == 0 || !this.props.reservation.name || !this.props.reservation.contactNumber) location.href = '../reservation/0';
                 if (!this.props.reservation.date) {
                     const today = this.getTodaysDate();
                     this.props.setReservation({ date: today });

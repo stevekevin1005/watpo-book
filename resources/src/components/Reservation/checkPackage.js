@@ -11,130 +11,136 @@ const Col = ReactBootstrap.Col,
     ControlLabel = ReactBootstrap.ControlLabel,
     Button = ReactBootstrap.Button;
 
-// const Package_select = (props) => {
-//     return (
-//         <div>
-//             <Row>
-//                 <Col md={3}>
-//                     <ControlLabel>{props.t("service")}</ControlLabel>
-//                     <FormControl componentClass="select" id="service" >
-//                         {sourceData.services && sourceData.services.map((service, index) => {
-//                             return (<option key={index} value={service.id}>{service.title}</option>);
-//                         })}
-//                     </FormControl>
-//                 </Col>
-//                 {/* <Col md={3}>
-//                     <ControlLabel>{props.t("showerOrNot")}</ControlLabel>
-//                     <FormControl componentClass="select" placeholder="select" //defaultValue={this.state.shower} onChange={this.setShower}
-//                     >
-//                         <option value={true}>{props.t("yes")}</option>
-//                         <option value={false}>{props.t("no")}</option>
-//                     </FormControl>
-//                 </Col> */}
-
-//                 <Col md={3}>
-//                     <ControlLabel>{props.t("guestNum")}</ControlLabel>
-//                     <FormControl componentClass="select" placeholder="select" >
-//                         <option value={1}>{1}</option>
-//                         <option value={2}>{2}</option>
-//                     </FormControl>
-
-//                 </Col>
-
-//                 <Col md={2}>
-
-//                     <ControlLabel>{props.t("operator")}</ControlLabel>
-//                     <FormControl componentClass="select" placeholder="select" >
-//                         <option value={0}>{"不指定"}</option>
-//                         <option value={1}>{1}</option>
-//                         <option value={2}>{2}</option>
-//                     </FormControl>
-
-//                 </Col>
-//                 <Col md={1}>
-//                     <div className="divider"></div>
-//                 </Col>
-//             </Row>
-//         </div>
-//     )
-// }
 
 class CheckPackage extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            package_stack: []
+            current_package: 0,
+            package_stack: [],
+            rest_customer: this.props.reservation.total_guest_num,
+            is_arranged_customer: []
         }
+        this.setCustomer = this.setCustomer.bind(this);
+        this.setPackageService = this.setPackageService.bind(this)
+        this.add_packages = this.add_packages.bind(this)
+        this.remove_packages = this.remove_packages.bind(this)
+        this.updateRestPeople = this.updateRestPeople.bind(this)
+        this.nextStep = this.nextStep.bind(this);
 
 
     }
     componentDidMount() {
-        if (!this.props.sourceData.services || !this.props.sourceData.shops) {
-            const that = this,
-                csrf_token = document.querySelector('input[name="_token"]').value;
-            let finished = 0;
+        if (this.props.loading)
+            this.props.toggleLoading()
+        this.props.claerPackage()
 
-            this.props.toggleLoading();
+    }
+
+    setCustomer(no, e) {
+        let amount = parseInt(e.target.options[event.target.selectedIndex].value),
+            customer_list = this.state.is_arranged_customer,
+            operator = [], operator_text = []
 
 
-            axios({
-                method: "get",
-                url: "../api/service_list",
-                responseType: 'json',
-                headers: { 'X-CSRF-TOKEN': csrf_token }
-            })
-                .then(function (response) {
-                    if (response.statusText == "OK") {
-                        that.props.setSourceData({ services: response.data });
-                        finished += 1;
-                        if (finished == 2) {
-                            if (that.props.loading) that.props.toggleLoading();
-                            that.props.setReservation({ shop: 1, service: 1 });
-                        }
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    if (finished == 2) that.props.toggleLoading();
-                    that.props.showErrorPopUp();
-                });
+        for (let i = 0; i < amount; i++) {
+            operator.push(0);
+            operator_text.push('不指定')
         }
+        let that = this;
+        this.props.setPackageReservation(no, { guestNum: amount, operator: operator, operator_text: operator_text });
+
+    }
+
+    setPackageService(no, event, callback) {
+        const el = event.target,
+            group = el.id,
+            index = +el.options[el.selectedIndex].value;
+
+        let data = {};
+        data[group] = index;
+        let { sourceData } = this.props
+        data['shower'] = sourceData.services.find(s => { return s.id == index }).shower === 1
+
+        this.props.setPackageReservation(no, data, callback);
+    }
+
+
+    updateRestPeople() {
+
+    }
+
+
+    remove_packages(no) {
+
+        let { package_reservation } = this.props
+        let r = package_reservation[no].guestNum + this.state.rest_customer
+        this.props.removePackage(no)
+        this.setState({ rest_customer: r })
+
     }
 
     add_packages() {
-        const { t } = this.props
-        let temp_stack = this.state.package_stack
-        temp_stack.push((<Package />))
-        console.log("package amount:", temp_stack.length)
-        this.setState({
-            package_stack: temp_stack
-        })
+
+        this.props.appendNewPackage();
+
     }
     nextStep(event) {
         event.preventDefault();
 
-
         this.props.nextStep();
     }
     render() {
-        const { t } = this.props
-        let { package_stack } = this.state;
+        const { t, package_reservation, reservation } = this.props
+
+        let package_stack = []
+        let total_customer = reservation.total_guest_num;
+        let is_arranged_customer = 0
+        for (let i = 0; i < package_reservation.length; i++) {
+            is_arranged_customer += parseInt(package_reservation[i].guestNum)
+        }
+        let rest_customer = total_customer - is_arranged_customer
+        if (rest_customer != reservation.unarranged_people)
+            this.props.setReservation({ unarranged_people: rest_customer })
+        for (let i = 0; i < package_reservation.length; i++) {
+            package_stack.push((
+                <div>
+                    {i == (package_reservation.length - 1) && (<div>
+                        <div className="col-md-11">
+                        </div>
+                        <button type="button" className="" aria-label="Close" onClick={() => {
+                            this.remove_packages(i)
+                        }}>
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>)}
+                    <Package
+                        disable={i !== (package_reservation.length - 1)}
+                        package_no={i}
+                        setPackageService={this.setPackageService}
+                        {...this.props}
+                        setCustomer={this.setCustomer}
+                        rest_customer={reservation.unarranged_people == 0 ? package_reservation[i].guestNum : reservation.unarranged_people}
+                    />
+                </div>)
+            )
+        }
         return (
             <div>
                 <FormGroup>
                     {package_stack}
 
                     <Col md={12} style={{ "justify-content": "center", "display": "flex" }}>
-                        <Button bsStyle="primary" bsSize="large"
+                        {reservation.unarranged_people > 0 && <Button bsStyle="primary" bsSize="large"
                             onClick={(e) => {
                                 console.log("Add new package")
                                 this.add_packages()
                             }}>
                             {t("AddPackage")}
-                        </Button>
+                        </Button>}
                     </Col>
                 </FormGroup>
-                <NextButton currentStep={1} clickHandle={this.nextStep} />
+                <NextButton currentStep={2} clickHandle={this.nextStep} disabled={reservation.unarranged_people !== 0} />
             </div>
         )
     }

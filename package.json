@@ -19,6 +19,7 @@
     "file-loader": "^1.1.5",
     "fontmin-webpack": "^1.0.2",
     "gulp": "^3.8.8",
+    "laravel-elixir-webpack-official": "^1.0.10",
     "node-sass": "^4.7.2",
     "postcss-loader": "^2.0.8",
     "postcss-scss": "^1.0.2",
