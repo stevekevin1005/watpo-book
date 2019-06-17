@@ -159,7 +159,7 @@ class CheckTime extends React.Component {
     }
 
     getTimePeriods(startTime, endTime) {
-        const { t } = this.props
+        // const { t } = this.props
         const that = this,
             reservation = this.props.reservation,
             date = this.date,
@@ -193,94 +193,97 @@ class CheckTime extends React.Component {
         axios.all(pacakge_time_room_promise).then(response => {
             console.log("Promise all response:", response)
             if (that.props.loading) that.props.toggleLoading();
-            // if (response.length == 1) {
-            //     that.props.setSourceData({ timeList: response[0].data });
-            // }
-            // else {
-            response = response.map((res) => {
-                return res.data
-            })
-            // let cross_set = response[0].data
-            let qualify_time = {}
-            for (let i = 0; i < response.length; i++) {
-                for (let time = 0; time < response[i].length; time++) {
-                    console.log("回覆：", response[i])
-                    let split_time = response[i][time].time.split('\n')[0]
-                    if (qualify_time[split_time] == undefined)
-                        qualify_time[split_time] = { select: true, select_list: [], rooms: [] }
-                    let room_list = []
-                    if (response[i][time].room)
-                        for (let r = 0; r < response[i][time].room.length; r++) {
-                            if (package_reservation[i].shower <= response[i][time].room[r].shower && package_reservation[i].guestNum <= response[i][time].room[r].person) {
-                                room_list.push(response[i][time].room[r].id)
-                            }
-                        }
-                    let can_select = true
-                    if (room_list == [])
-                        can_select = false
-                    qualify_time[split_time].select_list.push(can_select)
-                    qualify_time[split_time].rooms.push(room_list)
-                }
-
+            if (response.length == 1) {
+                that.props.setSourceData({ timeList: response[0].data });
+                that.setState({
+                    longTimePeriodChoose: true
+                })
             }
-            let disable_time_comment = {}
-            let permutation = Object.keys(qualify_time).map((key) => {
-                let data = qualify_time[key]
-                console.log("收斂組合：", key, ":", data)
-                let result = that.findRoomPermutaion(data.rooms)
-                if (result.length > 0) {
-                    return result[0]
-                }
-                else {
-                    for (let i = 0; i < data.rooms.length; i++) {
-                        console.log("!data.rooms[i]:", data.rooms[i])
-                        if (data.rooms[i] == false) {
-                            disable_time_comment[key] = "\n" + t("OutOf") + t(package_reservation[i].guestNum + "room")
-                            console.log("disable_time_comment:", disable_time_comment[key])
-                            break
-                        }
-
+            else {
+                response = response.map((res) => {
+                    return res.data
+                })
+                // let cross_set = response[0].data
+                let qualify_time = {}
+                for (let i = 0; i < response.length; i++) {
+                    for (let time = 0; time < response[i].length; time++) {
+                        console.log("回覆：", response[i])
+                        let split_time = response[i][time].time.split('\n')[0]
+                        if (qualify_time[split_time] == undefined)
+                            qualify_time[split_time] = { select: true, select_list: [], rooms: [] }
+                        let room_list = []
+                        if (response[i][time].room)
+                            for (let r = 0; r < response[i][time].room.length; r++) {
+                                if (package_reservation[i].shower <= response[i][time].room[r].shower && package_reservation[i].guestNum <= response[i][time].room[r].person) {
+                                    room_list.push(response[i][time].room[r].id)
+                                }
+                            }
+                        let can_select = true
+                        if (room_list == [])
+                            can_select = false
+                        qualify_time[split_time].select_list.push(can_select)
+                        qualify_time[split_time].rooms.push(room_list)
                     }
 
-                    return false
                 }
-            })
+                let disable_time_comment = {}
+                let permutation = Object.keys(qualify_time).map((key) => {
+                    let data = qualify_time[key]
+                    console.log("收斂組合：", key, ":", data)
+                    let result = that.findRoomPermutaion(data.rooms)
+                    if (result.length > 0) {
+                        return result[0]
+                    }
+                    else {
+                        for (let i = 0; i < data.rooms.length; i++) {
+                            console.log("!data.rooms[i]:", data.rooms[i])
+                            if (data.rooms[i] == false) {
+                                disable_time_comment[key] = "\n" + t("OutOf") + t(package_reservation[i].guestNum + "Room")
+                                console.log("disable_time_comment:", disable_time_comment[key])
+                                break
+                            }
 
-            console.log("可用組合：", permutation)
-            let time_list = response[0]
-            for (let i = 0; i < permutation.length; i++) {
-                console.log("permutation:", permutation[i])
-                let split_time = time_list[i].time.split('\n')[0]
-                if (disable_time_comment[split_time])
-                    time_list[i].time += disable_time_comment[split_time]
-                time_list[i].select = permutation[i] ? true : false //== [] ? false : true
+                        }
+
+                        return false
+                    }
+                })
+
+                console.log("可用組合：", permutation)
+                let time_list = response[0]
+                for (let i = 0; i < permutation.length; i++) {
+                    console.log("permutation:", permutation[i])
+                    let split_time = time_list[i].time.split('\n')[0]
+                    if (disable_time_comment[split_time])
+                        time_list[i].time += disable_time_comment[split_time]
+                    time_list[i].select = permutation[i] ? true : false //== [] ? false : true
+                }
+                that.setState({
+                    time_can_select: permutation,
+                    longTimePeriodChoose: true
+                })
+                console.log("time_list:", time_list)
+                that.props.setSourceData({ timeList: time_list })
+
+                // for (let i = 0; i < Object.keys(qualify_time))
+                //     findRoomPermutaion()
+
+
+
+                // for (let i = 1; i < response.length; i++) {
+                //     if (response[i].data.length == 0)
+                //         that.setState({ hint: "calendarError_noTimelist" })
+                //     cross_set = this.union_time(cross_set, response[i].data)
+                // }
+                // if (cross_set) {
+                //     console.log('ok time:', cross_set)
+                //     that.props.setSourceData({ timeList: cross_set });
+                //     that.setState({
+                //         longTimePeriodChoose: true
+                //     });
+                // }
+
             }
-            that.setState({
-                time_can_select: permutation,
-                longTimePeriodChoose: true
-            })
-            console.log("time_list:", time_list)
-            that.props.setSourceData({ timeList: time_list })
-
-            // for (let i = 0; i < Object.keys(qualify_time))
-            //     findRoomPermutaion()
-
-
-
-            // for (let i = 1; i < response.length; i++) {
-            //     if (response[i].data.length == 0)
-            //         that.setState({ hint: "calendarError_noTimelist" })
-            //     cross_set = this.union_time(cross_set, response[i].data)
-            // }
-            // if (cross_set) {
-            //     console.log('ok time:', cross_set)
-            //     that.props.setSourceData({ timeList: cross_set });
-            //     that.setState({
-            //         longTimePeriodChoose: true
-            //     });
-            // }
-
-            // }
         })
 
 
