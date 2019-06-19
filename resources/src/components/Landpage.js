@@ -154,7 +154,7 @@ class Landpage extends React.Component {
                         <footer>
                             <a href="https://www.facebook.com/watpomassages" target="_blank"><i className="fa fa-facebook-square" aria-hidden="true"></i></a><br />
                             {t("WatpoThaiTraditionalMedicalMassage")}<br />
-                            {t("registrationNumber")}: ( 02 ) 2581- 3338<br />
+                            {t("registrationNumber")}: ( 02 ) 2581- 3338888<br />
                             {t("bussinessHours")}: 12:00 p.m. ~ 04:00 a.m.<br />
                             {t("watpoAddr1")}
                         </footer>

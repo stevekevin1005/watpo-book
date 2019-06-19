@@ -103,5 +103,11 @@
 	"ErrorCode": "驗證碼輸入錯誤",
 	"SMSRETRY": "驗證碼有誤，請重新輸入",
 	"SendSMS": "寄出手機驗證碼",
-	"Verified": "用戶已驗證"
+	"Verified": "用戶已驗證",
+	"AddPackage": "新增包廂",
+	"OutOf": "不足",
+	"1Room": "單人房",
+	"2Room": "雙人房",
+	"3Room": "三人房",
+	"NotSpecify": "不指定"
 }

@@ -33,9 +33,9 @@
 	"ThaiOilMassage": "Traditional Thai Oil Massage",
 	"ThaiOilMassageDes": "The Traditional Thai Oil Massage master will massage our body with oil. By this way, our body will absorb the oil and make our body relax.",
 	"ThaiTraditionalMassage": "Thai Traditional Massage",
-	"ThaiTraditionalMassageDes":"Thai ancient massage is derived from Indian yoga. Thai is performed on the floor or on a high bed. The masseur uses his hands, fingers, axes and knees, arms and feet to push and knead along various parts of the body. , bending, twisting and other movements to make the body more relaxed and relieve pressure, and at the same time promote blood circulation.",
-	"massageAndSpa":"Thai Body Exfoliating + Aromatic Oil SPA",
-	"massageAndSpaDes":"To isolate physical and psychological pressure and urban pollution, the dust-washing ceremony prepared by Taihe Dian begins. Your SPA's exclusive time and space has been reserved for you. The beginning of the bath is the beginning of SPA aromatic pressure relief ~~~",
+	"ThaiTraditionalMassageDes": "Thai ancient massage is derived from Indian yoga. Thai is performed on the floor or on a high bed. The masseur uses his hands, fingers, axes and knees, arms and feet to push and knead along various parts of the body. , bending, twisting and other movements to make the body more relaxed and relieve pressure, and at the same time promote blood circulation.",
+	"massageAndSpa": "Thai Body Exfoliating + Aromatic Oil SPA",
+	"massageAndSpaDes": "To isolate physical and psychological pressure and urban pollution, the dust-washing ceremony prepared by Taihe Dian begins. Your SPA's exclusive time and space has been reserved for you. The beginning of the bath is the beginning of SPA aromatic pressure relief ~~~",
 	"chooseService": "Choose Service",
 	"chooseTime": "Choose Time",
 	"checkDetails": "Check Details",
@@ -103,5 +103,11 @@
 	"ErrorCode": "Incorrect verification code input",
 	"SMSRETRY": "The verification code is incorrect, please re-enter",
 	"SendSMS": "Send verification code",
-	"Verified": "User Verified"
+	"Verified": "User Verified",
+	"AddPackage": "Add new room",
+	"OutOf": "out of",
+	"1Room": "single room",
+	"2Room": "twin room",
+	"3Room": "triple room",
+	"NotSpecify": "not specify"
 }
