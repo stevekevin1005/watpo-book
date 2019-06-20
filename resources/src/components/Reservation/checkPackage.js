@@ -108,7 +108,7 @@ class CheckPackage extends Component {
                     {i == (package_reservation.length - 1) && (<div>
                         <div className="col-md-11">
                         </div>
-                        <button type="button" className="" aria-label="Close" onClick={() => {
+                        <button style={{ backgroundColor: "rgba(0,0,0,0)", border: 'none', fontSize: '25px' }} type="button" className="" aria-label="Close" onClick={() => {
                             this.remove_packages(i)
                         }}>
                             <span aria-hidden="true">&times;</span>

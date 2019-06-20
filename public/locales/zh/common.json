@@ -109,5 +109,6 @@
 	"1Room": "單人房",
 	"2Room": "雙人房",
 	"3Room": "三人房",
-	"NotSpecify": "不指定"
+	"NotSpecify": "不指定",
+	"Room": "包廂"
 }
