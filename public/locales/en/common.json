@@ -109,5 +109,6 @@
 	"1Room": "single room",
 	"2Room": "twin room",
 	"3Room": "triple room",
-	"NotSpecify": "not specify"
+	"NotSpecify": "not specify",
+	"Room": "Room"
 }

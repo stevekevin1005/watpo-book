@@ -207,7 +207,12 @@ class Package extends Component {
         return (
             <div>
                 <Row>
-                    <Col md={2}>
+                    <Col md={12}>
+                        <h4>{t('Room') + (package_no + 1) + ":"}</h4>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md={12}>
                         <ControlLabel>{t("service")}</ControlLabel>
                         <FormControl componentClass="select" id="service" defaultValue={package_reservation[package_no].service} placeholder="..." onChange={(e) => setPackageService(package_no, e, this.updateServiceProviderAndRoomList)} disabled={disable}>
                             {/* <option value={1}>{"massage"}</option> */}
@@ -257,7 +262,7 @@ class Package extends Component {
                         {/* <Col md={2}> */}
                         {/* </Col> */}
                         {/* <Col md={1}> */}
-                        <div className="divider"></div>
+                        <div className="divider" style={{ width: "85%", height: '1px' }}></div>
                     </Col>
                 </Row>
             </div >
