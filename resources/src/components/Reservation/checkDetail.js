@@ -243,6 +243,9 @@ class CheckDetail extends React.Component {
             sourceData = this.props.sourceData;
 
         let guestNumEl = [], operators = [];
+        if (!reservation.total_guest_num) {
+            this.props.setReservation({ total_guest_num: 1 });
+        }
         // if (this.state.maxGuestNum > 0) {
         for (let i = 1; i <= 5; i++) {
             // options of guest number
