@@ -36,10 +36,12 @@
 	"ThaiTraditionalMassageDes": "泰國古式按摩源於印度的瑜珈術泰式是在地板上或高床上進行，按摩師運用雙手、手指、手軸和膝蓋、臂膀和腳的力量，循著身體各部位施以按壓、揉捏、彎曲、扭轉等動作，使身體更加放鬆及達到舒壓的效果，並同時促進血液循環。",
 	"massageAndSpa": "泰式全身去角質+芳香精油SPA",
 	"massageAndSpaDes": "隔絕身心壓力及都市污染，泰和殿為您準備的洗塵儀式開始，您今天的 SPA 專屬時空已經替您預留。沐浴的開始即是SPA芳香舒壓的開始。",
-	"chooseService": "選擇服務",
+	"chooseAmount": "選擇人數",
 	"chooseTime": "選擇時間",
 	"checkDetails": "確認細節",
+	"chooseStore": "選擇分店",
 	"prevStep": "返回上一步",
+	"Return": "返回",
 	"nextStep": "下一步",
 	"send": "送出",
 	"branch": "分店",
@@ -110,5 +112,11 @@
 	"2Room": "雙人房",
 	"3Room": "三人房",
 	"NotSpecify": "不指定",
-	"Room": "包廂"
+	"Room": "包廂",
+	"earlyMorning": "凌晨",
+	"noon": "中午",
+	"afternoon": "下午",
+	"night": "晚上",
+	"SelectServiceTime": "請選擇服務時間:",
+	"SelectLongTime": "請選擇服務時段:"
 }

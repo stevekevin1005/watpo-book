@@ -5,8 +5,10 @@ import LoadingAnimation from "../LoadingAnimation";
 import Button from "./Button";
 
 const Col = ReactBootstrap.Col,
+    Row = ReactBootstrap.Row,
     ListGroupItem = ReactBootstrap.ListGroupItem,
-    ListGroup = ReactBootstrap.ListGroup;
+    ListGroup = ReactBootstrap.ListGroup,
+    ButtonBootstrap = ReactBootstrap.Button;
 
 function condition_reason(shower, people) {
     let r = "無"
@@ -16,6 +18,18 @@ function condition_reason(shower, people) {
     r += (people + "人房")
     return r
 }
+
+const ReturnButton = (props) => {
+    let { return_fun, content } = props
+    return (
+        <Col md={12} style={{ marginBottom: '10px' }}>
+            <ButtonBootstrap bsStyle="primary" bsSize="large" onClick={() => { return_fun() }}>
+                {content}
+            </ButtonBootstrap>
+        </Col>
+    )
+}
+
 
 function removeRepeatArrElement(arr) {
     var newArr = [];
@@ -167,14 +181,23 @@ class CheckTime extends React.Component {
         let { t, package_reservation } = this.props
         this.props.toggleLoading();
         let pacakge_time_room_promise = []
+        console.log("sourceData for data:", this.props.sourceData)
         for (let package_no = 0; package_no < package_reservation.length; package_no++) {
             let current_package = package_reservation[package_no]
+            let max_time = 0, longest_service = 1;
+            for (let i = 0; i < current_package.service.length; i++) {
+                let time = this.props.sourceData.services[parseInt(current_package.service[i]) - 1].time
+                if (max_time < time) {
+                    max_time = time
+                    longest_service = current_package.service[i]
+                }
+            }
             pacakge_time_room_promise.push(axios({
                 method: "get",
                 url: "../api/time_list",
                 params: {
                     shop_id: reservation.shop,
-                    service_id: current_package.service,
+                    service_id: longest_service,//current_package.service,
                     date: date,
                     person: current_package.guestNum,
                     service_provider_id: current_package.operator.join(),
@@ -349,14 +372,30 @@ class CheckTime extends React.Component {
         });
     }
 
+    time_text(time) {
+        const { t } = this.props
+        switch (time) {
+            case this.earlyMorning:
+                return (<span style={{ margin: 'auto' }} ><p style={{ textAlign: 'center' }}>{t("earlyMorning")}</p><p>{this.earlyMorning}</p></span>)
+            case this.noon:
+                return (<span style={{ margin: 'auto' }} ><p style={{ textAlign: 'center' }}>{t("noon")}</p><p>{this.noon}</p></span>)
+            case this.afternoon:
+                return (<span style={{ margin: 'auto' }} ><p style={{ textAlign: 'center' }}>{t("afternoon")}</p><p>{this.afternoon}</p></span>)
+            case this.night:
+                return (<span style={{ margin: 'auto' }} ><p style={{ textAlign: 'center' }}>{t("night")}</p><p>{this.night}</p></span>)
+
+        }
+    }
+
     render() {
-        console.log("sourceData:", this.props.sourceData)
+
 
         // console.log("Reasons: ", this.state.reason)
         // if(!this.props.reservation.roomId) location.href = '../reservation/0';
         const reservation = this.props.reservation,
             disabled = (!reservation.date || !reservation.time) || this.props.loading,
             { t } = this.props;
+        console.log("reservation:", this.props.reservation)
         return (
             <div>
                 <Col md={5}>
@@ -370,14 +409,16 @@ class CheckTime extends React.Component {
 
                     {!this.state.longTimePeriodChoose ? (
                         <div className="timePeriods">
-                            <span className="timePeriod available" onClick={() => this.setLongTimePeriod(this.earlyMorning)}>{this.earlyMorning}</span>
-                            <span className="timePeriod available" onClick={() => this.setLongTimePeriod(this.noon)}>{this.noon}</span>
-                            <span className="timePeriod available" onClick={() => this.setLongTimePeriod(this.afternoon)}>{this.afternoon}</span>
-                            <span className="timePeriod available" onClick={() => this.setLongTimePeriod(this.night)}>{this.night}</span>
+                            <p style={{ color: 'black' }}>{t("SelectLongTime")}</p>
+                            <div className="timePeriod available" onClick={() => this.setLongTimePeriod(this.earlyMorning)}>{this.time_text(this.earlyMorning)}</div>
+                            <div className="timePeriod available" onClick={() => this.setLongTimePeriod(this.noon)}>{this.time_text(this.noon)}</div>
+                            <div className="timePeriod available" onClick={() => this.setLongTimePeriod(this.afternoon)}>{this.time_text(this.afternoon)}</div>
+                            <div className="timePeriod available" onClick={() => this.setLongTimePeriod(this.night)}>{this.time_text(this.night)}</div>
                             <p className="hint">{t("timeHint")}</p>
                         </div>
                     ) : (
                             <div className="timePeriods">
+                                <p style={{ color: 'black' }}>{t("SelectServiceTime")}</p>
                                 {this.props.sourceData.timeList ? this.props.sourceData.timeList.map((time, index) => {
                                     if (time.time == this.props.reservation.time)
                                         return (
@@ -393,7 +434,14 @@ class CheckTime extends React.Component {
                             </div>
                         )}
                 </Col>
-                <Button currentStep={2} clickHandle={this.props.send} disabled={disabled} />
+                <Row>
+                    {this.state.longTimePeriodChoose &&
+                        <ReturnButton content={t("Return")} return_fun={this.clearDateAndTimeAndTimeList} />
+                    }
+                </Row>
+                <Row>
+                    <Button currentStep={2} clickHandle={this.props.send} disabled={disabled} />
+                </Row>
             </div>
         );
     }

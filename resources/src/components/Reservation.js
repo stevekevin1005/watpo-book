@@ -50,19 +50,19 @@ class Reservation extends React.Component {
                 total_guest_num: null,
                 date: null,
                 time: null,
-                unarranged_people: 1
+                unarranged_people: 1,
+                service_provider_list: null
 
 
             },
             package_reservation: [
                 // {
-                //     service: 1,
+                //     service: [1],
                 //     guestNum: 1,
                 //     operator: [0],
                 //     operator_text: ['不指定'],
                 //     roomId: null,
                 //     shower: false,
-                //     service_provider_list: null,
                 //     room_list: null
                 // }
             ],
@@ -123,11 +123,12 @@ class Reservation extends React.Component {
         //     shower: false
         // }
         temp_list = [...temp_list, {
-            service: 1,
+            service: [1],
             guestNum: 1,
             operator: [0],
             operator_text: ['不指定'],
             roomId: null,
+            // service_provider_list: null,
             shower: false
         }]
         this.setState({
@@ -212,40 +213,54 @@ class Reservation extends React.Component {
     }
     clearData(step) {
         let sourceData = JSON.parse(JSON.stringify(this.state.sourceData)),
-            reservation = JSON.parse(JSON.stringify(this.state.reservation));
+            reservation = JSON.parse(JSON.stringify(this.state.reservation)),
+            package_reservation = JSON.parse(JSON.stringify(this.state.package_reservation));
 
         switch (step) {
             case 0:
                 this.toggleLoading();
-                sourceData["service_provider_list"] = null;
-                sourceData["room"] = null;
+                package_reservation = [];
+                reservation["service_provider_list"] = null;
+                // sourceData["room"] = null;
                 const newReservationData = {
-                    service: reservation.service,
-                    shop: reservation.shop,
 
-                    guestNum: null,
-                    shower: null,
-                    operator: [],
-                    roomId: null,
+                    shop: null,
                     name: null,
                     contactNumber: null,
-
+                    total_guest_num: null,
                     date: null,
-                    time: null
+                    time: null,
+                    unarranged_people: 1,
+                    service_provider_list: null
+
+                    // service: reservation.service,
+                    // shop: reservation.shop,
+
+                    // guestNum: null,
+                    // shower: null,
+                    // operator: [],
+                    // roomId: null,
+                    // name: null,
+                    // contactNumber: null,
+
+                    // date: null,
+                    // time: null
                 };
                 this.setState({
                     sourceData,
-                    reservation: newReservationData
+                    reservation: newReservationData,
+                    package_reservation
                 }, () => {
                     if (this.state.loading) this.setState({ loading: false });
                 });
                 break;
             case 1:
                 this.toggleLoading();
+                package_reservation = [];
                 reservation["date"] = null;
                 reservation["time"] = null;
                 sourceData["timeList"] = null;
-                this.setState({ sourceData, reservation }, () => {
+                this.setState({ sourceData, reservation, package_reservation }, () => {
                     if (this.state.loading) this.setState({ loading: false });
                 });
                 break;
@@ -262,8 +277,10 @@ class Reservation extends React.Component {
         // get end time
         let serviceName = ""
         package_reservation.forEach((current_package) => {
+            current_package.service.forEach((s) => {
+                serviceName += this.state.sourceData.services[s].title + ","
 
-            serviceName += this.state.sourceData.services[current_package.service].title + ","
+            })
         })
         // package_reservation[res_status].operator_text.forEach(function (operator) {
         //     operator_text += (" " + operator);
@@ -314,15 +331,35 @@ class Reservation extends React.Component {
         for (let package_no = 0; package_no < package_reservation.length; package_no++) {
             let current_package = package_reservation[package_no]
             let endTime = reservation.time.split(":");
-            endTime[0] = parseInt(endTime[0]) + (this.state.sourceData.services[current_package.service].time / 60);
+            let max_time = 0;
+            for (let i = 0; i < current_package.service.length; i++) {
+                let time = this.state.sourceData.services[current_package.service[i]].time
+                if (max_time < time) {
+                    max_time = time
+                }
+            }
+
+
+            endTime[0] = parseInt(endTime[0]) + (max_time / 60);
             endTime = (endTime[0] >= 10 ? endTime[0] : "0" + endTime[0]) + ":" + endTime[1] + ":" + endTime[2];
+            let service_pair = {}
+            current_package.service.map((val, idx) => {
+                if (!service_pair[val]) {
+                    service_pair[val] = [current_package.operator[idx]]
+                }
+                else {
+                    service_pair[val].push(current_package.operator[idx])
+                }
+            })
+            console.log('service_pair:', service_pair)
             pacakge_time_room_promise.push(axios({
                 method: "post",
                 url: "/api/order",
                 params: {
                     phone: reservation.contactNumber,
                     shop_id: reservation.shop,
-                    service_id: current_package.service,
+                    service_pair: service_pair,
+                    service_id: 1,//current_package.service[0],
                     start_time: date + " " + reservation.time,
                     end_time: date + " " + endTime,
                     room_id: current_package.roomId,

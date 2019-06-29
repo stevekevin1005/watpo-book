@@ -12,7 +12,10 @@ const reducers = {
       } else return state;
     },
   checkOrdersInfo:
-    (state = {}, action) => {
+    (state = {
+      contactNumber: localStorage.getItem('phone') ? localStorage.getItem('phone') : '',
+      name: 'asdddd'//localStorage.getItem('name') ? localStorage.getItem('name') : ''
+    }, action) => {
       let result = JSON.parse(JSON.stringify(state));
       switch (action.type) {
         case "SET_CHECKORDERSINFO_NAME":
