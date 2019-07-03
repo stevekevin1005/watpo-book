@@ -76,9 +76,9 @@ class CheckTime extends React.Component {
         }
 
         let today = new Date();
-        let day = 24//today.getDate();
-        let month = 4//today.getMonth() + 1;
-        let year = 2018//today.getFullYear();
+        let day = today.getDate();
+        let month = today.getMonth() + 1;
+        let year = today.getFullYear();
         this.date = year + "/" + (month < 10 ? "0" + month : month) + "/" + (day < 10 ? "0" + day : day);
     }
     componentDidMount() {
