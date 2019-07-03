@@ -282,26 +282,18 @@ class BookController extends Controller
 			$shop_id = $request->shop_id;
 			$start_time = new DateTime($request->start_time);
 			$end_time = new DateTime($request->start_time);
-			// $service_id = $request->service_id;
-			$person = $request->person;
-			// $service_provider_id = $request->service_provider_id;
+			$service_provider_id = $request->service_provider_id;
 			$name = $request->name;
 			$phone = $request->phone;
 			$shower = $request->shower;
 			$room_id = $request->room_id;
-			$service_pair = $request->service_pair;
+			$service_pair = json_decode($request->service_pair);
 
 			if(!$start_time){
 				throw new Exception("缺少開始時間", 1);
 			}
 			if(!$shop_id){
 				throw new Exception("缺少店家ID", 1);
-			}
-			if(!$service_id){
-				throw new Exception("缺少服務ID", 1);
-			}
-			if(!$person){
-				throw new Exception("缺少人數", 1);
 			}
 			if(!$name){
 				throw new Exception("缺少預約客姓名", 1);
@@ -315,8 +307,9 @@ class BookController extends Controller
 			if(!is_null(BlackList::where('phone', $phone)->where('status', 1)->first())){
 				throw new Exception("系統錯誤", 1);
 			}
+	
+			foreach ($service_pair as $service_id => $service_provider_id_list) {
 
-			foreach ($service_pair as $key => $service_provider_id_list) {
 				$service = Service::where('id', $service_id)->first();
 				$end_time = $end_time->add(new DateInterval("PT".$service->time."M"));
 
@@ -327,8 +320,8 @@ class BookController extends Controller
 					$query->whereNotIn('status', [3,4,6]);
 				    $query->where('start_time', '<', $end_time);
 				    $query->where('end_time', '>',$start_time);
-				}])->whereIn('id', $service_provider_id_list)->get();
-				
+				}])->whereIn('id', $service_provider_id_list)->get();;
+
 				foreach ($service_provider_list as $key => $service_provider) {
 					if($service_provider->leaves->count() > 0){
 						throw new Exception($service_provider->name."號 該時段請假 請重新選擇", 1);
@@ -337,14 +330,13 @@ class BookController extends Controller
 						throw new Exception($service_provider->name."號 該時段已有約 請重新選擇", 1);
 					}
 				}
-				
+
 				$order = new Order;
 				$order->name = $name;
 				$order->phone = $phone;
 				$order->status = 1;
-				$order->person = $person;
+				$order->person = count($service_provider_id_list);
 				$order->service_id = $service_id;
-				// $order->room_id = $room->id;
 				$order->room_id = $room_id;
 				$order->shop_id = $shop_id;
 				$order->start_time = $start_time;
