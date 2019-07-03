@@ -71,6 +71,7 @@ class Reservation extends React.Component {
                 shops: null,
                 services: null,
                 timeList: null,
+                room_list: null
 
             },
 
@@ -270,6 +271,8 @@ class Reservation extends React.Component {
     send() {
         const { t } = this.props;
         // get info: service, shop
+        const { room_list } = this.state.sourceData
+        const { room_id } = this.state.reservation
         const reservation = this.state.reservation,
             // serviceIndex = this.state.sourceData.services.reduce((result, service, index) => { return result + (service.id == reservation.service ? index : 0) }, 0),
             // serviceName = this.state.sourceData.services[serviceIndex].title,
@@ -339,9 +342,9 @@ class Reservation extends React.Component {
                 }
             }
 
-
+            console.log('End time:', endTime)
             endTime[0] = parseInt(endTime[0]) + (max_time / 60);
-            endTime = (endTime[0] >= 10 ? endTime[0] : "0" + endTime[0]) + ":" + endTime[1] + ":" + endTime[2];
+            endTime = (endTime[0] >= 10 ? endTime[0] : "0" + endTime[0]) + ":" + endTime[1] + ":00"// + endTime[2];
             let service_pair = {}
             current_package.service.map((val, idx) => {
                 if (!service_pair[val]) {
@@ -352,6 +355,7 @@ class Reservation extends React.Component {
                 }
             })
             console.log('service_pair:', service_pair)
+            console.log('reservation:', reservation)
             pacakge_time_room_promise.push(axios({
                 method: "post",
                 url: "/api/order",
@@ -359,12 +363,12 @@ class Reservation extends React.Component {
                     phone: reservation.contactNumber,
                     shop_id: reservation.shop,
                     service_pair: service_pair,
-                    service_id: 1,//current_package.service[0],
+                    // service_id: 1,//current_package.service[0],
                     start_time: date + " " + reservation.time,
                     end_time: date + " " + endTime,
-                    room_id: current_package.roomId,
+                    room_id: room_id[package_no],//current_package.roomId,
                     person: current_package.guestNum,
-                    service_provider_id: current_package.operator.join(),
+                    // service_provider_id: current_package.operator.join(),
                     name: reservation.name,
                     shower: current_package.shower
                 },

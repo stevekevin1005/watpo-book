@@ -76,9 +76,9 @@ class CheckTime extends React.Component {
         }
 
         let today = new Date();
-        let day = today.getDate();
-        let month = today.getMonth() + 1;
-        let year = today.getFullYear();
+        let day = 24//today.getDate();
+        let month = 4//today.getMonth() + 1;
+        let year = 2018//today.getFullYear();
         this.date = year + "/" + (month < 10 ? "0" + month : month) + "/" + (day < 10 ? "0" + day : day);
     }
     componentDidMount() {
@@ -217,7 +217,11 @@ class CheckTime extends React.Component {
             console.log("Promise all response:", response)
             if (that.props.loading) that.props.toggleLoading();
             if (response.length == 1) {
-                that.props.setSourceData({ timeList: response[0].data });
+                let room_list = response[0].data.map((available_time) => available_time.room ? [available_time.room[0].id] : [])
+                console.log("timeList:", response[0].data)
+                console.log("timeList room_list:", room_list)
+
+                that.props.setSourceData({ timeList: response[0].data, room_list });
                 that.setState({
                     longTimePeriodChoose: true
                 })
@@ -286,7 +290,7 @@ class CheckTime extends React.Component {
                     longTimePeriodChoose: true
                 })
                 console.log("time_list:", time_list)
-                that.props.setSourceData({ timeList: time_list })
+                that.props.setSourceData({ timeList: time_list, room_list: permutation })
 
                 // for (let i = 0; i < Object.keys(qualify_time))
                 //     findRoomPermutaion()
@@ -345,7 +349,17 @@ class CheckTime extends React.Component {
     }
     setTime(event) {
         const time = event.target.innerHTML;
-        this.props.setReservation({ time });
+        let { timeList, room_list } = this.props.sourceData
+        let idx;
+        let selected_time_obj = timeList.filter((x, i) => {
+            if (x.time == time)
+                idx = i
+            return x.time == time
+        })
+        console.log("selected_time_obj:", selected_time_obj)
+        // let idx = Object.keys(timeList).find(key => [timeList[key]] == selected_time_obj)
+        console.log("selected_time_obj idx:", idx)
+        this.props.setReservation({ time, room_id: room_list[idx] });
     }
     setDate(year, month, day) {
         let date = year + "/" + (month < 10 ? "0" + month : month) + "/" + (day < 10 ? "0" + day : day);

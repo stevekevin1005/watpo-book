@@ -15,7 +15,7 @@ class Package extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            max_people_per_room: 3//this.props.rest_customer
+            max_people_per_room: this.props.rest_customer > 3 ? 3 : this.props.rest_customer
         }
         // this.request_data()
         this.setRoomId = this.setRoomId.bind(this);
@@ -169,7 +169,7 @@ class Package extends Component {
             that = this;
         let { package_no, package_reservation } = this.props
         let current_package = package_reservation[package_no]
-
+        console.log("Select shower to :", shower)
         that.props.setPackageReservation(package_no, { shower })
         // get and set max guest num 
         // this.setState({ shower }, () => {
@@ -188,8 +188,8 @@ class Package extends Component {
         let { max_people_per_room } = this.state
         let selectionList = [], room_size = [], operator_list = []
         if (max_people_per_room) {
-            let boundary = max_people_per_room <= rest_customer ? max_people_per_room : rest_customer + 1
-            for (let i = 1; i <= boundary; i++) {
+            let boundary = max_people_per_room <= rest_customer ? max_people_per_room : (rest_customer == 1 ? 1 : rest_customer + 1)
+            for (let i = 1; i <= max_people_per_room; i++) {
                 room_size.push(<option key={i} value={i}>{i}</option>)
             }
         }
