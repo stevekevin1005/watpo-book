@@ -154,7 +154,7 @@ class CheckDetail extends React.Component {
         const contactNumber = this.numberInput.value;
         this.props.setReservation({ contactNumber });
         this.setState({ contactNumber });
-        localStorage.setItem('phone', '0987654321');
+        // localStorage.setItem('phone', '0987654321');
 
         if (contactNumber == localStorage.getItem('phone'))
             this.props.clearCheckOrdersInfo("UserVerifiy", true);

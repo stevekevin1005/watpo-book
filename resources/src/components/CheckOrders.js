@@ -4,18 +4,20 @@ import OrderInfos from "./CheckOrders/OrderInfos";
 import InputInfo from "./CheckOrders/InputInfo";
 import { Link } from 'react-router-dom';
 import { translate } from 'react-i18next';
-import {connect} from "react-redux";
-import {bindActionCreators} from "redux";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import LoadingAnimation from "./LoadingAnimation";
 import toggleLoading from "../dispatchers/toggleLoading";
+import setCheckOrdersInfo from "../dispatchers/setCheckOrdersInfo";
+
 
 const Grid = ReactBootstrap.Grid,
     Row = ReactBootstrap.Row,
     Col = ReactBootstrap.Col;
 import SweetAlert from 'sweetalert-react';
 
-class CheckOrders extends React.Component{
-    constructor(props){
+class CheckOrders extends React.Component {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -23,84 +25,114 @@ class CheckOrders extends React.Component{
             alertTitle: "",
             alertText: ""
         };
-        
+
         this.nextStep = this.nextStep.bind(this);
         this.getOrdersError = this.getOrdersError.bind(this);
         this.cancelSuccess = this.cancelSuccess.bind(this);
     }
-    nextStep(){
+    nextStep() {
         this.props.history.push('/checkOrders/' + (parseInt(this.props.match.params.step) + 1));
     }
-    getOrdersError(){
+    getOrdersError() {
         this.setState({
             showAlert: true,
             alertTitle: "Error",
             alertText: "errorHint_system"
         });
     }
-    cancelSuccess(){
+    cancelSuccess() {
         this.setState({
             showAlert: true,
             alertTitle: "success",
             alertText: "orderCanceled"
         });
     }
-    render(){
+    render() {
         const { t } = this.props;
 
         // set up steps
-        const currentStep = parseInt(this.props.match.params.step),
-              stepsData = [t("inputRelatedInfo"),t("orderInfo")], pointer = {cursor: "pointer"}, currentStepStyle = {cursor:"pointer",color: "#914327"};
+        let currentStep = parseInt(this.props.match.params.step),
+            stepsData = [t("inputRelatedInfo"), t("orderInfo")], pointer = { cursor: "pointer" }, currentStepStyle = { cursor: "pointer", color: "#914327" };
 
-        let steps = stepsData.map((step, index,arr)=>{
-                let divider = index < arr.length - 1 && <span> <i className="fa fa-angle-right" aria-hidden="true"></i> </span>;
-                if(currentStep > index)return (
-                    <span key={index}>
-                        <Link to={"/checkOrders/"+index}>
-                            <span 
-                                style = {currentStep === index?currentStepStyle: null}
-                            >{step}</span>
-                        </Link>
+        if (localStorage.getItem('phone')) {
+            currentStep = 1;
+            // this.props.setCheckOrdersInfo("contactNumber", localStorage.getItem('phone'));
+            // this.props.setCheckOrdersInfo("name", 'asdddd');
+        }
+
+        let steps = stepsData.map((step, index, arr) => {
+            let divider = index < arr.length - 1 && <span> <i className="fa fa-angle-right" aria-hidden="true"></i> </span>;
+            if (currentStep > index) return (
+                <span key={index}>
+                    <Link to={"/checkOrders/" + index}>
+                        <span
+                            style={currentStep === index ? currentStepStyle : null}
+                        >{step}</span>
+                    </Link>
                     {divider}</span>);
-                return (
-                    <span>
-                            <span 
-                                style = {currentStep === index?currentStepStyle: null}
-                            >{step}</span>
+            return (
+                <span>
+                    <span
+                        style={currentStep === index ? currentStepStyle : null}
+                    >{step}</span>
                     {divider}</span>);
-              });
+        });
 
         // content to show
         let el;
-        switch(currentStep){
+        switch (currentStep) {
             case 0:
                 el = (
-                    <InputInfo nextStep={this.nextStep}/>);
+                    <InputInfo nextStep={this.nextStep} />);
                 break;
             case 1:
-                el = <OrderInfos getOrdersError={this.getOrdersError} cancelSuccess={this.cancelSuccess}/>;
+                el = <OrderInfos getOrdersError={this.getOrdersError} cancelSuccess={this.cancelSuccess} />;
                 break;
             default:
                 return;
         }
 
-        return(
+        return (
             <Grid>
-            <div className="reservationContainer">
-                <Row>
-                <Col md={12}>
-                    <div className="steps">
-                        {steps}
-                    </div>
-                </Col>
-                {currentStep > 0 && <Col md={12} >
-                <p className="prevStap"><Link to={"/checkOrders/"+ (currentStep - 1)}><span><i className="fa fa-angle-left" aria-hidden="true"></i>{" "+t("prevStep")}</span></Link></p>
-                </Col>}
-                    <div className="checkOrdersContent" style={{padding:"16px 0"}}>
-                        {el}
-                    </div>    
-                {this.props.loading && <Col md={12}><LoadingAnimation /></Col>}
-                </Row>                
+                <div className="reservationContainer">
+                    <Row>
+                        <Col md={12}>
+                            <div className="steps">
+                                {steps}
+                            </div>
+                        </Col>
+                        {currentStep > 0 &&
+                            <Col md={12} >
+                                <p className="prevStap">
+                                    {localStorage.getItem('phone') ? (
+                                        <Link to={"/"}>
+                                            <span>
+                                                <i className="fa fa-angle-left" aria-hidden="true"></i>
+                                                {" " + t("prevStep")}
+                                            </span>
+                                        </Link>) :
+                                        (<Link to={"/checkOrders/" + (currentStep - 1)}>
+                                            <span>
+                                                <i className="fa fa-angle-left" aria-hidden="true"></i>
+                                                {" " + t("prevStep")}
+                                            </span>
+                                        </Link>)
+                                    }
+
+                                    {/* <Link to={"/"}>
+
+                                        <span>
+                                            <i className="fa fa-angle-left" aria-hidden="true"></i>
+                                            {" " + t("prevStep")}
+                                        </span>
+                                    </Link> */}
+                                </p>
+                            </Col>}
+                        <div className="checkOrdersContent" style={{ padding: "16px 0" }}>
+                            {el}
+                        </div>
+                        {this.props.loading && <Col md={12}><LoadingAnimation /></Col>}
+                    </Row>
                 </div>
                 <SweetAlert
                     show={this.state.showAlert}
@@ -108,7 +140,7 @@ class CheckOrders extends React.Component{
                     text={t(this.state.alertText)}
                     onConfirm={() => {
                         this.setState({ showAlert: false });
-                        if(this.alertTitle == "Error"){ location.href="../checkOrders/0" }
+                        if (this.alertTitle == "Error") { location.href = "../checkOrders/0" }
                     }}
                 />
             </Grid>
@@ -116,19 +148,20 @@ class CheckOrders extends React.Component{
     }
 }
 
-const mapStateToProps = (state)=>{
+const mapStateToProps = (state) => {
     return {
         loading: state.loading,
         checkOrdersInfo: state.checkOrdersInfo
     }
 }
 
-const mapDispatchToProps = (dispatch)=>{
+const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
+        setCheckOrdersInfo: setCheckOrdersInfo,
         toggleLoading: toggleLoading
-    },dispatch);
+    }, dispatch);
 }
-  
+
 CheckOrders = connect(mapStateToProps, mapDispatchToProps)(CheckOrders);
 
 module.exports = translate()(CheckOrders);

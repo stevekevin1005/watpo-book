@@ -34,21 +34,65 @@ class CheckPackage extends Component {
         if (this.props.loading)
             this.props.toggleLoading()
         this.props.claerPackage()
+        const that = this,
+            csrf_token = document.querySelector('input[name="_token"]').value;
+
+        axios({
+            method: "get",
+            url: "../api/service_provider_and_room_list",
+            params: {
+                service_id: 1,
+                shop_id: this.props.reservation.shop
+            },
+            headers: { 'X-CSRF-TOKEN': csrf_token },
+            responseType: 'json'
+        })
+            .then(function (response) {
+                if (that.props.loading)
+                    that.props.toggleLoading()
+                if (response.statusText == "OK") {
+                    // let operator = [], operator_text = []
+
+                    // for (let i = 0; i < current_package.guestNum; i++) {
+                    //     operator.push(0);
+                    //     operator_text.push(t('NotSpecify'))
+                    // }
+                    that.props.setReservation({
+                        service_provider_list: response.data.service_provider_list
+                    })
+                    // that.props.setPackageReservation(package_no, {
+                    //     // guestNum: 1,
+                    //     operator: operator,
+                    //     operator_text: operator_text,
+                    //     // service_provider_list: response.data.service_provider_list,
+                    //     room_list: response.data.room
+                    // }, () => {
+                    //     that.setMaxGuestNum(that.setRoomId);
+                    // });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                that.props.showErrorPopUp();
+                if (that.props.loading) that.props.toggleLoading();
+            });
+
 
     }
 
     setCustomer(no, e) {
         let amount = parseInt(e.target.options[event.target.selectedIndex].value),
             customer_list = this.state.is_arranged_customer,
-            operator = [], operator_text = []
+            operator = [], operator_text = [], service = []
 
 
         for (let i = 0; i < amount; i++) {
+            service.push(1)
             operator.push(0);
             operator_text.push('不指定')
         }
         let that = this;
-        this.props.setPackageReservation(no, { guestNum: amount, operator: operator, operator_text: operator_text });
+        this.props.setPackageReservation(no, { service: service, guestNum: amount, operator: operator, operator_text: operator_text });
 
     }
 

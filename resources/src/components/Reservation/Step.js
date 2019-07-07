@@ -26,7 +26,7 @@ class Step extends React.Component {
             case 0:
                 if (this.props.reservation.roomId && this.props.reservation.name && this.props.reservation.contactNumber && this.props.reservation.operator && this.props.reservation.guestNum) this.props.clearData(+this.props.match.params.step);
                 if (this.props.sourceData.room) this.props.clearSourceData("room");
-                if (this.props.sourceData.service_provider_list) this.props.clearSourceData("service_provider_list");
+                // if (this.props.reservation.service_provider_list) this.props.clearSourceData("service_provider_list");
                 break;
             case 1:
                 if (!this.props.reservation.shop) location.href = '../reservation/0';
