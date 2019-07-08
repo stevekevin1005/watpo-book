@@ -378,31 +378,18 @@ class Reservation extends React.Component {
         }
         axios.all(pacakge_time_room_promise).then(response => {
             let operator_text = "";
+            let success_package = 1, package_desc = ''
             for (let res_status = 0; res_status < response.length; res_status++) {
                 if (response[res_status].statusText == "OK") {
                     // show success alert
+                    package_desc += '包廂' + success_package + ':'
 
-                    package_reservation[res_status].operator_text.forEach(function (operator) {
-                        operator_text += (" " + operator);
+                    package_reservation[res_status].operator_text.forEach(function (operator, idx) {
+                        package_desc += that.state.sourceData.services[package_reservation[res_status].service[idx]].title + ' ' + operator + '\n';
+                        // operator_text += (" " + operator);
                     });
-
-                    that.toggleLoading();
-                    that.setState({
-                        success: true,
-                        showAlert: true,
-                        alertTitle: t("reserveSuccess"),
-                        alertText: <Alert notice={t("reserveNotice2")} text={
-                            t("locations") + ": " + (reservation.shop == 1 ? t("location1") : t("location2")) + "\n"
-                            + t("registrationNumber") + ": " + (reservation.shop == 1 ? "02 2581-3338" : "02 2570-9393") + "\n"
-                            + t("reservatorName") + ": " + reservation.name + "\n"
-                            + t("contactNumber") + ": " + reservation.contactNumber + "\n"
-                            + t("reservatorDate") + ": " + reservation.date + " " + reservation.time + "\n"
-                            + "服務: " + serviceName + "\n"
-                            + "包廂數量:" + package_reservation.length + "\n"
-                            + "人數: " + reservation.total_guest_num + " " + (reservation.total_guest_num > 1 ? t("people") : t("person")) + " " + t("operator") + ": " + operator_text + "\n"
-                            + t("reserveNotice1") + "\n"
-                            + t("reserveNotice3")} />
-                    });
+                    package_desc += '---------------------\n'
+                    success_package += 1;
                 } else {
                     // show failure alert
                     that.toggleLoading();
@@ -413,6 +400,27 @@ class Reservation extends React.Component {
                     });
                 }
             }
+
+            that.toggleLoading();
+            that.setState({
+                success: true,
+                showAlert: true,
+                alertTitle: t("reserveSuccess"),
+                alertText: <Alert notice={t("reserveNotice2")} text={
+                    t("locations") + ": " + (reservation.shop == 1 ? t("location1") : t("location2")) + "\n"
+                    + t("registrationNumber") + ": " + (reservation.shop == 1 ? "02 2581-3338" : "02 2570-9393") + "\n"
+                    + t("reservatorName") + ": " + reservation.name + "\n"
+                    + t("contactNumber") + ": " + reservation.contactNumber + "\n"
+                    + t("reservatorDate") + ": " + reservation.date + " " + reservation.time + "\n"
+                    // + "服務: " + serviceName + "\n"
+                    + package_desc
+                    + "包廂數量:" + package_reservation.length + "\n"
+                    // + "人數: " + reservation.total_guest_num + " " + (reservation.total_guest_num > 1 ? t("people") : t("person")) + " " + t("operator") + ": " + operator_text + "\n"
+                    + t("reserveNotice1") + "\n"
+                    + t("reserveNotice3")} />
+            });
+
+
         }).catch(function (error) {
             console.log(error);
             // error handle
