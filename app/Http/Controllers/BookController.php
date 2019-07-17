@@ -385,7 +385,7 @@ class BookController extends Controller
 		try{
 			$name = $request->name;
 			$phone = $request->phone;
-			$orders = Order::with('service')->with('shop')->with('serviceProviders')->where('start_time', '>', date('Y-m-d H:i:s'))->where('name', $name)->where('phone', $phone)->whereIn('status', [1,2])->get();
+			$orders = Order::with('service')->with('shop')->with('serviceProviders')->where('start_time', '>', date('Y-m-d H:i:s'))->where('phone', $phone)->whereIn('status', [1,2])->get();
 			$order_list = [];
 			foreach($orders as $order){
 				$service_provider = "";
