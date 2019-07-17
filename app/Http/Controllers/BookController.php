@@ -141,7 +141,7 @@ class BookController extends Controller
 			while($start_time <= $end_time){
 				$today = clone $date;
 				if($start_time <= $shop_end_time) $today->modify("-1 day");
-				// if($start_time >= $shop_start_time || $start_time <= $shop_end_time){
+				if($start_time >= $shop_start_time || $start_time <= $shop_end_time){
 					$time_list[$i]['time'] = $start_time->format('H:i');
 
 					if(new DateTime(date("Y-m-d H:i:s")) > $start_time){
@@ -161,7 +161,7 @@ class BookController extends Controller
 						
 					}
 					$i++;
-				// }
+				}
 				$start_time->add(new DateInterval("PT30M"));
 			}
 
