@@ -258,9 +258,15 @@ class CheckTime extends React.Component {
                             search_weight_key = 'service_3'
 
                         // })
-                        let sorted_rooms = []
-                        if (response[i][time].room)
-                            sorted_rooms = response[i][time].room.sort(sortByProperty(search_weight_key))
+                        console.log("sorted_rooms before:", response[i][time].room)
+
+                        let sorted_rooms = response[i][time].room
+                        if (response[i][time].room) {
+                            sorted_rooms.sort((a, b) => a[search_weight_key] - b[search_weight_key])
+                            sorted_rooms.reverse()
+                            // sorted_rooms = response[i][time].room.sort(sortByProperty(search_weight_key))
+                            console.log("sorted_rooms after:", sorted_rooms)
+                        }
 
                         // if (response[i][time].room)
                         //     for (let r = 0; r < response[i][time].room.length; r++) {
