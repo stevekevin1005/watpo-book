@@ -1,11 +1,13 @@
 import React from "react";
 
-const LoadingAnimation = (props)=>{
+const LoadingAnimation = (props) => {
     let dots = [];
-    for (let i = 0; i < 10 ; i++) {
+    for (let i = 0; i < 10; i++) {
         dots.push(<div className="dot" key={i}></div>);
     }
-    return (<div className="dotContainer">{dots}</div>);
+    return (<div className="dotContainer">{dots}
+        <div style={{ lineHeight: '112px' }}>{"系統判斷中請稍候"}</div>
+    </div>);
 }
 
 module.exports = LoadingAnimation;
