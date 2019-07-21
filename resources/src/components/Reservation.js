@@ -385,7 +385,7 @@ class Reservation extends React.Component {
                     package_desc += '包廂' + success_package + ':'
 
                     package_reservation[res_status].operator_text.forEach(function (operator, idx) {
-                        package_desc += that.state.sourceData.services[package_reservation[res_status].service[idx]].title + ' ' + operator + '\n';
+                        package_desc += that.state.sourceData.services[package_reservation[res_status].service[idx] - 1].title + '\n' + operator + '\n';
                         // operator_text += (" " + operator);
                     });
                     package_desc += '---------------------\n'
@@ -415,9 +415,10 @@ class Reservation extends React.Component {
                     // + "服務: " + serviceName + "\n"
                     + package_desc
                     + "包廂數量:" + package_reservation.length + "\n"
-                    // + "人數: " + reservation.total_guest_num + " " + (reservation.total_guest_num > 1 ? t("people") : t("person")) + " " + t("operator") + ": " + operator_text + "\n"
+                    + "人數: " + reservation.total_guest_num + " " + (reservation.total_guest_num > 1 ? t("people") : t("person")) + "\n"// + t("operator") + ": " + operator_text + "\n"
                     + t("reserveNotice1") + "\n"
-                    + t("reserveNotice3")} />
+                    + t("reserveNotice2") + '\n'
+                    + t("reserveNotice3") + "\n" + "本店不可攜帶寵物"} />
             });
 
 
