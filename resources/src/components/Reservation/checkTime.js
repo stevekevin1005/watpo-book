@@ -30,6 +30,11 @@ const ReturnButton = (props) => {
     )
 }
 
+const sortByProperty = function (property) {
+    return function (x, y) {
+        return ((x[property] === y[property]) ? 0 : ((x[property] > y[property]) ? 1 : -1));
+    };
+};
 
 function removeRepeatArrElement(arr) {
     var newArr = [];
@@ -239,10 +244,40 @@ class CheckTime extends React.Component {
                         if (qualify_time[split_time] == undefined)
                             qualify_time[split_time] = { select: true, select_list: [], rooms: [] }
                         let room_list = []
-                        if (response[i][time].room)
-                            for (let r = 0; r < response[i][time].room.length; r++) {
-                                if (package_reservation[i].shower <= response[i][time].room[r].shower && package_reservation[i].guestNum <= response[i][time].room[r].person) {
-                                    room_list.push(response[i][time].room[r].id)
+
+                        // package_reservation.map((pkg, idx) => {
+                        console.log("search_weight_key：", package_reservation[i].service)
+                        let search_weight_key = 'service_3'
+                        if (package_reservation[i].service.find(x => x == 1) > 0 || package_reservation[i].service.find(x => x == 3) > 0) {
+                            search_weight_key = 'service_1'
+                        }
+                        else if ((package_reservation[i].service.find(x => x == 2) > 0 && package_reservation[i].shower) || (package_reservation[i].service.find(x => x == 4) > 0 && package_reservation[i].shower)) {
+                            search_weight_key = 'service_2'
+                        }
+                        else
+                            search_weight_key = 'service_3'
+
+                        // })
+                        console.log("sorted_rooms before:", response[i][time].room)
+
+                        let sorted_rooms = response[i][time].room
+                        if (response[i][time].room) {
+                            sorted_rooms.sort((a, b) => a[search_weight_key] - b[search_weight_key])
+                            sorted_rooms.reverse()
+                            // sorted_rooms = response[i][time].room.sort(sortByProperty(search_weight_key))
+                            console.log("sorted_rooms after:", sorted_rooms)
+                        }
+
+                        // if (response[i][time].room)
+                        //     for (let r = 0; r < response[i][time].room.length; r++) {
+                        //         if (package_reservation[i].shower <= response[i][time].room[r].shower && package_reservation[i].guestNum <= response[i][time].room[r].person) {
+                        //             room_list.push(response[i][time].room[r].id)
+                        //         }
+                        //     }
+                        if (sorted_rooms)
+                            for (let r = 0; r < sorted_rooms.length; r++) {
+                                if (package_reservation[i].shower <= sorted_rooms[r].shower && package_reservation[i].guestNum <= sorted_rooms[r].person) {
+                                    room_list.push(sorted_rooms[r].id)
                                 }
                             }
                         let can_select = true
@@ -259,6 +294,22 @@ class CheckTime extends React.Component {
                     console.log("收斂組合：", key, ":", data)
                     let result = that.findRoomPermutaion(data.rooms)
                     if (result.length > 0) {
+                        // return that.max_weight(result, )
+                        // package_reservation.map((pkg, idx) => {
+                        //     let search_weight_key = ''
+                        //     if (pkg.service.find(1) > 0 || pkg.service.find(3) > 0) {
+                        //         search_weight_key = 'service_1'
+                        //     }
+                        //     else if ((pkg.service.find(2) > 0 && pkg.shower) || (pkg.service.find(4) > 0 && pkg.shower)) {
+                        //         search_weight_key = 'service_2'
+                        //     }
+                        //     else
+                        //         search_weight_key = 'service_3'
+                        //     result.map(combination => {
+                        //         let room_id = combination[idx]
+                        //     })
+                        // })
+
                         return result[0]
                     }
                     else {
