@@ -110,5 +110,7 @@
 	"afternoon": "Afternoon",
 	"night": "Night",
 	"SelectServiceTime": "Please select the service time:",
-	"SelectLongTime": "Please select the time slot:"
+	"SelectLongTime": "Please select the time slot:",
+	"concelConfirm": "Cancel",
+	"orderCanceledConfirm": "Are you sure you want to cancel your reservation?"
 }

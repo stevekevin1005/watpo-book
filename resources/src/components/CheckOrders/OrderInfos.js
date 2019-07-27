@@ -1,8 +1,11 @@
 // 負責寫資料(日期,時段)到global state
 import { translate } from 'react-i18next';
-import {connect} from "react-redux";
-import {bindActionCreators} from "redux";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import toggleLoading from "../../dispatchers/toggleLoading";
+
+import SweetAlert from 'sweetalert-react';
+
 
 const Grid = ReactBootstrap.Grid,
     Row = ReactBootstrap.Row,
@@ -11,23 +14,26 @@ const Grid = ReactBootstrap.Grid,
     ListGroup = ReactBootstrap.ListGroup,
     Table = ReactBootstrap.Table;
 
-class OrdersInfo extends React.Component{
-    constructor(props){
+
+class OrdersInfo extends React.Component {
+    constructor(props) {
         super(props);
 
         this.state = {
             hint: "ordersInfoHint",
-            orders: []
+            orders: [],
+            id: null
         };
         this.cancel = this.cancel.bind(this);
         this.getOrders = this.getOrders.bind(this);
+        this.confirmCancel = this.confirmCancel.bind(this);
     }
-    componentDidMount(){
+    componentDidMount() {
         this.getOrders();
     }
-    getOrders(){
+    getOrders() {
         const that = this,
-        csrf_token = document.querySelector('input[name="_token"]').value;
+            csrf_token = document.querySelector('input[name="_token"]').value;
         that.props.toggleLoading(true);
         // 取得預約資料列表
         axios({
@@ -37,26 +43,36 @@ class OrdersInfo extends React.Component{
                 name: this.props.checkOrdersInfo.name,
                 phone: this.props.checkOrdersInfo.contactNumber
             },
-            headers: {'X-CSRF-TOKEN': csrf_token},
+            headers: { 'X-CSRF-TOKEN': csrf_token },
             responseType: 'json'
         })
-        .then(function (response) {
-            if(response.statusText == "OK"){
-                that.setState({orders: response.data});
+            .then(function (response) {
+                if (response.statusText == "OK") {
+                    that.setState({ orders: response.data });
+                    that.props.toggleLoading(false);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
                 that.props.toggleLoading(false);
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
-            that.props.toggleLoading(false);
-            that.props.getOrdersError();
-            location.href = "../checkOrders/0";
-        });
+                that.props.getOrdersError();
+                location.href = "../checkOrders/0";
+            });
     }
-    cancel(e){
+
+    confirmCancel(e) {
+        this.setState({
+            showAlert: true,
+            alertTitle: "concelConfirm",
+            alertText: "orderCanceledConfirm",
+            id: e.target.getAttribute("value")
+        })
+    }
+
+    cancel(id) {
         const that = this,
-              csrf_token = document.querySelector('input[name="_token"]').value,
-              id = e.target.getAttribute("value");
+            csrf_token = document.querySelector('input[name="_token"]').value
+        // id = e.target.getAttribute("value");
         that.props.toggleLoading(true);
 
         axios({
@@ -67,74 +83,92 @@ class OrdersInfo extends React.Component{
                 phone: this.props.checkOrdersInfo.contactNumber,
                 order_id: id
             },
-            headers: {'X-CSRF-TOKEN': csrf_token},
+            headers: { 'X-CSRF-TOKEN': csrf_token },
             responseType: 'json'
         })
-        .then(function (response) {
-            if(response.statusText == "OK"){
+            .then(function (response) {
+                if (response.statusText == "OK") {
+                    that.props.toggleLoading(false);
+                    that.props.cancelSuccess();
+                    that.getOrders();
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
                 that.props.toggleLoading(false);
-                that.props.cancelSuccess();
-                that.getOrders();
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
-            that.props.toggleLoading(false);
-            that.props.getOrdersError();
-        });        
+                that.props.getOrdersError();
+            });
     }
-    render(){
-        if(this.props.checkOrdersInfo.name === undefined || this.props.checkOrdersInfo.contactNumber === undefined) location.href = '../checkOrders/0';
-        
-        const { t } = this.props,
-        ths = [ "", "branch", "guestNum", "service", "operator", "time"].map((th, index)=>{
-            return (<th key={index}>{t(th)}</th>);
-        });
+    render() {
+        if (this.props.checkOrdersInfo.name === undefined || this.props.checkOrdersInfo.contactNumber === undefined) location.href = '../checkOrders/0';
 
-        return(
+        const { t } = this.props,
+            ths = ["", "branch", "time", "service", "guestNum", "operator"].map((th, index) => {
+                return (<th key={index}>{t(th)}</th>);
+            });
+
+        return (
             <Grid>
-            <Row className="show-grid">
-            <Col md={8}>
-                <Table responsive striped bordered condensed hover>
-                    <thead>
-                        <tr>
-                            {ths}
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {this.state.orders.length>0?this.state.orders.map((order,index)=>{
-                        return (
-                            <tr>
-                                <td className="cancel" onClick={this.cancel} value={order.id}>{t("cancel")}</td>
-                                <td>{order.shop}</td>
-                                <td>{order.person}</td>
-                                <td>{order.service}</td>
-                                <td>{order.service_provider}</td>
-                                <td>{order.start_time}</td>
-                            </tr>);
-                    }):<td colSpan="5"><p>{t(this.state.hint)}</p></td>}
-                    </tbody>
-                </Table>
-            </Col>
-            </Row>
+                <Row className="show-grid">
+                    <Col md={8}>
+                        <Table responsive striped bordered condensed hover>
+                            <thead>
+                                <tr>
+                                    {ths}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.orders.length > 0 ? this.state.orders.map((order, index) => {
+                                    return (
+                                        <tr>
+                                            <td className="cancel" onClick={this.confirmCancel} value={order.id}>{t("cancel")}</td>
+                                            <td>{order.shop}</td>
+                                            <td>{order.start_time}</td>
+                                            <td>{order.service}</td>
+                                            <td>{order.person}</td>
+                                            <td>{order.service_provider}</td>
+
+                                        </tr>);
+                                }) : <td colSpan="5"><p>{t(this.state.hint)}</p></td>}
+                            </tbody>
+                        </Table>
+                    </Col>
+                </Row>
+                <SweetAlert
+                    showCancelButton
+                    show={this.state.showAlert}
+                    title={t(this.state.alertTitle)}
+                    text={t(this.state.alertText)}
+                    cancelButtonText="No"
+                    confirmButtonText="Yes"
+                    onConfirm={() => {
+                        console.log('comfirm click', this.state)
+                        this.setState({ showAlert: false });
+                        this.cancel(this.state.id)
+                        // if (this.alertTitle == "Error") { location.href = "../checkOrders/0" }
+                    }}
+                    onCancel={() => {
+                        this.setState({ showAlert: false });
+                    }}
+                />
             </Grid>
         );
     }
 }
 
-const mapStateToProps = (state)=>{
+const mapStateToProps = (state) => {
     return {
         loading: state.loading,
         checkOrdersInfo: state.checkOrdersInfo
     }
 }
 
-const mapDispatchToProps = (dispatch)=>{
+const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
         toggleLoading: toggleLoading
-    },dispatch);
-  }
-  
-OrdersInfo = connect(mapStateToProps,mapDispatchToProps)(OrdersInfo);  
+    }, dispatch);
+}
+
+OrdersInfo = connect(mapStateToProps, mapDispatchToProps)(OrdersInfo);
 
 module.exports = translate()(OrdersInfo);
