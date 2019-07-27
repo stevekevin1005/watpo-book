@@ -14,16 +14,19 @@ const Grid = ReactBootstrap.Grid,
     ListGroup = ReactBootstrap.ListGroup,
     Table = ReactBootstrap.Table;
 
+
 class OrdersInfo extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             hint: "ordersInfoHint",
-            orders: []
+            orders: [],
+            id: null
         };
         this.cancel = this.cancel.bind(this);
         this.getOrders = this.getOrders.bind(this);
+        this.confirmCancel = this.confirmCancel.bind(this);
     }
     componentDidMount() {
         this.getOrders();
@@ -66,7 +69,7 @@ class OrdersInfo extends React.Component {
         })
     }
 
-    cancel() {
+    cancel(id) {
         const that = this,
             csrf_token = document.querySelector('input[name="_token"]').value
         // id = e.target.getAttribute("value");
@@ -132,10 +135,14 @@ class OrdersInfo extends React.Component {
                     </Col>
                 </Row>
                 <SweetAlert
+                    showCancelButton
                     show={this.state.showAlert}
                     title={t(this.state.alertTitle)}
                     text={t(this.state.alertText)}
+                    cancelButtonText="No"
+                    confirmButtonText="Yes"
                     onConfirm={() => {
+                        console.log('comfirm click', this.state)
                         this.setState({ showAlert: false });
                         this.cancel(this.state.id)
                         // if (this.alertTitle == "Error") { location.href = "../checkOrders/0" }

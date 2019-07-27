@@ -222,11 +222,41 @@ class CheckTime extends React.Component {
             console.log("Promise all response:", response)
             if (that.props.loading) that.props.toggleLoading();
             if (response.length == 1) {
+
+
+
+                let search_weight_key = 'service_3'
+                if (package_reservation[0].service.find(x => x == 1) > 0 || package_reservation[0].service.find(x => x == 3) > 0) {
+                    search_weight_key = 'service_1'
+                }
+                else if ((package_reservation[0].service.find(x => x == 2) > 0 && package_reservation[0].shower) || (package_reservation[0].service.find(x => x == 4) > 0 && package_reservation[0].shower)) {
+                    search_weight_key = 'service_2'
+                }
+                else
+                    search_weight_key = 'service_3'
+
+                response[0].data.forEach(time_obj => {
+                    // let sorted_rooms = time_obj.room
+                    if (time_obj) {
+                        time_obj.room.sort((a, b) => a[search_weight_key] - b[search_weight_key])
+                        time_obj.room.reverse()
+                        // sorted_rooms = response[i][time].room.sort(sortByProperty(search_weight_key))
+                        console.log("sorted_rooms after:", time_obj.room)
+                    }
+                });
+                // let sorted_rooms = response[i][time].room
+                // if (room_list) {
+                //     sorted_rooms.sort((a, b) => a[search_weight_key] - b[search_weight_key])
+                //     sorted_rooms.reverse()
+                //     // sorted_rooms = response[i][time].room.sort(sortByProperty(search_weight_key))
+                //     console.log("sorted_rooms after:", sorted_rooms)
+                // }
+                // let sorted_room_list = sorted_rooms.map(room => room.id)
                 let room_list = response[0].data.map((available_time) => available_time.room ? [available_time.room[0].id] : [])
                 console.log("timeList:", response[0].data)
                 console.log("timeList room_list:", room_list)
 
-                that.props.setSourceData({ timeList: response[0].data, room_list });
+                that.props.setSourceData({ timeList: response[0].data, room_list: room_list });
                 that.setState({
                     longTimePeriodChoose: true
                 })
