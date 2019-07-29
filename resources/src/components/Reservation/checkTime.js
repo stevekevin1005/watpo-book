@@ -226,18 +226,22 @@ class CheckTime extends React.Component {
 
 
                 let search_weight_key = 'service_3'
-                if (package_reservation[0].service.find(x => x == 1) > 0 || package_reservation[0].service.find(x => x == 3) > 0) {
-                    search_weight_key = 'service_1'
+                if (package_reservation[0].shower || package_reservation[0].service.find(x => x == 2) > 0) {
+                    search_weight_key = 'service_3'
                 }
-                else if ((package_reservation[0].service.find(x => x == 2) > 0 && package_reservation[0].shower) || (package_reservation[0].service.find(x => x == 4) > 0 && package_reservation[0].shower)) {
+                else if ((package_reservation[0].service.find(x => x == 2) > 0 && !package_reservation[0].shower) || (package_reservation[0].service.find(x => x == 4) > 0 && !package_reservation[0].shower)) {
                     search_weight_key = 'service_2'
                 }
+                // else if (package_reservation[0].service.find(x => x == 1) > 0 || package_reservation[0].service.find(x => x == 3) > 0) {
+                //     search_weight_key = 'service_1'
+                // }
+
                 else
-                    search_weight_key = 'service_3'
+                    search_weight_key = 'service_1'
 
                 response[0].data.forEach(time_obj => {
                     // let sorted_rooms = time_obj.room
-                    if (time_obj) {
+                    if (time_obj.room) {
                         time_obj.room.sort((a, b) => a[search_weight_key] - b[search_weight_key])
                         time_obj.room.reverse()
                         // sorted_rooms = response[i][time].room.sort(sortByProperty(search_weight_key))
@@ -278,14 +282,22 @@ class CheckTime extends React.Component {
                         // package_reservation.map((pkg, idx) => {
                         console.log("search_weight_key：", package_reservation[i].service)
                         let search_weight_key = 'service_3'
-                        if (package_reservation[i].service.find(x => x == 1) > 0 || package_reservation[i].service.find(x => x == 3) > 0) {
-                            search_weight_key = 'service_1'
+                        if (package_reservation[i].shower || package_reservation[i].service.find(x => x == 5) > 0) {
+                            search_weight_key = 'service_3'
                         }
-                        else if ((package_reservation[i].service.find(x => x == 2) > 0 && package_reservation[i].shower) || (package_reservation[i].service.find(x => x == 4) > 0 && package_reservation[i].shower)) {
+                        else if ((package_reservation[i].service.find(x => x == 2) > 0 && !package_reservation[i].shower) || (package_reservation[i].service.find(x => x == 4) > 0 && !package_reservation[i].shower)) {
                             search_weight_key = 'service_2'
                         }
                         else
-                            search_weight_key = 'service_3'
+                            search_weight_key = 'service_1'
+                        // if (package_reservation[i].service.find(x => x == 1) > 0 || package_reservation[i].service.find(x => x == 3) > 0) {
+                        //     search_weight_key = 'service_1'
+                        // }
+                        // else if ((package_reservation[i].service.find(x => x == 2) > 0 && package_reservation[i].shower) || (package_reservation[i].service.find(x => x == 4) > 0 && package_reservation[i].shower)) {
+                        //     search_weight_key = 'service_2'
+                        // }
+                        // else
+                        //     search_weight_key = 'service_3'
 
                         // })
                         console.log("sorted_rooms before:", response[i][time].room)
