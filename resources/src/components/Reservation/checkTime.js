@@ -226,7 +226,7 @@ class CheckTime extends React.Component {
 
 
                 let search_weight_key = 'service_3'
-                if (package_reservation[0].shower || package_reservation[0].service.find(x => x == 2) > 0) {
+                if (package_reservation[0].shower || package_reservation[0].service.find(x => x == 5) > 0) {
                     search_weight_key = 'service_3'
                 }
                 else if ((package_reservation[0].service.find(x => x == 2) > 0 && !package_reservation[0].shower) || (package_reservation[0].service.find(x => x == 4) > 0 && !package_reservation[0].shower)) {
