@@ -316,7 +316,7 @@ class CheckTime extends React.Component {
                         //             room_list.push(response[i][time].room[r].id)
                         //         }
                         //     }
-                        if (sorted_rooms)
+                        if (sorted_rooms.length > 0)
                             for (let r = 0; r < sorted_rooms.length; r++) {
                                 if (package_reservation[i].shower <= sorted_rooms[r].shower && package_reservation[i].guestNum <= sorted_rooms[r].person) {
                                     room_list.push(sorted_rooms[r].id)
