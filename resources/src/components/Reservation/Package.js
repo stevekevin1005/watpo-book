@@ -211,7 +211,7 @@ class Package extends Component {
             for (let i = 0; i < current_package.guestNum; i++) {
                 operator_list.push(
                     <div>
-                        <ControlLabel>{t("service")}</ControlLabel>
+                        <ControlLabel>{t("service") + (i + 1)}</ControlLabel>
                         <FormControl componentClass="select" id="service" defaultValue={package_reservation[package_no].service[i]} data-index={i} placeholder="..." onChange={(e) => this.setService(e)} disabled={disable}>
                             {/* <option value={1}>{"massage"}</option> */}
                             {sourceData.services && sourceData.services.map((service, index) => {
