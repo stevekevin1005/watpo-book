@@ -256,7 +256,25 @@ class CheckTime extends React.Component {
                 //     console.log("sorted_rooms after:", sorted_rooms)
                 // }
                 // let sorted_room_list = sorted_rooms.map(room => room.id)
-                let room_list = response[0].data.map((available_time) => available_time.select ? (available_time.room.lenght > 0 ? [available_time.room[0].id] : []) : [])
+                let room_list = response[0].data.map((available_time) => {
+                    // console.log('single package available:', available_time)
+                    // if (available_time.select == true) {
+                    //     console.log('single package available select:', available_time.select)
+
+                    //     if (available_time.room.length > 0) {
+                    //         return [available_time.room[0].id]
+                    //     }
+                    //     else
+                    //         return []
+                    // }
+                    // else{
+                    //     console.log('single package available:', available_time)
+
+                    //     return []
+                    // }
+
+                    return available_time.select ? (available_time.room.length > 0 ? [available_time.room[0].id] : []) : []
+                })
                 console.log("timeList:", response[0].data)
                 console.log("timeList room_list:", room_list)
 
