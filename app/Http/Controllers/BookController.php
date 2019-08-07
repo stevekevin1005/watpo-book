@@ -150,7 +150,7 @@ class BookController extends Controller
 					else{
 						$result = $this->time_option($today->format('Y-m-d'), $start_time->format('Y-m-d H:i:s'), $service->time, $shower, $shop_id, $person, $service_provider_id);
 						// dd($msg);
-						if($result["select"] === true){
+						if($result["select"] === true && $result["room"] != []){
 							$time_list[$i]['select'] = true;
 							$time_list[$i]["room"] = $result["room"];
 						}
