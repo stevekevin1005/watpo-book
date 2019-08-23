@@ -256,7 +256,25 @@ class CheckTime extends React.Component {
                 //     console.log("sorted_rooms after:", sorted_rooms)
                 // }
                 // let sorted_room_list = sorted_rooms.map(room => room.id)
-                let room_list = response[0].data.map((available_time) => available_time.room ? [available_time.room[0].id] : [])
+                let room_list = response[0].data.map((available_time) => {
+                    // console.log('single package available:', available_time)
+                    // if (available_time.select == true) {
+                    //     console.log('single package available select:', available_time.select)
+
+                    //     if (available_time.room.length > 0) {
+                    //         return [available_time.room[0].id]
+                    //     }
+                    //     else
+                    //         return []
+                    // }
+                    // else{
+                    //     console.log('single package available:', available_time)
+
+                    //     return []
+                    // }
+
+                    return available_time.select ? (available_time.room.length > 0 ? [available_time.room[0].id] : []) : []
+                })
                 console.log("timeList:", response[0].data)
                 console.log("timeList room_list:", room_list)
 
@@ -303,25 +321,27 @@ class CheckTime extends React.Component {
                         console.log("sorted_rooms before:", response[i][time].room)
 
                         let sorted_rooms = response[i][time].room
-                        if (response[i][time].room) {
-                            sorted_rooms.sort((a, b) => a[search_weight_key] - b[search_weight_key])
-                            sorted_rooms.reverse()
-                            // sorted_rooms = response[i][time].room.sort(sortByProperty(search_weight_key))
-                            console.log("sorted_rooms after:", sorted_rooms)
-                        }
-
-                        // if (response[i][time].room)
-                        //     for (let r = 0; r < response[i][time].room.length; r++) {
-                        //         if (package_reservation[i].shower <= response[i][time].room[r].shower && package_reservation[i].guestNum <= response[i][time].room[r].person) {
-                        //             room_list.push(response[i][time].room[r].id)
-                        //         }
-                        //     }
-                        if (sorted_rooms)
-                            for (let r = 0; r < sorted_rooms.length; r++) {
-                                if (package_reservation[i].shower <= sorted_rooms[r].shower && package_reservation[i].guestNum <= sorted_rooms[r].person) {
-                                    room_list.push(sorted_rooms[r].id)
-                                }
+                        if (response[i][time].select) {
+                            if (response[i][time].room) {
+                                sorted_rooms.sort((a, b) => a[search_weight_key] - b[search_weight_key])
+                                sorted_rooms.reverse()
+                                // sorted_rooms = response[i][time].room.sort(sortByProperty(search_weight_key))
+                                console.log("sorted_rooms after:", sorted_rooms)
                             }
+
+                            // if (response[i][time].room)
+                            //     for (let r = 0; r < response[i][time].room.length; r++) {
+                            //         if (package_reservation[i].shower <= response[i][time].room[r].shower && package_reservation[i].guestNum <= response[i][time].room[r].person) {
+                            //             room_list.push(response[i][time].room[r].id)
+                            //         }
+                            //     }
+                            if (sorted_rooms.length > 0)
+                                for (let r = 0; r < sorted_rooms.length; r++) {
+                                    if (package_reservation[i].shower <= sorted_rooms[r].shower && package_reservation[i].guestNum <= sorted_rooms[r].person) {
+                                        room_list.push(sorted_rooms[r].id)
+                                    }
+                                }
+                        }
                         let can_select = true
                         if (room_list == [])
                             can_select = false

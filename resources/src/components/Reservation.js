@@ -402,6 +402,14 @@ class Reservation extends React.Component {
             }
 
             that.toggleLoading();
+
+            let package_shower_cnt = 0
+            package_reservation.forEach((x) => {
+                if (x.shower) {
+                    package_shower_cnt += 1
+                }
+            })
+
             that.setState({
                 success: true,
                 showAlert: true,
@@ -414,7 +422,7 @@ class Reservation extends React.Component {
                     + t("reservatorDate") + ": " + reservation.date + " " + reservation.time + "\n"
                     // + "服務: " + serviceName + "\n"
                     + package_desc
-                    + "包廂數量:" + package_reservation.length + "\n"
+                    + "包廂數量:" + package_reservation.length + '( 沖澡:' + package_shower_cnt + ' )' + "\n"
                     + "人數: " + reservation.total_guest_num + " " + (reservation.total_guest_num > 1 ? t("people") : t("person")) + "\n"// + t("operator") + ": " + operator_text + "\n"
                     + t("reserveNotice1") + "\n"
                     + t("reserveNotice2") + '\n'
