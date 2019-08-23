@@ -6,7 +6,7 @@ const LoadingAnimation = (props) => {
         dots.push(<div className="dot" key={i}></div>);
     }
     return (<div className="dotContainer">{dots}
-        <div style={{ lineHeight: '112px', font-weight: bold }}>{"系統判斷中請稍候"}</div>
+        <div style={{ lineHeight: '112px', "font-weight": "bold" }}>{"系統判斷中請稍候"}</div>
     </div>);
 }
 
