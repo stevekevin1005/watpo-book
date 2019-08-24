@@ -281,6 +281,7 @@ class BookController extends Controller
 		try{
 			$shop_id = $request->shop_id;
 			$start_time = new DateTime($request->start_time);
+			$temp_start_time = $start_time;
 			$service_provider_id = $request->service_provider_id;
 			$name = $request->name;
 			$phone = $request->phone;
@@ -310,7 +311,7 @@ class BookController extends Controller
 			foreach ($service_pair as $service_id => $service_provider_id_list) {
 
 				$service = Service::where('id', $service_id)->first();
-				$end_time = $start_time->add(new DateInterval("PT".$service->time."M"));
+				$end_time = $temp_start_time->add(new DateInterval("PT".$service->time."M"));
 
 				$service_provider_list = ServiceProvider::with(['leaves' => function ($query) use ($start_time, $end_time) {
 				    $query->where('start_time', '<', $end_time);
