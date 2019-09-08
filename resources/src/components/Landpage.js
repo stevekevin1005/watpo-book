@@ -4,6 +4,7 @@ import i18n from '../i18n';
 import { connect } from "react-redux";
 import clearCheckOrdersInfo from "../dispatchers/clearCheckOrdersInfo";
 import { bindActionCreators } from "redux";
+import LoadingAnimation from "./LoadingAnimation";
 
 // 首頁
 
@@ -56,6 +57,7 @@ class Landpage extends React.Component {
                 return (
                     <div key={index}>
                         <h4><i className="fa fa-caret-right" aria-hidden="true"></i>{" " + branch.name}</h4>
+                        <LoadingAnimation />
                         <Row>
                             <Col md={6}>
                                 <div className="contentBlock" key={index}>
