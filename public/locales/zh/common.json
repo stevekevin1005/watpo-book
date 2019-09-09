@@ -117,8 +117,8 @@
 	"noon": "中午",
 	"afternoon": "下午",
 	"night": "晚上",
-	"SelectServiceTime": "請選擇定位時間:",
-	"SelectLongTime": "請選擇定位時段:",
+	"SelectServiceTime": "請選擇訂位時間:",
+	"SelectLongTime": "請選擇訂位時段:",
 	"concelConfirm": "取消預約",
 	"orderCanceledConfirm": "確定要取消這筆預約資訊？"
 }

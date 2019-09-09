@@ -57,7 +57,7 @@ class Landpage extends React.Component {
                 return (
                     <div key={index}>
                         <h4><i className="fa fa-caret-right" aria-hidden="true"></i>{" " + branch.name}</h4>
-                        <LoadingAnimation />
+                        {/* <LoadingAnimation /> */}
                         <Row>
                             <Col md={6}>
                                 <div className="contentBlock" key={index}>
