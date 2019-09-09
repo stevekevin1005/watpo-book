@@ -185,6 +185,7 @@ class CheckPackage extends Component {
                     </Col>
                 </FormGroup>
                 <NextButton currentStep={2} clickHandle={this.nextStep} disabled={reservation.unarranged_people !== 0} />
+                <div style={{ textAlign: 'center' }}>{"*點擊新增包廂選擇各包廂服務內容"}</div>
             </div>
         )
     }
