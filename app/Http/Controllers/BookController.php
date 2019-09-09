@@ -141,7 +141,7 @@ class BookController extends Controller
 			while($start_time <= $end_time){
 				$today = clone $date;
 				if($start_time <= $shop_end_time) $today->modify("-1 day");
-				// if($start_time >= $shop_start_time || $start_time <= $shop_end_time){
+				if($start_time >= $shop_start_time || $start_time <= $shop_end_time){
 					$time_list[$i]['time'] = $start_time->format('H:i');
 
 					if(new DateTime(date("Y-m-d H:i:s")) > $start_time){
@@ -150,7 +150,7 @@ class BookController extends Controller
 					else{
 						$result = $this->time_option($today->format('Y-m-d'), $start_time->format('Y-m-d H:i:s'), $service->time, $shower, $shop_id, $person, $service_provider_id);
 						// dd($msg);
-						if($result["select"] === true){
+						if($result["select"] === true && $result["room"] != []){
 							$time_list[$i]['select'] = true;
 							$time_list[$i]["room"] = $result["room"];
 						}
@@ -161,7 +161,7 @@ class BookController extends Controller
 						
 					}
 					$i++;
-				// }
+				}
 				$start_time->add(new DateInterval("PT30M"));
 			}
 
@@ -311,7 +311,7 @@ class BookController extends Controller
 			foreach ($service_pair as $service_id => $service_provider_id_list) {
 
 				$service = Service::where('id', $service_id)->first();
-				$end_time = $end_time->add(new DateInterval("PT".$service->time."M"));
+				$end_time->add(new DateInterval("PT".$service->time."M"));
 
 				$service_provider_list = ServiceProvider::with(['leaves' => function ($query) use ($start_time, $end_time) {
 				    $query->where('start_time', '<', $end_time);
@@ -342,7 +342,7 @@ class BookController extends Controller
 				$order->start_time = $start_time;
 				$order->end_time = $end_time;
 				$order->save();
-
+				$end_time->sub(new DateInterval("PT".$service->time."M"));
 				foreach ($service_provider_list as $key => $service_provider) {
 					$service_provider->orders()->save($order);
 				}
@@ -385,7 +385,7 @@ class BookController extends Controller
 		try{
 			$name = $request->name;
 			$phone = $request->phone;
-			$orders = Order::with('service')->with('shop')->with('serviceProviders')->where('start_time', '>', date('Y-m-d H:i:s'))->where('name', $name)->where('phone', $phone)->whereIn('status', [1,2])->get();
+			$orders = Order::with('service')->with('shop')->with('serviceProviders')->where('start_time', '>', date('Y-m-d H:i:s'))->where('phone', $phone)->whereIn('status', [1,2])->get();
 			$order_list = [];
 			foreach($orders as $order){
 				$service_provider = "";
