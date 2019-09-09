@@ -224,7 +224,7 @@
 						@endforeach
 					</tbody>
 				</table>
-				{!! $order_list->appends(['name' => $request->name, 'service' => $request->service, 'phone' => $request->phone, 'shop' => $request->shop, 'service_provider' => $request->service_provider, 'start_time' => $request->start_time, 'end_time' => $request->end_time, ])->links() !!}
+				{!! $order_list->appends(['name' => $request->name, 'service' => $request->service, 'phone' => $request->phone, 'shop' => $request->shop, 'service_provider' => $request->service_provider, 'start_time' => $request->start_time, 'end_time' => $request->end_time, 'room' => $request->room])->links() !!}
 			</div>
 		</div>
     </div>
