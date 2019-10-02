@@ -30,7 +30,7 @@ class CheckDetail extends React.Component {
             contactNumberHint: "",
             operatorHint: "",
             // 程式選中的房間是否會附衛浴，影響房間配置，與客人實際需求無關
-            shower: null,//reservation.shower === null ? shower : reservation.shower,
+            shower: false,//reservation.shower === null ? shower : reservation.shower,
             maxGuestNum: -1
         };
 
@@ -104,7 +104,6 @@ class CheckDetail extends React.Component {
         const el = event.target.options[event.target.selectedIndex],
             shower = (el.value == "true"),
             that = this;
-
         // get and set max guest num 
         this.setState({ shower }, () => {
             that.props.setReservation({ shower, guestNum: 1, operator: ['0'] }, () => {
