@@ -301,11 +301,6 @@ class CheckDetail extends React.Component {
                             {operators}
                         </div> : sourceData.room ? <p className="hint">{t("errorHint_noRoom")}</p> : null} */}
                     </Col>
-
-                    <Col md={1}>
-                        <div className="divider"></div>
-                    </Col>
-
                     <Col md={5}>
                         <ControlLabel>{t("reservatorName")}</ControlLabel>
                         <FormControl
