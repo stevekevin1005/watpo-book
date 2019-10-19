@@ -348,7 +348,15 @@ table{
 					</thead>
 					<tbody>
 					@foreach($order_list as $order)
-					<tr <?php if($order->report->response != null){ ?> style="color:green;"<?php }?>>
+					<tr style="
+							<?php if($order->report->response != null){ ?> 
+								color:green;
+							<?php }?>
+							<?php if($order->report->read != false){ ?> 
+								font-weight: bolder;
+							<?php }?>
+						"
+					>
 						<td>{{ $order->id }}</td>
 						<td>{{ $order->shop->name }}</td>
 						<td>{{ $order->report->q0 }}</td>
@@ -535,6 +543,17 @@ $(".detail").on('click', function(){
 	var myTemplate = $.templates("#report_detail");
 	console.log(order);
 	var html = myTemplate.render(order);
+	$.ajax({
+		url: '/api/report/readed',
+		type: 'post',
+		dataType: 'json',
+		data: {
+			orderId: order.id
+		},
+	})
+	
+	$(this).parent().parent().css("font-weight", "bolder");
+
 	swal({
         title: '#'+order.id+' 意見調查表',
         html: html,

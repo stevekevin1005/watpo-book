@@ -181,6 +181,12 @@ class ReportController extends Controller
         
     }
 
+    public function readed(Request $request) {
+        $orderId = $request->orderId;
+        $report = Report::where('order_id', $orderId)->first();
+        $report->read = true;
+        $report->save();
+    }
 
     public function getQuiz(Request $request){
         try{

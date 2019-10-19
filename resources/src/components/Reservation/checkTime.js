@@ -216,7 +216,6 @@ class CheckTime extends React.Component {
             }))
         }
         console.log("package_reservation for data:", package_reservation)
-        console.log("package_reservation for data2:", )
 
         axios.all(pacakge_time_room_promise).then(response => {
             console.log("Promise all response:", response)
@@ -242,6 +241,11 @@ class CheckTime extends React.Component {
                 response[0].data.forEach(time_obj => {
                     // let sorted_rooms = time_obj.room
                     if (time_obj.room) {
+                        if (package_reservation[0].shower) {
+                            time_obj.room = time_obj.room.filter(function(room, index) {
+                                return room.shower == 1;
+                            });
+                        }
                         time_obj.room.sort((a, b) => a[search_weight_key] - b[search_weight_key])
                         time_obj.room.reverse()
                         // sorted_rooms = response[i][time].room.sort(sortByProperty(search_weight_key))
@@ -256,7 +260,9 @@ class CheckTime extends React.Component {
                 //     console.log("sorted_rooms after:", sorted_rooms)
                 // }
                 // let sorted_room_list = sorted_rooms.map(room => room.id)
+
                 let room_list = response[0].data.map((available_time) => {
+                    console.log("available_time: ", available_time)
                     // console.log('single package available:', available_time)
                     // if (available_time.select == true) {
                     //     console.log('single package available select:', available_time.select)
@@ -275,8 +281,8 @@ class CheckTime extends React.Component {
 
                     return available_time.select ? (available_time.room.length > 0 ? [available_time.room[0].id] : []) : []
                 })
-                console.log("timeList:", response[0].data)
-                console.log("timeList room_list:", room_list)
+                console.log("timeList: ", response[0].data)
+                console.log("timeList room_list: ", room_list)
 
                 that.props.setSourceData({ timeList: response[0].data, room_list: room_list });
                 that.setState({
@@ -462,6 +468,7 @@ class CheckTime extends React.Component {
     }
     setTime(event) {
         const time = event.target.innerHTML;
+        console.log("sourceData for data:", this.props.sourceData)
         let { timeList, room_list } = this.props.sourceData
         let idx;
         let selected_time_obj = timeList.filter((x, i) => {
@@ -472,6 +479,7 @@ class CheckTime extends React.Component {
         console.log("selected_time_obj:", selected_time_obj)
         // let idx = Object.keys(timeList).find(key => [timeList[key]] == selected_time_obj)
         console.log("selected_time_obj idx:", idx)
+        console.log("room_list: ", room_list);
         this.props.setReservation({ time, room_id: room_list[idx] });
     }
     setDate(year, month, day) {

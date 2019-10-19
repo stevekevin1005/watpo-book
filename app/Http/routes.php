@@ -104,6 +104,8 @@ Route::group(['middleware' => ['web']], function () {
 		Route::get('/blacklist/search', ['uses' => 'BlackListController@api_search', 'as' => 'apiBlackListSearch']);
 	
 		Route::post('/phone/check', ['uses' => 'CalendarController@api_phone_check', 'as' => 'apiPhoneCheck']);
+
+		Route::post('/report/readed', ['uses' => 'ReportController@readed', 'as' => 'ReportReaded']);
 	});
 
 	Route::group(['prefix' => '/api'], function () {
