@@ -38,6 +38,7 @@ class Reservation extends React.Component {
         super(props);
 
         this.state = {
+            showTimeOut: false,
             showAlert: false,
             alertTitle: "",
             alertText: "",
@@ -89,7 +90,19 @@ class Reservation extends React.Component {
         this.toggleLoading = this.toggleLoading.bind(this);
         this.removePackage = this.removePackage.bind(this);
         this.claerPackage = this.claerPackage.bind(this);
+        this.setFormTimeOut = this.setFormTimeOut.bind(this)
+        this.setFormTimeOut()
     }
+
+    setFormTimeOut() {
+        setTimeout(() => {
+            this.setState({
+                showTimeOut: true
+            })
+        }, 1000 * 60 * 5)
+        // 1000ms * 60sec * 5 min
+    }
+
     componentDidMount() {
         if (this.props.checkOrdersInfo != {}) {
             this.props.clearCheckOrdersInfo("name");
@@ -535,7 +548,16 @@ class Reservation extends React.Component {
                     </Row>
                 </div>
                 {/* Enter SMS verification code */}
-
+                <SweetAlert
+                    show={this.state.showTimeOut}
+                    title={'填表時間逾時'}
+                    html
+                    text={'預約時間為5分鐘，請於時間內填寫完畢'}
+                    onConfirm={() => {
+                        this.setState({ timeOut: 0, showTimeOut: false })
+                        this.props.history.push('/')
+                    }}
+                />
                 <SweetAlert
                     show={this.state.showAlert}
                     title={this.state.alertTitle}
