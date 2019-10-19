@@ -240,12 +240,12 @@ class CheckTime extends React.Component {
 
                 response[0].data.forEach(time_obj => {
                     // let sorted_rooms = time_obj.room
-                    if (package_reservation[0].shower) {
-                        time_obj.room = time_obj.room.filter(function(room, index) {
-                            return room.shower == 1;
-                        });
-                    }
                     if (time_obj.room) {
+                        if (package_reservation[0].shower) {
+                            time_obj.room = time_obj.room.filter(function(room, index) {
+                                return room.shower == 1;
+                            });
+                        }
                         time_obj.room.sort((a, b) => a[search_weight_key] - b[search_weight_key])
                         time_obj.room.reverse()
                         // sorted_rooms = response[i][time].room.sort(sortByProperty(search_weight_key))
