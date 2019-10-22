@@ -38,6 +38,9 @@ class Reservation extends React.Component {
         super(props);
 
         this.state = {
+            resetTime: 60 * 5,
+            time: 0,
+            showTimeOut: false,
             showAlert: false,
             alertTitle: "",
             alertText: "",
@@ -89,7 +92,50 @@ class Reservation extends React.Component {
         this.toggleLoading = this.toggleLoading.bind(this);
         this.removePackage = this.removePackage.bind(this);
         this.claerPackage = this.claerPackage.bind(this);
+        this.setFormTimeOut = this.setFormTimeOut.bind(this)
+        this.getRestTime = this.getRestTime.bind(this)
+        this.setFormTimeOut()
     }
+
+    setFormTimeOut() {
+        setInterval(() => {
+            let temp_time = this.state.time
+            if (temp_time == this.state.resetTime) {
+                this.setState({
+                    showTimeOut: true,
+                    time: 0
+                })
+            }
+            else
+                this.setState({
+                    time: temp_time + 1
+                })
+        }, 1000);
+        // setTimeout(() => {
+        //     this.setState({
+        //         showTimeOut: true
+        //     })
+        // }, 1000 * 60 * 5)
+
+        // 1000ms * 60sec * 5 min
+    }
+
+    getRestTime(t) {
+        let min = 0, sec = 0
+        let total_time = this.state.resetTime
+        let sec_str = ''
+        min = parseInt((total_time - this.state.time) / 60)
+
+        sec = (total_time - this.state.time) - (min * 60)
+        if (sec / 10 < 1) {
+            sec_str = '0' + sec
+        }
+        else {
+            sec_str = '' + sec
+        }
+        return min + ':' + sec_str
+    }
+
     componentDidMount() {
         if (this.props.checkOrdersInfo != {}) {
             this.props.clearCheckOrdersInfo("name");
@@ -506,6 +552,9 @@ class Reservation extends React.Component {
         return (
             <Grid>
                 <div className="reservationContainer">
+                    <Row>
+                        <span className="intervalTime">剩餘時間 {this.getRestTime(this.state.time)}</span>
+                    </Row>
                     <Row className="reservationGrid">
                         <div className="reservationContent" style={{ padding: "16px 0" }}>
                             <Step
@@ -535,7 +584,16 @@ class Reservation extends React.Component {
                     </Row>
                 </div>
                 {/* Enter SMS verification code */}
-
+                <SweetAlert
+                    show={this.state.showTimeOut}
+                    title={'填表時間逾時'}
+                    html
+                    text={'預約時間為5分鐘，請於時間內填寫完畢'}
+                    onConfirm={() => {
+                        this.setState({ timeOut: 0, showTimeOut: false })
+                        this.props.history.push('/')
+                    }}
+                />
                 <SweetAlert
                     show={this.state.showAlert}
                     title={this.state.alertTitle}
