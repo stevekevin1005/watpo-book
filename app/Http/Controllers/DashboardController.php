@@ -46,6 +46,8 @@ class DashboardController extends Controller
 			
 			$day_orders = new Order;
 			$month_orders = new Order;
+			$shiatsu_day_orders = new Order;
+			$shiatsu_mounth_orders = new Order;
 
 			if($request->session()->has('service_provider_id')){
 				$service_provider_id = $request->session()->get('service_provider_id');
@@ -53,6 +55,14 @@ class DashboardController extends Controller
 				    $query->where('id', $service_provider_id);
 				});
 				$month_orders = $month_orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
+				    $query->where('id', $service_provider_id);
+				});
+
+				$shiatsu_day_orders = $shiatsu_day_orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
+				    $query->where('id', $service_provider_id);
+				});
+
+				$shiatsu_mounth_orders = $shiatsu_mounth_orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
 				    $query->where('id', $service_provider_id);
 				});
 			}
@@ -92,6 +102,28 @@ class DashboardController extends Controller
 				$day_orders = $day_orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
 				    $query->where('id', $service_provider_id);
 				})->with('service')->where('status', '!=', 3)->where('status', '!=', 4)->where('status', '!=', 6)->where('shop_id', $shop->id)->where('start_time', '<=', $day_end_time)->where('start_time', '>=', $day_start_time)->get();
+				
+				$oil_count = 0;
+				$shiatsu_count = 0;
+				foreach ($day_orders as $key => $order) {
+					if ($order->service->id == 1) {
+						$shiatsu_count += 0.5;
+					}
+					if ($order->service->id == 2) {
+						$oil_count += 0.5;
+					}
+					if ($order->service->id == 3) {
+						$shiatsu_count += 1;
+					}
+					if ($order->service->id == 4) {
+						$oil_count += 1;
+					}
+					if ($order->service->id == 5) {
+						$oil_count += 1;
+					}
+				}
+				$info['shiatsu_count'] = $shiatsu_count;
+				$info['oil_count'] = $oil_count;
 				$info['order_day'] = $day_orders->count();		
 				$month_orders = $month_orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
 				    $query->where('id', $service_provider_id);
