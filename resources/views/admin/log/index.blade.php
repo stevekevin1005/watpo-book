@@ -92,7 +92,7 @@
 					<tbody>
 						@foreach($log_list as $log)
 						<tr>
-							<td>{{$log->account['account']}}</td>
+							<td>{{$log->account['account']."	".$log->account['information']}}</td>
 							<td>{{$log->description}}</td>
 							<td>{{$log->created_at}}</td>
 						</tr>

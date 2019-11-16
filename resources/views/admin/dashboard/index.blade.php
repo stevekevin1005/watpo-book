@@ -24,7 +24,7 @@
                 </div>
                 @endif
                 <div class="col-sm-6 col-lg-3">
-                    <div class="widget-simple text-center card-box bg-success">
+                    <div class="widget-simple text-center card-box bg-warning">
                         <h3 class="text-white"><span class="counter">{{ $shop['order_day'] }}</span></h3>
                         <p class="text-white">今日預約</p>
                     </div>
