@@ -23,7 +23,6 @@ class OrderController extends Controller
 			$service_provider_id = $request->service_provider;
 			$order_list = $order_list->whereHas('serviceProviders', function($query) use ($service_provider_id ){
 				$query->where('id', $service_provider_id);
-				$query->where('activate', true);
 			});
 		}
 
@@ -78,7 +77,6 @@ class OrderController extends Controller
 			$service_provider_id = $request->service_provider;
 			$order_list = $order_list->whereHas('serviceProviders', function($query) use ($service_provider_id ){
 				$query->where('id', $service_provider_id);
-				$query->where('activate', true);
 			});
 		}
 
