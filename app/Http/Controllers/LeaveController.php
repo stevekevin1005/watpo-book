@@ -74,7 +74,6 @@ class LeaveController extends Controller
 			$service_provider = ServiceProvider::with('shop')->with(['leaves' => function ($query) use($start_time, $end_time) {
     			$query->where('start_time', '<=', $end_time);
     			$query->where('end_time', '>=', $start_time);
-    			$query->where('activate', true);
     		}])->where('id', $service_provider_id)->where('activate', true)->first();
 
 			if($service_provider->leaves->count() > 0){
