@@ -35,7 +35,7 @@ class ShiftController extends Controller
 
 			$serviceProviders = ServiceProvider::where('shop_id', $shop_id)->with(['shifts' => function($query) use ($month){
 				$query->where('month', $month);
-			}])->orderBy('name', 'asc')->get();
+			}])->where('activate', true)->orderBy('name', 'asc')->get();
 
 			$is_set = false;
 			foreach ($serviceProviders as $key => $serviceProvider) {

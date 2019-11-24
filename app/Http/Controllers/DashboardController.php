@@ -53,17 +53,21 @@ class DashboardController extends Controller
 				$service_provider_id = $request->session()->get('service_provider_id');
 				$day_orders = $day_orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
 				    $query->where('id', $service_provider_id);
+				    $query->where('activate', true);
 				});
 				$month_orders = $month_orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
 				    $query->where('id', $service_provider_id);
+				    $query->where('activate', true);
 				});
 
 				$shiatsu_day_orders = $shiatsu_day_orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
 				    $query->where('id', $service_provider_id);
+				    $query->where('activate', true);
 				});
 
 				$shiatsu_mounth_orders = $shiatsu_mounth_orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
 				    $query->where('id', $service_provider_id);
+				    $query->where('activate', true);
 				});
 			}
 
@@ -101,6 +105,7 @@ class DashboardController extends Controller
 			else if($request->session()->get('account_level') == 3){
 				$day_orders = $day_orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
 				    $query->where('id', $service_provider_id);
+				    $query->where('activate', true);
 				})->with('service')->where('status', '!=', 3)->where('status', '!=', 4)->where('status', '!=', 6)->where('shop_id', $shop->id)->where('start_time', '<=', $day_end_time)->where('start_time', '>=', $day_start_time)->get();
 				
 				$oil_count = 0;
@@ -127,6 +132,7 @@ class DashboardController extends Controller
 				$info['order_day'] = $day_orders->count();		
 				$month_orders = $month_orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
 				    $query->where('id', $service_provider_id);
+				    $query->where('activate', true);
 				})->with('service')->where('status', '!=', 3)->where('status', '!=', 4)->where('status', '!=', 6)->where('shop_id', $shop->id)->where('start_time', '<=', $month_end_time)->where('start_time', '>=', $month_start_time)->get();
 				$info['order_month'] = $month_orders->count();
 			}

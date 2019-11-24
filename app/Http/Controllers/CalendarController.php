@@ -35,7 +35,7 @@ class CalendarController extends Controller
 	public function index(Request $request, $shop_id)
 	{
 	
-		$service_providers = ServiceProvider::with('shop')->orderBy('name', 'asc')->get();
+		$service_providers = ServiceProvider::with('shop')->where('activate', true)->orderBy('name', 'asc')->get();
 		
 		$rooms = Room::where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
 
@@ -76,7 +76,7 @@ class CalendarController extends Controller
 		$view_data['today'] = $date->format('Y-m-d');
 
 		
-		$shop_service_providers = ServiceProvider::where('shop_id', $shop_id)->get();
+		$shop_service_providers = ServiceProvider::where('shop_id', $shop_id)->where('activate', true)->get();
 
 		/* shop_service_providers */
 		$view_data['shop_service_providers'] = [];
@@ -109,6 +109,7 @@ class CalendarController extends Controller
 			$service_provider_id = Session::get('service_provider_id');
 			$orders = $orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
 			    $query->where('id', $service_provider_id);
+			    $query->where('activate', true);
 			});
 		}
 
@@ -542,7 +543,7 @@ class CalendarController extends Controller
 			$date = date("Y-m-d", strtotime($start_time));
 			$month = date("Y-m", strtotime($date));
 	
-			$service_providers = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $order->shop->id)->get();
+			$service_providers = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $order->shop->id)->where('activate', true)->get();
 			$service_provider_list = [];
 			foreach($service_providers as $service_provider){
 				$shift = $service_provider->shifts->first();
@@ -642,7 +643,7 @@ class CalendarController extends Controller
 						$query->where('status', '!=', 6);
 					    $query->where('start_time', '<', $end_time);
 					    $query->where('end_time', '>',$start_time);
-					}])->whereIn('id', $service_provider_id_list)->get();
+					}])->whereIn('id', $service_provider_id_list)->where('activate', true)->get();
 					
 					foreach ($service_provider_list as $key => $service_provider) {
 						if($service_provider->leaves->count() > 0){
@@ -721,7 +722,7 @@ class CalendarController extends Controller
 								    $query->whereNotIn('status', [3,4,6]);
 								    $query->where('start_time', '<', $order->end_time);
 								    $query->where('end_time', '>', $order->start_time);
-								})->where('id', $service_provider->id)->first();
+								})->where('id', $service_provider->id)->where('activate', true)->first();
 						if($flag == null){
 							$service_provider->select = true;
 							$no_limit--;

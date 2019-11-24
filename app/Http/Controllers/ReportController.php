@@ -40,6 +40,7 @@ class ReportController extends Controller
             $service_provider_id = $request->service_provider;
             $order_list = $order_list->whereHas('serviceProviders', function($query) use ($service_provider_id ){
                 $query->where('id', $service_provider_id);
+                $query->where('activate', true);
             });
         }
         if($request->id){
@@ -94,7 +95,7 @@ class ReportController extends Controller
 
         $view_data['order_list'] = $order_list;
 
-        $service_providers = ServiceProvider::with('shop')->orderBy('name', 'asc')->get();
+        $service_providers = ServiceProvider::with('shop')->where('activate', true)->orderBy('name', 'asc')->get();
         $service_provider_list = [];
         foreach ($service_providers as $key => $service_provider) {
             $service_provider_list[$service_provider->shop->name][] = ["id" => $service_provider->id, "name" => $service_provider->name."(".$service_provider->shop->name.")"];
@@ -196,7 +197,7 @@ class ReportController extends Controller
                 if($status[0]->status == 2 ){
                     $service_providers = ServiceProvider::whereHas('orders', function($query) use ($id) {
                         $query->where('id', $id);
-                    })->with('shop')->get();
+                    })->where('activate', true)->with('shop')->get();
                     $service_provider_information = "";
                     foreach ($service_providers as $key => $service_provider) {
                         $service_provider_information .= $service_provider->name."(".$service_provider->shop->name.")";
@@ -239,6 +240,7 @@ class ReportController extends Controller
             $service_provider_id = $request->service_provider;
             $order_list = $order_list->whereHas('serviceProviders', function($query) use ($service_provider_id ){
                 $query->where('id', $service_provider_id);
+                $query->where('activate', true);
             });
         }
         if($request->id){

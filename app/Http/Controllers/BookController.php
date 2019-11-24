@@ -53,10 +53,10 @@ class BookController extends Controller
 			$shop_id = $request->shop_id;
 
 			if(!$service_id){
-				throw new Exception("缺少服務ID", 1);;
+				throw new Exception("缺少服務ID", 1);
 			}
 
-			$service_providers = ServiceProvider::where('shop_id', $shop_id);
+			$service_providers = ServiceProvider::where('shop_id', $shop_id)->where('activate', true);
 			// $rooms = Room::where('shop_id', $shop_id);
 
 			// if($service_id == 1 || $service_id == 3){
@@ -198,13 +198,13 @@ class BookController extends Controller
 		$service_providers = ServiceProvider::whereHas('leaves' ,function ($query) use ($start_time, $end_time) {
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
-		})->where('shop_id', $shop_id)->whereIn('id', $service_provider_id_list)->pluck('name')->toArray();
+		})->where('shop_id', $shop_id)->where('activate', true)->whereIn('id', $service_provider_id_list)->pluck('name')->toArray();
 
 		if(count($service_providers) != 0){
 			return array ("select" => false, "reason" => "\n師傅 ".implode(" ",$service_providers)." 休");
 		}
 
-		$service_providers = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $shop_id)->get();
+		$service_providers = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $shop_id)->where('activate', ture)->get();
 
 		//扣回 避免出勤錯誤
 		$start_time->add(new DateInterval('PT15M'));
@@ -232,7 +232,7 @@ class BookController extends Controller
 			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
-		})->where('shop_id', $shop_id)->get();
+		})->where('shop_id', $shop_id)->where('activate', true)->get();
 
 		$order_list = Order::
 							where('start_time', '<', $end_time)->
@@ -320,7 +320,7 @@ class BookController extends Controller
 					$query->whereNotIn('status', [3,4,6]);
 				    $query->where('start_time', '<', $end_time);
 				    $query->where('end_time', '>',$start_time);
-				}])->whereIn('id', $service_provider_id_list)->get();;
+				}])->whereIn('id', $service_provider_id_list)->where('activate', true)->get();
 
 				foreach ($service_provider_list as $key => $service_provider) {
 					if($service_provider->leaves->count() > 0){
@@ -434,7 +434,7 @@ class BookController extends Controller
 								    $query->whereNotIn('status', [3,4,6]);
 								    $query->where('start_time', '<', $order->end_time);
 								    $query->where('end_time', '>', $order->start_time);
-								})->where('id', $service_provider->id)->first();
+								})->where('id', $service_provider->id)->where('activate', true)->first();
 						if($flag == null){
 							$service_provider->select = true;
 							$no_limit--;
