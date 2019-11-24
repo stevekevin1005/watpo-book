@@ -40,7 +40,7 @@ class ServiceProviderController extends Controller
 			$serviceProvider = new ServiceProvider;
 			$serviceProvider->name = $request->name;
 			$serviceProvider->shop_id	 = $request->id;
-			$serviceProvider->activate = ture;
+			$serviceProvider->activate = true;
 			$serviceProvider->save();
 			Log::create(['description' => '增加師傅id '.$serviceProvider->id]);
 			return response()->json('新增成功', 200, self::headers, JSON_UNESCAPED_UNICODE);
@@ -94,7 +94,7 @@ class ServiceProviderController extends Controller
 			$serviceProviders = ServiceProvider::with(['leaves' => function ($query) use($shop_start_time, $shop_end_time) {
     			$query->where('start_time', '<=', $shop_end_time);
     			$query->where('end_time', '>=', $shop_start_time);
-    		}])->where('shop_id', $shop_id)->where('activate', ture)->orderBy('name', 'asc')->get();
+    		}])->where('shop_id', $shop_id)->where('activate', true)->orderBy('name', 'asc')->get();
 			
 			$result['serviceProviders'] = [];
 

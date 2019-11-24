@@ -204,7 +204,7 @@ class BookController extends Controller
 			return array ("select" => false, "reason" => "\n師傅 ".implode(" ",$service_providers)." 休");
 		}
 
-		$service_providers = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $shop_id)->where('activate', ture)->get();
+		$service_providers = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $shop_id)->where('activate', true)->get();
 
 		//扣回 避免出勤錯誤
 		$start_time->add(new DateInterval('PT15M'));
