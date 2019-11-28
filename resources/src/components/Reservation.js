@@ -38,7 +38,7 @@ class Reservation extends React.Component {
         super(props);
 
         this.state = {
-            resetTime: 60 * 5,
+            resetTime: 60 * 10,
             time: 0,
             showTimeOut: false,
             showAlert: false,
