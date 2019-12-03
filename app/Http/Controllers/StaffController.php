@@ -60,7 +60,7 @@ class StaffController extends Controller
 
 			$msg .= "<br/>第 ".intval($order_count)." 筆訂單   人數: $order->person <br/> 服務: $service->title<br/> 指定師傅: ";
 			
-			$service_provider_list = ServiceProvider::whereIn('id', $service_provider_id_list)->get();
+			$service_provider_list = ServiceProvider::whereIn('id', $service_provider_id_list)->where('activate', true)->get();
 			$service_provider_name = "";
 			foreach ($service_provider_list as $key => $service_provider) {
 				$msg .= "$service_provider->name ";
@@ -102,14 +102,14 @@ class StaffController extends Controller
 			$end_time->add(new DateInterval('PT15M'));
 		}
 		//2h以上 ok的師傅名單
-		$service_providers_2h_ok = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
+		$service_providers_2h_ok = ServiceProvider::freeTime($month, $start_time, $end_time)->where('activate', true)->where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
 		
 		/* 不指定人數 */
 		$service_providers = ServiceProvider::whereHas('orders' ,function ($query) use ($start_time, $end_time) {
 			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
-		})->where('shop_id', $shop_id)->get();
+		})->where('activate', true)->where('shop_id', $shop_id)->get();
 
 		$order_list = Order::
 							where('start_time', '<', $end_time)->
@@ -179,7 +179,7 @@ class StaffController extends Controller
 		//扣一小
 		$end_time->sub(new DateInterval("PT60M"));
 		//1h以上 ok的師傅名單
-		$service_providers_1h_ok = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
+		$service_providers_1h_ok = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $shop_id)->where('activate', true)->orderBy('name', 'asc')->get();
 
 		$service_providers_1h = [];
 		foreach ($service_providers_1h_ok as $service_provider) {
@@ -201,7 +201,7 @@ class StaffController extends Controller
 			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
-		})->where('shop_id', $shop_id)->get();
+		})->where('shop_id', $shop_id)->where('activate', true)->get();
 
 		$order_list = Order::
 							where('start_time', '<', $end_time)->
@@ -282,7 +282,7 @@ class StaffController extends Controller
 	public function api_service_provider_list(Request $request){
 		try {
 			$shop_id = $request->shop_id;
-			$result = ServiceProvider::where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
+			$result = ServiceProvider::where('shop_id', $shop_id)->where('activate', true)->orderBy('name', 'asc')->get();
 
 			return response()->json($result, 200,  self::headers, JSON_UNESCAPED_UNICODE);
 		} catch (Exception $e) {
@@ -345,7 +345,7 @@ class StaffController extends Controller
 		}
 
 		//有空的時間
-		$service_providers = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $shop_id)->get();
+		$service_providers = ServiceProvider::freeTime($month, $start_time, $end_time)->where('activate', true)->where('shop_id', $shop_id)->get();
 
 		if($limit_time == "true"){
 			//扣回 避免出勤錯誤
@@ -376,7 +376,7 @@ class StaffController extends Controller
 			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
-		})->where('shop_id', $shop_id)->get();
+		})->where('shop_id', $shop_id)->where('activate', true)->get();
 
 		$order_list = Order::
 							where('start_time', '<', $end_time)->
@@ -415,7 +415,7 @@ class StaffController extends Controller
 								    $query->whereNotIn('status', [3,4,6]);
 								    $query->where('start_time', '<', $order->end_time);
 								    $query->where('end_time', '>', $order->start_time);
-								})->where('id', $service_provider->id)->first();
+								})->where('id', $service_provider->id)->where('activate', true)->first();
 						if($flag == null){
 							$service_provider->select = true;
 							$no_limit--;

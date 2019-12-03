@@ -22,7 +22,7 @@ class ServiceProviderController extends Controller
 	public function api_list(Request $request)
 	{
 		try{
-			$serviceProviders = ServiceProvider::where('shop_id', $request->id)->orderBy('name', 'asc')->get();
+			$serviceProviders = ServiceProvider::where('shop_id', $request->id)->where('activate', 1)->orderBy('name', 'asc')->get();
 			$response['serviceProviders'] = $serviceProviders;
 			return response()->json($response, 200, self::headers, JSON_UNESCAPED_UNICODE);
 		}
@@ -40,6 +40,7 @@ class ServiceProviderController extends Controller
 			$serviceProvider = new ServiceProvider;
 			$serviceProvider->name = $request->name;
 			$serviceProvider->shop_id	 = $request->id;
+			$serviceProvider->activate = true;
 			$serviceProvider->save();
 			Log::create(['description' => '增加師傅id '.$serviceProvider->id]);
 			return response()->json('新增成功', 200, self::headers, JSON_UNESCAPED_UNICODE);
@@ -58,7 +59,8 @@ class ServiceProviderController extends Controller
 			
 			$serviceProvider = new ServiceProvider;
 			$serviceProvider = $serviceProvider->where('id', $request->id)->first();
-			$serviceProvider->delete();
+			$serviceProvider->activate = false;
+			$serviceProvider->save();
 			Log::create(['description' => '刪除師傅id '.$serviceProvider->id]);
 			return response()->json('刪除成功', 200, self::headers, JSON_UNESCAPED_UNICODE);
 		}
@@ -92,7 +94,7 @@ class ServiceProviderController extends Controller
 			$serviceProviders = ServiceProvider::with(['leaves' => function ($query) use($shop_start_time, $shop_end_time) {
     			$query->where('start_time', '<=', $shop_end_time);
     			$query->where('end_time', '>=', $shop_start_time);
-    		}])->where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
+    		}])->where('shop_id', $shop_id)->where('activate', true)->orderBy('name', 'asc')->get();
 			
 			$result['serviceProviders'] = [];
 

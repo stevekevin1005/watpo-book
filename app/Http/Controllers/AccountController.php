@@ -15,6 +15,7 @@ class AccountController extends Controller
 	{
 
 		$view_data['shops'] = Shop::with(['serviceProviders' => function($query){
+			$query->where('activate', true);
 			$query->orderBy('name', 'asc');
 		}])->get();
 		$view_data['counter_accounts'] = Account::where('level', 2)->get();

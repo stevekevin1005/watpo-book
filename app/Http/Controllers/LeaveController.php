@@ -17,6 +17,7 @@ class LeaveController extends Controller
 	public function index(Request $request)
 	{
 		$shops = Shop::with(['serviceProviders' => function($query){
+			$query->where('activate', true);
 			$query->orderBy('name', 'asc');
 		}])->get();
 
@@ -28,7 +29,7 @@ class LeaveController extends Controller
 			$leaves = Leave::where('service_provider_id', $request->service_provider_id)->get();
 			$view_data['leaves'] = $leaves;
 
-			$view_data['worker'] = ServiceProvider::where('id', $request->service_provider_id)->first();
+			$view_data['worker'] = ServiceProvider::where('id', $request->service_provider_id)->where('activate', true)->first();
 
 			$shop = Shop::where('id', $shop_id)->first();
 
@@ -73,7 +74,7 @@ class LeaveController extends Controller
 			$service_provider = ServiceProvider::with('shop')->with(['leaves' => function ($query) use($start_time, $end_time) {
     			$query->where('start_time', '<=', $end_time);
     			$query->where('end_time', '>=', $start_time);
-    		}])->where('id', $service_provider_id)->first();
+    		}])->where('id', $service_provider_id)->where('activate', true)->first();
 
 			if($service_provider->leaves->count() > 0){
 				throw new Exception("此時間區間已有休假");

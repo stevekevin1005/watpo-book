@@ -38,7 +38,7 @@ class Reservation extends React.Component {
         super(props);
 
         this.state = {
-            resetTime: 60 * 5,
+            resetTime: 60 * 10,
             time: 0,
             showTimeOut: false,
             showAlert: false,
@@ -327,7 +327,7 @@ class Reservation extends React.Component {
         let serviceName = ""
         package_reservation.forEach((current_package) => {
             current_package.service.forEach((s) => {
-                serviceName += this.state.sourceData.services[s].title + ","
+                serviceName += this.state.sourceData.services[s-1].title + ","
 
             })
         })
@@ -382,7 +382,7 @@ class Reservation extends React.Component {
             let endTime = reservation.time.split(":");
             let max_time = 0;
             for (let i = 0; i < current_package.service.length; i++) {
-                let time = this.state.sourceData.services[current_package.service[i]].time
+                let time = this.state.sourceData.services[current_package.service[i] - 1].time
                 if (max_time < time) {
                     max_time = time
                 }

@@ -17,7 +17,7 @@ class OrderController extends Controller
 	{
 
 		$order_list = Order::with('shop')->with('service')->with('serviceProviders')->with('room')->with('account');
-		$service_provider_list = ServiceProvider::with('shop')->get();
+		$service_provider_list = ServiceProvider::with('shop')->where('activate', true)->get();
 
 		if($request->service_provider){
 			$service_provider_id = $request->service_provider;

@@ -530,7 +530,7 @@ class CheckTime extends React.Component {
         const reservation = this.props.reservation,
             disabled = (!reservation.date || !reservation.time) || this.props.loading,
             { t } = this.props;
-        console.log("reservation:", this.props.reservation)
+        // console.log("reservation:", this.props.reservation)
         return (
             <div>
                 <Col md={5}>
