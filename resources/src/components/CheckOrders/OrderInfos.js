@@ -2,6 +2,7 @@
 import { translate } from 'react-i18next';
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import { Modal, Container, Button } from 'react-bootstrap'
 import toggleLoading from "../../dispatchers/toggleLoading";
 
 import SweetAlert from 'sweetalert-react';
@@ -22,11 +23,13 @@ class OrdersInfo extends React.Component {
         this.state = {
             hint: "ordersInfoHint",
             orders: [],
-            id: null
+            id: null,
+            showDetail: false
         };
         this.cancel = this.cancel.bind(this);
         this.getOrders = this.getOrders.bind(this);
         this.confirmCancel = this.confirmCancel.bind(this);
+        this.showDetail = this.showDetail.bind(this);
     }
     componentDidMount() {
         this.getOrders();
@@ -58,6 +61,12 @@ class OrdersInfo extends React.Component {
                 that.props.getOrdersError();
                 location.href = "../checkOrders/0";
             });
+    }
+    showDetail(e) {
+        this.setState({
+            showDetail: true,
+            detailTitle: "detail",
+        })
     }
 
     confirmCancel(e) {
@@ -103,7 +112,7 @@ class OrdersInfo extends React.Component {
         if (this.props.checkOrdersInfo.name === undefined || this.props.checkOrdersInfo.contactNumber === undefined) location.href = '../checkOrders/0';
 
         const { t } = this.props,
-            ths = ["", "branch", "time", "service", "guestNum", "operator"].map((th, index) => {
+            ths = ["", "", "branch", "time", "service", "guestNum", "operator"].map((th, index) => {
                 return (<th key={index}>{t(th)}</th>);
             });
 
@@ -121,6 +130,8 @@ class OrdersInfo extends React.Component {
                                 {this.state.orders.length > 0 ? this.state.orders.map((order, index) => {
                                     return (
                                         <tr>
+                                            <td className="detail" onClick={this.showDetail} >{"詳"}</td>
+
                                             <td className="cancel" onClick={this.confirmCancel} value={order.id}>{t("cancel")}</td>
                                             <td>{order.shop}</td>
                                             <td>{order.start_time}</td>
@@ -151,6 +162,42 @@ class OrdersInfo extends React.Component {
                         this.setState({ showAlert: false });
                     }}
                 />
+                <Modal
+                    show={this.state.showDetail}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            Using Grid in Modal
+        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Container>
+                            <Row className="show-grid">
+                                <Col xs={12} md={8}>
+                                    <code>.col-xs-12 .col-md-8</code>
+                                </Col>
+                                <Col xs={6} md={4}>
+                                    <code>.col-xs-6 .col-md-4</code>
+                                </Col>
+                            </Row>
+
+                            <Row className="show-grid">
+                                <Col xs={6} md={4}>
+                                    <code>.col-xs-6 .col-md-4</code>
+                                </Col>
+                                <Col xs={6} md={4}>
+                                    <code>.col-xs-6 .col-md-4</code>
+                                </Col>
+                                <Col xs={6} md={4}>
+                                    <code>.col-xs-6 .col-md-4</code>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={this.props.onHide}>Close</Button>
+                    </Modal.Footer>
+                </Modal>
             </Grid>
         );
     }
