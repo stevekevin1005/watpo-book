@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Modal, Container, Button } from 'react-bootstrap'
 import toggleLoading from "../../dispatchers/toggleLoading";
+import Alert from '../Reservation/Alert'
+import { renderToStaticMarkup } from 'react-dom/server';
 
 import SweetAlert from 'sweetalert-react';
 
@@ -24,7 +26,8 @@ class OrdersInfo extends React.Component {
             hint: "ordersInfoHint",
             orders: [],
             id: null,
-            showDetail: false
+            showDetail: false,
+            detail_data: ''
         };
         this.cancel = this.cancel.bind(this);
         this.getOrders = this.getOrders.bind(this);
@@ -62,10 +65,22 @@ class OrdersInfo extends React.Component {
                 location.href = "../checkOrders/0";
             });
     }
-    showDetail(e) {
+    showDetail(id) {
+        let reservation = this.state.orders[id]
+        let { t } = this.props
         this.setState({
             showDetail: true,
-            detailTitle: "detail",
+            detail_data: <Alert notice={t("reserveNotice2")} text={
+                t("locations") + ": " + reservation.shop + "\n"
+                + t("registrationNumber") + ": " + (reservation.shop == 1 ? "02 2581-3338" : "02 2570-9393") + "\n"
+                + t("contactNumber") + ": " + this.props.checkOrdersInfo.contactNumber + "\n"
+                + t("reservatorDate") + ": " + reservation.start_time + "\n"
+                // + "服務: " + serviceName + "\n"
+                + "包廂:" + reservation.service
+                + "人數: " + reservation.person + " " + (reservation.person > 1 ? t("people") : t("person")) + "\n"
+                + t("reserveNotice1") + "\n"
+                + t("reserveNotice2") + '\n'
+                + t("reserveNotice3") + "\n" + "本店不可攜帶寵物"} />,
         })
     }
 
@@ -130,7 +145,7 @@ class OrdersInfo extends React.Component {
                                 {this.state.orders.length > 0 ? this.state.orders.map((order, index) => {
                                     return (
                                         <tr>
-                                            <td className="detail" onClick={this.showDetail} >{"詳"}</td>
+                                            <td className="detail" onClick={() => { this.showDetail(index) }} >{"詳"}</td>
 
                                             <td className="cancel" onClick={this.confirmCancel} value={order.id}>{t("cancel")}</td>
                                             <td>{order.shop}</td>
@@ -162,42 +177,17 @@ class OrdersInfo extends React.Component {
                         this.setState({ showAlert: false });
                     }}
                 />
-                <Modal
+                <SweetAlert
                     show={this.state.showDetail}
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title id="contained-modal-title-vcenter">
-                            Using Grid in Modal
-        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Container>
-                            <Row className="show-grid">
-                                <Col xs={12} md={8}>
-                                    <code>.col-xs-12 .col-md-8</code>
-                                </Col>
-                                <Col xs={6} md={4}>
-                                    <code>.col-xs-6 .col-md-4</code>
-                                </Col>
-                            </Row>
+                    title={t("reserveDetail")}
+                    html
+                    text={typeof this.state.detail_data == "object" ? renderToStaticMarkup(this.state.detail_data) : this.state.detail_data}
+                    onConfirm={() => {
+                        this.setState({ showDetail: false });
 
-                            <Row className="show-grid">
-                                <Col xs={6} md={4}>
-                                    <code>.col-xs-6 .col-md-4</code>
-                                </Col>
-                                <Col xs={6} md={4}>
-                                    <code>.col-xs-6 .col-md-4</code>
-                                </Col>
-                                <Col xs={6} md={4}>
-                                    <code>.col-xs-6 .col-md-4</code>
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={this.props.onHide}>Close</Button>
-                    </Modal.Footer>
-                </Modal>
+                    }}
+                />
+
             </Grid>
         );
     }

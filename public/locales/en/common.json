@@ -120,5 +120,6 @@
 	"SelectServiceTime": "Please select the service time:",
 	"SelectLongTime": "Please select the time slot:",
 	"concelConfirm": "Cancel",
-	"orderCanceledConfirm": "Are you sure you want to cancel your reservation?"
+	"orderCanceledConfirm": "Are you sure you want to cancel your reservation?",
+	"reserveDetail": "Detail"
 }
