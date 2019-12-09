@@ -35,47 +35,6 @@ class Package extends Component {
         const that = this,
             csrf_token = document.querySelector('input[name="_token"]').value;
         this.setMaxGuestNum()
-        // this.props.toggleLoading();
-        // axios({
-        //     method: "get",
-        //     url: "../api/service_provider_and_room_list",
-        //     params: {
-        //         service_id: package_reservation[package_no].service[0],
-        //         shop_id: this.props.reservation.shop
-        //     },
-        //     headers: { 'X-CSRF-TOKEN': csrf_token },
-        //     responseType: 'json'
-        // })
-        //     .then(function (response) {
-        //         if (that.props.loading)
-        //             that.props.toggleLoading()
-        //         if (response.statusText == "OK") {
-        //             let operator = [], operator_text = []
-
-        //             for (let i = 0; i < current_package.guestNum; i++) {
-        //                 operator.push(0);
-        //                 operator_text.push(t('NotSpecify'))
-        //             }
-        //             that.props.setReservation({
-        //                 service_provider_list: response.data.service_provider_list
-        //             })
-        //             that.props.setPackageReservation(package_no, {
-        //                 // guestNum: 1,
-        //                 operator: operator,
-        //                 operator_text: operator_text,
-        //                 // service_provider_list: response.data.service_provider_list,
-        //                 room_list: response.data.room
-        //             }, () => {
-        //                 that.setMaxGuestNum(that.setRoomId);
-        //             });
-        //         }
-        //     })
-        //     .catch(function (error) {
-        //         console.log(error);
-        //         that.props.showErrorPopUp();
-        //         if (that.props.loading) that.props.toggleLoading();
-        //     });
-
     }
 
     componentDidMount() {
@@ -182,9 +141,9 @@ class Package extends Component {
     render() {
         let { t, rest_customer, setCustomer, sourceData, reservation, package_reservation, package_no, setPackageService, disable } = this.props
         let current_package = package_reservation[package_no]
-        console.log('package no.:', package_no)
-        console.log('package info:', current_package)
-        console.log('rest_customer:', rest_customer)
+        // console.log('package no.:', package_no)
+        // console.log('package info:', current_package)
+        // console.log('rest_customer:', rest_customer)
         let { max_people_per_room } = this.state
         let selectionList = [], room_size = [], operator_list = []
         if (max_people_per_room) {
@@ -199,20 +158,20 @@ class Package extends Component {
         else {
             room_size.push(<option>{t("please_select")}</option>)
         }
-        console.log('Reducing operators...', package_reservation)
+        // console.log('Reducing operators...', package_reservation)
 
         let selectedOperators = package_reservation.reduce((accu, cur) => {
             accu.push(...cur.operator)
             return accu
         }, [])
-        console.log("Selected opertaors:", selectedOperators)
+        // console.log("Selected opertaors:", selectedOperators)
         // const selectedOperators = current_package.operator;
         if (current_package.guestNum > 0 && reservation.service_provider_list) {
             for (let i = 0; i < current_package.guestNum; i++) {
                 operator_list.push(
                     <div>
                         <ControlLabel>{t("service") + (i + 1)}</ControlLabel>
-                        <FormControl componentClass="select" id="service" defaultValue={package_reservation[package_no].service[i]} data-index={i} placeholder="..." onChange={(e) => this.setService(e)} disabled={disable}>
+                        <FormControl componentClass="select" id="service" value={package_reservation[package_no].service[i]} defaultValue={package_reservation[package_no].service[i]} data-index={i} placeholder="..." onChange={(e) => this.setService(e)} disabled={disable}>
                             {/* <option value={1}>{"massage"}</option> */}
                             {sourceData.services && sourceData.services.map((service, index) => {
                                 return (<option key={index} value={service.id}>{service.title}</option>);
@@ -285,7 +244,6 @@ class Package extends Component {
                         </div> */}
 
                         {/* 是否衛浴 */}
-                        {console.log("Source data:", this.props.sourceData.services)}
                         {/* {(sourceData.services && package_reservation[package_no].service.length > 0) && this.props.sourceData.services.find((service, i) => {
                             console.log("service id:", service.id)
                             console.log("reservation service:", package_reservation[package_no].service)

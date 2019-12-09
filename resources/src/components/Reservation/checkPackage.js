@@ -85,7 +85,6 @@ class CheckPackage extends Component {
             customer_list = this.state.is_arranged_customer,
             operator = [], operator_text = [], service = []
 
-
         for (let i = 0; i < amount; i++) {
             service.push(1)
             operator.push(0);
@@ -177,7 +176,7 @@ class CheckPackage extends Component {
                     <Col md={12} style={{ "justify-content": "center", "display": "flex" }}>
                         {reservation.unarranged_people > 0 && <Button bsStyle="primary" bsSize="large"
                             onClick={(e) => {
-                                console.log("Add new package")
+                                console.log("Add new package")  
                                 this.add_packages()
                             }}>
                             {t("AddPackage")}
