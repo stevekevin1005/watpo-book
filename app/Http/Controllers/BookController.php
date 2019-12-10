@@ -149,7 +149,7 @@ class BookController extends Controller
 					}
 					else{
 						$result = $this->time_option($today->format('Y-m-d'), $start_time->format('Y-m-d H:i:s'), $service->time, $shower, $shop_id, $person, $service_provider_id);
-						if($result["select"] === true && !$result["room"]->isEmpty()){
+						if($result["select"] === true){
 							$time_list[$i]['select'] = true;
 							$time_list[$i]["room"] = $result["room"];
 						}
@@ -270,9 +270,12 @@ class BookController extends Controller
 		// if(!$room){
 		// 	return false;
 		// }
-
-		$result = array ("select" => true, "room" => $room->get());
-	
+		$room = $room->get();
+		if ($room->isEmpty()) {
+			return array ("select" => false, "reason" => "");
+		}
+		$result = array ("select" => true, "room" => $room);
+		
 		return $result;
 	}
 
