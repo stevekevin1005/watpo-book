@@ -53,14 +53,26 @@
                 <div class="panel-body">
                     <div class="col-sm-6 col-lg-3">
                         <div class="widget-simple text-center card-box bg-warning">
+                            <h3 class="text-white"><span class="counter">{{$last_shiatsu_count}}</span></h3>
+                            <p class="text-white">指壓次數(上月)</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget-simple text-center card-box bg-warning">
+                            <h3 class="text-white"><span class="counter">{{$last_oil_count}}</span></h3>
+                            <p class="text-white">油壓次數(上月)</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget-simple text-center card-box bg-warning">
                             <h3 class="text-white"><span class="counter">{{$shiatsu_count}}</span></h3>
-                            <p class="text-white">指壓次數</p>
+                            <p class="text-white">指壓次數(當月)</p>
                         </div>
                     </div>
                     <div class="col-sm-6 col-lg-3">
                         <div class="widget-simple text-center card-box bg-warning">
                             <h3 class="text-white"><span class="counter">{{$oil_count}}</span></h3>
-                            <p class="text-white">油壓次數</p>
+                            <p class="text-white">油壓次數(當月)</p>
                         </div>
                     </div>
                 </div>

@@ -107,14 +107,13 @@ class CalendarController extends Controller
 			$month_start_time = $month_start.' '.$shop->start_time;
 			
 			if($shop->end_time <= $shop->start_time){
-				$day_end_time = date('Y-m-d H:i:s', strtotime ("+1 day", strtotime($date.' '.$shop->end_time)));
 				$month_end_time = date('Y-m-d', strtotime("$month_end +1 days")).' '.$shop->end_time;
 			}
 			else{
-				$day_end_time = $date.' '.$shop->end_time;
 				$month_end_time = date('Y-m-d', strtotime("$month_end")).' '.$shop->end_time;
 			}
-			$month_orders = $orders->with('service')
+			$month_orders = clone($orders);
+			$month_orders = $month_orders->with('service')
 									->where('status', '!=', 3)
 									->where('status', '!=', 4)
 									->where('status', '!=', 6)
@@ -140,6 +139,43 @@ class CalendarController extends Controller
 					$oil_count += 1;
 				}
 			}
+
+			$last_month_start_time = date('Y-m-d', strtotime("$month_start_time -1 month")).' '.$shop->start_time;
+			if($shop->end_time <= $shop->start_time){
+				$last_month_end_time = date('Y-m-d', strtotime("$month_end_time -1 month")).' '.$shop->end_time;
+			}
+			else{
+				$last_month_end_time = date('Y-m-d', strtotime("$month_end_time -1 month")).' '.$shop->end_time;
+			}
+			$last_month_orders = clone($orders);
+			$last_month_orders = $last_month_orders->with('service')
+											->where('status', '!=', 3)
+											->where('status', '!=', 4)
+											->where('status', '!=', 6)
+											->where('shop_id', $shop->id)
+											->where('start_time', '<=', $last_month_end_time)
+											->where('start_time', '>=', $last_month_start_time)->get();
+			$last_oil_count = 0;
+			$last_shiatsu_count = 0;
+			foreach ($last_month_orders as $key => $order) {
+				if ($order->service->id == 1) {
+					$last_shiatsu_count += 1;
+				}
+				if ($order->service->id == 2) {
+					$last_oil_count += 1;
+				}
+				if ($order->service->id == 3) {
+					$last_shiatsu_count += 0.5;
+				}
+				if ($order->service->id == 4) {
+					$last_oil_count += 0.5;
+				}
+				if ($order->service->id == 5) {
+					$last_oil_count += 1;
+				}
+			}
+			$view_data['last_oil_count'] = $last_oil_count;
+			$view_data['last_shiatsu_count'] = $last_shiatsu_count;
 			$view_data['oil_count'] = $oil_count;
 			$view_data['shiatsu_count'] = $shiatsu_count;
 		}
