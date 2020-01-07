@@ -88,6 +88,61 @@ class CalendarController extends Controller
 		$order_list = $this->order_list($date->format('Y-m-d'), $shop_id);
 		$view_data['order_list'] = $order_list;
 
+		/* for service provider */
+		if(Session::has('service_provider_id')){
+			$service_provider_id = Session::get('service_provider_id');
+			$orders = new Order;
+			$orders = $orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
+			    $query->where('id', $service_provider_id);
+			    $query->where('activate', true);
+			});
+			if(strtotime(date('H:i:s')) >= strtotime(date($shop->start_time)) ){
+				$date = date("Y-m-d");
+			}
+			else{
+				$date = date("Y-m-d", strtotime(date("Y-m-d")."-1 day"));
+			}
+			$month_start = date('Y-m-01', strtotime($date));
+			$month_end = date('Y-m-d', strtotime("$month_start +1 month -1 day")); 
+			$month_start_time = $month_start.' '.$shop->start_time;
+			
+			if($shop->end_time <= $shop->start_time){
+				$day_end_time = date('Y-m-d H:i:s', strtotime ("+1 day", strtotime($date.' '.$shop->end_time)));
+				$month_end_time = date('Y-m-d', strtotime("$month_end +1 days")).' '.$shop->end_time;
+			}
+			else{
+				$day_end_time = $date.' '.$shop->end_time;
+				$month_end_time = date('Y-m-d', strtotime("$month_end")).' '.$shop->end_time;
+			}
+			$month_orders = $orders->with('service')
+									->where('status', '!=', 3)
+									->where('status', '!=', 4)
+									->where('status', '!=', 6)
+									->where('shop_id', $shop->id)
+									->where('start_time', '<=', $month_end_time)
+									->where('start_time', '>=', $month_start_time)->get();
+			$oil_count = 0;
+			$shiatsu_count = 0;
+			foreach ($month_orders as $key => $order) {
+				if ($order->service->id == 1) {
+					$shiatsu_count += 1;
+				}
+				if ($order->service->id == 2) {
+					$oil_count += 1;
+				}
+				if ($order->service->id == 3) {
+					$shiatsu_count += 0.5;
+				}
+				if ($order->service->id == 4) {
+					$oil_count += 0.5;
+				}
+				if ($order->service->id == 5) {
+					$oil_count += 1;
+				}
+			}
+			$view_data['oil_count'] = $oil_count;
+			$view_data['shiatsu_count'] = $shiatsu_count;
+		}
 		return view('admin.calendar.index', $view_data);
 	}
 
@@ -113,14 +168,14 @@ class CalendarController extends Controller
 			});
 		}
 
-		$orders =	$orders->with('service')
+		$orders =  $orders->with('service')
 							->with('room')
 							->with('serviceProviders')
 							->where('shop_id', $shop_id)
 							->where('start_time', '>=', date("Y-m-d H:i:s", $shop_start_time))
 							->where('end_time', '<=', date("Y-m-d H:i:s", $shop_end_time));
 
-		if(Session::get('account_level') != 1){
+		if(Session::get('account_level') == 2){
 			//30分後才隱藏訂單
 			$now->add(new DateInterval('PT30M'));
 			$orders = $orders->where('end_time', '>=', $now);
