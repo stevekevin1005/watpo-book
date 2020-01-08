@@ -122,6 +122,7 @@ class CalendarController extends Controller
 									->where('start_time', '>=', $month_start_time)->get();
 			$oil_count = 0;
 			$shiatsu_count = 0;
+			$exfoliating_count = 0;
 			foreach ($month_orders as $key => $order) {
 				if ($order->service->id == 1) {
 					$shiatsu_count += 1;
@@ -136,7 +137,7 @@ class CalendarController extends Controller
 					$oil_count += 0.5;
 				}
 				if ($order->service->id == 5) {
-					$oil_count += 1;
+					$exfoliating_count += 1;
 				}
 			}
 
@@ -157,6 +158,7 @@ class CalendarController extends Controller
 											->where('start_time', '>=', $last_month_start_time)->get();
 			$last_oil_count = 0;
 			$last_shiatsu_count = 0;
+			$last_exfoliating_count = 0;
 			foreach ($last_month_orders as $key => $order) {
 				if ($order->service->id == 1) {
 					$last_shiatsu_count += 1;
@@ -171,13 +173,15 @@ class CalendarController extends Controller
 					$last_oil_count += 0.5;
 				}
 				if ($order->service->id == 5) {
-					$last_oil_count += 1;
+					$last_exfoliating_count += 1;
 				}
 			}
 			$view_data['last_oil_count'] = $last_oil_count;
 			$view_data['last_shiatsu_count'] = $last_shiatsu_count;
+			$view_data['last_exfoliating_count'] = $last_exfoliating_count;
 			$view_data['oil_count'] = $oil_count;
 			$view_data['shiatsu_count'] = $shiatsu_count;
+			$view_data['exfoliating_count'] = $exfoliating_count;
 		}
 		return view('admin.calendar.index', $view_data);
 	}
