@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ServiceProvider extends Model {
 
     protected $table = 'ServiceProvider';
-    const TEMP_ORDER_SOLUTION = 73000;
+    const TEMP_ORDER_SOLUTION = 70000;
 
     public function orders()
     {

@@ -11,7 +11,7 @@ use App\Models\BlackList;
 class BookController extends Controller
 {
 	const headers = array('Content-Type' => 'application/json; <a href="http://superlevin.ifengyuan.tw/tag/charset/">charset</a>=utf-8');
-	const TEMP_ORDER_SOLUTION = 73000;
+	const TEMP_ORDER_SOLUTION = 70000;
 	public function index()
 	{
 		$view_data = [];
