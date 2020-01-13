@@ -11,6 +11,7 @@ use App\Models\BlackList;
 class BookController extends Controller
 {
 	const headers = array('Content-Type' => 'application/json; <a href="http://superlevin.ifengyuan.tw/tag/charset/">charset</a>=utf-8');
+	const TEMP_ORDER_SOLUTION = 73000;
 	public function index()
 	{
 		$view_data = [];
@@ -231,9 +232,11 @@ class BookController extends Controller
 			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
+		    $query->where('id', '>', self::TEMP_ORDER_SOLUTION);
 		})->where('shop_id', $shop_id)->where('activate', true)->get();
 
 		$order_list = Order::
+							where('id', '>', self::TEMP_ORDER_SOLUTION)->
 							where('start_time', '<', $end_time)->
 							where('end_time', '>', $start_time)->
 							whereNotIn('status', [3,4,6])->
@@ -255,21 +258,13 @@ class BookController extends Controller
 			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<=', $end_time);
 		    $query->where('end_time', '>=', $start_time);
+		    $query->where('id', '>', self::TEMP_ORDER_SOLUTION);
 		})->where('shop_id', $shop_id)->where('person', '>=', $person);
 
 		//扣回
 		$start_time->add(new DateInterval('PT30M'));
 		$end_time->sub(new DateInterval('PT30M'));
 
-		// if($shower == "true"){
-		// 	$room = $room->where('shower', 1);
-		// }
-
-		// $room = $room->first();
-
-		// if(!$room){
-		// 	return false;
-		// }
 		$room = $room->get();
 		if ($room->isEmpty()) {
 			return array ("select" => false, "reason" => "預約已滿");
@@ -436,6 +431,7 @@ class BookController extends Controller
 								    $query->whereNotIn('status', [3,4,6]);
 								    $query->where('start_time', '<', $order->end_time);
 								    $query->where('end_time', '>', $order->start_time);
+								    $query->where('id', '>', self::TEMP_ORDER_SOLUTION);
 								})->where('id', $service_provider->id)->where('activate', true)->first();
 						if($flag == null){
 							$service_provider->select = true;
