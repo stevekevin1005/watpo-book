@@ -190,7 +190,8 @@ class CalendarController extends Controller
 	{
 
 		$now = new Datetime();
-
+		$last_two_month = date("Y-m-d");
+		$last_two_month = date('Y-m-01', strtotime("$last_two_month -2 month"));
 		$shop = Shop::where('id', $shop_id)->first();
 		$shop_start_time = strtotime($date.' '.$shop->start_time);
 		$shop_end_time = strtotime($date.' '.$shop->end_time);
@@ -205,7 +206,7 @@ class CalendarController extends Controller
 			$orders = $orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
 			    $query->where('id', $service_provider_id);
 			    $query->where('activate', true);
-			});
+			})->where('start_time', '>=', $last_two_month);
 		}
 
 		$orders =  $orders->with('service')
