@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class ServiceProvider extends Model {
 
     protected $table = 'ServiceProvider';
-    const TEMP_ORDER_SOLUTION = 70000;
 
     public function orders()
     {
@@ -47,7 +46,7 @@ class ServiceProvider extends Model {
                     $query->whereNotIn('status', [3,4,6]);
                     $query->where('start_time', '<', $end_time);
                     $query->where('end_time', '>', $start_time);
-                    $query->where('id', '>', self::TEMP_ORDER_SOLUTION);
+                    $query->where('is_finished', false);
                 });
     }
 }

@@ -145,7 +145,7 @@ class OrdersInfo extends React.Component {
                                 {this.state.orders.length > 0 ? this.state.orders.map((order, index) => {
                                     return (
                                         <tr>
-                                            <td className="detail" onClick={() => { this.showDetail(index) }} >{"詳"}</td>
+                                            <td className="detail" onClick={() => { this.showDetail(index) }} >{"內容"}</td>
 
                                             <td className="cancel" onClick={this.confirmCancel} value={order.id}>{t("cancel")}</td>
                                             <td>{order.shop}</td>

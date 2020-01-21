@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Shop;
 use App\Models\Log;
 use App\Models\ServiceProvider;
+use App\Models\Account;
 use Hash, Exception, Datetime, DateInterval;
 
 class ServiceProviderController extends Controller
@@ -61,6 +62,7 @@ class ServiceProviderController extends Controller
 			$serviceProvider = $serviceProvider->where('id', $request->id)->first();
 			$serviceProvider->activate = false;
 			$serviceProvider->save();
+			Account::where('service_provider_id', $request->id)->delete();
 			Log::create(['description' => '刪除師傅id '.$serviceProvider->id]);
 			return response()->json('刪除成功', 200, self::headers, JSON_UNESCAPED_UNICODE);
 		}

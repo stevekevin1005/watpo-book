@@ -11,7 +11,6 @@ use App\Models\BlackList;
 class BookController extends Controller
 {
 	const headers = array('Content-Type' => 'application/json; <a href="http://superlevin.ifengyuan.tw/tag/charset/">charset</a>=utf-8');
-	const TEMP_ORDER_SOLUTION = 70000;
 	public function index()
 	{
 		$view_data = [];
@@ -232,11 +231,11 @@ class BookController extends Controller
 			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
-		    $query->where('id', '>', self::TEMP_ORDER_SOLUTION);
+		    $query->where('is_finished', false);
 		})->where('shop_id', $shop_id)->where('activate', true)->get();
 
 		$order_list = Order::
-							where('id', '>', self::TEMP_ORDER_SOLUTION)->
+							where('is_finished', false)->
 							where('start_time', '<', $end_time)->
 							where('end_time', '>', $start_time)->
 							whereNotIn('status', [3,4,6])->
@@ -258,7 +257,7 @@ class BookController extends Controller
 			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<=', $end_time);
 		    $query->where('end_time', '>=', $start_time);
-		    $query->where('id', '>', self::TEMP_ORDER_SOLUTION);
+		    $query->where('is_finished', false);
 		})->where('shop_id', $shop_id)->where('person', '>=', $person);
 
 		//扣回
@@ -409,6 +408,7 @@ class BookController extends Controller
 			$phone = $request->phone;
 			$order = Order::where('id', $order_id)->first();
 			$order->status = 3;
+			$order->is_finished = true;
 			$order->save();
 			return response()->json('預約取消成功!', 200, self::headers, JSON_UNESCAPED_UNICODE);
 		}
@@ -431,7 +431,7 @@ class BookController extends Controller
 								    $query->whereNotIn('status', [3,4,6]);
 								    $query->where('start_time', '<', $order->end_time);
 								    $query->where('end_time', '>', $order->start_time);
-								    $query->where('id', '>', self::TEMP_ORDER_SOLUTION);
+								    $query->where('is_finished', false);
 								})->where('id', $service_provider->id)->where('activate', true)->first();
 						if($flag == null){
 							$service_provider->select = true;

@@ -250,6 +250,7 @@ class CalendarController extends Controller
 
 			if(strtotime(date('Y-m-d H:i:s')) - strtotime($order->start_time) >= 600 && ($order->status == 1 || $order->status == 2)){
 				$order->status = 6;
+				$order->is_finished = true;
 				$order->save();
 				if($data->phone != '現場客'){
 					$blackList = new BlackList;
@@ -575,7 +576,6 @@ class CalendarController extends Controller
 	{
 		try{
 			$limit_room = $request->limit_room;
-
 			$start_time = $request->start_time;
 			$end_time = $request->end_time;
 			$room_id = $request->room_id;
@@ -777,6 +777,7 @@ class CalendarController extends Controller
 			$order_id = $request->order_id;
 			$order = Order::with('service')->with('shop')->where('id', $order_id)->first();
 			$order->status = 5;
+			$order->is_finished = true;
 			$order->save();
 			Log::create(['description' => '確認 訂單#'.$order->id]);
 			return response()->json('訂單確認成功!', 200);
@@ -795,6 +796,7 @@ class CalendarController extends Controller
 			$order_id = $request->order_id;
 			$order = Order::with('service')->with('shop')->where('id', $order_id)->first();
 			$order->status = 4;
+			$order->is_finished = true;
 			$order->save();
 			Log::create(['description' => '取消 訂單#'.$order->id]);
 			return response()->json('訂單取消成功!', 200);
@@ -818,6 +820,7 @@ class CalendarController extends Controller
 								    $query->whereNotIn('status', [3,4,6]);
 								    $query->where('start_time', '<', $order->end_time);
 								    $query->where('end_time', '>', $order->start_time);
+								    $query->where('is_finished', false);
 								})->where('id', $service_provider->id)->where('activate', true)->first();
 						if($flag == null){
 							$service_provider->select = true;
