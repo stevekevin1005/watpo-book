@@ -109,6 +109,7 @@ class StaffController extends Controller
 			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
+		    $query->where('is_finished', false);
 		})->where('activate', true)->where('shop_id', $shop_id)->get();
 
 		$order_list = Order::
@@ -116,6 +117,7 @@ class StaffController extends Controller
 							where('end_time', '>', $start_time)->
 							whereNotIn('status', [3,4,6])->
 							where('shop_id', $shop_id)->
+							where('is_finished', false)->
 							withCount('serviceProviders')->get();
 
 		$no_specific_amount_2hr = $this->no_specific($order_list, $service_providers);
@@ -151,11 +153,10 @@ class StaffController extends Controller
 		}
 		//2h以上房間名單
 		$rooms = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
-			$query->where('status', '!=', 3);
-			$query->where('status', '!=', 4);
-			$query->where('status', '!=', 6);
+			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
+		    $query->where('is_finished', false);
 		})->where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
 		
 		$rooms_2h = [];
@@ -201,6 +202,7 @@ class StaffController extends Controller
 			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
+		    $query->where('is_finished', false);
 		})->where('shop_id', $shop_id)->where('activate', true)->get();
 
 		$order_list = Order::
@@ -231,6 +233,7 @@ class StaffController extends Controller
 			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
+		    $query->where('is_finished', false);
 		})->where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
 		//限制時間
 		if($limit_time == "true"){
@@ -376,6 +379,7 @@ class StaffController extends Controller
 			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
+		    $query->where('is_finished', false);
 		})->where('shop_id', $shop_id)->where('activate', true)->get();
 
 		$order_list = Order::
@@ -383,6 +387,7 @@ class StaffController extends Controller
 							where('end_time', '>', $start_time)->
 							whereNotIn('status', [3,4,6])->
 							where('shop_id', $shop_id)->
+							where('is_finished', false)->
 							withCount('serviceProviders')->get();
 		if($limit_time == "true"){
 			//扣回 避免出勤錯誤
@@ -415,6 +420,7 @@ class StaffController extends Controller
 								    $query->whereNotIn('status', [3,4,6]);
 								    $query->where('start_time', '<', $order->end_time);
 								    $query->where('end_time', '>', $order->start_time);
+								    $query->where('is_finished', false);
 								})->where('id', $service_provider->id)->where('activate', true)->first();
 						if($flag == null){
 							$service_provider->select = true;

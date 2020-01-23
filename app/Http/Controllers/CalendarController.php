@@ -475,11 +475,10 @@ class CalendarController extends Controller
 			    $query->where('start_time', '<', $end_time);
 			    $query->where('end_time', '>', $start_time);
 			}])->with(['orders' => function ($query) use ($start_time, $end_time) {
-					$query->where('status', '!=', 3);
-					$query->where('status', '!=', 4);
-					$query->where('status', '!=', 6);
+				$query->whereNotIn('status', [3,4,6])->
 			    $query->where('start_time', '<', $end_time);
-			    $query->where('end_time', '>',$start_time);
+			    $query->where('end_time', '>', $start_time);
+			    $query->where('is_finished', false);
 			}])->whereIn('id', $service_provider_id_list)->get();
 			
 			foreach ($service_provider_list as $key => $service_provider) {
@@ -492,11 +491,10 @@ class CalendarController extends Controller
 			}
 			
 			$room = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
-					$query->where('status', '!=', 3);
-					$query->where('status', '!=', 4);
-					$query->where('status', '!=', 6);
+				$query->whereNotIn('status', [3,4,6])->
 			    $query->where('start_time', '<', $end_time);
 			    $query->where('end_time', '>', $start_time);
+			    $query->where('is_finished', false);
 			}])->where('id', $room_id)->first();
 
 			if($limit_room == "true"){
@@ -510,6 +508,7 @@ class CalendarController extends Controller
 				$query->whereNotIn('status', [3,4,6]);
 			    $query->where('start_time', '<', $end_time);
 			    $query->where('end_time', '>', $start_time);
+			    $query->where('is_finished', false);
 			})->where('shop_id', $shop_id)->get();
 
 			$order_list = Order::
@@ -517,6 +516,7 @@ class CalendarController extends Controller
 								where('end_time', '>', $start_time)->
 								whereNotIn('status', [3,4,6])->
 								where('shop_id', $shop_id)->
+								where('is_finished', false)->
 								withCount('serviceProviders')->get();
 
 			$no_specific_amount = $this->no_specific($order_list, $service_providers);
@@ -631,6 +631,7 @@ class CalendarController extends Controller
 								whereNotIn('status', [3,4,6])->
 								where('shop_id', $order->shop->id)->
 								where('id', '!=', $order_id)->
+								where('is_finished', false)->
 								withCount('serviceProviders')->get();
 
 			$no_specific_amount = $this->no_specific($order_list, $service_providers);
@@ -758,6 +759,7 @@ class CalendarController extends Controller
 			}
 			$order->start_time = $start_time;
 			$order->end_time = $end_time;
+			$order->is_finished = false;
 			$order->save();
 
 			Log::create(['description' => '更改 訂單#'.$order->id." 店家:".$order->shop->name." 姓名:".$order->name." 電話:".$order->phone." 服務:".$order->service->title." 人數:".$order->person."房號:".$room_name."師傅:".$service_provider_name." 開始時間:".$order->start_time." 結束時間".$order->end_time."(預約排程)"]);
