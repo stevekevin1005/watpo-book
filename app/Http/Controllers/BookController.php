@@ -257,7 +257,6 @@ class BookController extends Controller
 			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<=', $end_time);
 		    $query->where('end_time', '>=', $start_time);
-		    $query->where('is_finished', false);
 		})->where('shop_id', $shop_id)->where('person', '>=', $person);
 
 		//扣回
