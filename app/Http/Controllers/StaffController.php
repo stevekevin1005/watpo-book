@@ -181,7 +181,6 @@ class StaffController extends Controller
 		$end_time->sub(new DateInterval("PT60M"));
 		//1h以上 ok的師傅名單
 		$service_providers_1h_ok = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $shop_id)->where('activate', true)->orderBy('name', 'asc')->get();
-
 		$service_providers_1h = [];
 		foreach ($service_providers_1h_ok as $service_provider) {
 			$shift = $service_provider->shifts->first();
