@@ -156,6 +156,7 @@ class StaffController extends Controller
 			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
+		    $query->where('is_finished', false);
 		})->where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
 		
 		$rooms_2h = [];
@@ -231,6 +232,7 @@ class StaffController extends Controller
 			$query->whereNotIn('status', [3,4,6]);
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
+		    $query->where('is_finished', false);
 		})->where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
 		//限制時間
 		if($limit_time == "true"){

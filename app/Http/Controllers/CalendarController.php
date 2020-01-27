@@ -779,7 +779,6 @@ class CalendarController extends Controller
 			$order_id = $request->order_id;
 			$order = Order::with('service')->with('shop')->where('id', $order_id)->first();
 			$order->status = 5;
-			$order->is_finished = true;
 			$order->save();
 			Log::create(['description' => '確認 訂單#'.$order->id]);
 			return response()->json('訂單確認成功!', 200);
