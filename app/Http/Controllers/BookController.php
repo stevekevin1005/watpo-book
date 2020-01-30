@@ -316,6 +316,7 @@ class BookController extends Controller
 					$query->whereNotIn('status', [3,4,6]);
 				    $query->where('start_time', '<', $end_time);
 				    $query->where('end_time', '>',$start_time);
+				    $query->where('is_finished', false);
 				}])->whereIn('id', $service_provider_id_list)->where('activate', true)->get();
 
 				foreach ($service_provider_list as $key => $service_provider) {

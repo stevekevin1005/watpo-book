@@ -477,20 +477,21 @@ class CalendarController extends Controller
 			}])->with(['orders' => function ($query) use ($start_time, $end_time) {
 				$query->whereNotIn('status', [3,4,6]);
 			    $query->where('start_time', '<', $end_time);
-			    $query->where('end_time', '>', $start_time);
+			    $query->where('end_time', '>',$start_time);
 			    $query->where('is_finished', false);
-			}])->whereIn('id', $service_provider_id_list)->get();
+			}])->whereIn('id', $service_provider_id_list)->where('activate', true)->get();
+
 			foreach ($service_provider_list as $key => $service_provider) {
 				if($service_provider->leaves->count() > 0){
-					throw new Exception($service_provider->name."號 師傅該時段請假 請重新選擇", 1);
+					throw new Exception($service_provider->name."號 該時段請假 請重新選擇", 1);
 				}
 				if($service_provider->orders->count() > 0){
-					throw new Exception($service_provider->name."號 師傅該時段已有約 請重新選擇", 1);
+					throw new Exception($service_provider->name."號 該時段已有約 請重新選擇", 1);
 				}
 			}
-			
+
 			$room = Room::with(['orders' => function ($query) use ($start_time, $end_time) {
-				$query->whereNotIn('status', [3,4,6])->
+				$query->whereNotIn('status', [3,4,6]);
 			    $query->where('start_time', '<', $end_time);
 			    $query->where('end_time', '>', $start_time);
 			    $query->where('is_finished', false);
@@ -525,7 +526,7 @@ class CalendarController extends Controller
 			$month = date("Y-m", strtotime($date));
 	
 			$service_providers = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $shop_id)->get();
-			$service_provider_list = [];
+			// $service_provider_list = [];
 			foreach($service_providers as $service_provider){
 				$shift = $service_provider->shifts->first();
 				$on_duty = new DateTime($date." ".$shift->start_time);
@@ -534,9 +535,9 @@ class CalendarController extends Controller
 				if($off_duty < $on_duty){
 					$off_duty->add(new DateInterval("P1D"));
 				}
-				if($on_duty <= new Datetime($start_time) && $off_duty >= new Datetime($end_time)){
-					$service_provider_list[] = $service_provider->id;
-				}
+				// if($on_duty <= new Datetime($start_time) && $off_duty >= new Datetime($end_time)){
+				// 	$service_provider_list[] = $service_provider->id;
+				// }
 			}
 			/* 								預測end 						*/
 			// if(count($service_provider_list) - $no_specific_amount < count($service_provider_id_list)) throw new Exception("該時段師傅數不足 請重新選擇", 1);
