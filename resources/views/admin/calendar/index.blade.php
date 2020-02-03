@@ -65,7 +65,7 @@
                     </div>
                     <div class="col-sm-4 col-lg-2">
                         <div class="widget-simple text-center card-box bg-success">
-                            <h3 class="text-white"><span>{{$exfoliating_count}}</span></h3>
+                            <h3 class="text-white"><span>{{$last_exfoliating_count}}</span></h3>
                             <p class="text-white">去角質次數(上月)</p>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
                     </div>
                     <div class="col-sm-4 col-lg-2">
                         <div class="widget-simple text-center card-box bg-success">
-                            <h3 class="text-white"><span>{{$last_exfoliating_count}}</span></h3>
+                            <h3 class="text-white"><span>{{$exfoliating_count}}</span></h3>
                             <p class="text-white">去角質次數(當月)</p>
                         </div>
                     </div>
