@@ -158,7 +158,7 @@ class StaffController extends Controller
 		    $query->where('end_time', '>', $start_time);
 		    $query->where('is_finished', false);
 		})->where('shop_id', $shop_id)->orderBy('name', 'asc')->get();
-		
+
 		$rooms_2h = [];
 		foreach ($rooms as $room){
 			if(!in_array($room, $rooms_2h)){
