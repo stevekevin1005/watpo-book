@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         Commands\Inspire::class,
         Commands\ReportStatus::class,
         Commands\SendReportSMS::class,
+        Commands\MarkFinishedOrder::class,
         Commands\unlockBlackList::class,
     ];
 
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
                  ->hourly();
         $schedule->call('App\Http\Controllers\SmsController@schedulingSendReportSMS')->everyMinute();
         $schedule->call('App\Http\Controllers\ReportController@FinishedService')->everyMinute();
+        $schedule->command('order:MarkFinishedOrder')->dailyAt('05:00');
         $schedule->command('blackList:unlock')->dailyAt('05:00');
         $schedule->command('backup:run --only-db')->dailyAt('05:00');
         $schedule->command('backup:clean')->dailyAt('05:00');

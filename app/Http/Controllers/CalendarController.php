@@ -250,7 +250,6 @@ class CalendarController extends Controller
 
 			if(strtotime(date('Y-m-d H:i:s')) - strtotime($order->start_time) >= 600 && ($order->status == 1 || $order->status == 2)){
 				$order->status = 6;
-				$order->is_finished = true;
 				$order->save();
 				if($data->phone != '現場客'){
 					$blackList = new BlackList;
