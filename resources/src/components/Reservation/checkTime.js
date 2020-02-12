@@ -237,11 +237,11 @@ class CheckTime extends React.Component {
 
                 else
                     search_weight_key = 'service_1'
-
+                console.log("key: " + search_weight_key);
                 response[0].data.forEach(time_obj => {
                     // let sorted_rooms = time_obj.room
                     if (time_obj.room) {
-                        if (package_reservation[0].shower) {
+                        if (package_reservation[0].shower || package_reservation[0].service == 5) {
                             time_obj.room = time_obj.room.filter(function(room, index) {
                                 return room.shower == 1;
                             });
