@@ -108,33 +108,48 @@ class DashboardController extends Controller
 				    $query->where('activate', true);
 				})->with('service')->where('status', '!=', 3)->where('status', '!=', 4)->where('status', '!=', 6)->where('shop_id', $shop->id)->where('start_time', '<=', $day_end_time)->where('start_time', '>=', $day_start_time)->get();
 				
-				$oil_count = 0;
-				$shiatsu_count = 0;
+				$order_day = 0;
 				foreach ($day_orders as $key => $order) {
 					if ($order->service->id == 1) {
-						$shiatsu_count += 0.5;
+						$order_day += 1;
 					}
 					if ($order->service->id == 2) {
-						$oil_count += 0.5;
+						$order_day += 1;
 					}
 					if ($order->service->id == 3) {
-						$shiatsu_count += 1;
+						$order_day += 0.5;
 					}
 					if ($order->service->id == 4) {
-						$oil_count += 1;
+						$order_day += 0.5;
 					}
 					if ($order->service->id == 5) {
-						$oil_count += 1;
+						$order_day += 1;
 					}
 				}
-				$info['shiatsu_count'] = $shiatsu_count;
-				$info['oil_count'] = $oil_count;
-				$info['order_day'] = $day_orders->count();		
+				$info['order_day'] = $order_day;		
 				$month_orders = $month_orders->whereHas('serviceProviders' ,function ($query) use ($service_provider_id) {
 				    $query->where('id', $service_provider_id);
 				    $query->where('activate', true);
 				})->with('service')->where('status', '!=', 3)->where('status', '!=', 4)->where('status', '!=', 6)->where('shop_id', $shop->id)->where('start_time', '<=', $month_end_time)->where('start_time', '>=', $month_start_time)->get();
-				$info['order_month'] = $month_orders->count();
+				$order_month = 0;
+				foreach ($month_orders as $key => $order) {
+					if ($order->service->id == 1) {
+						$order_month += 1;
+					}
+					if ($order->service->id == 2) {
+						$order_month += 1;
+					}
+					if ($order->service->id == 3) {
+						$order_month += 0.5;
+					}
+					if ($order->service->id == 4) {
+						$order_month += 0.5;
+					}
+					if ($order->service->id == 5) {
+						$order_month += 1;
+					}
+				}
+				$info['order_month'] = $order_month;
 			}
 			$info['id'] = $shop->id;
 			$view_data['shop_list'][] = $info;
