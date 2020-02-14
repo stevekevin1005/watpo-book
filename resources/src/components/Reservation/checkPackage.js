@@ -81,10 +81,9 @@ class CheckPackage extends Component {
     }
 
     setCustomer(no, e) {
-        let amount = parseInt(e.target.options[event.target.selectedIndex].value),
+        let amount = parseInt(e.target.options[e.target.selectedIndex].value),
             customer_list = this.state.is_arranged_customer,
             operator = [], operator_text = [], service = []
-
         for (let i = 0; i < amount; i++) {
             service.push(1)
             operator.push(0);
