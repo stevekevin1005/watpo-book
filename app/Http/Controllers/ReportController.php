@@ -312,6 +312,6 @@ class ReportController extends Controller
                 }
                 $sheet->fromArray($formArrayData);
             });
-        })->export('xlsx');
+        })->export('xls');
     }
 }

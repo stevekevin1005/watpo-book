@@ -60,6 +60,6 @@ class LogController extends Controller
 	    	}
 	    	$sheet->fromArray($fromArrayData);
 	    });
-		})->export('xlsx');
+		})->export('xls');
 	}
 }
