@@ -29,7 +29,8 @@ class Landpage extends React.Component {
         // this.state = {show: true};
         Swal.fire({
             imageUrl: '/assets//images/book/alert.jpg',
-            showConfirmButton: false
+            showConfirmButton: false,
+            width: 600
         })
     }
     scroll() {
