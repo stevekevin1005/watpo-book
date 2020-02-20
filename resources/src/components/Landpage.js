@@ -19,13 +19,18 @@ class Landpage extends React.Component {
     constructor(props) {
         super(props);
         this.scroll = this.scroll.bind(this);
-        this.state = {show: true};
+        
     }
     componentDidMount() {
         if (this.props.checkOrdersInfo != {}) {
             this.props.clearCheckOrdersInfo("name");
             this.props.clearCheckOrdersInfo("contactNumber");
         }
+        // this.state = {show: true};
+        Swal.fire({
+            imageUrl: '/assets//images/book/alert.jpg',
+            showConfirmButton: false
+        })
     }
     scroll() {
         const distance = document.querySelector('.landpage_section').getBoundingClientRect().top + window.scrollY - 20,
@@ -86,14 +91,7 @@ class Landpage extends React.Component {
 
         return (
             <Grid>
-                <SweetAlert
-                    show={this.state.show}
-                    title="Notice!"
-                    html
-                    text={renderToStaticMarkup(<img src="/assets//images/book/alert.jpg" width="100%"/>)}
-                    onOutsideClick={() => this.setState({ show: false })}
-                    onConfirm={() => this.setState({ show: false })}
-                />
+                
                 <Row className="landpage_top">
                     <div className="topContainer">
                         <h1 className="title">{t("Watpo")}</h1>

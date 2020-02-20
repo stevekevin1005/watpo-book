@@ -16,6 +16,7 @@
   <body>
     <div id="container"></div>
   </body>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
   <script src="/assets/frontend/bundle.js"></script>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118933925-1"></script>
