@@ -334,6 +334,10 @@ class CalendarController extends Controller
 
 			$data->phone_call_status = $order->phone_call_status;
 			$order_list[] = $data;
+			if (!in_array($order->status, [3,4,6])) {
+				$order->is_finished = false;
+				$order->save();
+			}
 		}
 
 		return $order_list;
