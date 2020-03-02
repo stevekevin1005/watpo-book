@@ -132,7 +132,16 @@
 				                </div>
 			                  <!-- /col-md-4-->
 			                  <!-- /col-md-8-->
-			                	<div class="col-md-12 text-right"><a href="/admin/order/export?name={{$request->name}}&service={{$request->service}}&phone={{$request->phone}}&shop={{$request->shop}}&service_provider={{$request->service_provider}}&start_time={{$request->start_time}}&end_time={{$request->end_time}}&room={{$request->room}}" class="btn btn-danger" target="_blank">匯出</a><input class="btn btn-primary" type="submit" value="查詢"></div>
+			                  	<div class="col-md-4">
+				                    <div class="form-group">
+										<label class="col-md-4 control-label text-center">來訪次數</label>
+				                    	<div class="col-md-8">
+				                        	<input type="number" name="count" class="form-control" value="{{ $request->count }}" min="0">
+				                    	</div>
+				                    </div>
+				                    <!-- /form-group-->
+				                </div>
+			                	<div class="col-md-8 text-right"><a href="/admin/order/export?name={{$request->name}}&service={{$request->service}}&phone={{$request->phone}}&shop={{$request->shop}}&service_provider={{$request->service_provider}}&start_time={{$request->start_time}}&end_time={{$request->end_time}}&room={{$request->room}}&count={{$request->count}}" class="btn btn-danger" target="_blank">匯出</a><input class="btn btn-primary" type="submit" value="查詢"></div>
 			                  <!-- /col-md-12-->
 			                </div>
 			                <!-- /row-->
@@ -147,6 +156,7 @@
         	<div class="card-box">
 		        <table class="table table-striped">
 					<thead>
+						@if(!$request->count && $request->count <= 0)
 						<th>編號</th>
 						<th>店家</th>
 						<th>姓名</th>
@@ -161,70 +171,86 @@
 						@if(session('account_level') == 1)
 						<th></th>
 						@endif
+						@endif
+						@if($request->count && $request->count > 0)
+						<th>姓名</th>
+						<th>手機號碼</th>
+						<th>次數</th>
+						@endif
 					</thead>
 					<tbody>
 						@foreach($order_list as $order)
-						<tr>
-							<?php
-								$service_provider_list= "";
-								foreach ($order->serviceProviders as $key => $serviceProvider) {
-									if($serviceProvider->shop_id == $order->shop_id){
-										$service_provider_list = $service_provider_list." ".$serviceProvider->name;
+							
+							<tr>
+								@if(!$request->count && $request->count <= 0)
+								<?php
+									$service_provider_list= "";
+									foreach ($order->serviceProviders as $key => $serviceProvider) {
+										if($serviceProvider->shop_id == $order->shop_id){
+											$service_provider_list = $service_provider_list." ".$serviceProvider->name;
+										}
+										else{
+											$service_provider_list = $service_provider_list." ".$serviceProvider->name."(調)";
+										}
+										
 									}
-									else{
-										$service_provider_list = $service_provider_list." ".$serviceProvider->name."(調)";
-									}
-									
-								}
 
-								$status = "";
-								switch ($order->status) {
-									case 1:
-										$status = "<button class='btn btn-info'>客戶預定</button>";
-										break;
-									case 2:
-										$status = "<button class='btn btn-primary'>櫃檯預定</button>";
-										break;
-									case 3:
-										$status = "<button class='btn btn-light'>客戶取消</button>";
-										break;
-									case 4:
-										$status = "<button class='btn btn-warning'>櫃檯取消</button>";
-										break;
-									case 5:
-										$status = "<button class='btn btn-success'>訂單成立</button>";
-										break;
-									case 6:
-										$status = "<button class='btn btn-danger'>逾期取消</button>";
-										break;
-									default:
-										$status = "<button class='btn btn-info'>客戶預定</button>";
-										break;
-								}
-							?>
-							<td>{{ $order->id }}</td>
-							<td>{{ $order->shop->name }}</td>
-							<td>{{ $order->name }}</td>
-							<td>{{ $order->phone }}</td>
-							<td>{{ $service_provider_list }}</td>
-							<td>{{ $order->room->name }}</td>
-							<td>{{ $order->service->title }}</td>
-							@if($order->account != null)
-							<td>{{ $order->account->account }}</td>
-							@else
-							<td></td>
-							@endif
-							<td>{{ $order->start_time }}</td>
-							<td>{{ $order->end_time }}</td>
-							<td>{!! $status !!}</td>
-							@if(session('account_level') == 1)
-							<th><button data-id="{{$order->id}}" class="btn btn-primary operate">操作</button></th>
-							@endif
-						</tr>
+									$status = "";
+									switch ($order->status) {
+										case 1:
+											$status = "<button class='btn btn-info'>客戶預定</button>";
+											break;
+										case 2:
+											$status = "<button class='btn btn-primary'>櫃檯預定</button>";
+											break;
+										case 3:
+											$status = "<button class='btn btn-light'>客戶取消</button>";
+											break;
+										case 4:
+											$status = "<button class='btn btn-warning'>櫃檯取消</button>";
+											break;
+										case 5:
+											$status = "<button class='btn btn-success'>訂單成立</button>";
+											break;
+										case 6:
+											$status = "<button class='btn btn-danger'>逾期取消</button>";
+											break;
+										default:
+											$status = "<button class='btn btn-info'>客戶預定</button>";
+											break;
+									}
+								?>
+								<td>{{ $order->id }}</td>
+								<td>{{ $order->shop->name }}</td>
+								<td>{{ $order->name }}</td>
+								<td>{{ $order->phone }}</td>
+								<td>{{ $service_provider_list }}</td>
+								<td>{{ $order->room->name }}</td>
+								<td>{{ $order->service->title }}</td>
+								@if($order->account != null)
+								<td>{{ $order->account->account }}</td>
+								@else
+								<td></td>
+								@endif
+								<td>{{ $order->start_time }}</td>
+								<td>{{ $order->end_time }}</td>
+								<td>{!! $status !!}</td>
+								@if(session('account_level') == 1)
+								<th><button data-id="{{$order->id}}" class="btn btn-primary operate">操作</button></th>
+								@endif
+								@endif
+								@if($request->count && $request->count > 0)
+								<td>{{ $order->name }}</td>
+								<td>{{ $order->phone }}</td>
+								<td>{{ $order->total }}</td>
+								@endif
+							</tr>
+							
 						@endforeach
 					</tbody>
 				</table>
-				{!! $order_list->appends(['name' => $request->name, 'service' => $request->service, 'phone' => $request->phone, 'shop' => $request->shop, 'service_provider' => $request->service_provider, 'start_time' => $request->start_time, 'end_time' => $request->end_time, 'room' => $request->room])->links() !!}
+				{!! $order_list->appends(['name' => $request->name, 'service' => $request->service, 'phone' => $request->phone, 'shop' => $request->shop, 'service_provider' => $request->service_provider, 'start_time' => $request->start_time, 'end_time' => $request->end_time, 'room' => $request->room,
+				'count' => $request->count])->links() !!}
 			</div>
 		</div>
     </div>

@@ -9,6 +9,7 @@ use App\Models\Service;
 use App\Models\Shop;
 use App\Models\Room;
 use App\Models\ServiceProvider;
+use DB;
 
 class OrderController extends Controller
 {
@@ -53,10 +54,15 @@ class OrderController extends Controller
 		if($request->shop){
 			$order_list = $order_list->where('shop_id', $request->shop);
 		}
+
 		if($request->room){
 			$order_list = $order_list->where('room_id', $request->room);
 		}
 
+		if($request->count && $request->count > 0){
+			$order_list = $order_list->select('name', 'phone', DB::raw('count(*) as total'))->groupBy('phone')->havingRaw('count(*) >= ?', [$request->count])->where('status', 5);
+		}
+		
 		foreach ($service_provider_list as $key => $service_provider) {
 			$service_provider_name = $service_provider->name."(".$service_provider->shop->name.")";
 			$view_data['service_provider_list'][] = ["id" => $service_provider->id, "name" => $service_provider_name];
@@ -108,44 +114,58 @@ class OrderController extends Controller
 			$order_list = $order_list->where('room_id', $request->room);
 		}
 
+		if($request->count && $request->count > 0){
+			$order_list = $order_list->select('name', 'phone', DB::raw('count(*) as total'))->groupBy('phone')->havingRaw('count(*) >= ?', [$request->count])->where('status', 5);
+		}
+
 		$order_list = $order_list->get();
 
-		return Excel::create('泰和殿訂單列表', function($excel) use ($order_list){
-		    $excel->sheet('訂單', function($sheet) use ($order_list){
-		    	$fromArrayData[] = [ "訂單編號", "姓名", "電話", "人數", "服務項目", "房間", "預約人","開始時間", "結束時間", "訂單時間", "訂單狀態"];
-		    	foreach ($order_list as $key => $order) {
-		    		if($order->room->shower){
-							$shower = "可沖洗";
-						}
-						else{
-							$shower = "";
-						}
-						$status = "";
-						switch ($order->status) {
-							case '1':
-								$status = "客戶預定";
-								break;
-							case '2':
-								$status = "櫃檯預定";
-								break;
-							case '3':
-								$status = "客戶取消";
-								break;
-							case '4':
-								$status = "櫃檯取消";
-								break;
-							case '5':
-								$status = "訂單成立";
-								break;
-							default:
-								# code...
-								break;
-						}
-						$room_name = $order->room->name."(".$order->room->person."人房 ".$shower.")";
-						$order_account = $order->account != null ? $order->account->account: "";
-		    		$fromArrayData[] = [ $order->id, $order->name, $order->phone, $order->person, $order->service->title, $room_name, $order_account,$order->start_time, $order->end_time, $order->created_at, $status];
+		return Excel::create('泰和殿訂單列表', function($excel) use ($order_list, $request){
+		    $excel->sheet('訂單', function($sheet) use ($order_list, $request){
+		    	if (!$request->count) {
+		    		$fromArrayData[] = [ "訂單編號", "姓名", "電話", "人數", "服務項目", "房間", "預約人","開始時間", "結束時間", "訂單時間", "訂單狀態"];
+			    	foreach ($order_list as $key => $order) {
+			    		if($order->room->shower){
+								$shower = "可沖洗";
+							}
+							else{
+								$shower = "";
+							}
+							$status = "";
+							switch ($order->status) {
+								case '1':
+									$status = "客戶預定";
+									break;
+								case '2':
+									$status = "櫃檯預定";
+									break;
+								case '3':
+									$status = "客戶取消";
+									break;
+								case '4':
+									$status = "櫃檯取消";
+									break;
+								case '5':
+									$status = "訂單成立";
+									break;
+								default:
+									# code...
+									break;
+							}
+							$room_name = $order->room->name."(".$order->room->person."人房 ".$shower.")";
+							$order_account = $order->account != null ? $order->account->account: "";
+			    		$fromArrayData[] = [ $order->id, $order->name, $order->phone, $order->person, $order->service->title, $room_name, $order_account,$order->start_time, $order->end_time, $order->created_at, $status];
+			    	}
+			    	$sheet->fromArray($fromArrayData);
 		    	}
-		    	$sheet->fromArray($fromArrayData);
+		    	else {
+		    		$fromArrayData[] = [ "姓名", "電話", "次數"];
+		    		foreach ($order_list as $key => $order) {
+		    			$fromArrayData[] = [$order->name, $order->phone, $order->total];
+		    		}
+		    		$sheet->fromArray($fromArrayData);
+		    	}
+		    	
 		    });
 		})->export('xls');
 	}
