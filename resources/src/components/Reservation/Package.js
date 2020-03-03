@@ -68,33 +68,7 @@ class Package extends Component {
         if (this.state.max_people_per_room > max)
             this.setState({ max_people_per_room: max });
     }
-    setRoomId() {
-        // roomId is set in initializing and whenever shower option or guest number is set
-        // let { package_no, package_reservation } = this.props
-        // const rooms = package_reservation[package_no].room_list,
-        //     guestNum = package_reservation[package_no].guestNum;
 
-        // let roomId;
-
-        // // 尋找人數剛好符合的房間
-        // for (let i = 0; i < rooms.length; i++) {
-        //     if (rooms[i].shower == this.state.shower && rooms[i].person == guestNum) {
-        //         roomId = rooms[i].id;
-        //         break;
-        //     }
-        // }
-        // // 假如沒有人數剛好符合的房間，找人數較多的
-        // if (roomId === undefined) {
-        //     for (let i = 0; i < rooms.length; i++) {
-        //         if (rooms[i].shower == this.state.shower && rooms[i].person > guestNum) {
-        //             roomId = rooms[i].id;
-        //             break;
-        //         }
-        //     }
-        // }
-
-        // this.props.setReservation({ roomId });
-    }
     setOperator(event) {
         const { t } = this.props
         const value = event.target.options[event.target.selectedIndex].value, // id
@@ -138,6 +112,10 @@ class Package extends Component {
         // });
     }
 
+    setRoomId() {
+
+    }
+    
     render() {
         let { t, rest_customer, setCustomer, sourceData, reservation, package_reservation, package_no, setPackageService, disable } = this.props
         let current_package = package_reservation[package_no]
@@ -200,17 +178,7 @@ class Package extends Component {
         let needs_shower_ids = needs_shower_obj.map(val => val.id)
         let should_show_shower = false;
         should_show_shower = needs_shower_ids.some(r => package_reservation[package_no].service.indexOf(r) >= 0)
-        // needs_shower_ids.map((val) => {
-        //     if (val in package_reservation[package_no].service) {
-        //         should_show_shower = true
-        //         return true
-        //     }
-
-        //     else
-        //         return false
-        // })
-
-
+                                && package_reservation[package_no].service.indexOf(5) < 0
         return (
             <div>
                 <Row>
