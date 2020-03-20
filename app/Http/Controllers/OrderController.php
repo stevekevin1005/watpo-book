@@ -60,9 +60,14 @@ class OrderController extends Controller
 		}
 
 		if($request->count && $request->count > 0){
-			$order_list = $order_list->select('name', 'phone', DB::raw('count(*) as total'))->groupBy('phone')->havingRaw('count(*) >= ?', [$request->count])->where('status', 5);
+			$order_list = $order_list->select('name', 'phone', DB::raw('count(*) as total'))
+				->groupBy('phone')
+				->havingRaw('count(*) >= ?', [$request->count])
+				->where('status', 5);
 		}
-		
+		if($request->count_end && $request->count_end > 0){
+			$order_list = $order_list->havingRaw('count(*) <= ?', [$request->count_end]);
+		}
 		foreach ($service_provider_list as $key => $service_provider) {
 			$service_provider_name = $service_provider->name."(".$service_provider->shop->name.")";
 			$view_data['service_provider_list'][] = ["id" => $service_provider->id, "name" => $service_provider_name];

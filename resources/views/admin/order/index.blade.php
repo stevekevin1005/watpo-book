@@ -135,13 +135,19 @@
 			                  	<div class="col-md-4">
 				                    <div class="form-group">
 										<label class="col-md-4 control-label text-center">來訪次數</label>
-				                    	<div class="col-md-8">
+				                    	<div class="col-md-3">
 				                        	<input type="number" name="count" class="form-control" value="{{ $request->count }}" min="0">
+				                    	</div>
+				                    	<div class="col-md-1">
+				                        	~
+				                    	</div>
+				                    	<div class="col-md-3">
+				                        	<input type="number" name="count_end" class="form-control" value="{{ $request->count_end }}" min="0">
 				                    	</div>
 				                    </div>
 				                    <!-- /form-group-->
 				                </div>
-			                	<div class="col-md-8 text-right"><a href="/admin/order/export?name={{$request->name}}&service={{$request->service}}&phone={{$request->phone}}&shop={{$request->shop}}&service_provider={{$request->service_provider}}&start_time={{$request->start_time}}&end_time={{$request->end_time}}&room={{$request->room}}&count={{$request->count}}" class="btn btn-danger" target="_blank">匯出</a><input class="btn btn-primary" type="submit" value="查詢"></div>
+			                	<div class="col-md-4 text-right"><a href="/admin/order/export?name={{$request->name}}&service={{$request->service}}&phone={{$request->phone}}&shop={{$request->shop}}&service_provider={{$request->service_provider}}&start_time={{$request->start_time}}&end_time={{$request->end_time}}&room={{$request->room}}&count={{$request->count}}&count_end={{$request->count_end}}" class="btn btn-danger" target="_blank">匯出</a><input class="btn btn-primary" type="submit" value="查詢"></div>
 			                  <!-- /col-md-12-->
 			                </div>
 			                <!-- /row-->
@@ -250,7 +256,7 @@
 					</tbody>
 				</table>
 				{!! $order_list->appends(['name' => $request->name, 'service' => $request->service, 'phone' => $request->phone, 'shop' => $request->shop, 'service_provider' => $request->service_provider, 'start_time' => $request->start_time, 'end_time' => $request->end_time, 'room' => $request->room,
-				'count' => $request->count])->links() !!}
+				'count' => $request->count, 'count_end' => $request->count_end])->links() !!}
 			</div>
 		</div>
     </div>
