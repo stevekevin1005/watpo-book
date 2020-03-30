@@ -8,6 +8,8 @@ use App\Models\ServiceProvider;
 use App\Models\Order;
 use App\Models\Room;
 use App\Models\BlackList;
+use App\Models\Log;
+
 class BookController extends Controller
 {
 	const headers = array('Content-Type' => 'application/json; <a href="http://superlevin.ifengyuan.tw/tag/charset/">charset</a>=utf-8');
@@ -344,8 +346,9 @@ class BookController extends Controller
 					$service_provider->orders()->save($order);
 				}
 			}
-				
 
+			Log::create(['description' => '新增 訂單#'.$order->id." 姓名:".$order->name." 電話:".$order->phone."人數:".$order->person." 開始時間:".$start_time->format('Y-m-d H:i')." 結束時間".$end_time->format('Y-m-d H:i')."(客戶訂位)"]);
+				
 			// $room = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
 			// 	$query->whereNotIn('status', [3,4,6]);
 			//     $query->where('start_time', '<=', $end_time);

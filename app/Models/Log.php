@@ -19,7 +19,9 @@ class Log extends Model {
 		foreach ($attributes as $key => $value) {
 			$log->$key = $value;
 		}
-		$log->account_id = Session::get('account_id');
+		if(Session::get('account_id')) {
+			$log->account_id = Session::get('account_id');
+		}
 		$log->save();
 	}
 }
