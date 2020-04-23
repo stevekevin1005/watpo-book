@@ -159,6 +159,12 @@ class Package extends Component {
                         <FormControl bsClass="form-control operatorOption" componentClass="select" id={"operator" + i} data-index={i} onChange={this.setOperator} defaultValue={current_package.operator[i] ? current_package.operator[i] : null} key={i} onChange={this.setOperator} disabled={disable}>
                             <option key={-1} value={0}>{"不指定"}</option>
                             {reservation.service_provider_list.map((operator, index) => {
+                                let serviceCategory = package_reservation[package_no].service[i];
+                                if ((serviceCategory == 1 || serviceCategory == 3) && operator.service_1 == 0) return null;
+                                if ((serviceCategory == 2 || serviceCategory == 4) && operator.service_2 == 0) {
+                                    return null;
+                                }
+                                if (serviceCategory == 5 && operator.service_3 == 0) return null;
                                 for (let j = 0; j < selectedOperators.length; j++) {
                                     if (selectedOperators[j] === current_package.operator[i]) continue; // 當前的跟不指定不用確認
                                     if (operator.id == selectedOperators[j]) {

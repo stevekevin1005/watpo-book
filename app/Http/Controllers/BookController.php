@@ -62,13 +62,13 @@ class BookController extends Controller
 			// $rooms = Room::where('shop_id', $shop_id);
 
 			// if($service_id == 1 || $service_id == 3){
-				$service_providers = $service_providers->where('service_1', true);
+				// $service_providers = $service_providers->where('service_1', true);
 			// }
 			// else if($service_id == 2 || $service_id == 4){
-				$service_providers = $service_providers->where('service_2', true);
+				// $service_providers = $service_providers->where('service_2', true);
 			// }
 			// else{
-				$service_providers = $service_providers->where('service_3', true);
+				// $service_providers = $service_providers->where('service_3', true);
 				// $rooms = $rooms->where('shower', true);
 			// }
 
@@ -80,7 +80,9 @@ class BookController extends Controller
 			// $result['room'] = null;
 			
 			foreach($service_providers as $service_provider){
-				$result['service_provider_list'][] = ['id' => $service_provider->id, 'name' => $service_provider->name];
+				$result['service_provider_list'][] = ['id' => $service_provider->id,
+				 'name' => $service_provider->name, 'service_1' => $service_provider->service_1,
+				  'service_2' => $service_provider->service_2, 'service_3' => $service_provider->service_3];
 			}
 			// foreach($rooms as $room){
 			// 	$result['room'][] = ['id' => $room->id, 'shower' => $room->shower, 'shop_id' => $room->shop_id, 'person' => $room->person];
