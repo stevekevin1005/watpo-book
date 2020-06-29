@@ -620,6 +620,9 @@ class CalendarController extends Controller
 			$order->service_id = $service_id;
 			$room_name = $order->room->name;
 			$service_provider_name = " ";
+			foreach ($order->serviceProviders as $key => $service_provider) {
+				$service_provider_name = $service_provider_name.$service_provider->name." ";
+			}
 			/* 								預測start						*/
 			/* 不指定人數 */
 			$service_providers = ServiceProvider::whereHas('orders' ,function ($query) use ($start_time, $end_time, $order_id) {
@@ -700,7 +703,7 @@ class CalendarController extends Controller
 							throw new Exception($service_provider->name."號 師傅該時段已有約 請重新選擇", 1);
 						}
 					}
-					
+					$service_provider_name = " ";
 					foreach ($service_provider_list as $key => $service_provider) {
 						$service_provider_name = $service_provider_name.$service_provider->name." ";
 						$service_provider->orders()->save($order);
@@ -754,6 +757,7 @@ class CalendarController extends Controller
 							throw new Exception($service_provider->name."號 師傅該時段已有約 請重新選擇", 1);
 						}
 					}
+					$service_provider_name = " ";
 					foreach ($service_provider_list as $key => $service_provider) {
 						$service_provider->orders()->save($order);
 						$service_provider_name = $service_provider_name.$service_provider->name." ";
