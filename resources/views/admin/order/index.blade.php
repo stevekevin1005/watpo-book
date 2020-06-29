@@ -57,7 +57,7 @@
 									<div class="form-group">
 										<label class="col-md-4 control-label">手機號碼</label>
 										<div class="col-md-8">
-											<input type="text" name="phone" class="form-control">
+											<input type="text" name="phone" value="{{ $request->phone }}" class="form-control">
 										</div>
 									</div>
 								<!-- /form-group-->
