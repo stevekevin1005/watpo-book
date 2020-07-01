@@ -217,10 +217,10 @@ class CalendarController extends Controller
 							->where('end_time', '<=', date("Y-m-d H:i:s", $shop_end_time));
 
 		if(Session::get('account_level') == 2){
-			//30分後才隱藏訂單
-			$now->add(new DateInterval('PT30M'));
+			//60分後才隱藏訂單
+			$now->add(new DateInterval('PT60M'));
 			$orders = $orders->where('end_time', '>=', $now);
-			$now->sub(new DateInterval('PT30M'));
+			$now->sub(new DateInterval('PT60M'));
 		}
 		$orders = $orders->orderBy('start_time', 'asc')->orderBy('phone', 'asc')
 						 ->get();
