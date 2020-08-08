@@ -92,14 +92,6 @@ class CheckService extends React.Component {
                             })}
                         </FormControl>
                     </FormGroup>
-                    {/* <FormGroup>
-                            <ControlLabel>{t("service")}</ControlLabel>
-                            <FormControl componentClass="select" id="service" defaultValue={reservation.service} placeholder="..." onChange={this.setReservation}>
-                                {sourceData.services && sourceData.services.map((service,index)=>{
-                                    return (<option key={index} value={service.id}>{service.title}</option>);
-                                })}
-                            </FormControl>
-                        </FormGroup> */}
                 </Col>
                 <Button currentStep={0} clickHandle={this.props.nextStep} disabled={disabled} />
             </div>
