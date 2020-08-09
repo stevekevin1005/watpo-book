@@ -43,6 +43,7 @@ class CheckDetail extends React.Component {
         this.setMaxGuestNum = this.setMaxGuestNum.bind(this);
         this.setShower = this.setShower.bind(this);
         this.nextStep = this.nextStep.bind(this);
+
     }
     componentDidMount() {
         if (this.props.sourceData.room) {
@@ -277,6 +278,11 @@ class CheckDetail extends React.Component {
             <div>
                 <FormGroup>
                     <Col md={5}>
+                        {sourceData.shops && sourceData.shops.map((shop, index) => {
+                            if (shop.id == reservation.shop) {
+                                return (<div style={{ marginBottom: "5px" }}><ControlLabel>{shop.name}</ControlLabel></div>);
+                            }
+                        })}
                         <div style={{ marginBottom: "5px" }}><ControlLabel>{t("guestNum")}</ControlLabel>
                             <FormControl componentClass="select" placeholder="select" defaultValue={reservation.total_guest_num} onChange={this.setGuestNum}>
                                 {guestNumEl}

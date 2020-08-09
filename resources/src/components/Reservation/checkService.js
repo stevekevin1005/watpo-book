@@ -66,14 +66,15 @@ class CheckService extends React.Component {
     }
     setReservation(event) {
         const el = event.target,
-            group = el.id,
-            index = +el.options[el.selectedIndex].value;
+            group = "shop",
+            index = +el.value;
 
         let data = {};
         data[group] = index;
         if (index === 5) data['shower'] = true;
         else data['shower'] = false;
         this.props.setReservation(data);
+        this.props.nextStep();
     }
     render() {
         const { t } = this.props,
@@ -86,14 +87,12 @@ class CheckService extends React.Component {
                 <Col md={7}>
                     <FormGroup>
                         <ControlLabel bsClass="control-label branch">{t("branch")}</ControlLabel>
-                        <FormControl componentClass="select" id="shop" placeholder="..." defaultValue={reservation.shop} onChange={this.setReservation}>
-                            {sourceData.shops && sourceData.shops.map((shop, index) => {
-                                return (<option key={index} value={shop.id}>{shop.name}</option>);
-                            })}
-                        </FormControl>
+                        {sourceData.shops && sourceData.shops.map((shop, index) => {
+                            return (<FormControl componentClass="button" currentStep={0} value={shop.id} onClick={this.setReservation}>{shop.name}</FormControl>);
+                        })}
+                        
                     </FormGroup>
                 </Col>
-                <Button currentStep={0} clickHandle={this.props.nextStep} disabled={disabled} />
             </div>
         );
     }
