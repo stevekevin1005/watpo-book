@@ -2,6 +2,7 @@ import { translate } from 'react-i18next';
 import Button from "./Button";
 
 const Col = ReactBootstrap.Col,
+    Row = ReactBootstrap.Row,
     FormGroup = ReactBootstrap.FormGroup,
     FormControl = ReactBootstrap.FormControl,
     ControlLabel = ReactBootstrap.ControlLabel;
@@ -84,15 +85,14 @@ class CheckService extends React.Component {
 
         return (
             <div style={{ paddingTop: "5px" }}>
-                <Col md={7}>
-                    <FormGroup>
-                        <ControlLabel bsClass="control-label branch">{t("branch")}</ControlLabel>
-                        {sourceData.shops && sourceData.shops.map((shop, index) => {
-                            return (<FormControl componentClass="button" currentStep={0} value={shop.id} onClick={this.setReservation}>{shop.name}</FormControl>);
-                        })}
-                        
-                    </FormGroup>
-                </Col>
+                <FormGroup>
+                    <ControlLabel bsClass="control-label branch">{t("branch")}</ControlLabel>
+                    <Row>
+                    {sourceData.shops && sourceData.shops.map((shop, index) => {
+                        return (<Col md={6} sm={6} xs={6}><FormControl componentClass="button" currentStep={0} value={shop.id} onClick={this.setReservation}>{shop.name}</FormControl></Col>);
+                    })}
+                    </Row>
+                </FormGroup>
             </div>
         );
     }
