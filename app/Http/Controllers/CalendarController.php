@@ -193,9 +193,9 @@ class CalendarController extends Controller
 		$last_two_month = date("Y-m-d");
 		$last_two_month = date('Y-m-01', strtotime("$last_two_month -2 month"));
 		$shop = Shop::where('id', $shop_id)->first();
-		$shop_start_time = strtotime($date.' '.$shop->start_time);
-		$shop_end_time = strtotime($date.' '.$shop->end_time);
-		
+		$shop_start_time = strtotime($date.' '.$shop->start_time.' -3hours');
+		$shop_end_time = strtotime($date.' '.$shop->end_time.'+ 3hours');
+			
 		if($shop_end_time <= $shop_start_time){
 			$shop_end_time = strtotime("+1 day", $shop_end_time);
 		}
