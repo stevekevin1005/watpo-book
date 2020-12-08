@@ -60,7 +60,7 @@ class SmsController extends Controller
         try{
             $phone = $request->phone;
             $CODE = substr(md5(rand()),0,4);
-            $message = "歡迎蒞臨泰和殿，您的驗證碼為 ". $CODE . " 請於30分鐘內驗證完畢！";
+            $message = "歡迎蒞臨泰和殿，您的驗證碼為 ". $CODE . " 請於5分鐘內驗證完畢！";
             
             if(!Cache::has($phone))
                 $resp = $this->initiateSmsActivation($phone, $message,$CODE);
@@ -142,7 +142,7 @@ class SmsController extends Controller
         $isError = 0;
         $errorMessage = true;
 
-        $expiresAt = Carbon::now()->addMinutes(30);
+        $expiresAt = Carbon::now()->addMinutes(5);
         if($CODE)
             Cache::put($phone_number, $CODE, $expiresAt);
 
