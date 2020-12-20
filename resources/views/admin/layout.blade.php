@@ -221,6 +221,8 @@
         <script src="/assets/js/jquery.app.js"></script>
         <!-- Js render -->
         <script src="/assets/js/jsrender.min.js"></script>
+        <!-- moment -->
+        <script src="/assets/js/moment-timezone-with-data.js"></script>
         <!-- Js bootstrap-datetimepicker -->
         <script type="text/javascript" src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
         <script type="text/javascript">
