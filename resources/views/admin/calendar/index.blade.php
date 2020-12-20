@@ -728,16 +728,12 @@
         $('body').on('change', '#select_service, #start_time', function(){
             var service_id = $("#select_service").val();
             var start_time = moment.tz($("#start_time").val(), "Asia/Taipei");
-            // start_time = new Date(start_time - start_time.getTimezoneOffset() * 60000);
             if(service_id == 4 || service_id == 3){
                 document.getElementById("end_time").value = start_time.add(60, 'minutes').format("YYYY-MM-DDTHH:mm");
-                // start_time.setMinutes(start_time.getMinutes() + 60);
             }
             else{
-                document.getElementById("end_time").value = start_time.add(60, 'minutes').format("YYYY-MM-DDTHH:mm");
-                // start_time.setMinutes(start_time.getMinutes() + 120);
+                document.getElementById("end_time").value = start_time.add(120, 'minutes').format("YYYY-MM-DDTHH:mm");
             }
-           
         });
         @endif
         $("#date").on('change', function(e){
