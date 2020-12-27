@@ -253,8 +253,8 @@ class BookController extends Controller
 		}
 
 		//房間預約30分鐘
-		$start_time->sub(new DateInterval('PT30M'));
-		$end_time->add(new DateInterval('PT30M'));
+		$start_time->sub(new DateInterval('PT15M'));
+		$end_time->add(new DateInterval('PT15M'));
 
 
 		$room = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
@@ -265,8 +265,8 @@ class BookController extends Controller
 		})->where('shop_id', $shop_id)->where('person', '>=', $person);
 
 		//扣回
-		$start_time->add(new DateInterval('PT30M'));
-		$end_time->sub(new DateInterval('PT30M'));
+		$start_time->add(new DateInterval('PT15M'));
+		$end_time->sub(new DateInterval('PT15M'));
 
 		$room = $room->get();
 		if ($room->isEmpty()) {
