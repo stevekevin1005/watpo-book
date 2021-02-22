@@ -1,5 +1,7 @@
 <?php
 namespace App\Http\Controllers;
+use App\Http\Services\MemberService;
+use App\Models\Member;
 use Illuminate\Http\Request;
 use Hash, Exception, DB, DateTime, DateInterval;
 use App\Models\Shop;
@@ -10,20 +12,25 @@ use App\Models\Room;
 use App\Models\BlackList;
 use App\Models\Log;
 
-class BookController extends Controller
-{
+class BookController extends Controller {
+
+    protected $memberService;
+
+    public function __construct(MemberService $memberService) {
+        $this->memberService = $memberService;
+    }
+
 	const headers = array('Content-Type' => 'application/json; <a href="http://superlevin.ifengyuan.tw/tag/charset/">charset</a>=utf-8');
-	public function index()
-	{
+
+	public function index() {
 		$view_data = [];
 		return view('book', $view_data);
-		
 	}
-	public function api_shop_list(Request $request)
-	{
+
+	public function api_shop_list(Request $request) {
 		try{
 			$shop_list = Shop::All();
-			
+
 			return response()->json($shop_list);
 		}
 		catch(Exception $e){
@@ -33,28 +40,26 @@ class BookController extends Controller
 			return response()->json('資料庫錯誤, 請洽系統商!', 400);
 		}
 	}
-	public function api_service_list(Request $request)
-	{
-		try{
+
+	public function api_service_list(Request $request) {
+		try {
 			$service_list = Service::All();
-			
 			return response()->json($service_list);
 		}
-		catch(Exception $e){
+		catch(Exception $e) {
 			return response()->json($e->getMessage(), 400);
 		}
-		catch(\Illuminate\Database\QueryException $e){
+		catch(\Illuminate\Database\QueryException $e) {
 			return response()->json('資料庫錯誤, 請洽系統商!', 400);
 		}
 	}
 
-	public function api_service_provider_and_room_list(Request $request)
-	{
-		try{
+	public function api_service_provider_and_room_list(Request $request) {
+		try {
 			$service_id = $request->service_id;
 			$shop_id = $request->shop_id;
 
-			if(!$service_id){
+			if(!$service_id) {
 				throw new Exception("缺少服務ID", 1);
 			}
 
@@ -78,8 +83,8 @@ class BookController extends Controller
 			$result = [];
 			$result['service_provider_list'] = null;
 			// $result['room'] = null;
-			
-			foreach($service_providers as $service_provider){
+
+			foreach($service_providers as $service_provider) {
 				$result['service_provider_list'][] = ['id' => $service_provider->id,
 				 'name' => $service_provider->name, 'service_1' => $service_provider->service_1,
 				  'service_2' => $service_provider->service_2, 'service_3' => $service_provider->service_3];
@@ -90,17 +95,16 @@ class BookController extends Controller
 
 			return response()->json($result);
 		}
-		catch(Exception $e){
+		catch(Exception $e) {
 			return response()->json($e->getMessage(), 400, self::headers, JSON_UNESCAPED_UNICODE);
 		}
-		catch(\Illuminate\Database\QueryException $e){
+		catch(\Illuminate\Database\QueryException $e) {
 			return response()->json('資料庫錯誤, 請洽系統商!', 400, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 	}
 
-	public function api_time_list(Request $request)
-	{
-		try{
+	public function api_time_list(Request $request) {
+		try {
 
 			$date = new Datetime($request->date);
 			$shop_id = $request->shop_id;
@@ -109,23 +113,23 @@ class BookController extends Controller
 			$service_provider_id = $request->service_provider_id;
 			$room_id = $request->room_id;
 			$shower = $request->shower;
-			if(!$date){
+			if(!$date) {
 				throw new Exception("缺少日期", 1);
 			}
-			if(!$shop_id){
+			if(!$shop_id) {
 				throw new Exception("缺少店家ID", 1);
 			}
-			if(!$service_id){
+			if(!$service_id) {
 				throw new Exception("缺少服務ID", 1);
 			}
-			if(!$person){
+			if(!$person) {
 				throw new Exception("缺少人數", 1);
 			}
 
 
 			$service = Service::where('id', $service_id)->first();
 			$shop = Shop::where('id', $shop_id)->first();
-			
+
 
 			// $start_time = clone $date;
 
@@ -135,33 +139,32 @@ class BookController extends Controller
 			$end_time = new Datetime($date->format('Y-m-d')." ".$request->end_time);
 			if($end_time <= $start_time) $end_time->modify("+1 day");
 			// $end_time->add(new DateInterval("P1D"));
-			
+
 			$shop_start_time = new Datetime($date->format('Y-m-d')." ".$shop->start_time);
 
 			$shop_end_time =new Datetime($date->format('Y-m-d')." ".$shop->end_time);
 			$shop_end_time->modify("-2 hour");
 
 			$i = 0;
-			while($start_time <= $end_time){
+			while($start_time <= $end_time) {
 				$today = clone $date;
-				if($start_time <= $shop_end_time) $today->modify("-1 day");
-				if($start_time >= $shop_start_time || $start_time <= $shop_end_time){
+				if($start_time <= $shop_end_time) {
+				    $today->modify("-1 day");
+                }
+				if($start_time >= $shop_start_time || $start_time <= $shop_end_time) {
 					$time_list[$i]['time'] = $start_time->format('H:i');
 
-					if(new DateTime(date("Y-m-d H:i:s")) > $start_time){
+					if(new DateTime(date("Y-m-d H:i:s")) > $start_time) {
 						$time_list[$i]['select'] = false;
-					}
-					else{
+					} else {
 						$result = $this->time_option($today->format('Y-m-d'), $start_time->format('Y-m-d H:i:s'), $service->time, $shower, $shop_id, $person, $service_provider_id);
-						if($result["select"] === true){
+						if($result["select"] === true) {
 							$time_list[$i]['select'] = true;
 							$time_list[$i]["room"] = $result["room"];
-						}
-						else{
+						} else {
 							$time_list[$i]['select'] = false;
 							$time_list[$i]['time'] .= $result["reason"] === false ? "": $result["reason"];
 						}
-						
 					}
 					$i++;
 				}
@@ -169,17 +172,14 @@ class BookController extends Controller
 			}
 
 			return response()->json($time_list, 200, self::headers, JSON_UNESCAPED_UNICODE);
-		}
-		catch(Exception $e){
+		} catch(Exception $e) {
 			return response()->json($e->getMessage(), 400, self::headers, JSON_UNESCAPED_UNICODE);
-		}
-		catch(\Illuminate\Database\QueryException $e){
-			return response()->json('資料庫錯誤, 請洽系統商!', 400, self::headers, JSON_UNESCAPED_UNICODE);
-		}
-			
+		} catch(\Illuminate\Database\QueryException $e) {
+            return response()->json('資料庫錯誤, 請洽系統商!', 400, self::headers, JSON_UNESCAPED_UNICODE);
+        }
 	}
-	private function time_option($date, $start, $service_time, $shower,$shop_id, $person, $service_provider_id){
-		
+
+	private function time_option($date, $start, $service_time, $shower,$shop_id, $person, $service_provider_id) {
 		$month = date("Y-m", strtotime($date));
 
 		$start_time = new Datetime($start);
@@ -187,46 +187,46 @@ class BookController extends Controller
 		$end_time->add(new DateInterval("PT".$service_time."M"));
 
 		$service_provider_id_list = explode(",", $service_provider_id);
-		foreach($service_provider_id_list as $index => $service_provider_id){
-			if($service_provider_id == '0'){
+		foreach($service_provider_id_list as $index => $service_provider_id) {
+			if($service_provider_id == '0') {
 				unset($service_provider_id_list[$index]);
 			}
 		}
-		
+
 		//師傅預約前後冷卻15分鐘
 		$start_time->sub(new DateInterval('PT15M'));
 		$end_time->add(new DateInterval('PT15M'));
-		
+
 		//確認師傅休假
 		$service_providers = ServiceProvider::whereHas('leaves' ,function ($query) use ($start_time, $end_time) {
 		    $query->where('start_time', '<', $end_time);
 		    $query->where('end_time', '>', $start_time);
 		})->where('shop_id', $shop_id)->where('activate', true)->whereIn('id', $service_provider_id_list)->pluck('name')->toArray();
 
-		if(count($service_providers) != 0){
+		if(count($service_providers) != 0) {
 			return array ("select" => false, "reason" => "\n師傅 ".implode(" ",$service_providers)." 休");
 		}
 
-		$service_providers = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $shop_id)->where('activate', true)->get();
+        $service_providers = ServiceProvider::freeTime($month, $start_time, $end_time)->where('shop_id', $shop_id)->where('activate', true)->get();
 
-		//扣回 避免出勤錯誤
+        //扣回 避免出勤錯誤
 		$start_time->add(new DateInterval('PT15M'));
 		$end_time->sub(new DateInterval('PT15M'));
 
 		$service_provider_list = [];
-		foreach($service_providers as $service_provider){
+		foreach($service_providers as $service_provider) {
 			$shift = $service_provider->shifts->first();
 			$on_duty = new DateTime($date." ".$shift->start_time);
 			$off_duty =  new DateTime($date." ".$shift->end_time);
-			if($off_duty < $on_duty){
+			if($off_duty < $on_duty) {
 				$off_duty->add(new DateInterval("P1D"));
 			}
-			if($on_duty <= $start_time && $off_duty >= $end_time){
+			if($on_duty <= $start_time && $off_duty >= $end_time) {
 				$service_provider_list[] = $service_provider->id;
 			}
 		}
 
-		if(!empty(array_diff($service_provider_id_list, $service_provider_list))){
+		if(!empty(array_diff($service_provider_id_list, $service_provider_list))) {
 			return array ("select" => false, "reason" => "預約已滿");
 		}
 
@@ -247,8 +247,8 @@ class BookController extends Controller
 							withCount('serviceProviders')->get();
 
 		$no_specific_amount = $this->no_specific($order_list, $service_providers);
-	
-		if(count($service_provider_list) - $no_specific_amount < $person){
+
+		if(count($service_provider_list) - $no_specific_amount < $person) {
 			return array ("select" => false, "reason" => "預約已滿");
 		}
 
@@ -273,11 +273,11 @@ class BookController extends Controller
 			return array ("select" => false, "reason" => "預約已滿");
 		}
 		$result = array ("select" => true, "room" => $room);
-		
+
 		return $result;
 	}
 
-	public function api_order(Request $request){
+	public function api_order(Request $request) {
 		try{
 			$shop_id = $request->shop_id;
 			$start_time = new DateTime($request->start_time);
@@ -307,7 +307,7 @@ class BookController extends Controller
 			if(!is_null(BlackList::where('phone', $phone)->where('status', 1)->first())){
 				throw new Exception("系統錯誤", 1);
 			}
-	
+
 			foreach ($service_pair as $service_id => $service_provider_id_list) {
 
 				$service = Service::where('id', $service_id)->first();
@@ -350,28 +350,9 @@ class BookController extends Controller
 			}
 
 			Log::create(['description' => '新增 訂單#'.$order->id." 姓名:".$order->name." 電話:".$order->phone."人數:".$order->person." 開始時間:".$start_time->format('Y-m-d H:i')." 結束時間".$end_time->format('Y-m-d H:i')."(客戶訂位)"]);
-				
-			// $room = Room::whereDoesntHave('orders' ,function ($query) use ($start_time, $end_time) {
-			// 	$query->whereNotIn('status', [3,4,6]);
-			//     $query->where('start_time', '<=', $end_time);
-			//     $query->where('end_time', '>=', $start_time);
-			// })->where('shop_id', $shop_id)->where('person', '>=', $person);
-			
-			// if($shower == "true"){
-			// 	$room = $room->where('shower', 1)->orderBy('person', 'asc');
-			// }
-			// else if($shower != "true" && ($service_id == 2 || $service_id == 4)){
-			// 	$room = $room->orderBy('service_2', 'desc');
-			// }
-			// else{
-			// 	$room = $room->orderBy('service_1', 'desc');
-			// }
 
-			// $room = $room->first();
-			
-			// if(!$room){
-			// 	throw new Exception("該時段房間已滿 請重新選擇", 1);
-			// }
+            $this->memberService->createMember($phone);
+
 			return response()->json('預約成功', 200, self::headers, JSON_UNESCAPED_UNICODE);
 		}
 		catch(Exception $e){

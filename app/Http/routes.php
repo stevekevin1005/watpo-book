@@ -19,6 +19,7 @@
 | kernel and includes session state, CSRF protection, and more.
 |
 */
+
 Route::group(['middleware' => ['web']], function () {
 	
 	Route::get('/admin/login', ['uses' => 'LoginController@index', 'as' => 'login']);
@@ -68,6 +69,8 @@ Route::group(['middleware' => ['web']], function () {
 			Route::get('/report', ['uses' => 'ReportController@index', 'as' => 'ReportIndex']);
 			Route::get('/report/export', ['uses' => 'ReportController@export', 'as' => 'ReportExport']);
 			Route::post('/report/reply', ['uses' => 'SmsController@sendReportResponseSMS', 'as' => 'ReportSMSReply']);
+
+            Route::get('/member', ['uses' => 'MemberController@index', 'as' => 'ReportIndex']);
 		});
 	});
 
@@ -106,6 +109,9 @@ Route::group(['middleware' => ['web']], function () {
 		Route::post('/phone/check', ['uses' => 'CalendarController@api_phone_check', 'as' => 'apiPhoneCheck']);
 
 		Route::post('/report/readed', ['uses' => 'ReportController@readed', 'as' => 'ReportReaded']);
+
+        Route::get('/member', ['uses' => 'MemberController@queryMember', 'as' => 'apiQueryMember']);
+        Route::get('/member/{member_id}', ['uses' => 'MemberController@getMember', 'as' => 'apiGetMember']);
 	});
 
 	Route::group(['prefix' => '/api'], function () {

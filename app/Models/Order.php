@@ -8,34 +8,32 @@ class Order extends Model {
 
   protected $table = 'Order';
 
-  public function room()
-  {
+  public function room() {
     return $this->belongsTo('App\Models\Room', 'room_id');
   }
 
-  public function service()
-  {
+  public function service() {
     return $this->belongsTo('App\Models\Service', 'service_id');
   }
 
-  public function shop()
-  {
+  public function shop() {
     return $this->belongsTo('App\Models\Shop', 'shop_id');
   }
 
-  public function account()
-  {
+  public function account() {
     return $this->belongsTo('App\Models\Account', 'account_id');
   }
 
-  public function report()
-  {
+  public function report() {
     return $this->hasOne('App\Models\Report', 'order_id');
   }
 
-  public function serviceProviders()
-  {
-    return $this->belongsToMany('App\Models\ServiceProvider', 'service_provider_order', 'order_id','service_provider_id');
+  public function serviceProviders() {
+    return $this->belongsToMany('App\Models\ServiceProvider', 'service_provider_order', 'order_id', 'service_provider_id');
+  }
+
+  public function point() {
+    return $this->hasOne('App\Models\Point', 'order_id');
   }
 }
 

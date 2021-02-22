@@ -104,13 +104,16 @@
                                 </ul>
                             </li>
                              @if(session('account_level') != 3)
-                            <li>
-                                <a href="/admin/order" class="waves-effect waves-primary"><i class="md md-view-list"></i><span> 訂單列表 </span></a>
-                            </li>
+                                <li>
+                                    <a href="/admin/order" class="waves-effect waves-primary"><i class="md md-view-list"></i><span> 訂單列表 </span></a>
+                                </li>
+                                <li>
+                                    <a href="/admin/member" class="waves-effect waves-primary"><i class="md md-face-unlock"></i><span> 會員列表 </span></a>
+                                </li>
                             @endif
-                            <li>
-                                <a href="/admin/logout" class="waves-effect waves-primary"><i class="md  md-reply"></i><span> 登出 </span></a>
-                            </li>
+                                <li>
+                                    <a href="/admin/logout" class="waves-effect waves-primary"><i class="md  md-reply"></i><span> 登出 </span></a>
+                                </li>
                             @if(session('account_level') == 1)
                             <li class="text-muted menu-title">管理功能選單</li>
                             <li>
